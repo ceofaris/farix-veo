@@ -113,7 +113,7 @@ export const updateReseller = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await assertRole(context.userId, ["king"]);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const patch: Record<string, unknown> = {
+    const patch: { full_name: string; is_active: boolean; expires_at?: string } = {
       full_name: data.full_name,
       is_active: data.is_active,
     };
@@ -225,7 +225,7 @@ export const updateEndUser = createServerFn({ method: "POST" })
       if (!target || target.role !== "user" || target.created_by !== context.userId)
         throw new Error("Forbidden");
     }
-    const patch: Record<string, unknown> = {
+    const patch: { full_name: string; is_active: boolean; expires_at?: string } = {
       full_name: data.full_name,
       is_active: data.is_active,
     };
