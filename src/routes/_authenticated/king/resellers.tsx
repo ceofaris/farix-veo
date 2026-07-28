@@ -48,18 +48,18 @@ function KingResellers() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Resellers</h1>
-          <p className="text-muted-foreground text-sm mt-1">Manage reseller accounts and permissions.</p>
-        </div>
-        <Button onClick={() => { setEditing(null); setOpen(true); }}>
-          <Plus className="w-4 h-4 mr-1" /> Create Reseller
-        </Button>
-      </div>
+      <PageHeader
+        title="Resellers"
+        description="Manage reseller accounts, tool access and expiry."
+        action={
+          <Button size="lg" onClick={() => { setEditing(null); setOpen(true); }} className="shadow-soft transition-transform active:scale-[0.98]">
+            <Plus className="w-4 h-4 mr-1.5" /> Create Reseller
+          </Button>
+        }
+      />
 
-      <div className="mt-6 border border-border rounded-xl bg-card overflow-hidden">
-        <table className="w-full text-sm">
+      <TableShell>
+
           <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
             <tr>
               <th className="px-5 py-3.5 font-semibold">Name</th>
@@ -99,9 +99,8 @@ function KingResellers() {
             {resellers.data?.length === 0 && (
               <tr><td colSpan={6} className="px-5 py-14 text-center text-muted-foreground">No resellers.</td></tr>
             )}
-          </tbody>
-        </table>
-      </div>
+      </TableShell>
+
 
       <ResellerFormDialog open={open} onOpenChange={setOpen} reseller={editing} onSaved={() => resellers.refetch()} />
     </div>
