@@ -66,31 +66,31 @@ export function UserFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-neutral-900 border-white/10 text-white">
+      <DialogContent className="bg-card border-border text-foreground">
         <DialogHeader>
           <DialogTitle>{user ? "Edit User" : "Create User"}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
             <Label>Full Name</Label>
-            <Input value={fullName} onChange={(e) => setFullName(e.target.value)} className="bg-neutral-950 border-white/10" />
+            <Input value={fullName} onChange={(e) => setFullName(e.target.value)} className="bg-background border-border" />
           </div>
           {!user && (
             <>
               <div>
                 <Label>Email</Label>
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-neutral-950 border-white/10" />
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-background border-border" />
               </div>
               <div>
                 <Label>Password</Label>
-                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} className="bg-neutral-950 border-white/10" />
+                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} className="bg-background border-border" />
               </div>
             </>
           )}
           <div>
             <Label>Custom Days</Label>
-            <Input type="number" min={0} value={days} onChange={(e) => setDays(Number(e.target.value))} className="bg-neutral-950 border-white/10" />
-            {user && <p className="text-xs text-neutral-500 mt-1">Sets a new expiry from today.</p>}
+            <Input type="number" min={0} value={days} onChange={(e) => setDays(Number(e.target.value))} className="bg-background border-border" />
+            {user && <p className="text-xs text-muted-foreground mt-1">Sets a new expiry from today.</p>}
           </div>
           <div className="flex items-center gap-3">
             <Switch checked={isActive} onCheckedChange={setIsActive} />

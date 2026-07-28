@@ -16,8 +16,8 @@ export const Route = createFileRoute("/_authenticated/reseller/tools")({
 function LogoImg({ path }: { path: string | null }) {
   const [url, setUrl] = useState<string | null>(null);
   useEffect(() => { signedLogoUrl(path).then(setUrl); }, [path]);
-  if (!url) return <div className="w-12 h-12 rounded-lg bg-white/5 border border-white/10" />;
-  return <img src={url} alt="" className="w-12 h-12 rounded-lg object-cover bg-white/5 border border-white/10" />;
+  if (!url) return <div className="w-12 h-12 rounded-lg bg-muted border border-border" />;
+  return <img src={url} alt="" className="w-12 h-12 rounded-lg object-cover bg-muted border border-border" />;
 }
 
 function ResellerTools() {
@@ -40,7 +40,7 @@ function ResellerTools() {
   return (
     <div>
       <h1 className="text-2xl font-semibold">My Tools</h1>
-      <p className="text-neutral-400 text-sm mt-1">Tools assigned to you by the admin.</p>
+      <p className="text-muted-foreground text-sm mt-1">Tools assigned to you by the admin.</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
         {tools.data?.map((t) => (
           <Card key={t.id}>
@@ -53,7 +53,7 @@ function ResellerTools() {
                     {t.is_active ? "Active" : "Inactive"}
                   </Badge>
                 </div>
-                <p className="text-xs text-neutral-400 truncate">{t.domain}</p>
+                <p className="text-xs text-muted-foreground truncate">{t.domain}</p>
               </div>
             </div>
             <Button asChild size="sm" variant="secondary" className="w-full mt-4">
@@ -64,7 +64,7 @@ function ResellerTools() {
           </Card>
         ))}
         {tools.data && tools.data.length === 0 && (
-          <div className="col-span-full text-center text-neutral-500 py-12">
+          <div className="col-span-full text-center text-muted-foreground py-12">
             No tools assigned yet.
           </div>
         )}

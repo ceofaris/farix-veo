@@ -78,14 +78,14 @@ export function AccountFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-neutral-900 border-white/10 text-white max-w-2xl">
+      <DialogContent className="bg-card border-border text-foreground max-w-2xl">
         <DialogHeader>
           <DialogTitle>{account ? "Edit Account" : "Add Account"}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
             <Label>Label (optional)</Label>
-            <Input value={label} onChange={(e) => setLabel(e.target.value)} className="bg-neutral-950 border-white/10" />
+            <Input value={label} onChange={(e) => setLabel(e.target.value)} className="bg-background border-border" />
           </div>
           <div>
             <Label>Cookie Data</Label>
@@ -93,7 +93,7 @@ export function AccountFormDialog({
               value={cookieData}
               onChange={(e) => setCookieData(e.target.value)}
               rows={8}
-              className="bg-neutral-950 border-white/10 font-mono text-xs"
+              className="bg-background border-border font-mono text-xs"
               placeholder="Paste raw cookie JSON or string…"
             />
           </div>
@@ -103,7 +103,7 @@ export function AccountFormDialog({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}
-              className="bg-neutral-950 border-white/10"
+              className="bg-background border-border"
             />
           </div>
           <div className="flex items-center gap-3">

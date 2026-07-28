@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Shield } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useServerFn } from "@tanstack/react-start";
 import { bootstrapKing } from "@/lib/admin.functions";
 
@@ -64,17 +65,18 @@ function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4 relative">
+      <ThemeToggle className="absolute top-6 right-6" />
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center gap-2 justify-center mb-8">
           <Shield className="w-6 h-6" />
           <span className="text-xl font-semibold tracking-tight">Farix</span>
         </Link>
-        <div className="bg-neutral-900/80 border border-white/10 rounded-2xl p-8 backdrop-blur">
+        <div className="bg-card border border-border rounded-2xl p-8 shadow-card">
           <h1 className="text-2xl font-semibold text-center">
             {mode === "signin" ? "Sign in to your account" : "Create first admin"}
           </h1>
-          <p className="text-sm text-neutral-400 text-center mt-2">
+          <p className="text-sm text-muted-foreground text-center mt-2">
             {mode === "signin"
               ? "Enter your credentials to continue."
               : "This is only available before any admin exists."}
@@ -91,7 +93,7 @@ function AuthPage() {
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
-                  className="bg-neutral-950 border-white/10"
+                  className="bg-background border-border"
                 />
               </div>
             )}
@@ -103,7 +105,7 @@ function AuthPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="bg-neutral-950 border-white/10"
+                className="bg-background border-border"
               />
             </div>
             <div>
@@ -115,20 +117,20 @@ function AuthPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="bg-neutral-950 border-white/10"
+                className="bg-background border-border"
               />
             </div>
-            <Button type="submit" disabled={loading} className="w-full bg-white text-black hover:bg-neutral-200">
+            <Button type="submit" disabled={loading} className="w-full">
               {loading ? "Please wait…" : mode === "signin" ? "Sign In" : "Create Admin"}
             </Button>
           </form>
-          <p className="text-xs text-neutral-500 text-center mt-6">
+          <p className="text-xs text-muted-foreground text-center mt-6">
             No public signup. Contact your admin or reseller to get an account.
           </p>
           <div className="text-center mt-4">
             <button
               onClick={() => setMode(mode === "signin" ? "bootstrap" : "signin")}
-              className="text-xs text-neutral-500 hover:text-neutral-300 underline"
+              className="text-xs text-muted-foreground hover:text-foreground/80 underline"
             >
               {mode === "signin" ? "Bootstrap first admin" : "Back to sign in"}
             </button>
