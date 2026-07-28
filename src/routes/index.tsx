@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Shield } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -21,9 +22,10 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-6 relative">
+      <ThemeToggle className="absolute top-6 right-6" />
       <div className="flex flex-col items-center max-w-2xl text-center">
-        <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-muted border border-border mb-6">
+        <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/12 text-primary border border-primary/20 mb-6">
           <Shield className="w-8 h-8 text-foreground" />
         </div>
         <h1 className="text-5xl sm:text-6xl font-semibold tracking-tight">Farix</h1>

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useProfile } from "@/hooks/use-profile";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: UserOrRedirect,
@@ -29,8 +30,10 @@ function UserOrRedirect() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-border">
+      <header className="flex items-center justify-between px-6 h-16 border-b border-border bg-background/80 backdrop-blur-md sticky top-0">
         <div className="font-semibold">Farix</div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
         <Button
           variant="ghost"
           onClick={async () => {
@@ -40,6 +43,7 @@ function UserOrRedirect() {
         >
           Logout
         </Button>
+        </div>
       </header>
       <main className="flex-1 flex items-center justify-center px-6">
         <div className="text-center max-w-md">

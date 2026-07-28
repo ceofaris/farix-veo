@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Shield } from "lucide-react";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { useServerFn } from "@tanstack/react-start";
 import { bootstrapKing } from "@/lib/admin.functions";
 
@@ -64,13 +65,14 @@ function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4 relative">
+      <ThemeToggle className="absolute top-6 right-6" />
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center gap-2 justify-center mb-8">
           <Shield className="w-6 h-6" />
           <span className="text-xl font-semibold tracking-tight">Farix</span>
         </Link>
-        <div className="bg-card border border-border rounded-2xl p-8 backdrop-blur">
+        <div className="bg-card border border-border rounded-2xl p-8 shadow-card">
           <h1 className="text-2xl font-semibold text-center">
             {mode === "signin" ? "Sign in to your account" : "Create first admin"}
           </h1>
