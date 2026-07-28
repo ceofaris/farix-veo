@@ -1,3 +1,4 @@
+import { PanelTabs } from "@/components/panel-tabs";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
@@ -57,6 +58,16 @@ function KingTools() {
 
   return (
     <div>
+      <div className="mb-6">
+        <PanelTabs
+          items={[
+            { to: "/king", label: "Dashboard" },
+            { to: "/king/tools", label: "Tools" },
+            { to: "/king/resellers", label: "Resellers" },
+            { to: "/king/users", label: "Users" },
+          ]}
+        />
+      </div>
       <PageHeader
         title="Tools"
         description="All tools available on the platform."
