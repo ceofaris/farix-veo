@@ -9,38 +9,224 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedResellerRouteRouteImport } from './routes/_authenticated/reseller/route'
+import { Route as AuthenticatedKingRouteRouteImport } from './routes/_authenticated/king/route'
+import { Route as AuthenticatedResellerIndexRouteImport } from './routes/_authenticated/reseller/index'
+import { Route as AuthenticatedKingIndexRouteImport } from './routes/_authenticated/king/index'
+import { Route as AuthenticatedResellerUsersRouteImport } from './routes/_authenticated/reseller/users'
+import { Route as AuthenticatedResellerToolsRouteImport } from './routes/_authenticated/reseller/tools'
+import { Route as AuthenticatedKingUsersRouteImport } from './routes/_authenticated/king/users'
+import { Route as AuthenticatedKingToolsRouteImport } from './routes/_authenticated/king/tools'
+import { Route as AuthenticatedKingResellersRouteImport } from './routes/_authenticated/king/resellers'
+import { Route as AuthenticatedResellerToolsIdRouteImport } from './routes/_authenticated/reseller/tools_.$id'
+import { Route as AuthenticatedKingToolsIdRouteImport } from './routes/_authenticated/king/tools_.$id'
 
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedResellerRouteRoute =
+  AuthenticatedResellerRouteRouteImport.update({
+    id: '/reseller',
+    path: '/reseller',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedKingRouteRoute = AuthenticatedKingRouteRouteImport.update({
+  id: '/king',
+  path: '/king',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedResellerIndexRoute =
+  AuthenticatedResellerIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedResellerRouteRoute,
+  } as any)
+const AuthenticatedKingIndexRoute = AuthenticatedKingIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedKingRouteRoute,
+} as any)
+const AuthenticatedResellerUsersRoute =
+  AuthenticatedResellerUsersRouteImport.update({
+    id: '/users',
+    path: '/users',
+    getParentRoute: () => AuthenticatedResellerRouteRoute,
+  } as any)
+const AuthenticatedResellerToolsRoute =
+  AuthenticatedResellerToolsRouteImport.update({
+    id: '/tools',
+    path: '/tools',
+    getParentRoute: () => AuthenticatedResellerRouteRoute,
+  } as any)
+const AuthenticatedKingUsersRoute = AuthenticatedKingUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AuthenticatedKingRouteRoute,
+} as any)
+const AuthenticatedKingToolsRoute = AuthenticatedKingToolsRouteImport.update({
+  id: '/tools',
+  path: '/tools',
+  getParentRoute: () => AuthenticatedKingRouteRoute,
+} as any)
+const AuthenticatedKingResellersRoute =
+  AuthenticatedKingResellersRouteImport.update({
+    id: '/resellers',
+    path: '/resellers',
+    getParentRoute: () => AuthenticatedKingRouteRoute,
+  } as any)
+const AuthenticatedResellerToolsIdRoute =
+  AuthenticatedResellerToolsIdRouteImport.update({
+    id: '/tools_/$id',
+    path: '/tools/$id',
+    getParentRoute: () => AuthenticatedResellerRouteRoute,
+  } as any)
+const AuthenticatedKingToolsIdRoute =
+  AuthenticatedKingToolsIdRouteImport.update({
+    id: '/tools_/$id',
+    path: '/tools/$id',
+    getParentRoute: () => AuthenticatedKingRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/king': typeof AuthenticatedKingRouteRouteWithChildren
+  '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/king/resellers': typeof AuthenticatedKingResellersRoute
+  '/king/tools': typeof AuthenticatedKingToolsRoute
+  '/king/users': typeof AuthenticatedKingUsersRoute
+  '/reseller/tools': typeof AuthenticatedResellerToolsRoute
+  '/reseller/users': typeof AuthenticatedResellerUsersRoute
+  '/king/': typeof AuthenticatedKingIndexRoute
+  '/reseller/': typeof AuthenticatedResellerIndexRoute
+  '/king/tools/$id': typeof AuthenticatedKingToolsIdRoute
+  '/reseller/tools/$id': typeof AuthenticatedResellerToolsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/king/resellers': typeof AuthenticatedKingResellersRoute
+  '/king/tools': typeof AuthenticatedKingToolsRoute
+  '/king/users': typeof AuthenticatedKingUsersRoute
+  '/reseller/tools': typeof AuthenticatedResellerToolsRoute
+  '/reseller/users': typeof AuthenticatedResellerUsersRoute
+  '/king': typeof AuthenticatedKingIndexRoute
+  '/reseller': typeof AuthenticatedResellerIndexRoute
+  '/king/tools/$id': typeof AuthenticatedKingToolsIdRoute
+  '/reseller/tools/$id': typeof AuthenticatedResellerToolsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
+  '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/king/resellers': typeof AuthenticatedKingResellersRoute
+  '/_authenticated/king/tools': typeof AuthenticatedKingToolsRoute
+  '/_authenticated/king/users': typeof AuthenticatedKingUsersRoute
+  '/_authenticated/reseller/tools': typeof AuthenticatedResellerToolsRoute
+  '/_authenticated/reseller/users': typeof AuthenticatedResellerUsersRoute
+  '/_authenticated/king/': typeof AuthenticatedKingIndexRoute
+  '/_authenticated/reseller/': typeof AuthenticatedResellerIndexRoute
+  '/_authenticated/king/tools_/$id': typeof AuthenticatedKingToolsIdRoute
+  '/_authenticated/reseller/tools_/$id': typeof AuthenticatedResellerToolsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/king'
+    | '/reseller'
+    | '/dashboard'
+    | '/king/resellers'
+    | '/king/tools'
+    | '/king/users'
+    | '/reseller/tools'
+    | '/reseller/users'
+    | '/king/'
+    | '/reseller/'
+    | '/king/tools/$id'
+    | '/reseller/tools/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/king/resellers'
+    | '/king/tools'
+    | '/king/users'
+    | '/reseller/tools'
+    | '/reseller/users'
+    | '/king'
+    | '/reseller'
+    | '/king/tools/$id'
+    | '/reseller/tools/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/king'
+    | '/_authenticated/reseller'
+    | '/_authenticated/dashboard'
+    | '/_authenticated/king/resellers'
+    | '/_authenticated/king/tools'
+    | '/_authenticated/king/users'
+    | '/_authenticated/reseller/tools'
+    | '/_authenticated/reseller/users'
+    | '/_authenticated/king/'
+    | '/_authenticated/reseller/'
+    | '/_authenticated/king/tools_/$id'
+    | '/_authenticated/reseller/tools_/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +234,154 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reseller': {
+      id: '/_authenticated/reseller'
+      path: '/reseller'
+      fullPath: '/reseller'
+      preLoaderRoute: typeof AuthenticatedResellerRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/king': {
+      id: '/_authenticated/king'
+      path: '/king'
+      fullPath: '/king'
+      preLoaderRoute: typeof AuthenticatedKingRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reseller/': {
+      id: '/_authenticated/reseller/'
+      path: '/'
+      fullPath: '/reseller/'
+      preLoaderRoute: typeof AuthenticatedResellerIndexRouteImport
+      parentRoute: typeof AuthenticatedResellerRouteRoute
+    }
+    '/_authenticated/king/': {
+      id: '/_authenticated/king/'
+      path: '/'
+      fullPath: '/king/'
+      preLoaderRoute: typeof AuthenticatedKingIndexRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
+    '/_authenticated/reseller/users': {
+      id: '/_authenticated/reseller/users'
+      path: '/users'
+      fullPath: '/reseller/users'
+      preLoaderRoute: typeof AuthenticatedResellerUsersRouteImport
+      parentRoute: typeof AuthenticatedResellerRouteRoute
+    }
+    '/_authenticated/reseller/tools': {
+      id: '/_authenticated/reseller/tools'
+      path: '/tools'
+      fullPath: '/reseller/tools'
+      preLoaderRoute: typeof AuthenticatedResellerToolsRouteImport
+      parentRoute: typeof AuthenticatedResellerRouteRoute
+    }
+    '/_authenticated/king/users': {
+      id: '/_authenticated/king/users'
+      path: '/users'
+      fullPath: '/king/users'
+      preLoaderRoute: typeof AuthenticatedKingUsersRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
+    '/_authenticated/king/tools': {
+      id: '/_authenticated/king/tools'
+      path: '/tools'
+      fullPath: '/king/tools'
+      preLoaderRoute: typeof AuthenticatedKingToolsRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
+    '/_authenticated/king/resellers': {
+      id: '/_authenticated/king/resellers'
+      path: '/resellers'
+      fullPath: '/king/resellers'
+      preLoaderRoute: typeof AuthenticatedKingResellersRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
+    '/_authenticated/reseller/tools_/$id': {
+      id: '/_authenticated/reseller/tools_/$id'
+      path: '/tools/$id'
+      fullPath: '/reseller/tools/$id'
+      preLoaderRoute: typeof AuthenticatedResellerToolsIdRouteImport
+      parentRoute: typeof AuthenticatedResellerRouteRoute
+    }
+    '/_authenticated/king/tools_/$id': {
+      id: '/_authenticated/king/tools_/$id'
+      path: '/tools/$id'
+      fullPath: '/king/tools/$id'
+      preLoaderRoute: typeof AuthenticatedKingToolsIdRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
   }
 }
 
+interface AuthenticatedKingRouteRouteChildren {
+  AuthenticatedKingResellersRoute: typeof AuthenticatedKingResellersRoute
+  AuthenticatedKingToolsRoute: typeof AuthenticatedKingToolsRoute
+  AuthenticatedKingUsersRoute: typeof AuthenticatedKingUsersRoute
+  AuthenticatedKingIndexRoute: typeof AuthenticatedKingIndexRoute
+  AuthenticatedKingToolsIdRoute: typeof AuthenticatedKingToolsIdRoute
+}
+
+const AuthenticatedKingRouteRouteChildren: AuthenticatedKingRouteRouteChildren =
+  {
+    AuthenticatedKingResellersRoute: AuthenticatedKingResellersRoute,
+    AuthenticatedKingToolsRoute: AuthenticatedKingToolsRoute,
+    AuthenticatedKingUsersRoute: AuthenticatedKingUsersRoute,
+    AuthenticatedKingIndexRoute: AuthenticatedKingIndexRoute,
+    AuthenticatedKingToolsIdRoute: AuthenticatedKingToolsIdRoute,
+  }
+
+const AuthenticatedKingRouteRouteWithChildren =
+  AuthenticatedKingRouteRoute._addFileChildren(
+    AuthenticatedKingRouteRouteChildren,
+  )
+
+interface AuthenticatedResellerRouteRouteChildren {
+  AuthenticatedResellerToolsRoute: typeof AuthenticatedResellerToolsRoute
+  AuthenticatedResellerUsersRoute: typeof AuthenticatedResellerUsersRoute
+  AuthenticatedResellerIndexRoute: typeof AuthenticatedResellerIndexRoute
+  AuthenticatedResellerToolsIdRoute: typeof AuthenticatedResellerToolsIdRoute
+}
+
+const AuthenticatedResellerRouteRouteChildren: AuthenticatedResellerRouteRouteChildren =
+  {
+    AuthenticatedResellerToolsRoute: AuthenticatedResellerToolsRoute,
+    AuthenticatedResellerUsersRoute: AuthenticatedResellerUsersRoute,
+    AuthenticatedResellerIndexRoute: AuthenticatedResellerIndexRoute,
+    AuthenticatedResellerToolsIdRoute: AuthenticatedResellerToolsIdRoute,
+  }
+
+const AuthenticatedResellerRouteRouteWithChildren =
+  AuthenticatedResellerRouteRoute._addFileChildren(
+    AuthenticatedResellerRouteRouteChildren,
+  )
+
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedKingRouteRoute: typeof AuthenticatedKingRouteRouteWithChildren
+  AuthenticatedResellerRouteRoute: typeof AuthenticatedResellerRouteRouteWithChildren
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedKingRouteRoute: AuthenticatedKingRouteRouteWithChildren,
+  AuthenticatedResellerRouteRoute: AuthenticatedResellerRouteRouteWithChildren,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
