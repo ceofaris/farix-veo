@@ -118,7 +118,7 @@ function AuthPage() {
                 className="bg-background border-border"
               />
             </div>
-            <Button type="submit" disabled={loading} className="w-full bg-white text-black hover:bg-neutral-200">
+            <Button type="submit" disabled={loading} className="w-full">
               {loading ? "Please wait…" : mode === "signin" ? "Sign In" : "Create Admin"}
             </Button>
           </form>

@@ -21,7 +21,7 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-950 to-black text-foreground flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center px-6">
       <div className="flex flex-col items-center max-w-2xl text-center">
         <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-muted border border-border mb-6">
           <Shield className="w-8 h-8 text-foreground" />
@@ -39,7 +39,7 @@ function Landing() {
         </p>
         <Link
           to="/auth"
-          className="mt-10 inline-flex items-center justify-center rounded-full bg-white text-black font-medium px-8 py-3 hover:bg-neutral-200 transition"
+          className="mt-10 inline-flex items-center justify-center rounded-full bg-primary text-primary-foreground font-medium px-8 py-3 shadow-card hover:opacity-90 active:scale-[0.98] transition"
         >
           Sign In
         </Link>
