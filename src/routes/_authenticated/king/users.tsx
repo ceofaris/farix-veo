@@ -1,3 +1,4 @@
+import { PanelTabs } from "@/components/panel-tabs";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -45,6 +46,16 @@ function KingUsers() {
 
   return (
     <div>
+      <div className="mb-6">
+        <PanelTabs
+          items={[
+            { to: "/king", label: "Dashboard" },
+            { to: "/king/tools", label: "Tools" },
+            { to: "/king/resellers", label: "Resellers" },
+            { to: "/king/users", label: "Users" },
+          ]}
+        />
+      </div>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Users</h1>

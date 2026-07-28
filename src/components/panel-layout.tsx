@@ -113,9 +113,17 @@ export function PanelLayout({
             <Menu className="w-5 h-5" />
           </button>
           <div className="font-semibold lg:hidden">Farix</div>
-          <div className="hidden lg:block text-sm text-muted-foreground">{title}</div>
+          <div className="hidden lg:block text-sm text-muted-foreground">
+            Welcome back, {(profile?.full_name || profile?.email || "there").split(" ")[0]}
+          </div>
           <div className="ml-auto flex items-center gap-2">
             <ThemeToggle />
+            <button
+              onClick={logout}
+              className="inline-flex h-9 items-center gap-2 rounded-lg border border-border bg-card px-3 text-sm font-medium text-muted-foreground shadow-soft transition-all hover:bg-accent hover:text-foreground active:scale-95"
+            >
+              <LogOut className="h-4 w-4" /> Logout
+            </button>
           </div>
         </header>
         <main className="flex-1 p-5 sm:p-8 max-w-[1400px] w-full mx-auto">{children}</main>
