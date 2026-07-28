@@ -99,6 +99,7 @@ function KingResellers() {
             {resellers.data?.length === 0 && (
               <tr><td colSpan={6} className="px-5 py-14 text-center text-muted-foreground">No resellers.</td></tr>
             )}
+          </tbody>
       </TableShell>
 
 

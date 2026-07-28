@@ -91,6 +91,7 @@ function KingUsers() {
             {users.data?.length === 0 && (
               <tr><td colSpan={5} className="px-5 py-14 text-center text-muted-foreground">No users.</td></tr>
             )}
+          </tbody>
       </TableShell>
 
 
