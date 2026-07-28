@@ -1,14 +1,16 @@
-import { Card } from "@/components/panel-layout";
+import { cn } from "@/lib/utils";
 
 export function StatCard({
   icon: Icon,
   label,
   value,
+  hint,
   tone = "primary",
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   value: number | string;
+  hint?: string;
   tone?: "primary" | "chart-2" | "chart-3" | "chart-5";
 }) {
   const toneMap: Record<string, string> = {
@@ -18,18 +20,21 @@ export function StatCard({
     "chart-5": "bg-chart-5/15 text-chart-5",
   };
   return (
-    <Card className="relative overflow-hidden hover:shadow-pop transition-shadow">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <div className="text-xs font-medium text-muted-foreground uppercase tracking-[0.12em]">
-            {label}
-          </div>
-          <div className="text-3xl font-semibold mt-2 tracking-tight">{value}</div>
-        </div>
-        <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${toneMap[tone]}`}>
-          <Icon className="w-5 h-5" />
+    <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-card transition-all hover:shadow-pop">
+      <div
+        className={cn(
+          "pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full blur-3xl opacity-30",
+          toneMap[tone],
+        )}
+      />
+      <div className="relative flex items-start justify-between gap-4">
+        <div className="text-sm font-medium text-muted-foreground">{label}</div>
+        <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center", toneMap[tone])}>
+          <Icon className="w-4 h-4" />
         </div>
       </div>
-    </Card>
+      <div className="relative mt-3 text-4xl font-semibold tracking-tight">{value}</div>
+      {hint && <div className="relative mt-2 text-xs text-muted-foreground">{hint}</div>}
+    </div>
   );
 }
