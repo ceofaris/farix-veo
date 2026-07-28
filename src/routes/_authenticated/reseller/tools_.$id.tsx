@@ -9,7 +9,7 @@ import { ArrowLeft, Plus, Pencil, Trash2, Power } from "lucide-react";
 import { AccountFormDialog, ToolAccountRow } from "@/components/account-form-dialog";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/reseller/tools/$id")({
+export const Route = createFileRoute("/_authenticated/reseller/tools_/$id")({
   component: ResellerToolAccounts,
 });
 
