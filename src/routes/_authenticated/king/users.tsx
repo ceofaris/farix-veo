@@ -5,6 +5,7 @@ import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { PageHeader, TableShell } from "@/components/panel-layout";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { UserFormDialog, UserRow } from "@/components/user-form-dialog";
 import { useServerFn } from "@tanstack/react-start";
@@ -46,18 +47,18 @@ function KingUsers() {
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold">Users</h1>
-          <p className="text-muted-foreground text-sm mt-1">Manage end users of the platform.</p>
-        </div>
-        <Button onClick={() => { setEditing(null); setOpen(true); }}>
-          <Plus className="w-4 h-4 mr-1" /> Create User
-        </Button>
-      </div>
+      <PageHeader
+        title="Users"
+        description="Manage end users of the platform."
+        action={
+          <Button size="lg" onClick={() => { setEditing(null); setOpen(true); }} className="shadow-soft transition-transform active:scale-[0.98]">
+            <Plus className="w-4 h-4 mr-1.5" /> Create User
+          </Button>
+        }
+      />
 
-      <div className="mt-6 border border-border rounded-xl bg-card overflow-hidden">
-        <table className="w-full text-sm">
+      <TableShell>
+
           <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
             <tr>
               <th className="px-5 py-3.5 font-semibold">Name</th>
@@ -92,8 +93,8 @@ function KingUsers() {
               <tr><td colSpan={5} className="px-5 py-14 text-center text-muted-foreground">No users.</td></tr>
             )}
           </tbody>
-        </table>
-      </div>
+      </TableShell>
+
 
       <UserFormDialog open={open} onOpenChange={setOpen} user={editing} onSaved={() => users.refetch()} />
     </div>
