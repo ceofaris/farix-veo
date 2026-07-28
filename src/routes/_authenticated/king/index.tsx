@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { StatCard } from "@/components/stat-card";
-import { PanelTabs } from "@/components/panel-tabs";
+
 import { Card } from "@/components/panel-layout";
 import { Users, Wrench, UserCog, KeyRound, Activity } from "lucide-react";
 
@@ -69,14 +69,6 @@ function KingDashboard() {
         />
       </div>
 
-      <PanelTabs
-        items={[
-          { to: "/king", label: "Dashboard" },
-          { to: "/king/tools", label: "Tools" },
-          { to: "/king/resellers", label: "Resellers" },
-          { to: "/king/users", label: "Users" },
-        ]}
-      />
 
       <Card className="p-8">
         <div className="flex items-center gap-2 font-medium">
