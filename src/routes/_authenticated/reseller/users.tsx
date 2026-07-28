@@ -56,30 +56,30 @@ function ResellerUsers() {
 
       <div className="mt-6 border border-border rounded-xl bg-card overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-muted text-muted-foreground text-left">
+          <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
             <tr>
-              <th className="px-4 py-3 font-medium">Name</th>
-              <th className="px-4 py-3 font-medium">Email</th>
-              <th className="px-4 py-3 font-medium">Expires</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-              <th className="px-4 py-3 font-medium text-right">Actions</th>
+              <th className="px-5 py-3.5 font-semibold">Name</th>
+              <th className="px-5 py-3.5 font-semibold">Email</th>
+              <th className="px-5 py-3.5 font-semibold">Expires</th>
+              <th className="px-5 py-3.5 font-semibold">Status</th>
+              <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {users.data?.map((u) => (
-              <tr key={u.id} className="border-t border-border">
-                <td className="px-4 py-3">{u.full_name || <span className="text-muted-foreground">—</span>}</td>
-                <td className="px-4 py-3 text-foreground/80">{u.email}</td>
-                <td className="px-4 py-3 text-muted-foreground">{u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}</td>
-                <td className="px-4 py-3"><Badge variant={u.is_active ? "default" : "secondary"}>{u.is_active ? "Active" : "Inactive"}</Badge></td>
-                <td className="px-4 py-3 text-right space-x-1">
+              <tr key={u.id} className="border-t border-border transition-colors hover:bg-muted/40">
+                <td className="px-5 py-4">{u.full_name || <span className="text-muted-foreground">—</span>}</td>
+                <td className="px-5 py-4 text-foreground/80">{u.email}</td>
+                <td className="px-5 py-4 text-muted-foreground">{u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}</td>
+                <td className="px-5 py-4"><Badge variant={u.is_active ? "default" : "secondary"}>{u.is_active ? "Active" : "Inactive"}</Badge></td>
+                <td className="px-5 py-4 text-right space-x-1">
                   <Button size="sm" variant="ghost" onClick={() => { setEditing(u); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
                   <Button size="sm" variant="ghost" onClick={() => handleDelete(u.id)}><Trash2 className="w-4 h-4" /></Button>
                 </td>
               </tr>
             ))}
             {users.data?.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-12 text-center text-muted-foreground">No users yet.</td></tr>
+              <tr><td colSpan={5} className="px-5 py-14 text-center text-muted-foreground">No users yet.</td></tr>
             )}
           </tbody>
         </table>

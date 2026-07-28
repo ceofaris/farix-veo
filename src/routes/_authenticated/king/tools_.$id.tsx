@@ -80,27 +80,27 @@ function KingToolAccounts() {
 
       <div className="mt-4 border border-border rounded-xl overflow-hidden bg-card">
         <table className="w-full text-sm">
-          <thead className="bg-muted text-muted-foreground text-left">
+          <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
             <tr>
-              <th className="px-4 py-3 font-medium">Label</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-              <th className="px-4 py-3 font-medium">Created</th>
-              <th className="px-4 py-3 font-medium text-right">Actions</th>
+              <th className="px-5 py-3.5 font-semibold">Label</th>
+              <th className="px-5 py-3.5 font-semibold">Status</th>
+              <th className="px-5 py-3.5 font-semibold">Created</th>
+              <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map((a) => (
-              <tr key={a.id} className="border-t border-border">
-                <td className="px-4 py-3">{a.label || <span className="text-muted-foreground">—</span>}</td>
-                <td className="px-4 py-3">
+              <tr key={a.id} className="border-t border-border transition-colors hover:bg-muted/40">
+                <td className="px-5 py-4">{a.label || <span className="text-muted-foreground">—</span>}</td>
+                <td className="px-5 py-4">
                   <Badge variant={a.is_active ? "default" : "secondary"}>
                     {a.is_active ? "Active" : "Inactive"}
                   </Badge>
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">
+                <td className="px-5 py-4 text-muted-foreground">
                   {new Date((a as unknown as { created_at: string }).created_at).toLocaleDateString()}
                 </td>
-                <td className="px-4 py-3 text-right space-x-1">
+                <td className="px-5 py-4 text-right space-x-1">
                   <Button size="sm" variant="ghost" onClick={() => toggleActive(a)}>
                     <Power className="w-4 h-4" />
                   </Button>
@@ -115,7 +115,7 @@ function KingToolAccounts() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-12 text-center text-muted-foreground">
+                <td colSpan={4} className="px-5 py-14 text-center text-muted-foreground">
                   No accounts.
                 </td>
               </tr>

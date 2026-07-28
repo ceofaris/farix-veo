@@ -59,33 +59,33 @@ function KingResellers() {
 
       <div className="mt-6 border border-border rounded-xl bg-card overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-muted text-muted-foreground text-left">
+          <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
             <tr>
-              <th className="px-4 py-3 font-medium">Name</th>
-              <th className="px-4 py-3 font-medium">Email</th>
-              <th className="px-4 py-3 font-medium">Tools</th>
-              <th className="px-4 py-3 font-medium">Expires</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-              <th className="px-4 py-3 font-medium text-right">Actions</th>
+              <th className="px-5 py-3.5 font-semibold">Name</th>
+              <th className="px-5 py-3.5 font-semibold">Email</th>
+              <th className="px-5 py-3.5 font-semibold">Tools</th>
+              <th className="px-5 py-3.5 font-semibold">Expires</th>
+              <th className="px-5 py-3.5 font-semibold">Status</th>
+              <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
             </tr>
           </thead>
           <tbody>
             {resellers.data?.map((r) => (
-              <tr key={r.id} className="border-t border-border">
-                <td className="px-4 py-3">{r.full_name || <span className="text-muted-foreground">—</span>}</td>
-                <td className="px-4 py-3 text-foreground/80">{r.email}</td>
-                <td className="px-4 py-3 text-muted-foreground text-xs">
+              <tr key={r.id} className="border-t border-border transition-colors hover:bg-muted/40">
+                <td className="px-5 py-4">{r.full_name || <span className="text-muted-foreground">—</span>}</td>
+                <td className="px-5 py-4 text-foreground/80">{r.email}</td>
+                <td className="px-5 py-4 text-muted-foreground text-xs">
                   {r.reseller_tools?.length
                     ? r.reseller_tools.map((rt) => rt.tools?.name).filter(Boolean).join(", ")
                     : "—"}
                 </td>
-                <td className="px-4 py-3 text-muted-foreground">
+                <td className="px-5 py-4 text-muted-foreground">
                   {r.expires_at ? new Date(r.expires_at).toLocaleDateString() : "—"}
                 </td>
-                <td className="px-4 py-3">
+                <td className="px-5 py-4">
                   <Badge variant={r.is_active ? "default" : "secondary"}>{r.is_active ? "Active" : "Inactive"}</Badge>
                 </td>
-                <td className="px-4 py-3 text-right space-x-1">
+                <td className="px-5 py-4 text-right space-x-1">
                   <Button size="sm" variant="ghost" onClick={() => { setEditing(r); setOpen(true); }}>
                     <Pencil className="w-4 h-4" />
                   </Button>
@@ -96,7 +96,7 @@ function KingResellers() {
               </tr>
             ))}
             {resellers.data?.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">No resellers.</td></tr>
+              <tr><td colSpan={6} className="px-5 py-14 text-center text-muted-foreground">No resellers.</td></tr>
             )}
           </tbody>
         </table>
