@@ -21,19 +21,19 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-950 to-black text-white flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-gradient-to-b from-neutral-950 via-neutral-950 to-black text-foreground flex flex-col items-center justify-center px-6">
       <div className="flex flex-col items-center max-w-2xl text-center">
-        <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-white/5 border border-white/10 mb-6">
-          <Shield className="w-8 h-8 text-white" />
+        <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-muted border border-border mb-6">
+          <Shield className="w-8 h-8 text-foreground" />
         </div>
         <h1 className="text-5xl sm:text-6xl font-semibold tracking-tight">Farix</h1>
-        <p className="mt-3 text-sm uppercase tracking-[0.3em] text-neutral-400">
+        <p className="mt-3 text-sm uppercase tracking-[0.3em] text-muted-foreground">
           Cookie Management Platform
         </p>
         <h2 className="mt-10 text-3xl sm:text-4xl font-semibold leading-tight">
           One platform to manage every tool your team relies on.
         </h2>
-        <p className="mt-5 text-neutral-400 text-lg">
+        <p className="mt-5 text-muted-foreground text-lg">
           Secure, private, and centrally managed. Access is invite-only — reach out to your admin
           or reseller to receive credentials.
         </p>
@@ -44,7 +44,7 @@ function Landing() {
           Sign In
         </Link>
       </div>
-      <footer className="absolute bottom-6 text-xs text-neutral-600">
+      <footer className="absolute bottom-6 text-xs text-muted-foreground">
         © {new Date().getFullYear()} Farix. All rights reserved.
       </footer>
     </div>

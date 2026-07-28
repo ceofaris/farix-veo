@@ -58,13 +58,13 @@ function KingToolAccounts() {
 
   return (
     <div>
-      <Link to="/king/tools" className="text-sm text-neutral-400 inline-flex items-center gap-1 hover:text-white">
+      <Link to="/king/tools" className="text-sm text-muted-foreground inline-flex items-center gap-1 hover:text-foreground">
         <ArrowLeft className="w-4 h-4" /> Back to Tools
       </Link>
       <div className="flex items-center justify-between mt-3">
         <div>
           <h1 className="text-2xl font-semibold">{tool.data?.name ?? "Tool"}</h1>
-          <p className="text-neutral-400 text-sm mt-1">Manage cookie accounts.</p>
+          <p className="text-muted-foreground text-sm mt-1">Manage cookie accounts.</p>
         </div>
         <Button onClick={() => { setEditing(null); setDialogOpen(true); }}>
           <Plus className="w-4 h-4 mr-1" /> Add Account
@@ -75,12 +75,12 @@ function KingToolAccounts() {
         placeholder="Search by label…"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
-        className="mt-4 max-w-sm bg-neutral-900 border-white/10"
+        className="mt-4 max-w-sm bg-card border-border"
       />
 
-      <div className="mt-4 border border-white/10 rounded-xl overflow-hidden bg-neutral-900/60">
+      <div className="mt-4 border border-border rounded-xl overflow-hidden bg-card">
         <table className="w-full text-sm">
-          <thead className="bg-white/5 text-neutral-400 text-left">
+          <thead className="bg-muted text-muted-foreground text-left">
             <tr>
               <th className="px-4 py-3 font-medium">Label</th>
               <th className="px-4 py-3 font-medium">Status</th>
@@ -90,14 +90,14 @@ function KingToolAccounts() {
           </thead>
           <tbody>
             {filtered.map((a) => (
-              <tr key={a.id} className="border-t border-white/5">
-                <td className="px-4 py-3">{a.label || <span className="text-neutral-500">—</span>}</td>
+              <tr key={a.id} className="border-t border-border">
+                <td className="px-4 py-3">{a.label || <span className="text-muted-foreground">—</span>}</td>
                 <td className="px-4 py-3">
                   <Badge variant={a.is_active ? "default" : "secondary"}>
                     {a.is_active ? "Active" : "Inactive"}
                   </Badge>
                 </td>
-                <td className="px-4 py-3 text-neutral-400">
+                <td className="px-4 py-3 text-muted-foreground">
                   {new Date((a as unknown as { created_at: string }).created_at).toLocaleDateString()}
                 </td>
                 <td className="px-4 py-3 text-right space-x-1">
@@ -115,7 +115,7 @@ function KingToolAccounts() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={4} className="px-4 py-12 text-center text-neutral-500">
+                <td colSpan={4} className="px-4 py-12 text-center text-muted-foreground">
                   No accounts.
                 </td>
               </tr>

@@ -47,16 +47,16 @@ function ResellerUsers() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">My Users</h1>
-          <p className="text-neutral-400 text-sm mt-1">Users you have created.</p>
+          <p className="text-muted-foreground text-sm mt-1">Users you have created.</p>
         </div>
         <Button onClick={() => { setEditing(null); setOpen(true); }}>
           <Plus className="w-4 h-4 mr-1" /> Create User
         </Button>
       </div>
 
-      <div className="mt-6 border border-white/10 rounded-xl bg-neutral-900/60 overflow-hidden">
+      <div className="mt-6 border border-border rounded-xl bg-card overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-white/5 text-neutral-400 text-left">
+          <thead className="bg-muted text-muted-foreground text-left">
             <tr>
               <th className="px-4 py-3 font-medium">Name</th>
               <th className="px-4 py-3 font-medium">Email</th>
@@ -67,10 +67,10 @@ function ResellerUsers() {
           </thead>
           <tbody>
             {users.data?.map((u) => (
-              <tr key={u.id} className="border-t border-white/5">
-                <td className="px-4 py-3">{u.full_name || <span className="text-neutral-500">—</span>}</td>
-                <td className="px-4 py-3 text-neutral-300">{u.email}</td>
-                <td className="px-4 py-3 text-neutral-400">{u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}</td>
+              <tr key={u.id} className="border-t border-border">
+                <td className="px-4 py-3">{u.full_name || <span className="text-muted-foreground">—</span>}</td>
+                <td className="px-4 py-3 text-foreground/80">{u.email}</td>
+                <td className="px-4 py-3 text-muted-foreground">{u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}</td>
                 <td className="px-4 py-3"><Badge variant={u.is_active ? "default" : "secondary"}>{u.is_active ? "Active" : "Inactive"}</Badge></td>
                 <td className="px-4 py-3 text-right space-x-1">
                   <Button size="sm" variant="ghost" onClick={() => { setEditing(u); setOpen(true); }}><Pencil className="w-4 h-4" /></Button>
@@ -79,7 +79,7 @@ function ResellerUsers() {
               </tr>
             ))}
             {users.data?.length === 0 && (
-              <tr><td colSpan={5} className="px-4 py-12 text-center text-neutral-500">No users yet.</td></tr>
+              <tr><td colSpan={5} className="px-4 py-12 text-center text-muted-foreground">No users yet.</td></tr>
             )}
           </tbody>
         </table>

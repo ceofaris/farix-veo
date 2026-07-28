@@ -77,14 +77,14 @@ export function ToolFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-neutral-900 border-white/10 text-white">
+      <DialogContent className="bg-card border-border text-foreground">
         <DialogHeader>
           <DialogTitle>{tool ? "Edit Tool" : "Add New Tool"}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <div>
             <Label>Tool Name</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} className="bg-neutral-950 border-white/10" />
+            <Input value={name} onChange={(e) => setName(e.target.value)} className="bg-background border-border" />
           </div>
           <div>
             <Label>Domain</Label>
@@ -92,7 +92,7 @@ export function ToolFormDialog({
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
               placeholder="example.com"
-              className="bg-neutral-950 border-white/10"
+              className="bg-background border-border"
             />
           </div>
           <div>
@@ -101,7 +101,7 @@ export function ToolFormDialog({
               type="file"
               accept="image/*"
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-              className="bg-neutral-950 border-white/10"
+              className="bg-background border-border"
             />
           </div>
           <div className="flex items-center gap-3">

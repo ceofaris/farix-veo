@@ -15,7 +15,7 @@ function ResellerLayout() {
     if (!loading && profile && profile.role !== "reseller") navigate({ to: "/dashboard" });
   }, [profile, loading, navigate]);
   if (loading || !profile) {
-    return <div className="min-h-screen bg-neutral-950 text-white flex items-center justify-center">Loading…</div>;
+    return <div className="min-h-screen bg-background text-foreground flex items-center justify-center">Loading…</div>;
   }
   if (profile.role !== "reseller") return null;
   return (

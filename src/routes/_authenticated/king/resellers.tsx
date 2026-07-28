@@ -50,16 +50,16 @@ function KingResellers() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-semibold">Resellers</h1>
-          <p className="text-neutral-400 text-sm mt-1">Manage reseller accounts and permissions.</p>
+          <p className="text-muted-foreground text-sm mt-1">Manage reseller accounts and permissions.</p>
         </div>
         <Button onClick={() => { setEditing(null); setOpen(true); }}>
           <Plus className="w-4 h-4 mr-1" /> Create Reseller
         </Button>
       </div>
 
-      <div className="mt-6 border border-white/10 rounded-xl bg-neutral-900/60 overflow-hidden">
+      <div className="mt-6 border border-border rounded-xl bg-card overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-white/5 text-neutral-400 text-left">
+          <thead className="bg-muted text-muted-foreground text-left">
             <tr>
               <th className="px-4 py-3 font-medium">Name</th>
               <th className="px-4 py-3 font-medium">Email</th>
@@ -71,15 +71,15 @@ function KingResellers() {
           </thead>
           <tbody>
             {resellers.data?.map((r) => (
-              <tr key={r.id} className="border-t border-white/5">
-                <td className="px-4 py-3">{r.full_name || <span className="text-neutral-500">—</span>}</td>
-                <td className="px-4 py-3 text-neutral-300">{r.email}</td>
-                <td className="px-4 py-3 text-neutral-400 text-xs">
+              <tr key={r.id} className="border-t border-border">
+                <td className="px-4 py-3">{r.full_name || <span className="text-muted-foreground">—</span>}</td>
+                <td className="px-4 py-3 text-foreground/80">{r.email}</td>
+                <td className="px-4 py-3 text-muted-foreground text-xs">
                   {r.reseller_tools?.length
                     ? r.reseller_tools.map((rt) => rt.tools?.name).filter(Boolean).join(", ")
                     : "—"}
                 </td>
-                <td className="px-4 py-3 text-neutral-400">
+                <td className="px-4 py-3 text-muted-foreground">
                   {r.expires_at ? new Date(r.expires_at).toLocaleDateString() : "—"}
                 </td>
                 <td className="px-4 py-3">
@@ -96,7 +96,7 @@ function KingResellers() {
               </tr>
             ))}
             {resellers.data?.length === 0 && (
-              <tr><td colSpan={6} className="px-4 py-12 text-center text-neutral-500">No resellers.</td></tr>
+              <tr><td colSpan={6} className="px-4 py-12 text-center text-muted-foreground">No resellers.</td></tr>
             )}
           </tbody>
         </table>

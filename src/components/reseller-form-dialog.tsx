@@ -90,35 +90,35 @@ export function ResellerFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-neutral-900 border-white/10 text-white max-w-lg">
+      <DialogContent className="bg-card border-border text-foreground max-w-lg">
         <DialogHeader>
           <DialogTitle>{reseller ? "Edit Reseller" : "Create Reseller"}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 max-h-[70vh] overflow-auto">
           <div>
             <Label>Full Name</Label>
-            <Input value={fullName} onChange={(e) => setFullName(e.target.value)} className="bg-neutral-950 border-white/10" />
+            <Input value={fullName} onChange={(e) => setFullName(e.target.value)} className="bg-background border-border" />
           </div>
           {!reseller && (
             <>
               <div>
                 <Label>Email</Label>
-                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-neutral-950 border-white/10" />
+                <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="bg-background border-border" />
               </div>
               <div>
                 <Label>Password</Label>
-                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} className="bg-neutral-950 border-white/10" />
+                <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} minLength={6} className="bg-background border-border" />
               </div>
             </>
           )}
           <div>
             <Label>Custom Days</Label>
-            <Input type="number" min={0} value={days} onChange={(e) => setDays(Number(e.target.value))} className="bg-neutral-950 border-white/10" />
+            <Input type="number" min={0} value={days} onChange={(e) => setDays(Number(e.target.value))} className="bg-background border-border" />
           </div>
           <div>
             <Label>Tools Permission</Label>
-            <div className="mt-2 space-y-2 border border-white/10 rounded-lg p-3 bg-neutral-950">
-              {tools.length === 0 && <p className="text-xs text-neutral-500">No active tools yet.</p>}
+            <div className="mt-2 space-y-2 border border-border rounded-lg p-3 bg-background">
+              {tools.length === 0 && <p className="text-xs text-muted-foreground">No active tools yet.</p>}
               {tools.map((t) => (
                 <label key={t.id} className="flex items-center gap-3 cursor-pointer">
                   <Checkbox checked={selected.has(t.id)} onCheckedChange={() => toggleTool(t.id)} />
