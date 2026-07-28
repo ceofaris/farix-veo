@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/panel-layout";
-import { StatCard } from "@/routes/_authenticated/king/index";
+import { StatCard } from "@/components/stat-card";
 import { Users, Wrench } from "lucide-react";
 import { useProfile } from "@/hooks/use-profile";
 

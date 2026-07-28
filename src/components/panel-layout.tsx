@@ -127,7 +127,7 @@ export function PanelLayout({
   );
 }
 
-export function Card({ children, className }: { children: ReactNode; className?: string }) {
+export function Card({ children, className }: { children?: ReactNode; className?: string }) {
   return (
     <div
       className={cn(
