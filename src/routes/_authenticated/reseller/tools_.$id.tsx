@@ -9,11 +9,11 @@ import { ArrowLeft, Plus, Pencil, Trash2, Power } from "lucide-react";
 import { AccountFormDialog, ToolAccountRow } from "@/components/account-form-dialog";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/_authenticated/king/tools_/$id")({
-  component: KingToolAccounts,
+export const Route = createFileRoute("/_authenticated/reseller/tools/$id")({
+  component: ResellerToolAccounts,
 });
 
-function KingToolAccounts() {
+function ResellerToolAccounts() {
   const { id } = Route.useParams();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<ToolAccountRow | null>(null);
@@ -21,10 +21,7 @@ function KingToolAccounts() {
 
   const tool = useQuery({
     queryKey: ["tool", id],
-    queryFn: async () => {
-      const { data } = await supabase.from("tools").select("*").eq("id", id).maybeSingle();
-      return data;
-    },
+    queryFn: async () => (await supabase.from("tools").select("*").eq("id", id).maybeSingle()).data,
   });
 
   const accounts = useQuery({
@@ -49,17 +46,17 @@ function KingToolAccounts() {
     accounts.refetch();
   }
 
-  async function deleteAccount(id: string) {
+  async function deleteAccount(aid: string) {
     if (!confirm("Delete this account?")) return;
-    const { error } = await supabase.from("tool_accounts").delete().eq("id", id);
+    const { error } = await supabase.from("tool_accounts").delete().eq("id", aid);
     if (error) return toast.error(error.message);
     accounts.refetch();
   }
 
   return (
     <div>
-      <Link to="/king/tools" className="text-sm text-neutral-400 inline-flex items-center gap-1 hover:text-white">
-        <ArrowLeft className="w-4 h-4" /> Back to Tools
+      <Link to="/reseller/tools" className="text-sm text-neutral-400 inline-flex items-center gap-1 hover:text-white">
+        <ArrowLeft className="w-4 h-4" /> Back to My Tools
       </Link>
       <div className="flex items-center justify-between mt-3">
         <div>
@@ -93,32 +90,20 @@ function KingToolAccounts() {
               <tr key={a.id} className="border-t border-white/5">
                 <td className="px-4 py-3">{a.label || <span className="text-neutral-500">—</span>}</td>
                 <td className="px-4 py-3">
-                  <Badge variant={a.is_active ? "default" : "secondary"}>
-                    {a.is_active ? "Active" : "Inactive"}
-                  </Badge>
+                  <Badge variant={a.is_active ? "default" : "secondary"}>{a.is_active ? "Active" : "Inactive"}</Badge>
                 </td>
                 <td className="px-4 py-3 text-neutral-400">
                   {new Date((a as unknown as { created_at: string }).created_at).toLocaleDateString()}
                 </td>
                 <td className="px-4 py-3 text-right space-x-1">
-                  <Button size="sm" variant="ghost" onClick={() => toggleActive(a)}>
-                    <Power className="w-4 h-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={() => { setEditing(a); setDialogOpen(true); }}>
-                    <Pencil className="w-4 h-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={() => deleteAccount(a.id)}>
-                    <Trash2 className="w-4 h-4" />
-                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => toggleActive(a)}><Power className="w-4 h-4" /></Button>
+                  <Button size="sm" variant="ghost" onClick={() => { setEditing(a); setDialogOpen(true); }}><Pencil className="w-4 h-4" /></Button>
+                  <Button size="sm" variant="ghost" onClick={() => deleteAccount(a.id)}><Trash2 className="w-4 h-4" /></Button>
                 </td>
               </tr>
             ))}
             {filtered.length === 0 && (
-              <tr>
-                <td colSpan={4} className="px-4 py-12 text-center text-neutral-500">
-                  No accounts.
-                </td>
-              </tr>
+              <tr><td colSpan={4} className="px-4 py-12 text-center text-neutral-500">No accounts.</td></tr>
             )}
           </tbody>
         </table>
