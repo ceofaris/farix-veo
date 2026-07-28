@@ -60,7 +60,11 @@ export function PanelLayout({
             Menu
           </div>
           {items.map((it) => {
-            const active = path === it.to || path.startsWith(it.to + "/");
+            const matches = items.filter(
+              (i) => path === i.to || path.startsWith(i.to + "/"),
+            );
+            const best = matches.sort((a, b) => b.to.length - a.to.length)[0];
+            const active = best?.to === it.to;
             return (
               <Link
                 key={it.to}
