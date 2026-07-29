@@ -7,7 +7,6 @@ export type Profile = {
   email: string;
   full_name: string | null;
   role: "king" | "reseller" | "user";
-  credits: number;
   expires_at: string | null;
   is_active: boolean;
   created_by: string | null;
