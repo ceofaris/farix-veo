@@ -130,21 +130,23 @@ export function UserFormDialog({
             <Input type="number" min={0} value={days} onChange={(e) => setDays(Number(e.target.value))} className="bg-background border-border" />
             {user && <p className="text-xs text-muted-foreground mt-1">Sets a new expiry from today.</p>}
           </div>
-          <div>
-            <Label>Tools Access</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              The user only sees extensions for the tools selected here.
-            </p>
-            <div className="mt-2 space-y-2 border border-border rounded-lg p-3 bg-background">
-              {tools.length === 0 && <p className="text-xs text-muted-foreground">No tools available.</p>}
-              {tools.map((t) => (
-                <label key={t.id} className="flex items-center gap-3 cursor-pointer">
-                  <Checkbox checked={selected.has(t.id)} onCheckedChange={() => toggleTool(t.id)} />
-                  <span className="text-sm">{t.name}</span>
-                </label>
-              ))}
+          {!hideTools && (
+            <div>
+              <Label>Tools Access</Label>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                The user only sees extensions for the tools selected here.
+              </p>
+              <div className="mt-2 space-y-2 border border-border rounded-lg p-3 bg-background">
+                {tools.length === 0 && <p className="text-xs text-muted-foreground">No tools available.</p>}
+                {tools.map((t) => (
+                  <label key={t.id} className="flex items-center gap-3 cursor-pointer">
+                    <Checkbox checked={selected.has(t.id)} onCheckedChange={() => toggleTool(t.id)} />
+                    <span className="text-sm">{t.name}</span>
+                  </label>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex items-center gap-3">
             <Switch checked={isActive} onCheckedChange={setIsActive} />
             <Label>Active</Label>
