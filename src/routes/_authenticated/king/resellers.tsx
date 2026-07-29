@@ -1,12 +1,13 @@
 
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader, TableShell } from "@/components/panel-layout";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Users } from "lucide-react";
+
 import { ResellerFormDialog, ResellerRow } from "@/components/reseller-form-dialog";
 import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser } from "@/lib/admin.functions";
@@ -88,6 +89,11 @@ function KingResellers() {
                   <Badge variant={r.is_active ? "default" : "secondary"}>{r.is_active ? "Active" : "Inactive"}</Badge>
                 </td>
                 <td className="px-5 py-4 text-right space-x-1">
+                  <Button size="sm" variant="ghost" asChild>
+                    <Link to="/king/resellers/$id" params={{ id: r.id }} title="Manage users">
+                      <Users className="w-4 h-4" />
+                    </Link>
+                  </Button>
                   <Button size="sm" variant="ghost" onClick={() => { setEditing(r); setOpen(true); }}>
                     <Pencil className="w-4 h-4" />
                   </Button>
@@ -95,6 +101,7 @@ function KingResellers() {
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </td>
+
               </tr>
             ))}
             {resellers.data?.length === 0 && (

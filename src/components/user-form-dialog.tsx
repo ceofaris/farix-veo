@@ -20,11 +20,13 @@ export function UserFormDialog({
   open,
   onOpenChange,
   user,
+  ownerId,
   onSaved,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   user: UserRow | null;
+  ownerId?: string;
   onSaved: () => void;
 }) {
   const [email, setEmail] = useState("");
@@ -35,6 +37,7 @@ export function UserFormDialog({
   const [saving, setSaving] = useState(false);
   const create = useServerFn(createEndUser);
   const update = useServerFn(updateEndUser);
+
 
   useEffect(() => {
     if (open) {
@@ -52,7 +55,7 @@ export function UserFormDialog({
       if (user) {
         await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive } });
       } else {
-        await create({ data: { email, password, full_name: fullName, days, is_active: isActive } });
+        await create({ data: { email, password, full_name: fullName, days, is_active: isActive, owner_id: ownerId } });
       }
       toast.success(user ? "User updated" : "User created");
       onOpenChange(false);

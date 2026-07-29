@@ -19,11 +19,12 @@ import { Route as AuthenticatedResellerIndexRouteImport } from './routes/_authen
 import { Route as AuthenticatedKingIndexRouteImport } from './routes/_authenticated/king/index'
 import { Route as AuthenticatedResellerUsersRouteImport } from './routes/_authenticated/reseller/users'
 import { Route as AuthenticatedResellerToolsRouteImport } from './routes/_authenticated/reseller/tools'
-import { Route as AuthenticatedKingUsersRouteImport } from './routes/_authenticated/king/users'
 import { Route as AuthenticatedKingToolsRouteImport } from './routes/_authenticated/king/tools'
 import { Route as AuthenticatedKingResellersRouteImport } from './routes/_authenticated/king/resellers'
+import { Route as AuthenticatedKingExtensionRouteImport } from './routes/_authenticated/king/extension'
 import { Route as AuthenticatedResellerToolsIdRouteImport } from './routes/_authenticated/reseller/tools_.$id'
 import { Route as AuthenticatedKingToolsIdRouteImport } from './routes/_authenticated/king/tools_.$id'
+import { Route as AuthenticatedKingResellersIdRouteImport } from './routes/_authenticated/king/resellers_.$id'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -78,11 +79,6 @@ const AuthenticatedResellerToolsRoute =
     path: '/tools',
     getParentRoute: () => AuthenticatedResellerRouteRoute,
   } as any)
-const AuthenticatedKingUsersRoute = AuthenticatedKingUsersRouteImport.update({
-  id: '/users',
-  path: '/users',
-  getParentRoute: () => AuthenticatedKingRouteRoute,
-} as any)
 const AuthenticatedKingToolsRoute = AuthenticatedKingToolsRouteImport.update({
   id: '/tools',
   path: '/tools',
@@ -92,6 +88,12 @@ const AuthenticatedKingResellersRoute =
   AuthenticatedKingResellersRouteImport.update({
     id: '/resellers',
     path: '/resellers',
+    getParentRoute: () => AuthenticatedKingRouteRoute,
+  } as any)
+const AuthenticatedKingExtensionRoute =
+  AuthenticatedKingExtensionRouteImport.update({
+    id: '/extension',
+    path: '/extension',
     getParentRoute: () => AuthenticatedKingRouteRoute,
   } as any)
 const AuthenticatedResellerToolsIdRoute =
@@ -106,6 +108,12 @@ const AuthenticatedKingToolsIdRoute =
     path: '/tools/$id',
     getParentRoute: () => AuthenticatedKingRouteRoute,
   } as any)
+const AuthenticatedKingResellersIdRoute =
+  AuthenticatedKingResellersIdRouteImport.update({
+    id: '/resellers_/$id',
+    path: '/resellers/$id',
+    getParentRoute: () => AuthenticatedKingRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -113,13 +121,14 @@ export interface FileRoutesByFullPath {
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/king/extension': typeof AuthenticatedKingExtensionRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
   '/king/tools': typeof AuthenticatedKingToolsRoute
-  '/king/users': typeof AuthenticatedKingUsersRoute
   '/reseller/tools': typeof AuthenticatedResellerToolsRoute
   '/reseller/users': typeof AuthenticatedResellerUsersRoute
   '/king/': typeof AuthenticatedKingIndexRoute
   '/reseller/': typeof AuthenticatedResellerIndexRoute
+  '/king/resellers/$id': typeof AuthenticatedKingResellersIdRoute
   '/king/tools/$id': typeof AuthenticatedKingToolsIdRoute
   '/reseller/tools/$id': typeof AuthenticatedResellerToolsIdRoute
 }
@@ -127,13 +136,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/king/extension': typeof AuthenticatedKingExtensionRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
   '/king/tools': typeof AuthenticatedKingToolsRoute
-  '/king/users': typeof AuthenticatedKingUsersRoute
   '/reseller/tools': typeof AuthenticatedResellerToolsRoute
   '/reseller/users': typeof AuthenticatedResellerUsersRoute
   '/king': typeof AuthenticatedKingIndexRoute
   '/reseller': typeof AuthenticatedResellerIndexRoute
+  '/king/resellers/$id': typeof AuthenticatedKingResellersIdRoute
   '/king/tools/$id': typeof AuthenticatedKingToolsIdRoute
   '/reseller/tools/$id': typeof AuthenticatedResellerToolsIdRoute
 }
@@ -145,13 +155,14 @@ export interface FileRoutesById {
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/king/extension': typeof AuthenticatedKingExtensionRoute
   '/_authenticated/king/resellers': typeof AuthenticatedKingResellersRoute
   '/_authenticated/king/tools': typeof AuthenticatedKingToolsRoute
-  '/_authenticated/king/users': typeof AuthenticatedKingUsersRoute
   '/_authenticated/reseller/tools': typeof AuthenticatedResellerToolsRoute
   '/_authenticated/reseller/users': typeof AuthenticatedResellerUsersRoute
   '/_authenticated/king/': typeof AuthenticatedKingIndexRoute
   '/_authenticated/reseller/': typeof AuthenticatedResellerIndexRoute
+  '/_authenticated/king/resellers_/$id': typeof AuthenticatedKingResellersIdRoute
   '/_authenticated/king/tools_/$id': typeof AuthenticatedKingToolsIdRoute
   '/_authenticated/reseller/tools_/$id': typeof AuthenticatedResellerToolsIdRoute
 }
@@ -163,13 +174,14 @@ export interface FileRouteTypes {
     | '/king'
     | '/reseller'
     | '/dashboard'
+    | '/king/extension'
     | '/king/resellers'
     | '/king/tools'
-    | '/king/users'
     | '/reseller/tools'
     | '/reseller/users'
     | '/king/'
     | '/reseller/'
+    | '/king/resellers/$id'
     | '/king/tools/$id'
     | '/reseller/tools/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -177,13 +189,14 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard'
+    | '/king/extension'
     | '/king/resellers'
     | '/king/tools'
-    | '/king/users'
     | '/reseller/tools'
     | '/reseller/users'
     | '/king'
     | '/reseller'
+    | '/king/resellers/$id'
     | '/king/tools/$id'
     | '/reseller/tools/$id'
   id:
@@ -194,13 +207,14 @@ export interface FileRouteTypes {
     | '/_authenticated/king'
     | '/_authenticated/reseller'
     | '/_authenticated/dashboard'
+    | '/_authenticated/king/extension'
     | '/_authenticated/king/resellers'
     | '/_authenticated/king/tools'
-    | '/_authenticated/king/users'
     | '/_authenticated/reseller/tools'
     | '/_authenticated/reseller/users'
     | '/_authenticated/king/'
     | '/_authenticated/reseller/'
+    | '/_authenticated/king/resellers_/$id'
     | '/_authenticated/king/tools_/$id'
     | '/_authenticated/reseller/tools_/$id'
   fileRoutesById: FileRoutesById
@@ -283,13 +297,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedResellerToolsRouteImport
       parentRoute: typeof AuthenticatedResellerRouteRoute
     }
-    '/_authenticated/king/users': {
-      id: '/_authenticated/king/users'
-      path: '/users'
-      fullPath: '/king/users'
-      preLoaderRoute: typeof AuthenticatedKingUsersRouteImport
-      parentRoute: typeof AuthenticatedKingRouteRoute
-    }
     '/_authenticated/king/tools': {
       id: '/_authenticated/king/tools'
       path: '/tools'
@@ -302,6 +309,13 @@ declare module '@tanstack/react-router' {
       path: '/resellers'
       fullPath: '/king/resellers'
       preLoaderRoute: typeof AuthenticatedKingResellersRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
+    '/_authenticated/king/extension': {
+      id: '/_authenticated/king/extension'
+      path: '/extension'
+      fullPath: '/king/extension'
+      preLoaderRoute: typeof AuthenticatedKingExtensionRouteImport
       parentRoute: typeof AuthenticatedKingRouteRoute
     }
     '/_authenticated/reseller/tools_/$id': {
@@ -318,23 +332,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKingToolsIdRouteImport
       parentRoute: typeof AuthenticatedKingRouteRoute
     }
+    '/_authenticated/king/resellers_/$id': {
+      id: '/_authenticated/king/resellers_/$id'
+      path: '/resellers/$id'
+      fullPath: '/king/resellers/$id'
+      preLoaderRoute: typeof AuthenticatedKingResellersIdRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
   }
 }
 
 interface AuthenticatedKingRouteRouteChildren {
+  AuthenticatedKingExtensionRoute: typeof AuthenticatedKingExtensionRoute
   AuthenticatedKingResellersRoute: typeof AuthenticatedKingResellersRoute
   AuthenticatedKingToolsRoute: typeof AuthenticatedKingToolsRoute
-  AuthenticatedKingUsersRoute: typeof AuthenticatedKingUsersRoute
   AuthenticatedKingIndexRoute: typeof AuthenticatedKingIndexRoute
+  AuthenticatedKingResellersIdRoute: typeof AuthenticatedKingResellersIdRoute
   AuthenticatedKingToolsIdRoute: typeof AuthenticatedKingToolsIdRoute
 }
 
 const AuthenticatedKingRouteRouteChildren: AuthenticatedKingRouteRouteChildren =
   {
+    AuthenticatedKingExtensionRoute: AuthenticatedKingExtensionRoute,
     AuthenticatedKingResellersRoute: AuthenticatedKingResellersRoute,
     AuthenticatedKingToolsRoute: AuthenticatedKingToolsRoute,
-    AuthenticatedKingUsersRoute: AuthenticatedKingUsersRoute,
     AuthenticatedKingIndexRoute: AuthenticatedKingIndexRoute,
+    AuthenticatedKingResellersIdRoute: AuthenticatedKingResellersIdRoute,
     AuthenticatedKingToolsIdRoute: AuthenticatedKingToolsIdRoute,
   }
 
