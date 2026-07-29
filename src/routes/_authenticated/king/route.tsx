@@ -25,7 +25,6 @@ function KingLayout() {
         { to: "/king", label: "Dashboard", icon: LayoutDashboard },
         { to: "/king/tools", label: "Tools", icon: Wrench },
         { to: "/king/resellers", label: "Resellers", icon: UserCog },
-        ]}
       ]}
     >
       <Outlet />
