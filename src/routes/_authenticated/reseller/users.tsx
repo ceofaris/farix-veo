@@ -86,10 +86,10 @@ function ResellerUsers() {
             <tr key={u.id} className="border-t border-border transition-colors hover:bg-muted/40">
               <td className="px-5 py-4">{u.full_name || <span className="text-muted-foreground">—</span>}</td>
               <td className="px-5 py-4 text-foreground/80">{u.email}</td>
-              <td className="px-5 py-4 text-xs text-muted-foreground">
-                {u.user_tools?.length
-                  ? u.user_tools.map((t) => toolMap.get(t.tool_id) ?? "—").join(", ")
-                  : "—"}
+              <td className="px-5 py-4">
+                <Badge variant={u.is_active ? "default" : "secondary"}>
+                  {u.is_active ? "Active" : "Inactive"}
+                </Badge>
               </td>
               <td className="px-5 py-4 text-muted-foreground">
                 {u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}
