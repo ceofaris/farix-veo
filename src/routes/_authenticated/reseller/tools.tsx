@@ -1,11 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Card } from "@/components/panel-layout";
-import { Button } from "@/components/ui/button";
+import { Card, PageHeader } from "@/components/panel-layout";
 import { Badge } from "@/components/ui/badge";
-import { Settings } from "lucide-react";
 import { signedLogoUrl } from "@/lib/logo";
 import { useProfile } from "@/hooks/use-profile";
 
