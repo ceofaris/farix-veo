@@ -47,7 +47,7 @@ export function UserFormDialog({
   const create = useServerFn(createEndUser);
   const update = useServerFn(updateEndUser);
 
-  const allTools = useQuery({ ...activeToolsQuery, enabled: open });
+  const allTools = useQuery({ ...activeToolsQuery, enabled: open && !hideTools });
   const ownerToolIds = useQuery({ ...resellerToolIdsQuery(ownerId), enabled: open && !!ownerId });
 
   const tools = ownerId
