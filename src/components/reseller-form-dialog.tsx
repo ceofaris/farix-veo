@@ -7,8 +7,11 @@ import { Switch } from "@/components/ui/switch";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import { createReseller, updateReseller } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
+import { activeToolsQuery } from "@/lib/queries";
+
 
 export type ResellerRow = {
   id: string;
