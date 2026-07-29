@@ -26,12 +26,15 @@ export function UserFormDialog({
   onOpenChange,
   user,
   ownerId,
+  hideTools = false,
   onSaved,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   user: UserRow | null;
   ownerId?: string;
+  /** Hide tool selection (reseller view) — the owner's tools are assigned automatically. */
+  hideTools?: boolean;
   onSaved: () => void;
 }) {
   const [email, setEmail] = useState("");
