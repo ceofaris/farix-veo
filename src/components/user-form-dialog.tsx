@@ -55,7 +55,7 @@ export function UserFormDialog({
       if (user) {
         await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive } });
       } else {
-        await create({ data: { email, password, full_name: fullName, days, is_active: isActive } });
+        await create({ data: { email, password, full_name: fullName, days, is_active: isActive, owner_id: ownerId } });
       }
       toast.success(user ? "User updated" : "User created");
       onOpenChange(false);
