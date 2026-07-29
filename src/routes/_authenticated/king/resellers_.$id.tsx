@@ -129,9 +129,9 @@ function KingResellerUsers() {
       />
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <StatCard label="Total Users" value={rows.length} icon={UsersIcon} tone="blue" />
-        <StatCard label="Paid Users" value={paidCount} icon={BadgeCheck} tone="green" />
-        <StatCard label="Unpaid Users" value={rows.length - paidCount} icon={BadgeAlert} tone="amber" />
+        <StatCard label="Total Users" value={rows.length} icon={UsersIcon} tone="primary" />
+        <StatCard label="Paid Users" value={paidCount} icon={BadgeCheck} tone="chart-2" />
+        <StatCard label="Unpaid Users" value={rows.length - paidCount} icon={BadgeAlert} tone="chart-5" />
       </div>
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
