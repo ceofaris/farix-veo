@@ -4,15 +4,20 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
 import { createEndUser, updateEndUser } from "@/lib/admin.functions";
+import { supabase } from "@/integrations/supabase/client";
+import { activeToolsQuery, resellerToolIdsQuery } from "@/lib/queries";
 
 export type UserRow = {
   id: string;
   email: string;
   full_name: string | null;
   is_active: boolean;
+  is_paid?: boolean;
   expires_at: string | null;
 };
 
@@ -34,28 +39,55 @@ export function UserFormDialog({
   const [fullName, setFullName] = useState("");
   const [days, setDays] = useState(30);
   const [isActive, setIsActive] = useState(true);
+  const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const create = useServerFn(createEndUser);
   const update = useServerFn(updateEndUser);
 
+  const allTools = useQuery({ ...activeToolsQuery, enabled: open });
+  const ownerToolIds = useQuery({ ...resellerToolIdsQuery(ownerId), enabled: open && !!ownerId });
+
+  const tools = ownerId
+    ? (allTools.data ?? []).filter((t) => (ownerToolIds.data ?? []).includes(t.id))
+    : (allTools.data ?? []);
 
   useEffect(() => {
-    if (open) {
-      setEmail(user?.email ?? "");
-      setPassword("");
-      setFullName(user?.full_name ?? "");
-      setDays(30);
-      setIsActive(user?.is_active ?? true);
+    if (!open) return;
+    setEmail(user?.email ?? "");
+    setPassword("");
+    setFullName(user?.full_name ?? "");
+    setDays(30);
+    setIsActive(user?.is_active ?? true);
+    setSelected(new Set());
+    if (user) {
+      let cancelled = false;
+      (async () => {
+        const { data } = await supabase.from("user_tools").select("tool_id").eq("user_id", user.id);
+        if (!cancelled) setSelected(new Set((data ?? []).map((r) => r.tool_id as string)));
+      })();
+      return () => {
+        cancelled = true;
+      };
     }
   }, [open, user]);
+
+  function toggleTool(id: string) {
+    const next = new Set(selected);
+    if (next.has(id)) next.delete(id);
+    else next.add(id);
+    setSelected(next);
+  }
 
   async function save() {
     setSaving(true);
     try {
+      const tool_ids = Array.from(selected);
       if (user) {
-        await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive } });
+        await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive, tool_ids } });
       } else {
-        await create({ data: { email, password, full_name: fullName, days, is_active: isActive, owner_id: ownerId } });
+        await create({
+          data: { email, password, full_name: fullName, days, is_active: isActive, owner_id: ownerId, tool_ids },
+        });
       }
       toast.success(user ? "User updated" : "User created");
       onOpenChange(false);
@@ -73,7 +105,7 @@ export function UserFormDialog({
         <DialogHeader>
           <DialogTitle>{user ? "Edit User" : "Create User"}</DialogTitle>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-4 max-h-[70vh] overflow-auto">
           <div>
             <Label>Full Name</Label>
             <Input value={fullName} onChange={(e) => setFullName(e.target.value)} className="bg-background border-border" />
@@ -95,10 +127,28 @@ export function UserFormDialog({
             <Input type="number" min={0} value={days} onChange={(e) => setDays(Number(e.target.value))} className="bg-background border-border" />
             {user && <p className="text-xs text-muted-foreground mt-1">Sets a new expiry from today.</p>}
           </div>
+          <div>
+            <Label>Tools Access</Label>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              The user only sees extensions for the tools selected here.
+            </p>
+            <div className="mt-2 space-y-2 border border-border rounded-lg p-3 bg-background">
+              {tools.length === 0 && <p className="text-xs text-muted-foreground">No tools available.</p>}
+              {tools.map((t) => (
+                <label key={t.id} className="flex items-center gap-3 cursor-pointer">
+                  <Checkbox checked={selected.has(t.id)} onCheckedChange={() => toggleTool(t.id)} />
+                  <span className="text-sm">{t.name}</span>
+                </label>
+              ))}
+            </div>
+          </div>
           <div className="flex items-center gap-3">
             <Switch checked={isActive} onCheckedChange={setIsActive} />
             <Label>Active</Label>
           </div>
+          {!user && (
+            <p className="text-xs text-muted-foreground">New users start as <strong>Unpaid</strong>.</p>
+          )}
         </div>
         <DialogFooter>
           <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
