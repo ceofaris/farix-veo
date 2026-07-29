@@ -37,8 +37,7 @@ function ResellerTools() {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold">My Tools</h1>
-      <p className="text-muted-foreground text-sm mt-1">Tools assigned to you by the admin.</p>
+      <PageHeader title="My Tools" description="Tools assigned to you by the admin." />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
         {tools.data?.map((t) => (
           <Card key={t.id}>
@@ -54,11 +53,6 @@ function ResellerTools() {
                 <p className="text-xs text-muted-foreground truncate">{t.domain}</p>
               </div>
             </div>
-            <Button asChild size="sm" variant="secondary" className="w-full mt-4">
-              <Link to="/reseller/tools/$id" params={{ id: t.id }}>
-                <Settings className="w-4 h-4 mr-1" /> Manage Accounts
-              </Link>
-            </Button>
           </Card>
         ))}
         {tools.data && tools.data.length === 0 && (
