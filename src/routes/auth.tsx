@@ -32,20 +32,34 @@ function AuthPage() {
   const [mode, setMode] = useState<"signin" | "bootstrap">("signin");
   const bootstrap = useServerFn(bootstrapKing);
 
+  async function landingRouteFor(userId: string) {
+    const { data } = await supabase.from("profiles").select("role").eq("id", userId).maybeSingle();
+    const role = (data as { role?: string } | null)?.role;
+    if (role === "king") return "/king" as const;
+    if (role === "reseller") return "/reseller" as const;
+    return "/dashboard" as const;
+  }
+
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => {
-      if (data.user) navigate({ to: "/dashboard" });
+    supabase.auth.getSession().then(async ({ data }) => {
+      const user = data.session?.user;
+      if (user) navigate({ to: await landingRouteFor(user.id), replace: true });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setLoading(false);
+      return toast.error(error.message);
+    }
+    const to = await landingRouteFor(data.user!.id);
     setLoading(false);
-    if (error) return toast.error(error.message);
     toast.success("Signed in");
-    navigate({ to: "/dashboard" });
+    navigate({ to, replace: true });
   }
 
   async function handleBootstrap(e: React.FormEvent) {
@@ -56,7 +70,7 @@ function AuthPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       toast.success("Admin account created");
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/king", replace: true });
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
