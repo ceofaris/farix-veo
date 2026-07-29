@@ -7,19 +7,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { PageHeader, TableShell, Card } from "@/components/panel-layout";
 import { Download, Star, Trash2, Upload, Puzzle } from "lucide-react";
 import { toast } from "sonner";
 import { uploadExtensionZip, signedExtensionUrl } from "@/lib/extension";
+import { activeToolsQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/king/extension")({
   component: KingExtension,
   head: () => ({
     meta: [
       { title: "Extension Versions | Farix King Panel" },
-      { name: "description", content: "Upload, publish and manage Farix browser extension versions." },
+      { name: "description", content: "Upload, publish and manage Farix browser extension versions per tool." },
       { property: "og:title", content: "Extension Versions | Farix King Panel" },
-      { property: "og:description", content: "Upload, publish and manage Farix browser extension versions." },
+      { property: "og:description", content: "Upload, publish and manage Farix browser extension versions per tool." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -33,6 +41,7 @@ type VersionRow = {
   file_path: string;
   file_size: number | null;
   is_latest: boolean;
+  tool_id: string | null;
   created_at: string;
 };
 
@@ -45,15 +54,21 @@ function formatSize(bytes: number | null) {
 function KingExtension() {
   const [version, setVersion] = useState("");
   const [notes, setNotes] = useState("");
+  const [toolId, setToolId] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
 
+  const tools = useQuery(activeToolsQuery);
+  const toolName = (id: string | null) =>
+    id ? (tools.data ?? []).find((t) => t.id === id)?.name ?? "Unknown tool" : "General";
+
   const versions = useQuery({
     queryKey: ["extension-versions"],
+    staleTime: 60 * 1000,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("extension_versions")
-        .select("*")
+        .select("id, version, notes, file_path, file_size, is_latest, tool_id, created_at")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data as VersionRow[];
@@ -61,6 +76,7 @@ function KingExtension() {
   });
 
   async function upload() {
+    if (!toolId) return toast.error("Select a tool");
     if (!version.trim()) return toast.error("Enter a version name");
     if (!file) return toast.error("Choose a ZIP file");
     setUploading(true);
@@ -71,6 +87,7 @@ function KingExtension() {
         notes: notes.trim() || null,
         file_path: path,
         file_size: file.size,
+        tool_id: toolId,
       });
       if (error) throw new Error(error.message);
       toast.success("Version uploaded");
@@ -85,13 +102,12 @@ function KingExtension() {
     }
   }
 
-  async function setLatest(id: string) {
-    const { error: clearErr } = await supabase
-      .from("extension_versions")
-      .update({ is_latest: false })
-      .eq("is_latest", true);
+  async function setLatest(row: VersionRow) {
+    let clear = supabase.from("extension_versions").update({ is_latest: false }).eq("is_latest", true);
+    clear = row.tool_id ? clear.eq("tool_id", row.tool_id) : clear.is("tool_id", null);
+    const { error: clearErr } = await clear;
     if (clearErr) return toast.error(clearErr.message);
-    const { error } = await supabase.from("extension_versions").update({ is_latest: true }).eq("id", id);
+    const { error } = await supabase.from("extension_versions").update({ is_latest: true }).eq("id", row.id);
     if (error) return toast.error(error.message);
     toast.success("Marked as latest");
     versions.refetch();
@@ -112,11 +128,11 @@ function KingExtension() {
     versions.refetch();
   }
 
-  const latest = versions.data?.find((v) => v.is_latest);
+  const latestPerTool = (versions.data ?? []).filter((v) => v.is_latest);
 
   return (
     <div>
-      <PageHeader title="Extension" description="Upload and publish browser extension builds." />
+      <PageHeader title="Extension" description="Upload and publish a browser extension build for each tool." />
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_1.4fr]">
         <Card>
@@ -124,6 +140,21 @@ function KingExtension() {
             <Upload className="h-4 w-4" /> Upload new version
           </div>
           <div className="mt-4 space-y-4">
+            <div>
+              <Label>Tool</Label>
+              <Select value={toolId} onValueChange={setToolId}>
+                <SelectTrigger className="bg-background border-border">
+                  <SelectValue placeholder="Select a tool" />
+                </SelectTrigger>
+                <SelectContent>
+                  {(tools.data ?? []).map((t) => (
+                    <SelectItem key={t.id} value={t.id}>
+                      {t.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
             <div>
               <Label>Version</Label>
               <Input
@@ -159,22 +190,26 @@ function KingExtension() {
 
         <Card>
           <div className="flex items-center gap-2 font-medium">
-            <Puzzle className="h-4 w-4" /> Current release
+            <Puzzle className="h-4 w-4" /> Current releases
           </div>
-          {latest ? (
-            <div className="mt-4 flex flex-wrap items-center gap-4">
-              <div>
-                <div className="text-2xl font-semibold tracking-tight">v{latest.version}</div>
-                <div className="text-xs text-muted-foreground">
-                  Published {new Date(latest.created_at).toLocaleDateString()} · {formatSize(latest.file_size)}
+          {latestPerTool.length ? (
+            <div className="mt-4 space-y-3">
+              {latestPerTool.map((v) => (
+                <div
+                  key={v.id}
+                  className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-background px-4 py-3"
+                >
+                  <div>
+                    <div className="font-medium">{toolName(v.tool_id)}</div>
+                    <div className="text-xs text-muted-foreground">
+                      v{v.version} · {new Date(v.created_at).toLocaleDateString()} · {formatSize(v.file_size)}
+                    </div>
+                  </div>
+                  <Button size="sm" onClick={() => download(v)} className="ml-auto">
+                    <Download className="h-4 w-4 mr-1.5" /> Download
+                  </Button>
                 </div>
-              </div>
-              <Button onClick={() => download(latest)} className="ml-auto">
-                <Download className="h-4 w-4 mr-1.5" /> Download latest
-              </Button>
-              {latest.notes && (
-                <p className="w-full text-sm text-muted-foreground whitespace-pre-wrap">{latest.notes}</p>
-              )}
+              ))}
             </div>
           ) : (
             <p className="mt-4 text-sm text-muted-foreground">
@@ -187,6 +222,7 @@ function KingExtension() {
       <TableShell>
         <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
           <tr>
+            <th className="px-5 py-3.5 font-semibold">Tool</th>
             <th className="px-5 py-3.5 font-semibold">Version</th>
             <th className="px-5 py-3.5 font-semibold">Uploaded</th>
             <th className="px-5 py-3.5 font-semibold">Size</th>
@@ -197,15 +233,16 @@ function KingExtension() {
         <tbody>
           {versions.data?.map((v) => (
             <tr key={v.id} className="border-t border-border transition-colors hover:bg-muted/40">
+              <td className="px-5 py-4">{toolName(v.tool_id)}</td>
               <td className="px-5 py-4 font-medium">v{v.version}</td>
               <td className="px-5 py-4 text-muted-foreground">{new Date(v.created_at).toLocaleString()}</td>
               <td className="px-5 py-4 text-muted-foreground">{formatSize(v.file_size)}</td>
               <td className="px-5 py-4">
                 {v.is_latest ? <Badge>Latest</Badge> : <Badge variant="secondary">Archived</Badge>}
               </td>
-              <td className="px-5 py-4 text-right space-x-1">
+              <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
                 {!v.is_latest && (
-                  <Button size="sm" variant="ghost" onClick={() => setLatest(v.id)} title="Mark as latest">
+                  <Button size="sm" variant="ghost" onClick={() => setLatest(v)} title="Mark as latest">
                     <Star className="w-4 h-4" />
                   </Button>
                 )}
@@ -220,7 +257,7 @@ function KingExtension() {
           ))}
           {versions.data?.length === 0 && (
             <tr>
-              <td colSpan={5} className="px-5 py-14 text-center text-muted-foreground">
+              <td colSpan={6} className="px-5 py-14 text-center text-muted-foreground">
                 No extension versions uploaded yet.
               </td>
             </tr>

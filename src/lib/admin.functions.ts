@@ -43,16 +43,6 @@ export const bootstrapKing = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
-async function assertRole(userId: string, roles: string[]) {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const { data, error } = await supabaseAdmin
-    .from("profiles")
-    .select("role")
-    .eq("id", userId)
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  if (!data || !roles.includes(data.role)) throw new Error("Forbidden");
-}
 
 export const createReseller = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -69,7 +59,7 @@ export const createReseller = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    await assertRole(context.userId, ["king"]);
+    await (await import("@/lib/admin.server")).assertRole(context.userId, ["king"]);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email,
@@ -111,7 +101,7 @@ export const updateReseller = createServerFn({ method: "POST" })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    await assertRole(context.userId, ["king"]);
+    await (await import("@/lib/admin.server")).assertRole(context.userId, ["king"]);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const patch: { full_name: string; is_active: boolean; expires_at?: string } = {
       full_name: data.full_name,
@@ -170,16 +160,17 @@ export const createEndUser = createServerFn({ method: "POST" })
         days: z.number().int().min(0).default(30),
         is_active: z.boolean().default(true),
         owner_id: z.string().uuid().optional(),
+        tool_ids: z.array(z.string().uuid()).default([]),
       })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    await assertRole(context.userId, ["king", "reseller"]);
+    await (await import("@/lib/admin.server")).assertRole(context.userId, ["king", "reseller"]);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     // Only a king may create a user on behalf of a reseller.
     let owner = context.userId;
     if (data.owner_id && data.owner_id !== context.userId) {
-      await assertRole(context.userId, ["king"]);
+      await (await import("@/lib/admin.server")).assertRole(context.userId, ["king"]);
       const { data: target } = await supabaseAdmin
         .from("profiles")
         .select("role")
@@ -188,6 +179,7 @@ export const createEndUser = createServerFn({ method: "POST" })
       if (!target || target.role !== "reseller") throw new Error("Invalid owner");
       owner = data.owner_id;
     }
+    const tool_ids = await (await import("@/lib/admin.server")).allowedToolIds(context.userId, owner, data.tool_ids);
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email,
       password: data.password,
@@ -203,9 +195,13 @@ export const createEndUser = createServerFn({ method: "POST" })
       full_name: data.full_name,
       role: "user",
       is_active: data.is_active,
+      is_paid: false,
       expires_at,
       created_by: owner,
     });
+    if (tool_ids.length) {
+      await supabaseAdmin.from("user_tools").insert(tool_ids.map((tid) => ({ user_id: uid, tool_id: tid })));
+    }
     return { ok: true, id: uid };
   });
 
@@ -218,6 +214,7 @@ export const updateEndUser = createServerFn({ method: "POST" })
         full_name: z.string().min(1),
         days: z.number().int().min(0).optional(),
         is_active: z.boolean(),
+        tool_ids: z.array(z.string().uuid()).optional(),
       })
       .parse(d),
   )
@@ -229,15 +226,14 @@ export const updateEndUser = createServerFn({ method: "POST" })
       .eq("id", context.userId)
       .maybeSingle();
     if (!me || !["king", "reseller"].includes(me.role)) throw new Error("Forbidden");
-    if (me.role === "reseller") {
-      const { data: target } = await supabaseAdmin
-        .from("profiles")
-        .select("created_by, role")
-        .eq("id", data.id)
-        .maybeSingle();
-      if (!target || target.role !== "user" || target.created_by !== context.userId)
-        throw new Error("Forbidden");
-    }
+    const { data: target } = await supabaseAdmin
+      .from("profiles")
+      .select("created_by, role")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (!target || target.role !== "user") throw new Error("Forbidden");
+    if (me.role === "reseller" && target.created_by !== context.userId) throw new Error("Forbidden");
+
     const patch: { full_name: string; is_active: boolean; expires_at?: string } = {
       full_name: data.full_name,
       is_active: data.is_active,
@@ -247,5 +243,37 @@ export const updateEndUser = createServerFn({ method: "POST" })
     }
     const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
+
+    if (data.tool_ids) {
+      const tool_ids = await (await import("@/lib/admin.server")).allowedToolIds(
+        context.userId,
+        target.created_by ?? context.userId,
+        data.tool_ids,
+      );
+      await supabaseAdmin.from("user_tools").delete().eq("user_id", data.id);
+      if (tool_ids.length) {
+        await supabaseAdmin
+          .from("user_tools")
+          .insert(tool_ids.map((tid) => ({ user_id: data.id, tool_id: tid })));
+      }
+    }
     return { ok: true };
   });
+
+/** King-only: flip a user's payment status. */
+export const setUserPaid = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z.object({ id: z.string().uuid(), is_paid: z.boolean() }).parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await (await import("@/lib/admin.server")).assertRole(context.userId, ["king"]);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({ is_paid: data.is_paid })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+

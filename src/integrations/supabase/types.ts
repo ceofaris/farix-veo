@@ -23,6 +23,7 @@ export type Database = {
           id: string
           is_latest: boolean
           notes: string | null
+          tool_id: string | null
           updated_at: string
           version: string
         }
@@ -34,6 +35,7 @@ export type Database = {
           id?: string
           is_latest?: boolean
           notes?: string | null
+          tool_id?: string | null
           updated_at?: string
           version: string
         }
@@ -45,10 +47,19 @@ export type Database = {
           id?: string
           is_latest?: boolean
           notes?: string | null
+          tool_id?: string | null
           updated_at?: string
           version?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "extension_versions_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -60,6 +71,7 @@ export type Database = {
           full_name: string | null
           id: string
           is_active: boolean
+          is_paid: boolean
           role: string
           updated_at: string
         }
@@ -72,6 +84,7 @@ export type Database = {
           full_name?: string | null
           id: string
           is_active?: boolean
+          is_paid?: boolean
           role?: string
           updated_at?: string
         }
@@ -84,6 +97,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           is_active?: boolean
+          is_paid?: boolean
           role?: string
           updated_at?: string
         }
@@ -201,6 +215,35 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      user_tools: {
+        Row: {
+          created_at: string
+          id: string
+          tool_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          tool_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          tool_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_tools_tool_id_fkey"
+            columns: ["tool_id"]
+            isOneToOne: false
+            referencedRelation: "tools"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
