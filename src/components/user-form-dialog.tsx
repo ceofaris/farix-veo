@@ -84,7 +84,7 @@ export function UserFormDialog({
   async function save() {
     setSaving(true);
     try {
-      const tool_ids = Array.from(selected);
+      const tool_ids = hideTools ? (ownerToolIds.data ?? []) : Array.from(selected);
       if (user) {
         await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive, tool_ids } });
       } else {
