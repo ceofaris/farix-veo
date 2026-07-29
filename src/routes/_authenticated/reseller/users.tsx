@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,22 +11,18 @@ import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/use-profile";
-import { activeToolsQuery } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/reseller/users")({
   component: ResellerUsers,
 });
 
-type ResellerUserRow = UserRow & { is_paid: boolean; user_tools: { tool_id: string }[] };
+type ResellerUserRow = UserRow & { is_paid: boolean };
 
 function ResellerUsers() {
   const { profile } = useProfile();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<UserRow | null>(null);
   const del = useServerFn(deleteAuthUser);
-
-  const tools = useQuery(activeToolsQuery);
-  const toolMap = useMemo(() => new Map((tools.data ?? []).map((t) => [t.id, t.name])), [tools.data]);
 
   const users = useQuery({
     queryKey: ["reseller-users", profile?.id],
@@ -35,7 +31,7 @@ function ResellerUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, full_name, is_active, is_paid, expires_at, user_tools(tool_id)")
+        .select("id, email, full_name, is_active, is_paid, expires_at")
         .eq("role", "user")
         .eq("created_by", profile!.id)
         .order("created_at", { ascending: false });
@@ -79,7 +75,7 @@ function ResellerUsers() {
           <tr>
             <th className="px-5 py-3.5 font-semibold">Name</th>
             <th className="px-5 py-3.5 font-semibold">Email</th>
-            <th className="px-5 py-3.5 font-semibold">Tool</th>
+            <th className="px-5 py-3.5 font-semibold">Status</th>
             <th className="px-5 py-3.5 font-semibold">Expiry</th>
             <th className="px-5 py-3.5 font-semibold">Payment</th>
             <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
@@ -90,10 +86,10 @@ function ResellerUsers() {
             <tr key={u.id} className="border-t border-border transition-colors hover:bg-muted/40">
               <td className="px-5 py-4">{u.full_name || <span className="text-muted-foreground">—</span>}</td>
               <td className="px-5 py-4 text-foreground/80">{u.email}</td>
-              <td className="px-5 py-4 text-xs text-muted-foreground">
-                {u.user_tools?.length
-                  ? u.user_tools.map((t) => toolMap.get(t.tool_id) ?? "—").join(", ")
-                  : "—"}
+              <td className="px-5 py-4">
+                <Badge variant={u.is_active ? "default" : "secondary"}>
+                  {u.is_active ? "Active" : "Inactive"}
+                </Badge>
               </td>
               <td className="px-5 py-4 text-muted-foreground">
                 {u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}
@@ -133,8 +129,10 @@ function ResellerUsers() {
         onOpenChange={setOpen}
         user={editing}
         ownerId={profile?.id}
+        hideTools
         onSaved={() => users.refetch()}
       />
+
     </div>
   );
 }

@@ -21,7 +21,6 @@ import { Route as AuthenticatedResellerUsersRouteImport } from './routes/_authen
 import { Route as AuthenticatedResellerToolsRouteImport } from './routes/_authenticated/reseller/tools'
 import { Route as AuthenticatedKingToolsRouteImport } from './routes/_authenticated/king/tools'
 import { Route as AuthenticatedKingResellersRouteImport } from './routes/_authenticated/king/resellers'
-import { Route as AuthenticatedResellerToolsIdRouteImport } from './routes/_authenticated/reseller/tools_.$id'
 import { Route as AuthenticatedKingToolsIdRouteImport } from './routes/_authenticated/king/tools_.$id'
 import { Route as AuthenticatedKingResellersIdRouteImport } from './routes/_authenticated/king/resellers_.$id'
 
@@ -89,12 +88,6 @@ const AuthenticatedKingResellersRoute =
     path: '/resellers',
     getParentRoute: () => AuthenticatedKingRouteRoute,
   } as any)
-const AuthenticatedResellerToolsIdRoute =
-  AuthenticatedResellerToolsIdRouteImport.update({
-    id: '/tools_/$id',
-    path: '/tools/$id',
-    getParentRoute: () => AuthenticatedResellerRouteRoute,
-  } as any)
 const AuthenticatedKingToolsIdRoute =
   AuthenticatedKingToolsIdRouteImport.update({
     id: '/tools_/$id',
@@ -122,7 +115,6 @@ export interface FileRoutesByFullPath {
   '/reseller/': typeof AuthenticatedResellerIndexRoute
   '/king/resellers/$id': typeof AuthenticatedKingResellersIdRoute
   '/king/tools/$id': typeof AuthenticatedKingToolsIdRoute
-  '/reseller/tools/$id': typeof AuthenticatedResellerToolsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -136,7 +128,6 @@ export interface FileRoutesByTo {
   '/reseller': typeof AuthenticatedResellerIndexRoute
   '/king/resellers/$id': typeof AuthenticatedKingResellersIdRoute
   '/king/tools/$id': typeof AuthenticatedKingToolsIdRoute
-  '/reseller/tools/$id': typeof AuthenticatedResellerToolsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -154,7 +145,6 @@ export interface FileRoutesById {
   '/_authenticated/reseller/': typeof AuthenticatedResellerIndexRoute
   '/_authenticated/king/resellers_/$id': typeof AuthenticatedKingResellersIdRoute
   '/_authenticated/king/tools_/$id': typeof AuthenticatedKingToolsIdRoute
-  '/_authenticated/reseller/tools_/$id': typeof AuthenticatedResellerToolsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -172,7 +162,6 @@ export interface FileRouteTypes {
     | '/reseller/'
     | '/king/resellers/$id'
     | '/king/tools/$id'
-    | '/reseller/tools/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -186,7 +175,6 @@ export interface FileRouteTypes {
     | '/reseller'
     | '/king/resellers/$id'
     | '/king/tools/$id'
-    | '/reseller/tools/$id'
   id:
     | '__root__'
     | '/'
@@ -203,7 +191,6 @@ export interface FileRouteTypes {
     | '/_authenticated/reseller/'
     | '/_authenticated/king/resellers_/$id'
     | '/_authenticated/king/tools_/$id'
-    | '/_authenticated/reseller/tools_/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -298,13 +285,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKingResellersRouteImport
       parentRoute: typeof AuthenticatedKingRouteRoute
     }
-    '/_authenticated/reseller/tools_/$id': {
-      id: '/_authenticated/reseller/tools_/$id'
-      path: '/tools/$id'
-      fullPath: '/reseller/tools/$id'
-      preLoaderRoute: typeof AuthenticatedResellerToolsIdRouteImport
-      parentRoute: typeof AuthenticatedResellerRouteRoute
-    }
     '/_authenticated/king/tools_/$id': {
       id: '/_authenticated/king/tools_/$id'
       path: '/tools/$id'
@@ -348,7 +328,6 @@ interface AuthenticatedResellerRouteRouteChildren {
   AuthenticatedResellerToolsRoute: typeof AuthenticatedResellerToolsRoute
   AuthenticatedResellerUsersRoute: typeof AuthenticatedResellerUsersRoute
   AuthenticatedResellerIndexRoute: typeof AuthenticatedResellerIndexRoute
-  AuthenticatedResellerToolsIdRoute: typeof AuthenticatedResellerToolsIdRoute
 }
 
 const AuthenticatedResellerRouteRouteChildren: AuthenticatedResellerRouteRouteChildren =
@@ -356,7 +335,6 @@ const AuthenticatedResellerRouteRouteChildren: AuthenticatedResellerRouteRouteCh
     AuthenticatedResellerToolsRoute: AuthenticatedResellerToolsRoute,
     AuthenticatedResellerUsersRoute: AuthenticatedResellerUsersRoute,
     AuthenticatedResellerIndexRoute: AuthenticatedResellerIndexRoute,
-    AuthenticatedResellerToolsIdRoute: AuthenticatedResellerToolsIdRoute,
   }
 
 const AuthenticatedResellerRouteRouteWithChildren =
@@ -387,13 +365,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

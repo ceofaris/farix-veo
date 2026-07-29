@@ -26,12 +26,15 @@ export function UserFormDialog({
   onOpenChange,
   user,
   ownerId,
+  hideTools = false,
   onSaved,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   user: UserRow | null;
   ownerId?: string;
+  /** Hide tool selection (reseller view) — the owner's tools are assigned automatically. */
+  hideTools?: boolean;
   onSaved: () => void;
 }) {
   const [email, setEmail] = useState("");
@@ -44,7 +47,7 @@ export function UserFormDialog({
   const create = useServerFn(createEndUser);
   const update = useServerFn(updateEndUser);
 
-  const allTools = useQuery({ ...activeToolsQuery, enabled: open });
+  const allTools = useQuery({ ...activeToolsQuery, enabled: open && !hideTools });
   const ownerToolIds = useQuery({ ...resellerToolIdsQuery(ownerId), enabled: open && !!ownerId });
 
   const tools = ownerId
@@ -81,7 +84,7 @@ export function UserFormDialog({
   async function save() {
     setSaving(true);
     try {
-      const tool_ids = Array.from(selected);
+      const tool_ids = hideTools ? (ownerToolIds.data ?? []) : Array.from(selected);
       if (user) {
         await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive, tool_ids } });
       } else {
@@ -127,21 +130,23 @@ export function UserFormDialog({
             <Input type="number" min={0} value={days} onChange={(e) => setDays(Number(e.target.value))} className="bg-background border-border" />
             {user && <p className="text-xs text-muted-foreground mt-1">Sets a new expiry from today.</p>}
           </div>
-          <div>
-            <Label>Tools Access</Label>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              The user only sees extensions for the tools selected here.
-            </p>
-            <div className="mt-2 space-y-2 border border-border rounded-lg p-3 bg-background">
-              {tools.length === 0 && <p className="text-xs text-muted-foreground">No tools available.</p>}
-              {tools.map((t) => (
-                <label key={t.id} className="flex items-center gap-3 cursor-pointer">
-                  <Checkbox checked={selected.has(t.id)} onCheckedChange={() => toggleTool(t.id)} />
-                  <span className="text-sm">{t.name}</span>
-                </label>
-              ))}
+          {!hideTools && (
+            <div>
+              <Label>Tools Access</Label>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                The user only sees extensions for the tools selected here.
+              </p>
+              <div className="mt-2 space-y-2 border border-border rounded-lg p-3 bg-background">
+                {tools.length === 0 && <p className="text-xs text-muted-foreground">No tools available.</p>}
+                {tools.map((t) => (
+                  <label key={t.id} className="flex items-center gap-3 cursor-pointer">
+                    <Checkbox checked={selected.has(t.id)} onCheckedChange={() => toggleTool(t.id)} />
+                    <span className="text-sm">{t.name}</span>
+                  </label>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
           <div className="flex items-center gap-3">
             <Switch checked={isActive} onCheckedChange={setIsActive} />
             <Label>Active</Label>
