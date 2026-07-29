@@ -75,7 +75,7 @@ function ResellerUsers() {
           <tr>
             <th className="px-5 py-3.5 font-semibold">Name</th>
             <th className="px-5 py-3.5 font-semibold">Email</th>
-            <th className="px-5 py-3.5 font-semibold">Tool</th>
+            <th className="px-5 py-3.5 font-semibold">Status</th>
             <th className="px-5 py-3.5 font-semibold">Expiry</th>
             <th className="px-5 py-3.5 font-semibold">Payment</th>
             <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
