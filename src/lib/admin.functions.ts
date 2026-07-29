@@ -169,12 +169,25 @@ export const createEndUser = createServerFn({ method: "POST" })
         full_name: z.string().min(1),
         days: z.number().int().min(0).default(30),
         is_active: z.boolean().default(true),
+        owner_id: z.string().uuid().optional(),
       })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
     await assertRole(context.userId, ["king", "reseller"]);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    // Only a king may create a user on behalf of a reseller.
+    let owner = context.userId;
+    if (data.owner_id && data.owner_id !== context.userId) {
+      await assertRole(context.userId, ["king"]);
+      const { data: target } = await supabaseAdmin
+        .from("profiles")
+        .select("role")
+        .eq("id", data.owner_id)
+        .maybeSingle();
+      if (!target || target.role !== "reseller") throw new Error("Invalid owner");
+      owner = data.owner_id;
+    }
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email,
       password: data.password,
@@ -191,7 +204,7 @@ export const createEndUser = createServerFn({ method: "POST" })
       role: "user",
       is_active: data.is_active,
       expires_at,
-      created_by: context.userId,
+      created_by: owner,
     });
     return { ok: true, id: uid };
   });
