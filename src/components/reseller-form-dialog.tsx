@@ -34,11 +34,12 @@ export function ResellerFormDialog({
   const [fullName, setFullName] = useState("");
   const [days, setDays] = useState(30);
   const [isActive, setIsActive] = useState(true);
-  const [tools, setTools] = useState<{ id: string; name: string }[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const create = useServerFn(createReseller);
   const update = useServerFn(updateReseller);
+  const toolsQuery = useQuery({ ...activeToolsQuery, enabled: open });
+  const tools = toolsQuery.data ?? [];
 
   useEffect(() => {
     if (!open) return;
@@ -47,20 +48,21 @@ export function ResellerFormDialog({
     setFullName(reseller?.full_name ?? "");
     setDays(30);
     setIsActive(reseller?.is_active ?? true);
+    setSelected(new Set());
+    if (!reseller) return;
+    let cancelled = false;
     (async () => {
-      const { data } = await supabase.from("tools").select("id, name").eq("is_active", true).order("name");
-      setTools(data ?? []);
-      if (reseller) {
-        const { data: assigned } = await supabase
-          .from("reseller_tools")
-          .select("tool_id")
-          .eq("reseller_id", reseller.id);
-        setSelected(new Set((assigned ?? []).map((r) => r.tool_id as string)));
-      } else {
-        setSelected(new Set());
-      }
+      const { data: assigned } = await supabase
+        .from("reseller_tools")
+        .select("tool_id")
+        .eq("reseller_id", reseller.id);
+      if (!cancelled) setSelected(new Set((assigned ?? []).map((r) => r.tool_id as string)));
     })();
+    return () => {
+      cancelled = true;
+    };
   }, [open, reseller]);
+
 
   async function save() {
     setSaving(true);
