@@ -90,7 +90,7 @@ function KingResellers() {
                 </td>
                 <td className="px-5 py-4 text-right space-x-1">
                   <Button size="sm" variant="ghost" asChild>
-                    <Link to="/king/resellers_/$id" params={{ id: r.id }} title="Manage users">
+                    <Link to="/king/resellers/$id" params={{ id: r.id }} title="Manage users">
                       <Users className="w-4 h-4" />
                     </Link>
                   </Button>
