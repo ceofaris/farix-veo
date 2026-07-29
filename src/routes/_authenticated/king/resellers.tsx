@@ -88,6 +88,11 @@ function KingResellers() {
                   <Badge variant={r.is_active ? "default" : "secondary"}>{r.is_active ? "Active" : "Inactive"}</Badge>
                 </td>
                 <td className="px-5 py-4 text-right space-x-1">
+                  <Button size="sm" variant="ghost" asChild>
+                    <Link to="/king/resellers_/$id" params={{ id: r.id }} title="Manage users">
+                      <Users className="w-4 h-4" />
+                    </Link>
+                  </Button>
                   <Button size="sm" variant="ghost" onClick={() => { setEditing(r); setOpen(true); }}>
                     <Pencil className="w-4 h-4" />
                   </Button>
@@ -95,6 +100,7 @@ function KingResellers() {
                     <Trash2 className="w-4 h-4" />
                   </Button>
                 </td>
+
               </tr>
             ))}
             {resellers.data?.length === 0 && (
