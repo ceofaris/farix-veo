@@ -240,6 +240,13 @@ export type Database = {
             referencedRelation: "tools"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "user_tools_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
