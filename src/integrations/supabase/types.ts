@@ -23,7 +23,7 @@ export type Database = {
           id: string
           is_latest: boolean
           notes: string | null
-          tool_id: string | null
+          tool_id: string
           updated_at: string
           version: string
         }
@@ -35,7 +35,7 @@ export type Database = {
           id?: string
           is_latest?: boolean
           notes?: string | null
-          tool_id?: string | null
+          tool_id: string
           updated_at?: string
           version: string
         }
@@ -47,7 +47,7 @@ export type Database = {
           id?: string
           is_latest?: boolean
           notes?: string | null
-          tool_id?: string | null
+          tool_id?: string
           updated_at?: string
           version?: string
         }
@@ -65,7 +65,6 @@ export type Database = {
         Row: {
           created_at: string
           created_by: string | null
-          credits: number
           email: string
           expires_at: string | null
           full_name: string | null
@@ -78,7 +77,6 @@ export type Database = {
         Insert: {
           created_at?: string
           created_by?: string | null
-          credits?: number
           email: string
           expires_at?: string | null
           full_name?: string | null
@@ -91,7 +89,6 @@ export type Database = {
         Update: {
           created_at?: string
           created_by?: string | null
-          credits?: number
           email?: string
           expires_at?: string | null
           full_name?: string | null
