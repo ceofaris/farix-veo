@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      extension_versions: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          file_path: string
+          file_size: number | null
+          id: string
+          is_latest: boolean
+          notes: string | null
+          updated_at: string
+          version: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          file_path: string
+          file_size?: number | null
+          id?: string
+          is_latest?: boolean
+          notes?: string | null
+          updated_at?: string
+          version: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          file_path?: string
+          file_size?: number | null
+          id?: string
+          is_latest?: boolean
+          notes?: string | null
+          updated_at?: string
+          version?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
