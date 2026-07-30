@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Shield, Sparkles, ArrowRight, Video, MessageSquare, ImageIcon, AudioLines } from "lucide-react";
+import { Shield, Sparkles, ArrowRight, Video, MessageSquare, ImageIcon, AudioLines, Zap, Lock } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+
 import toolVideo from "@/assets/tool-video.jpg";
 import toolChat from "@/assets/tool-chat.jpg";
 import toolImage from "@/assets/tool-image.jpg";
@@ -115,38 +117,47 @@ function Landing() {
       <section id="home" className="relative overflow-hidden">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 -top-40 mx-auto h-96 max-w-3xl rounded-full bg-primary/25 blur-[140px]"
+          className="pointer-events-none absolute inset-x-0 -top-48 mx-auto h-[28rem] w-[80rem] max-w-[120vw] rounded-full opacity-70 blur-[150px] bg-gradient-brand"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-24 top-40 h-72 w-72 rounded-full bg-chart-2/30 blur-[120px]"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-24 top-24 h-72 w-72 rounded-full bg-chart-4/25 blur-[120px]"
         />
         <div className="relative mx-auto max-w-4xl px-5 py-24 text-center sm:py-32">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" />
             Managed access to premium AI tools
           </span>
-          <h1 className="mt-7 text-5xl font-semibold leading-[1.05] tracking-tight sm:text-7xl">
-            Every AI tool.
+          <h1 className="mt-7 text-5xl font-bold leading-[1.02] tracking-tight sm:text-7xl">
+            Create with AI
             <br />
-            <span className="text-primary">One secure login.</span>
+            <span className="text-gradient-brand">Without Limits.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
-            Farix AI centrally manages access to the tools your team relies on — video, chat, image
-            and voice. Invite-only, private, and always up to date.
+            Video, chat, image and voice — every premium AI tool your team needs, unlocked behind one
+            secure login.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/auth"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 font-medium text-primary-foreground shadow-pop transition hover:opacity-90 active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 font-medium text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
             >
               Sign In <ArrowRight className="h-4 w-4" />
             </Link>
             <a
               href="#tools"
-              className="inline-flex items-center rounded-full border border-border bg-card px-7 py-3.5 font-medium transition hover:bg-accent"
+              className="inline-flex items-center rounded-full border border-border bg-card/70 px-7 py-3.5 font-medium backdrop-blur transition hover:border-primary/40 hover:bg-accent"
             >
               Explore Tools
             </a>
           </div>
         </div>
       </section>
+
 
       {/* Tools showcase */}
       <section id="tools" className="mx-auto max-w-6xl px-5 pb-24">
@@ -166,8 +177,13 @@ function Landing() {
             return (
               <article
                 key={tool.name}
-                className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-pop"
+                className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-2 hover:border-primary/50 hover:shadow-pop hover:ring-glow"
               >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-40 bg-gradient-brand"
+                />
+
                 <div className="relative aspect-[3/2] overflow-hidden">
                   <img
                     src={tool.image}
@@ -210,12 +226,20 @@ function Landing() {
       </section>
 
       {/* About */}
-      <section id="about" className="border-y border-border bg-secondary/40">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 md:grid-cols-2">
+      <section id="about" className="relative overflow-hidden border-y border-border bg-secondary/40">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-32 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-primary/20 blur-[130px]"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-32 top-10 h-80 w-80 rounded-full bg-chart-2/20 blur-[130px]"
+        />
+        <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-24 md:grid-cols-2 md:items-center">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.25em] text-primary">About</p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Built for teams and resellers.
+            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+              Built for teams and <span className="text-gradient-brand">resellers.</span>
             </h2>
             <p className="mt-5 text-muted-foreground">
               Farix AI is a private access platform. Admins manage tools and sessions centrally,
@@ -225,19 +249,54 @@ function Landing() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {[
-              { t: "Managed sessions", d: "Access handled centrally — nothing to configure." },
-              { t: "Role-based access", d: "King, reseller and user scopes kept strictly separate." },
-              { t: "Always current", d: "Latest tool builds delivered automatically." },
-              { t: "Private by default", d: "Invite-only. No public signup, ever." },
-            ].map((f) => (
-              <div key={f.t} className="rounded-2xl border border-border bg-card p-5 shadow-soft">
-                <h3 className="text-sm font-semibold">{f.t}</h3>
-                <p className="mt-1.5 text-sm text-muted-foreground">{f.d}</p>
-              </div>
-            ))}
+              {
+                t: "Managed sessions",
+                d: "Access handled centrally — nothing to configure.",
+                icon: Sparkles,
+                tone: "bg-primary/12 text-primary",
+              },
+              {
+                t: "Role-based access",
+                d: "King, reseller and user scopes kept strictly separate.",
+                icon: Shield,
+                tone: "bg-chart-2/15 text-chart-2",
+              },
+              {
+                t: "Always current",
+                d: "Latest tool builds delivered automatically.",
+                icon: Zap,
+                tone: "bg-chart-3/15 text-chart-3",
+              },
+              {
+                t: "Private by default",
+                d: "Invite-only. No public signup, ever.",
+                icon: Lock,
+                tone: "bg-chart-4/15 text-chart-4",
+              },
+            ].map((f) => {
+              const Icon = f.icon;
+              return (
+                <div
+                  key={f.t}
+                  className="group rounded-2xl border border-border bg-card p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
+                >
+                  <span
+                    className={cn(
+                      "grid h-10 w-10 place-items-center rounded-xl transition-transform duration-300 group-hover:scale-110",
+                      f.tone,
+                    )}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <h3 className="mt-4 text-sm font-semibold">{f.t}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{f.d}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
+
 
       {/* Pricing */}
       <section id="pricing" className="mx-auto max-w-3xl px-5 py-24 text-center">
