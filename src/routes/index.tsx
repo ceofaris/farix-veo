@@ -115,38 +115,47 @@ function Landing() {
       <section id="home" className="relative overflow-hidden">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 -top-40 mx-auto h-96 max-w-3xl rounded-full bg-primary/25 blur-[140px]"
+          className="pointer-events-none absolute inset-x-0 -top-48 mx-auto h-[28rem] w-[80rem] max-w-[120vw] rounded-full opacity-70 blur-[150px] bg-gradient-brand"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-24 top-40 h-72 w-72 rounded-full bg-chart-2/30 blur-[120px]"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-24 top-24 h-72 w-72 rounded-full bg-chart-4/25 blur-[120px]"
         />
         <div className="relative mx-auto max-w-4xl px-5 py-24 text-center sm:py-32">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary">
+          <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" />
             Managed access to premium AI tools
           </span>
-          <h1 className="mt-7 text-5xl font-semibold leading-[1.05] tracking-tight sm:text-7xl">
-            Every AI tool.
+          <h1 className="mt-7 text-5xl font-bold leading-[1.02] tracking-tight sm:text-7xl">
+            Create with AI
             <br />
-            <span className="text-primary">One secure login.</span>
+            <span className="text-gradient-brand">Without Limits.</span>
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
-            Farix AI centrally manages access to the tools your team relies on — video, chat, image
-            and voice. Invite-only, private, and always up to date.
+            Video, chat, image and voice — every premium AI tool your team needs, unlocked behind one
+            secure login.
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/auth"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 font-medium text-primary-foreground shadow-pop transition hover:opacity-90 active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 font-medium text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
             >
               Sign In <ArrowRight className="h-4 w-4" />
             </Link>
             <a
               href="#tools"
-              className="inline-flex items-center rounded-full border border-border bg-card px-7 py-3.5 font-medium transition hover:bg-accent"
+              className="inline-flex items-center rounded-full border border-border bg-card/70 px-7 py-3.5 font-medium backdrop-blur transition hover:border-primary/40 hover:bg-accent"
             >
               Explore Tools
             </a>
           </div>
         </div>
       </section>
+
 
       {/* Tools showcase */}
       <section id="tools" className="mx-auto max-w-6xl px-5 pb-24">
