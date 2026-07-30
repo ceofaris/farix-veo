@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Shield, Sparkles, ArrowRight, Video, MessageSquare, ImageIcon, AudioLines } from "lucide-react";
+import { Shield, Sparkles, ArrowRight, Video, MessageSquare, ImageIcon, AudioLines, Zap, Lock } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+
 import toolVideo from "@/assets/tool-video.jpg";
 import toolChat from "@/assets/tool-chat.jpg";
 import toolImage from "@/assets/tool-image.jpg";
