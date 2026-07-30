@@ -224,12 +224,20 @@ function Landing() {
       </section>
 
       {/* About */}
-      <section id="about" className="border-y border-border bg-secondary/40">
-        <div className="mx-auto grid max-w-6xl gap-10 px-5 py-20 md:grid-cols-2">
+      <section id="about" className="relative overflow-hidden border-y border-border bg-secondary/40">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-32 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-primary/20 blur-[130px]"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-32 top-10 h-80 w-80 rounded-full bg-chart-2/20 blur-[130px]"
+        />
+        <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-24 md:grid-cols-2 md:items-center">
           <div>
             <p className="text-xs font-medium uppercase tracking-[0.25em] text-primary">About</p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-              Built for teams and resellers.
+            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
+              Built for teams and <span className="text-gradient-brand">resellers.</span>
             </h2>
             <p className="mt-5 text-muted-foreground">
               Farix AI is a private access platform. Admins manage tools and sessions centrally,
@@ -239,19 +247,54 @@ function Landing() {
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             {[
-              { t: "Managed sessions", d: "Access handled centrally — nothing to configure." },
-              { t: "Role-based access", d: "King, reseller and user scopes kept strictly separate." },
-              { t: "Always current", d: "Latest tool builds delivered automatically." },
-              { t: "Private by default", d: "Invite-only. No public signup, ever." },
-            ].map((f) => (
-              <div key={f.t} className="rounded-2xl border border-border bg-card p-5 shadow-soft">
-                <h3 className="text-sm font-semibold">{f.t}</h3>
-                <p className="mt-1.5 text-sm text-muted-foreground">{f.d}</p>
-              </div>
-            ))}
+              {
+                t: "Managed sessions",
+                d: "Access handled centrally — nothing to configure.",
+                icon: Sparkles,
+                tone: "bg-primary/12 text-primary",
+              },
+              {
+                t: "Role-based access",
+                d: "King, reseller and user scopes kept strictly separate.",
+                icon: Shield,
+                tone: "bg-chart-2/15 text-chart-2",
+              },
+              {
+                t: "Always current",
+                d: "Latest tool builds delivered automatically.",
+                icon: Zap,
+                tone: "bg-chart-3/15 text-chart-3",
+              },
+              {
+                t: "Private by default",
+                d: "Invite-only. No public signup, ever.",
+                icon: Lock,
+                tone: "bg-chart-4/15 text-chart-4",
+              },
+            ].map((f) => {
+              const Icon = f.icon;
+              return (
+                <div
+                  key={f.t}
+                  className="group rounded-2xl border border-border bg-card p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
+                >
+                  <span
+                    className={cn(
+                      "grid h-10 w-10 place-items-center rounded-xl transition-transform duration-300 group-hover:scale-110",
+                      f.tone,
+                    )}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <h3 className="mt-4 text-sm font-semibold">{f.t}</h3>
+                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{f.d}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
+
 
       {/* Pricing */}
       <section id="pricing" className="mx-auto max-w-3xl px-5 py-24 text-center">
