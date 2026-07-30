@@ -175,8 +175,13 @@ function Landing() {
             return (
               <article
                 key={tool.name}
-                className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1.5 hover:border-primary/40 hover:shadow-pop"
+                className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-2 hover:border-primary/50 hover:shadow-pop hover:ring-glow"
               >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-40 bg-gradient-brand"
+                />
+
                 <div className="relative aspect-[3/2] overflow-hidden">
                   <img
                     src={tool.image}
