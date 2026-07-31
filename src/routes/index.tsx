@@ -173,64 +173,56 @@ function Landing() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
               <article
                 key={tool.name}
-                className="group relative flex flex-col overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-card transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:border-primary/50 hover:shadow-pop hover:ring-glow"
+                className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-pop hover:ring-glow"
               >
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -inset-1 rounded-[2rem] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-45 bg-gradient-brand"
+                  className="pointer-events-none absolute -inset-1 rounded-[1.5rem] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-40 bg-gradient-brand"
                 />
 
-                <div className="relative z-10 aspect-[4/5] overflow-hidden sm:aspect-[3/4]">
+                <div className="relative z-10 aspect-[4/3] overflow-hidden">
                   <img
                     src={tool.image}
                     alt={`${tool.name} preview`}
                     width={1024}
-                    height={688}
+                    height={768}
                     loading="lazy"
-                    className="h-full w-full scale-[1.02] object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-card/45 to-transparent"
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent"
                   />
-                  <span className="absolute left-4 top-4 rounded-full border border-primary/40 bg-background/70 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary backdrop-blur-md">
+                  <span className="absolute left-3 top-3 rounded-full border border-primary/40 bg-background/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary backdrop-blur-md">
                     {tool.badge}
                   </span>
-                  <span className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-xl border border-border/60 bg-background/60 text-primary backdrop-blur-md">
-                    <Icon className="h-4 w-4" />
+                  <span className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-lg border border-border/60 bg-background/60 text-primary backdrop-blur-md">
+                    <Icon className="h-3.5 w-3.5" />
                   </span>
-
-                  <div className="absolute inset-x-0 bottom-0 p-5">
-                    <h3 className="font-display text-lg font-semibold leading-tight tracking-tight">
-                      {tool.name}
-                    </h3>
-                    <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
-                      {tool.kind}
-                    </p>
-                  </div>
                 </div>
 
-                <div className="relative z-10 flex flex-1 flex-col p-5 pt-4">
-                  <p className="flex-1 text-sm leading-relaxed text-muted-foreground">
+                <div className="relative z-10 px-4 pb-4 pt-3">
+                  <h3 className="font-display text-base font-semibold leading-tight tracking-tight">
+                    {tool.name}
+                  </h3>
+                  <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+                    {tool.kind}
+                  </p>
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                     {tool.description}
                   </p>
-                  <Link
-                    to="/auth"
-                    className="mt-5 inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-secondary px-4 py-2.5 text-sm font-semibold transition group-hover:border-primary/40 group-hover:bg-primary group-hover:text-primary-foreground"
-                  >
-                    Try Now <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                  </Link>
                 </div>
               </article>
             );
           })}
         </div>
+
 
       </section>
 
