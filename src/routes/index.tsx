@@ -132,11 +132,12 @@ function Landing() {
             <Sparkles className="h-3.5 w-3.5" />
             Managed access to premium AI tools
           </span>
-          <h1 className="mt-7 text-5xl font-bold leading-[1.02] tracking-tight sm:text-7xl">
+          <h1 className="mt-7 text-[3.25rem] font-extrabold leading-[0.95] tracking-[-0.045em] sm:text-8xl">
             Create with AI
             <br />
             <span className="text-gradient-brand">Without Limits.</span>
           </h1>
+
           <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
             Video, chat, image and voice — every premium AI tool your team needs, unlocked behind one
             secure login.
@@ -171,58 +172,65 @@ function Landing() {
           </p>
         </div>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
               <article
                 key={tool.name}
-                className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-2 hover:border-primary/50 hover:shadow-pop hover:ring-glow"
+                className="group relative flex flex-col overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-card transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:border-primary/50 hover:shadow-pop hover:ring-glow"
               >
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 blur-md transition-opacity duration-300 group-hover:opacity-40 bg-gradient-brand"
+                  className="pointer-events-none absolute -inset-1 rounded-[2rem] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-45 bg-gradient-brand"
                 />
 
-                <div className="relative aspect-[3/2] overflow-hidden">
+                <div className="relative z-10 aspect-[4/5] overflow-hidden sm:aspect-[3/4]">
                   <img
                     src={tool.image}
                     alt={`${tool.name} preview`}
-                    width={768}
-                    height={512}
+                    width={1024}
+                    height={688}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full scale-[1.02] object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   />
-                  <span className="absolute left-3 top-3 rounded-full border border-primary/30 bg-background/80 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider text-primary backdrop-blur">
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-card/45 to-transparent"
+                  />
+                  <span className="absolute left-4 top-4 rounded-full border border-primary/40 bg-background/70 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary backdrop-blur-md">
                     {tool.badge}
                   </span>
-                </div>
-                <div className="flex flex-1 flex-col p-5">
-                  <div className="flex min-w-0 items-center gap-2">
-                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-primary/12 text-primary">
-                      <Icon className="h-4 w-4" />
-                    </span>
-                    <div className="min-w-0">
-                      <h3 className="truncate text-sm font-semibold">{tool.name}</h3>
-                      <p className="truncate text-[11px] uppercase tracking-wider text-muted-foreground">
-                        {tool.kind}
-                      </p>
-                    </div>
+                  <span className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-xl border border-border/60 bg-background/60 text-primary backdrop-blur-md">
+                    <Icon className="h-4 w-4" />
+                  </span>
+
+                  <div className="absolute inset-x-0 bottom-0 p-5">
+                    <h3 className="font-display text-lg font-semibold leading-tight tracking-tight">
+                      {tool.name}
+                    </h3>
+                    <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+                      {tool.kind}
+                    </p>
                   </div>
-                  <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">
+                </div>
+
+                <div className="relative z-10 flex flex-1 flex-col p-5 pt-4">
+                  <p className="flex-1 text-sm leading-relaxed text-muted-foreground">
                     {tool.description}
                   </p>
                   <Link
                     to="/auth"
-                    className="mt-5 inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-secondary px-4 py-2 text-sm font-medium transition group-hover:border-primary/40 group-hover:bg-primary group-hover:text-primary-foreground"
+                    className="mt-5 inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-secondary px-4 py-2.5 text-sm font-semibold transition group-hover:border-primary/40 group-hover:bg-primary group-hover:text-primary-foreground"
                   >
-                    Try Now <ArrowRight className="h-3.5 w-3.5" />
+                    Try Now <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                   </Link>
                 </div>
               </article>
             );
           })}
         </div>
+
       </section>
 
       {/* About */}
