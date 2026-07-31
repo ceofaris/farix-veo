@@ -187,6 +187,17 @@
   color: transparent;
 }
 
+@utility text-gradient-soft {
+  background-image: linear-gradient(
+    105deg,
+    var(--brand-violet) 0%,
+    var(--brand-pink) 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
 @utility bg-gradient-brand {
   background-image: linear-gradient(
     100deg,
