@@ -117,35 +117,35 @@ function Landing() {
       <section id="home" className="relative overflow-hidden">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 -top-48 mx-auto h-[28rem] w-[80rem] max-w-[120vw] rounded-full opacity-70 blur-[150px] bg-gradient-brand"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-20%,color-mix(in_oklab,var(--brand-violet)_38%,transparent),transparent_60%)]"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -left-24 top-40 h-72 w-72 rounded-full bg-chart-2/30 blur-[120px]"
+          className="pointer-events-none absolute -left-32 top-32 h-[26rem] w-[26rem] rounded-full bg-chart-2/25 blur-[150px]"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-24 top-24 h-72 w-72 rounded-full bg-chart-4/25 blur-[120px]"
+          className="pointer-events-none absolute -right-32 top-10 h-[26rem] w-[26rem] rounded-full bg-chart-4/20 blur-[150px]"
         />
-        <div className="relative mx-auto max-w-4xl px-5 py-24 text-center sm:py-32">
+        <div className="relative mx-auto max-w-4xl px-5 pb-28 pt-24 text-center sm:pb-36 sm:pt-32">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" />
             Managed access to premium AI tools
           </span>
-          <h1 className="mt-7 text-[3.25rem] font-extrabold leading-[0.95] tracking-[-0.045em] sm:text-8xl">
+          <h1 className="mt-8 font-sans text-[3.5rem] font-extrabold leading-[0.92] tracking-[-0.05em] sm:text-[6.5rem]">
             Create with AI
             <br />
             <span className="text-gradient-brand">Without Limits.</span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
+          <p className="mx-auto mt-7 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Video, chat, image and voice — every premium AI tool your team needs, unlocked behind one
             secure login.
           </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/auth"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 font-medium text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
             >
               Sign In <ArrowRight className="h-4 w-4" />
             </Link>
@@ -158,6 +158,7 @@ function Landing() {
           </div>
         </div>
       </section>
+
 
 
       {/* Tools showcase */}
