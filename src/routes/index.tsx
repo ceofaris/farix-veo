@@ -132,7 +132,7 @@ function Landing() {
             <Sparkles className="h-3.5 w-3.5" />
             Managed access to premium AI tools
           </span>
-          <h1 className="mt-8 font-display text-[2.75rem] font-semibold leading-[1.1] tracking-[-0.04em] text-foreground sm:text-[4.5rem]">
+          <h1 className="mt-8 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.04em] text-foreground sm:whitespace-nowrap sm:text-[3.5rem]">
             Create with <span className="text-gradient-soft">AI</span> Without Limits.
           </h1>
 
