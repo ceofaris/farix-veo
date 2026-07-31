@@ -117,35 +117,35 @@ function Landing() {
       <section id="home" className="relative overflow-hidden">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 -top-48 mx-auto h-[28rem] w-[80rem] max-w-[120vw] rounded-full opacity-70 blur-[150px] bg-gradient-brand"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-20%,color-mix(in_oklab,var(--brand-violet)_38%,transparent),transparent_60%)]"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -left-24 top-40 h-72 w-72 rounded-full bg-chart-2/30 blur-[120px]"
+          className="pointer-events-none absolute -left-32 top-32 h-[26rem] w-[26rem] rounded-full bg-chart-2/25 blur-[150px]"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-24 top-24 h-72 w-72 rounded-full bg-chart-4/25 blur-[120px]"
+          className="pointer-events-none absolute -right-32 top-10 h-[26rem] w-[26rem] rounded-full bg-chart-4/20 blur-[150px]"
         />
-        <div className="relative mx-auto max-w-4xl px-5 py-24 text-center sm:py-32">
+        <div className="relative mx-auto max-w-4xl px-5 pb-28 pt-24 text-center sm:pb-36 sm:pt-32">
           <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary backdrop-blur">
             <Sparkles className="h-3.5 w-3.5" />
             Managed access to premium AI tools
           </span>
-          <h1 className="mt-7 text-[3.25rem] font-extrabold leading-[0.95] tracking-[-0.045em] sm:text-8xl">
+          <h1 className="mt-8 font-sans text-[3.5rem] font-extrabold leading-[0.92] tracking-[-0.05em] sm:text-[6.5rem]">
             Create with AI
             <br />
             <span className="text-gradient-brand">Without Limits.</span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground sm:text-lg">
+          <p className="mx-auto mt-7 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
             Video, chat, image and voice — every premium AI tool your team needs, unlocked behind one
             secure login.
           </p>
-          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
             <Link
               to="/auth"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 font-medium text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
             >
               Sign In <ArrowRight className="h-4 w-4" />
             </Link>
@@ -160,6 +160,7 @@ function Landing() {
       </section>
 
 
+
       {/* Tools showcase */}
       <section id="tools" className="mx-auto max-w-6xl px-5 pb-24">
         <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 sm:flex sm:justify-between">
@@ -172,64 +173,56 @@ function Landing() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {tools.map((tool) => {
             const Icon = tool.icon;
             return (
               <article
                 key={tool.name}
-                className="group relative flex flex-col overflow-hidden rounded-[1.75rem] border border-border bg-card shadow-card transition-all duration-500 hover:-translate-y-2 hover:scale-[1.02] hover:border-primary/50 hover:shadow-pop hover:ring-glow"
+                className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-pop hover:ring-glow"
               >
                 <span
                   aria-hidden
-                  className="pointer-events-none absolute -inset-1 rounded-[2rem] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-45 bg-gradient-brand"
+                  className="pointer-events-none absolute -inset-1 rounded-[1.5rem] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-40 bg-gradient-brand"
                 />
 
-                <div className="relative z-10 aspect-[4/5] overflow-hidden sm:aspect-[3/4]">
+                <div className="relative z-10 aspect-[4/3] overflow-hidden">
                   <img
                     src={tool.image}
                     alt={`${tool.name} preview`}
                     width={1024}
-                    height={688}
+                    height={768}
                     loading="lazy"
-                    className="h-full w-full scale-[1.02] object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-card/45 to-transparent"
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent"
                   />
-                  <span className="absolute left-4 top-4 rounded-full border border-primary/40 bg-background/70 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary backdrop-blur-md">
+                  <span className="absolute left-3 top-3 rounded-full border border-primary/40 bg-background/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary backdrop-blur-md">
                     {tool.badge}
                   </span>
-                  <span className="absolute right-4 top-4 grid h-9 w-9 place-items-center rounded-xl border border-border/60 bg-background/60 text-primary backdrop-blur-md">
-                    <Icon className="h-4 w-4" />
+                  <span className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-lg border border-border/60 bg-background/60 text-primary backdrop-blur-md">
+                    <Icon className="h-3.5 w-3.5" />
                   </span>
-
-                  <div className="absolute inset-x-0 bottom-0 p-5">
-                    <h3 className="font-display text-lg font-semibold leading-tight tracking-tight">
-                      {tool.name}
-                    </h3>
-                    <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
-                      {tool.kind}
-                    </p>
-                  </div>
                 </div>
 
-                <div className="relative z-10 flex flex-1 flex-col p-5 pt-4">
-                  <p className="flex-1 text-sm leading-relaxed text-muted-foreground">
+                <div className="relative z-10 px-4 pb-4 pt-3">
+                  <h3 className="font-display text-base font-semibold leading-tight tracking-tight">
+                    {tool.name}
+                  </h3>
+                  <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
+                    {tool.kind}
+                  </p>
+                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
                     {tool.description}
                   </p>
-                  <Link
-                    to="/auth"
-                    className="mt-5 inline-flex items-center justify-center gap-1.5 rounded-full border border-border bg-secondary px-4 py-2.5 text-sm font-semibold transition group-hover:border-primary/40 group-hover:bg-primary group-hover:text-primary-foreground"
-                  >
-                    Try Now <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
-                  </Link>
                 </div>
               </article>
             );
           })}
         </div>
+
 
       </section>
 
