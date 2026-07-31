@@ -1,7 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Shield, Sparkles, ArrowRight, Video, MessageSquare, ImageIcon, AudioLines, Zap, Lock } from "lucide-react";
+import {
+  Shield,
+  ArrowRight,
+  Video,
+  MessageSquare,
+  ImageIcon,
+  AudioLines,
+  Zap,
+  Lock,
+  Layers,
+  Check,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { Reveal } from "@/components/reveal";
 
 import toolVideo from "@/assets/tool-video.jpg";
 import toolChat from "@/assets/tool-chat.jpg";
@@ -37,23 +49,26 @@ const tools = [
     name: "Veo Video Studio",
     kind: "Video Generation",
     description: "Cinematic AI video with sound, directed from a single prompt.",
-    badge: "New",
+    badge: "NEW",
+    badgeTone: "text-[oklch(0.72_0.2_300)]",
     image: toolVideo,
     icon: Video,
   },
   {
     name: "ChatGPT Access",
     kind: "Chat Model",
-    description: "Full premium chat, deep research and reasoning in one workspace.",
-    badge: "Live",
+    description: "Premium chat, deep research and reasoning in one workspace.",
+    badge: "LIVE",
+    badgeTone: "text-[oklch(0.78_0.16_160)]",
     image: toolChat,
     icon: MessageSquare,
   },
   {
     name: "Image Lab",
     kind: "Image Model",
-    description: "High-fidelity image generation and editing for brand-ready assets.",
-    badge: "Hot",
+    description: "High-fidelity generation and editing for brand-ready assets.",
+    badge: "HOT",
+    badgeTone: "text-[oklch(0.78_0.16_60)]",
     image: toolImage,
     icon: ImageIcon,
   },
@@ -61,34 +76,59 @@ const tools = [
     name: "Voice & TTS",
     kind: "Audio Model",
     description: "Natural text-to-speech and voice cloning in 30+ languages.",
-    badge: "New",
+    badge: "NEW",
+    badgeTone: "text-[oklch(0.72_0.2_300)]",
     image: toolVoice,
     icon: AudioLines,
   },
 ];
 
+const plans = [
+  {
+    name: "Veo 3 Access",
+    accent: "bg-gradient-to-r from-[oklch(0.6_0.25_296)] to-[oklch(0.7_0.22_320)]",
+    features: [
+      "Unlimited Flow videos",
+      "Veo 3 Lite model",
+      "Nano Banana image generation",
+      "Nano Banana Pro",
+    ],
+  },
+  {
+    name: "ChatGPT Access",
+    accent: "bg-gradient-to-r from-[oklch(0.72_0.15_175)] to-[oklch(0.75_0.16_155)]",
+    features: [
+      "Full premium ChatGPT access",
+      "Latest models included",
+      "Deep research & reasoning",
+      "Voice mode & image generation",
+    ],
+  },
+];
+
 function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-5">
         <Link to="/" className="flex min-w-0 items-center gap-2.5">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-primary text-primary-foreground shadow-soft">
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-cta text-primary-foreground shadow-soft">
             <Shield className="h-4.5 w-4.5" />
           </span>
-          <span className="truncate font-display text-lg font-semibold tracking-tight">
-            Farix <span className="text-primary">AI</span>
+          <span className="truncate font-display text-lg font-bold tracking-tight">
+            Farix <span className="text-gradient-soft">AI</span>
           </span>
         </Link>
         <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
           {[
             { label: "Home", href: "#home" },
+            { label: "Tools", href: "#tools" },
             { label: "About", href: "#about" },
             { label: "Pricing", href: "#pricing" },
           ].map((l) => (
             <a
               key={l.label}
               href={l.href}
-              className="rounded-full px-4 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              className="rounded-full px-4 py-2 font-display text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
               {l.label}
             </a>
@@ -98,13 +138,41 @@ function Navbar() {
           <ThemeToggle />
           <Link
             to="/auth"
-            className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground shadow-card transition hover:opacity-90 active:scale-[0.98]"
+            className="inline-flex items-center justify-center rounded-full bg-gradient-cta px-5 py-2 font-display text-sm font-semibold text-primary-foreground shadow-card transition hover:opacity-90 active:scale-[0.98]"
           >
             Sign In
           </Link>
         </div>
       </nav>
     </header>
+  );
+}
+
+function SectionHeading({
+  eyebrow,
+  title,
+  aside,
+}: {
+  eyebrow: string;
+  title: React.ReactNode;
+  aside?: string;
+}) {
+  return (
+    <div className="grid gap-4 sm:flex sm:items-end sm:justify-between">
+      <div className="min-w-0">
+        <p className="font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+          {eyebrow}
+        </p>
+        <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:leading-[1.05]">
+          {title}
+        </h2>
+      </div>
+      {aside ? (
+        <p className="hidden max-w-sm text-sm leading-relaxed text-muted-foreground sm:block">
+          {aside}
+        </p>
+      ) : null}
+    </div>
   );
 }
 
@@ -117,204 +185,234 @@ function Landing() {
       <section id="home" className="relative overflow-hidden">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-20%,color-mix(in_oklab,var(--brand-violet)_38%,transparent),transparent_60%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-25%,color-mix(in_oklab,var(--brand-violet)_42%,transparent),transparent_62%)]"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -left-32 top-32 h-[26rem] w-[26rem] rounded-full bg-chart-2/25 blur-[150px]"
+          className="pointer-events-none absolute -left-40 top-24 h-[30rem] w-[30rem] rounded-full bg-[var(--brand-pink)]/18 blur-[170px]"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 top-10 h-[26rem] w-[26rem] rounded-full bg-chart-4/20 blur-[150px]"
+          className="pointer-events-none absolute -right-40 top-0 h-[30rem] w-[30rem] rounded-full bg-[var(--brand-cyan)]/14 blur-[170px]"
         />
-        <div className="relative mx-auto max-w-4xl px-5 pb-28 pt-24 text-center sm:pb-36 sm:pt-32">
-          <span className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-4 py-1.5 text-xs font-medium text-primary backdrop-blur">
-            <Sparkles className="h-3.5 w-3.5" />
-            Managed access to premium AI tools
-          </span>
-          <h1 className="mt-8 font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.04em] text-foreground sm:whitespace-nowrap sm:text-[3.5rem]">
-            Create with <span className="text-gradient-soft">AI</span> Without Limits.
-          </h1>
-
-          <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-            Every premium AI tool your team needs — video, chat, image and voice — unlocked behind one
-            secure login.
-          </p>
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-            <Link
-              to="/auth"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
-            >
-              Sign In <ArrowRight className="h-4 w-4" />
-            </Link>
-            <a
-              href="#tools"
-              className="inline-flex items-center rounded-full border border-border bg-card/70 px-7 py-3.5 font-medium backdrop-blur transition hover:border-primary/40 hover:bg-accent"
-            >
-              Explore Tools
-            </a>
-          </div>
+        <div className="relative mx-auto max-w-5xl px-5 pb-28 pt-28 text-center sm:pb-40 sm:pt-36">
+          <Reveal>
+            <h1 className="font-display text-[2.4rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-foreground sm:whitespace-nowrap sm:text-[4.25rem]">
+              Create with <span className="text-gradient-soft">AI</span> Without Limits.
+            </h1>
+          </Reveal>
+          <Reveal delay={120}>
+            <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
+              Every premium AI tool your team needs — video, chat, image and voice — unlocked
+              behind one secure login.
+            </p>
+          </Reveal>
+          <Reveal delay={220}>
+            <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
+              <Link
+                to="/auth"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-cta px-8 py-3.5 font-display font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
+              >
+                Sign In <ArrowRight className="h-4 w-4" />
+              </Link>
+              <a
+                href="#tools"
+                className="inline-flex items-center rounded-full border border-border bg-card/50 px-7 py-3.5 font-display font-medium backdrop-blur transition hover:border-primary/40 hover:bg-accent"
+              >
+                Explore Tools
+              </a>
+            </div>
+          </Reveal>
         </div>
       </section>
 
-
-
       {/* Tools showcase */}
-      <section id="tools" className="mx-auto max-w-6xl px-5 pb-24">
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-4 sm:flex sm:justify-between">
-          <div className="min-w-0">
-            <p className="text-xs font-medium uppercase tracking-[0.25em] text-primary">Showcase</p>
-            <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">Latest AI Tools</h2>
-          </div>
-          <p className="hidden max-w-sm text-sm text-muted-foreground sm:block">
-            Every tool below is available instantly once your reseller activates your account.
-          </p>
-        </div>
+      <section id="tools" className="mx-auto max-w-6xl px-5 pb-28">
+        <Reveal>
+          <SectionHeading
+            eyebrow="Showcase"
+            title="Latest AI Tools"
+            aside="Every tool below is available instantly once your reseller activates your account."
+          />
+        </Reveal>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {tools.map((tool) => {
+        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {tools.map((tool, i) => {
             const Icon = tool.icon;
             return (
-              <article
-                key={tool.name}
-                className="group relative overflow-hidden rounded-2xl border border-border bg-card shadow-card transition-all duration-500 hover:-translate-y-1.5 hover:border-primary/50 hover:shadow-pop hover:ring-glow"
-              >
-                <span
-                  aria-hidden
-                  className="pointer-events-none absolute -inset-1 rounded-[1.5rem] opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-40 bg-gradient-brand"
-                />
-
-                <div className="relative z-10 aspect-[4/3] overflow-hidden">
+              <Reveal key={tool.name} delay={i * 90}>
+                <article className="glow-frame group relative h-[26rem] overflow-hidden rounded-3xl border border-border/70 bg-card transition-transform duration-500 ease-out hover:-translate-y-1">
                   <img
                     src={tool.image}
                     alt={`${tool.name} preview`}
                     width={1024}
-                    height={768}
+                    height={1280}
                     loading="lazy"
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
                   />
                   <span
                     aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-card via-card/20 to-transparent"
+                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[oklch(0.08_0.01_285)] via-[oklch(0.08_0.01_285)]/60 to-transparent"
                   />
-                  <span className="absolute left-3 top-3 rounded-full border border-primary/40 bg-background/70 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-primary backdrop-blur-md">
+
+                  <span
+                    className={cn(
+                      "absolute left-4 top-4 z-10 rounded-full bg-[oklch(0.12_0.01_285)]/70 px-3 py-1 font-display text-[10px] font-bold uppercase tracking-[0.16em] backdrop-blur-md",
+                      tool.badgeTone,
+                    )}
+                  >
                     {tool.badge}
                   </span>
-                  <span className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-lg border border-border/60 bg-background/60 text-primary backdrop-blur-md">
-                    <Icon className="h-3.5 w-3.5" />
+                  <span className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full bg-[oklch(0.12_0.01_285)]/70 text-[oklch(0.97_0_0)] backdrop-blur-md">
+                    <Icon className="h-4 w-4" />
                   </span>
-                </div>
 
-                <div className="relative z-10 px-4 pb-4 pt-3">
-                  <h3 className="font-display text-base font-semibold leading-tight tracking-tight">
-                    {tool.name}
-                  </h3>
-                  <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary">
-                    {tool.kind}
-                  </p>
-                  <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-muted-foreground">
-                    {tool.description}
-                  </p>
-                </div>
-              </article>
+                  <div className="absolute inset-x-0 bottom-0 z-10 p-5">
+                    <p className="font-display text-[10px] font-semibold uppercase tracking-[0.22em] text-[oklch(0.8_0.02_285)]">
+                      {tool.kind}
+                    </p>
+                    <h3 className="mt-2 font-display text-xl font-bold leading-tight tracking-[-0.02em] text-[oklch(0.99_0_0)]">
+                      {tool.name}
+                    </h3>
+                    <p className="mt-2 line-clamp-1 text-xs leading-relaxed text-[oklch(0.78_0.01_285)]">
+                      {tool.description}
+                    </p>
+                  </div>
+                </article>
+              </Reveal>
             );
           })}
         </div>
-
-
       </section>
 
       {/* About */}
-      <section id="about" className="relative overflow-hidden border-y border-border bg-secondary/40">
+      <section id="about" className="relative overflow-hidden border-y border-border">
         <div
           aria-hidden
-          className="pointer-events-none absolute -left-32 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-primary/20 blur-[130px]"
+          className="pointer-events-none absolute -left-32 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-primary/15 blur-[150px]"
         />
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-32 top-10 h-80 w-80 rounded-full bg-chart-2/20 blur-[130px]"
+          className="pointer-events-none absolute -right-32 top-10 h-80 w-80 rounded-full bg-[var(--brand-pink)]/12 blur-[150px]"
         />
-        <div className="relative mx-auto grid max-w-6xl gap-12 px-5 py-24 md:grid-cols-2 md:items-center">
-          <div>
-            <p className="text-xs font-medium uppercase tracking-[0.25em] text-primary">About</p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">
-              Built for teams and <span className="text-gradient-brand">resellers.</span>
-            </h2>
-            <p className="mt-5 text-muted-foreground">
-              Farix AI is a private access platform. Admins manage tools and sessions centrally,
-              resellers manage their own users, and members simply sign in and start working — no
-              personal accounts, no shared passwords, no setup.
-            </p>
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
+        <div className="relative mx-auto grid max-w-6xl gap-14 px-5 py-28 md:grid-cols-2 md:items-center">
+          <Reveal>
+            <div>
+              <p className="font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+                About
+              </p>
+              <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:leading-[1.05]">
+                Built for teams and <span className="text-gradient-soft">resellers.</span>
+              </h2>
+              <p className="mt-6 max-w-md leading-relaxed text-muted-foreground">
+                Farix AI is a private access platform. Admins manage tools and sessions centrally,
+                resellers manage their own users, and members simply sign in and start working — no
+                personal accounts, no shared passwords, no setup.
+              </p>
+            </div>
+          </Reveal>
+          <div className="grid gap-5 sm:grid-cols-2">
             {[
               {
                 t: "Managed sessions",
                 d: "Access handled centrally — nothing to configure.",
-                icon: Sparkles,
-                tone: "bg-primary/12 text-primary",
+                icon: Layers,
               },
               {
                 t: "Role-based access",
                 d: "King, reseller and user scopes kept strictly separate.",
                 icon: Shield,
-                tone: "bg-chart-2/15 text-chart-2",
               },
               {
                 t: "Always current",
                 d: "Latest tool builds delivered automatically.",
                 icon: Zap,
-                tone: "bg-chart-3/15 text-chart-3",
               },
               {
                 t: "Private by default",
                 d: "Invite-only. No public signup, ever.",
                 icon: Lock,
-                tone: "bg-chart-4/15 text-chart-4",
               },
-            ].map((f) => {
+            ].map((f, i) => {
               const Icon = f.icon;
               return (
-                <div
-                  key={f.t}
-                  className="group rounded-2xl border border-border bg-card p-6 shadow-soft transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-card"
-                >
-                  <span
-                    className={cn(
-                      "grid h-10 w-10 place-items-center rounded-xl transition-transform duration-300 group-hover:scale-110",
-                      f.tone,
-                    )}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <h3 className="mt-4 text-sm font-semibold">{f.t}</h3>
-                  <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{f.d}</p>
-                </div>
+                <Reveal key={f.t} delay={i * 90}>
+                  <div className="group h-full rounded-2xl border border-border/70 bg-card/60 p-6 shadow-soft backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/45 hover:shadow-card">
+                    <span className="grid h-11 w-11 place-items-center rounded-full bg-primary/12 text-primary shadow-[0_0_0_1px_color-mix(in_oklab,var(--brand-violet)_25%,transparent),0_10px_30px_-12px_color-mix(in_oklab,var(--brand-violet)_60%,transparent)] transition-transform duration-300 group-hover:scale-110">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <h3 className="mt-5 font-display text-base font-semibold">{f.t}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.d}</p>
+                  </div>
+                </Reveal>
               );
             })}
           </div>
         </div>
       </section>
 
-
       {/* Pricing */}
-      <section id="pricing" className="mx-auto max-w-3xl px-5 py-24 text-center">
-        <p className="text-xs font-medium uppercase tracking-[0.25em] text-primary">Pricing</p>
-        <h2 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-          Access is invite-only.
-        </h2>
-        <div className="mt-8 rounded-3xl border border-primary/25 bg-card p-10 shadow-card">
-          <p className="text-lg font-medium">Contact your Reseller to get access</p>
-          <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
-            Farix AI accounts are issued by administrators and resellers. Already have credentials?
-            Sign in below.
-          </p>
-          <Link
-            to="/auth"
-            className="mt-7 inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 font-medium text-primary-foreground shadow-card transition hover:opacity-90 active:scale-[0.98]"
-          >
-            Sign In <ArrowRight className="h-4 w-4" />
-          </Link>
+      <section id="pricing" className="relative overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-0 h-[26rem] w-[42rem] -translate-x-1/2 rounded-full bg-primary/12 blur-[170px]"
+        />
+        <div className="relative mx-auto max-w-5xl px-5 py-28 text-center">
+          <Reveal>
+            <p className="font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+              Pricing
+            </p>
+            <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:leading-[1.05]">
+              Access is invite-only.
+            </h2>
+            <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground">
+              Choose your plan and contact your reseller to get started. All accounts are issued by
+              administrators.
+            </p>
+          </Reveal>
+
+          <div className="mt-14 grid gap-6 md:grid-cols-2">
+            {plans.map((plan, i) => (
+              <Reveal key={plan.name} delay={i * 120}>
+                <div className="group relative h-full overflow-hidden rounded-3xl border border-border/70 bg-card/60 text-left shadow-card backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/45">
+                  <span aria-hidden className={cn("absolute inset-x-0 top-0 h-1", plan.accent)} />
+                  <div className="flex h-full flex-col p-8">
+                    <h3 className="font-display text-2xl font-bold tracking-[-0.02em]">
+                      {plan.name}
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Contact your Reseller for price
+                    </p>
+                    <ul className="mt-7 flex-1 space-y-3.5">
+                      {plan.features.map((f) => (
+                        <li key={f} className="flex items-start gap-3 text-sm">
+                          <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-primary-foreground">
+                            <Check className="h-3 w-3" strokeWidth={3} />
+                          </span>
+                          <span className="text-foreground/90">{f}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link
+                      to="/auth"
+                      className="mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-cta px-6 py-3 font-display font-semibold text-primary-foreground transition hover:opacity-90 active:scale-[0.98]"
+                    >
+                      Get Access <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <Reveal delay={200}>
+            <p className="mt-10 text-sm text-muted-foreground">
+              Already have credentials?{" "}
+              <Link to="/auth" className="font-medium text-primary hover:underline">
+                Sign in here →
+              </Link>
+            </p>
+          </Reveal>
         </div>
       </section>
 
