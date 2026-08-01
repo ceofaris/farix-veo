@@ -173,12 +173,6 @@ function Landing() {
               Create with <span className="text-gradient-soft">AI</span> Without Limits.
             </h1>
           </Reveal>
-          <Reveal delay={120}>
-            <p className="mx-auto mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground sm:text-xl">
-              Every premium AI tool your team needs — video, chat, image and voice — unlocked
-              behind one secure login.
-            </p>
-          </Reveal>
           <Reveal delay={220}>
             <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
               <Link
