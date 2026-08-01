@@ -148,34 +148,6 @@ function Navbar() {
   );
 }
 
-function SectionHeading({
-  eyebrow,
-  title,
-  aside,
-}: {
-  eyebrow: string;
-  title: React.ReactNode;
-  aside?: string;
-}) {
-  return (
-    <div className="grid gap-4 sm:flex sm:items-end sm:justify-between">
-      <div className="min-w-0">
-        <p className="font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
-          {eyebrow}
-        </p>
-        <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:leading-[1.05]">
-          {title}
-        </h2>
-      </div>
-      {aside ? (
-        <p className="hidden max-w-sm text-sm leading-relaxed text-muted-foreground sm:block">
-          {aside}
-        </p>
-      ) : null}
-    </div>
-  );
-}
-
 function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -228,15 +200,7 @@ function Landing() {
 
       {/* Tools showcase */}
       <section id="tools" className="mx-auto max-w-6xl px-5 pb-28">
-        <Reveal>
-          <SectionHeading
-            eyebrow="Showcase"
-            title="Latest AI Tools"
-            aside="Every tool below is available instantly once your reseller activates your account."
-          />
-        </Reveal>
-
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {tools.map((tool, i) => {
             const Icon = tool.icon;
             return (
