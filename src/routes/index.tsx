@@ -228,15 +228,7 @@ function Landing() {
 
       {/* Tools showcase */}
       <section id="tools" className="mx-auto max-w-6xl px-5 pb-28">
-        <Reveal>
-          <SectionHeading
-            eyebrow="Showcase"
-            title="Latest AI Tools"
-            aside="Every tool below is available instantly once your reseller activates your account."
-          />
-        </Reveal>
-
-        <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {tools.map((tool, i) => {
             const Icon = tool.icon;
             return (
