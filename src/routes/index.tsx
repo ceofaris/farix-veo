@@ -123,8 +123,8 @@ function LogoMarquee() {
   const half = [...marqueeLogos, ...marqueeLogos, ...marqueeLogos];
   const row = [...half, ...half];
   return (
-    <div className="relative mt-16 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
-      <div className="flex w-max animate-marquee items-center gap-20 sm:gap-28">
+    <div className="relative mt-20 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+      <div className="flex w-max animate-marquee items-center gap-24 sm:gap-32">
         {row.map((logo, i) => (
           <img
             key={`${logo.alt}-${i}`}
