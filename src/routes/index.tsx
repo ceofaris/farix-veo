@@ -188,7 +188,7 @@ function Landing() {
 
       {/* How it works */}
       <section id="how" className="border-y border-border bg-secondary/40">
-        <div className="mx-auto max-w-6xl px-5 py-24">
+        <div className="mx-auto max-w-6xl px-5 py-28">
           <Reveal>
             <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
               How it works
