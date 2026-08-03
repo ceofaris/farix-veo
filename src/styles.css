@@ -201,9 +201,9 @@
 @utility text-gradient-metallic {
   background-image: linear-gradient(
     180deg,
-    oklch(0.32 0 0) 0%,
-    oklch(0.52 0 0) 52%,
-    oklch(0.28 0 0) 100%
+    oklch(0.22 0 0) 0%,
+    oklch(0.46 0 0) 52%,
+    oklch(0.16 0 0) 100%
   );
   background-clip: text;
   -webkit-background-clip: text;
@@ -213,9 +213,9 @@
 @utility text-gradient-ocean {
   background-image: linear-gradient(
     100deg,
-    oklch(0.65 0.18 260) 0%,
-    oklch(0.72 0.16 210) 45%,
-    oklch(0.7 0.18 170) 100%
+    oklch(0.58 0.22 260) 0%,
+    oklch(0.7 0.2 210) 45%,
+    oklch(0.64 0.22 170) 100%
   );
   background-clip: text;
   -webkit-background-clip: text;

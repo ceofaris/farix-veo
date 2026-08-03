@@ -176,26 +176,16 @@ function Landing() {
       <Navbar />
 
       {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_60%_at_50%_-10%,color-mix(in_oklab,var(--brand-violet)_14%,transparent),transparent_70%)]"
-        />
+      <section className="relative overflow-hidden bg-background">
         <div className="relative mx-auto max-w-5xl px-5 pb-24 pt-24 text-center sm:pt-32">
           <Reveal>
-            <h1 className="font-sans text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[4.5rem]">
+            <h1 className="font-sans text-[2.5rem] font-bold leading-[1.05] tracking-[-0.04em] sm:text-[4.5rem]">
               <span className="text-gradient-metallic">Create with AI</span>
               <br />
               <span className="text-gradient-ocean">Without Hassle</span>
             </h1>
           </Reveal>
           <Reveal delay={140}>
-            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
-              Every premium AI tool your team needs — video, chat, image and voice — unlocked behind
-              one secure login.
-            </p>
-          </Reveal>
-          <Reveal delay={240}>
             <div className="mt-9 flex justify-center">
               <Link
                 to="/auth"
@@ -205,7 +195,7 @@ function Landing() {
               </Link>
             </div>
           </Reveal>
-          <Reveal delay={320}>
+          <Reveal delay={240}>
             <LogoMarquee />
           </Reveal>
         </div>
