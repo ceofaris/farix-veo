@@ -140,22 +140,25 @@ function Navbar() {
 }
 
 function LogoMarquee() {
-  const row = [...marqueeLogos, ...marqueeLogos];
+  const half = [...marqueeLogos, ...marqueeLogos, ...marqueeLogos];
+  const row = [...half, ...half];
   return (
     <div className="relative mt-16 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
-      <div className="flex w-max animate-marquee items-center gap-4">
-        {row.map((name, i) => (
-          <span
-            key={`${name}-${i}`}
-            className="whitespace-nowrap rounded-2xl border border-border bg-card px-7 py-4 font-display text-lg font-semibold text-foreground/70 shadow-soft"
-          >
-            {name}
-          </span>
+      <div className="flex w-max animate-marquee items-center gap-16 sm:gap-24">
+        {row.map((logo, i) => (
+          <img
+            key={`${logo.alt}-${i}`}
+            src={logo.src}
+            alt={`${logo.alt} logo`}
+            loading="lazy"
+            className={`${logo.h} w-auto shrink-0 select-none object-contain opacity-80 transition-opacity duration-300 hover:opacity-100`}
+          />
         ))}
       </div>
     </div>
   );
 }
+
 
 function Landing() {
   // Landing page is light-theme only.
