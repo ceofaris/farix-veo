@@ -1,42 +1,34 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect } from "react";
 import {
   Shield,
   ArrowRight,
-  Video,
-  MessageSquare,
-  ImageIcon,
-  AudioLines,
   Zap,
+  Infinity as InfinityIcon,
   Lock,
-  Layers,
+  UserPlus,
+  Puzzle,
+  Play,
   Check,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Reveal } from "@/components/reveal";
-
-import toolVideo from "@/assets/tool-video.jpg";
-import toolChat from "@/assets/tool-chat.jpg";
-import toolImage from "@/assets/tool-image.jpg";
-import toolVoice from "@/assets/tool-voice.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Farix AI — Premium Multi-Tool AI Access Platform" },
+      { title: "Farix AI — Premium AI Tools Behind One Secure Login" },
       {
         name: "description",
         content:
-          "Farix AI gives teams and resellers managed access to premium AI tools — video, chat, image and voice — from one secure platform.",
+          "Farix AI gives teams and resellers managed access to premium AI tools — video, chat, image and voice — from one secure, invite-only platform.",
       },
-      { property: "og:title", content: "Farix AI — Premium Multi-Tool AI Access Platform" },
+      { property: "og:title", content: "Farix AI — Premium AI Tools Behind One Secure Login" },
       {
         property: "og:description",
         content:
           "Managed access to premium AI tools — video, chat, image and voice — from one secure platform.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "/" }],
@@ -44,85 +36,78 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const tools = [
+const marqueeLogos = [
+  "Veo 3.1",
+  "ChatGPT",
+  "Google Flow",
+  "Nano Banana",
+  "Midjourney",
+  "ElevenLabs",
+  "Sora",
+  "Claude",
+];
+
+const features = [
   {
-    name: "Veo Video Studio",
-    kind: "Video Generation",
-    description: "Cinematic AI video with sound, directed from a single prompt.",
-    badge: "NEW",
-    badgeTone: "text-[oklch(0.72_0.2_300)]",
-    image: toolVideo,
-    icon: Video,
+    icon: Zap,
+    title: "Instant Session Access",
+    body: "Sign in once and your managed sessions are ready — no setup, no shared passwords.",
   },
   {
-    name: "ChatGPT Access",
-    kind: "Chat Model",
-    description: "Premium chat, deep research and reasoning in one workspace.",
-    badge: "LIVE",
-    badgeTone: "text-[oklch(0.78_0.16_160)]",
-    image: toolChat,
-    icon: MessageSquare,
+    icon: InfinityIcon,
+    title: "Unlimited Usage",
+    body: "Generate video, chat, images and voice with premium models. No daily caps.",
   },
   {
-    name: "Image Lab",
-    kind: "Image Model",
-    description: "High-fidelity generation and editing for brand-ready assets.",
-    badge: "HOT",
-    badgeTone: "text-[oklch(0.78_0.16_60)]",
-    image: toolImage,
-    icon: ImageIcon,
-  },
-  {
-    name: "Voice & TTS",
-    kind: "Audio Model",
-    description: "Natural text-to-speech and voice cloning in 30+ languages.",
-    badge: "NEW",
-    badgeTone: "text-[oklch(0.72_0.2_300)]",
-    image: toolVoice,
-    icon: AudioLines,
+    icon: Lock,
+    title: "Secure & Private",
+    body: "Encrypted session storage with strict role-based access. Your data stays yours.",
   },
 ];
 
-const plans = [
+const steps = [
   {
-    name: "Veo 3 Access",
-    accent: "bg-gradient-to-r from-[oklch(0.6_0.25_296)] to-[oklch(0.7_0.22_320)]",
-    features: [
-      "Unlimited Flow videos",
-      "Veo 3 Lite model",
-      "Nano Banana image generation",
-      "Nano Banana Pro",
-    ],
+    n: "01",
+    icon: UserPlus,
+    title: "Get your account",
+    body: "Your reseller or admin issues your Farix AI credentials. No public signup.",
   },
   {
-    name: "ChatGPT Access",
-    accent: "bg-gradient-to-r from-[oklch(0.72_0.15_175)] to-[oklch(0.75_0.16_155)]",
-    features: [
-      "Full premium ChatGPT access",
-      "Latest models included",
-      "Deep research & reasoning",
-      "Voice mode & image generation",
-    ],
+    n: "02",
+    icon: Puzzle,
+    title: "Install the extension",
+    body: "Add the Farix extension to Chrome in a single click from your dashboard.",
   },
+  {
+    n: "03",
+    icon: Play,
+    title: "Start creating",
+    body: "Open any assigned tool and start working — sessions are injected instantly.",
+  },
+];
+
+const planFeatures = [
+  "Unlimited access to assigned tools",
+  "Veo 3, ChatGPT, Image & Voice models",
+  "Managed accounts, always current",
+  "Secure Chrome extension included",
+  "Priority reseller support",
 ];
 
 function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border/60 bg-background/70 backdrop-blur-xl">
+    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-5">
         <Link to="/" className="flex min-w-0 items-center gap-2.5">
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-cta text-primary-foreground shadow-soft">
             <Shield className="h-4.5 w-4.5" />
           </span>
-          <span className="truncate font-display text-lg font-bold tracking-tight">
-            Farix <span className="text-gradient-soft">AI</span>
-          </span>
+          <span className="truncate font-display text-lg font-bold tracking-tight">Farix AI</span>
         </Link>
         <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
           {[
-            { label: "Home", href: "#home" },
-            { label: "Tools", href: "#tools" },
-            { label: "About", href: "#about" },
+            { label: "Features", href: "#features" },
+            { label: "How it works", href: "#how" },
             { label: "Pricing", href: "#pricing" },
           ].map((l) => (
             <a
@@ -135,12 +120,17 @@ function Navbar() {
           ))}
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
-          <ThemeToggle />
           <Link
             to="/auth"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-cta px-5 py-2 font-display text-sm font-semibold text-primary-foreground shadow-card transition hover:opacity-90 active:scale-[0.98]"
+            className="hidden rounded-full px-4 py-2 font-display text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
           >
             Sign In
+          </Link>
+          <Link
+            to="/auth"
+            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-cta px-5 py-2 font-display text-sm font-semibold text-primary-foreground shadow-card transition hover:opacity-90 active:scale-[0.98]"
+          >
+            Get Started <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         </div>
       </nav>
@@ -148,159 +138,134 @@ function Navbar() {
   );
 }
 
+function LogoMarquee() {
+  const row = [...marqueeLogos, ...marqueeLogos];
+  return (
+    <div className="relative mt-16 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+      <div className="flex w-max animate-marquee items-center gap-4">
+        {row.map((name, i) => (
+          <span
+            key={`${name}-${i}`}
+            className="whitespace-nowrap rounded-2xl border border-border bg-card px-7 py-4 font-display text-lg font-semibold text-foreground/70 shadow-soft"
+          >
+            {name}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Landing() {
+  // Landing page is light-theme only.
+  useEffect(() => {
+    const root = document.documentElement;
+    const wasDark = root.classList.contains("dark");
+    root.classList.remove("dark");
+    root.style.colorScheme = "light";
+    return () => {
+      if (wasDark) {
+        root.classList.add("dark");
+        root.style.colorScheme = "dark";
+      }
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navbar />
 
       {/* Hero */}
-      <section id="home" className="relative overflow-hidden">
+      <section className="relative overflow-hidden">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_80%_at_50%_-25%,color-mix(in_oklab,var(--brand-violet)_42%,transparent),transparent_62%)]"
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_60%_at_50%_-10%,color-mix(in_oklab,var(--brand-violet)_14%,transparent),transparent_70%)]"
         />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-40 top-24 h-[30rem] w-[30rem] rounded-full bg-[var(--brand-pink)]/18 blur-[170px]"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-40 top-0 h-[30rem] w-[30rem] rounded-full bg-[var(--brand-cyan)]/14 blur-[170px]"
-        />
-        <div className="relative mx-auto max-w-5xl px-5 pb-28 pt-28 text-center sm:pb-40 sm:pt-36">
+        <div className="relative mx-auto max-w-5xl px-5 pb-24 pt-24 text-center sm:pt-32">
           <Reveal>
-            <h1 className="font-display text-[2.4rem] font-extrabold leading-[1.05] tracking-[-0.045em] text-foreground sm:whitespace-nowrap sm:text-[4.25rem]">
-              Create with <span className="text-gradient-soft">AI</span> Without Limits.
+            <h1 className="font-display text-[2.5rem] font-extrabold leading-[1.05] tracking-[-0.045em] sm:text-[4.25rem]">
+              Create with <span className="text-gradient-soft">AI</span>
+              <br />
+              Without Hassle
             </h1>
           </Reveal>
-          <Reveal delay={220}>
-            <div className="mt-12 flex flex-wrap items-center justify-center gap-3">
+          <Reveal delay={140}>
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+              Every premium AI tool your team needs — video, chat, image and voice — unlocked behind
+              one secure login.
+            </p>
+          </Reveal>
+          <Reveal delay={240}>
+            <div className="mt-9 flex justify-center">
               <Link
                 to="/auth"
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-cta px-8 py-3.5 font-display font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
               >
-                Sign In <ArrowRight className="h-4 w-4" />
+                Get Started <ArrowRight className="h-4 w-4" />
               </Link>
-              <a
-                href="#tools"
-                className="inline-flex items-center rounded-full border border-border bg-card/50 px-7 py-3.5 font-display font-medium backdrop-blur transition hover:border-primary/40 hover:bg-accent"
-              >
-                Explore Tools
-              </a>
             </div>
+          </Reveal>
+          <Reveal delay={320}>
+            <LogoMarquee />
           </Reveal>
         </div>
       </section>
 
-      {/* Tools showcase */}
-      <section id="tools" className="mx-auto max-w-6xl px-5 pb-28">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          {tools.map((tool, i) => {
-            const Icon = tool.icon;
+      {/* Features */}
+      <section id="features" className="mx-auto max-w-6xl px-5 py-24">
+        <Reveal>
+          <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+            Features
+          </p>
+          <h2 className="mt-4 text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
+            Built for creators, businesses and teams.
+          </h2>
+        </Reveal>
+        <div className="mt-14 grid gap-6 md:grid-cols-3">
+          {features.map((f, i) => {
+            const Icon = f.icon;
             return (
-              <Reveal key={tool.name} delay={i * 90}>
-                <article className="glow-frame group relative h-[26rem] overflow-hidden rounded-3xl border border-border/70 bg-card transition-transform duration-500 ease-out hover:-translate-y-1">
-                  <img
-                    src={tool.image}
-                    alt={`${tool.name} preview`}
-                    width={1024}
-                    height={1280}
-                    loading="lazy"
-                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
-                  />
-                  <span
-                    aria-hidden
-                    className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[oklch(0.08_0.01_285)] via-[oklch(0.08_0.01_285)]/60 to-transparent"
-                  />
-
-                  <span
-                    className={cn(
-                      "absolute left-4 top-4 z-10 rounded-full bg-[oklch(0.12_0.01_285)]/70 px-3 py-1 font-display text-[10px] font-bold uppercase tracking-[0.16em] backdrop-blur-md",
-                      tool.badgeTone,
-                    )}
-                  >
-                    {tool.badge}
+              <Reveal key={f.title} delay={i * 100}>
+                <div className="h-full rounded-2xl border border-border bg-card p-7 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-pop">
+                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
+                    <Icon className="h-5 w-5" />
                   </span>
-                  <span className="absolute right-4 top-4 z-10 grid h-9 w-9 place-items-center rounded-full bg-[oklch(0.12_0.01_285)]/70 text-[oklch(0.97_0_0)] backdrop-blur-md">
-                    <Icon className="h-4 w-4" />
-                  </span>
-
-                  <div className="absolute inset-x-0 bottom-0 z-10 p-5">
-                    <p className="font-display text-[10px] font-semibold uppercase tracking-[0.22em] text-[oklch(0.8_0.02_285)]">
-                      {tool.kind}
-                    </p>
-                    <h3 className="mt-2 font-display text-xl font-bold leading-tight tracking-[-0.02em] text-[oklch(0.99_0_0)]">
-                      {tool.name}
-                    </h3>
-                    <p className="mt-2 line-clamp-1 text-xs leading-relaxed text-[oklch(0.78_0.01_285)]">
-                      {tool.description}
-                    </p>
-                  </div>
-                </article>
+                  <h3 className="mt-5 font-display text-lg font-semibold">{f.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
+                </div>
               </Reveal>
             );
           })}
         </div>
       </section>
 
-      {/* About */}
-      <section id="about" className="relative overflow-hidden border-y border-border">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -left-32 top-1/2 h-80 w-80 -translate-y-1/2 rounded-full bg-primary/15 blur-[150px]"
-        />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute -right-32 top-10 h-80 w-80 rounded-full bg-[var(--brand-pink)]/12 blur-[150px]"
-        />
-        <div className="relative mx-auto grid max-w-6xl gap-14 px-5 py-28 md:grid-cols-2 md:items-center">
+      {/* How it works */}
+      <section id="how" className="border-y border-border bg-secondary/40">
+        <div className="mx-auto max-w-6xl px-5 py-24">
           <Reveal>
-            <div>
-              <p className="font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
-                About
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:leading-[1.05]">
-                Built for teams and <span className="text-gradient-soft">resellers.</span>
-              </h2>
-              <p className="mt-6 max-w-md leading-relaxed text-muted-foreground">
-                Farix AI is a private access platform. Admins manage tools and sessions centrally,
-                resellers manage their own users, and members simply sign in and start working — no
-                personal accounts, no shared passwords, no setup.
-              </p>
-            </div>
+            <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+              How it works
+            </p>
+            <h2 className="mt-4 text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
+              Live in three steps.
+            </h2>
           </Reveal>
-          <div className="grid gap-5 sm:grid-cols-2">
-            {[
-              {
-                t: "Managed sessions",
-                d: "Access handled centrally — nothing to configure.",
-                icon: Layers,
-              },
-              {
-                t: "Role-based access",
-                d: "King, reseller and user scopes kept strictly separate.",
-                icon: Shield,
-              },
-              {
-                t: "Always current",
-                d: "Latest tool builds delivered automatically.",
-                icon: Zap,
-              },
-              {
-                t: "Private by default",
-                d: "Invite-only. No public signup, ever.",
-                icon: Lock,
-              },
-            ].map((f, i) => {
-              const Icon = f.icon;
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {steps.map((s, i) => {
+              const Icon = s.icon;
               return (
-                <Reveal key={f.t} delay={i * 90}>
-                  <div className="group h-full rounded-2xl border border-border/70 bg-card/60 p-6 shadow-soft backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/45 hover:shadow-card">
-                    <span className="grid h-11 w-11 place-items-center rounded-full bg-primary/12 text-primary shadow-[0_0_0_1px_color-mix(in_oklab,var(--brand-violet)_25%,transparent),0_10px_30px_-12px_color-mix(in_oklab,var(--brand-violet)_60%,transparent)] transition-transform duration-300 group-hover:scale-110">
-                      <Icon className="h-5 w-5" />
-                    </span>
-                    <h3 className="mt-5 font-display text-base font-semibold">{f.t}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.d}</p>
+                <Reveal key={s.n} delay={i * 100}>
+                  <div className="h-full rounded-2xl border border-border bg-card p-7 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-pop">
+                    <div className="flex items-start justify-between">
+                      <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
+                        <Icon className="h-5 w-5" />
+                      </span>
+                      <span className="font-display text-3xl font-extrabold text-muted-foreground/25">
+                        {s.n}
+                      </span>
+                    </div>
+                    <h3 className="mt-5 font-display text-lg font-semibold">{s.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
                   </div>
                 </Reveal>
               );
@@ -310,73 +275,78 @@ function Landing() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-1/2 top-0 h-[26rem] w-[42rem] -translate-x-1/2 rounded-full bg-primary/12 blur-[170px]"
-        />
-        <div className="relative mx-auto max-w-5xl px-5 py-28 text-center">
-          <Reveal>
-            <p className="font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
-              Pricing
-            </p>
-            <h2 className="mt-3 font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.75rem] sm:leading-[1.05]">
-              Access is invite-only.
-            </h2>
-            <p className="mx-auto mt-5 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              Choose your plan and contact your reseller to get started. All accounts are issued by
-              administrators.
-            </p>
-          </Reveal>
+      <section id="pricing" className="mx-auto max-w-6xl px-5 py-24">
+        <Reveal>
+          <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+            Pricing
+          </p>
+          <h2 className="mt-4 text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
+            One plan. Everything unlocked.
+          </h2>
+          <p className="mx-auto mt-4 max-w-lg text-center text-sm leading-relaxed text-muted-foreground">
+            Access is invite-only. Payments are handled directly through your reseller via WhatsApp,
+            Telegram or bank transfer.
+          </p>
+        </Reveal>
 
-          <div className="mt-14 grid gap-6 md:grid-cols-2">
-            {plans.map((plan, i) => (
-              <Reveal key={plan.name} delay={i * 120}>
-                <div className="group relative h-full overflow-hidden rounded-3xl border border-border/70 bg-card/60 text-left shadow-card backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-primary/45">
-                  <span aria-hidden className={cn("absolute inset-x-0 top-0 h-1", plan.accent)} />
-                  <div className="flex h-full flex-col p-8">
-                    <h3 className="font-display text-2xl font-bold tracking-[-0.02em]">
-                      {plan.name}
-                    </h3>
-                    <p className="mt-2 text-sm text-muted-foreground">
-                      Contact your Reseller for price
-                    </p>
-                    <ul className="mt-7 flex-1 space-y-3.5">
-                      {plan.features.map((f) => (
-                        <li key={f} className="flex items-start gap-3 text-sm">
-                          <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-primary-foreground">
-                            <Check className="h-3 w-3" strokeWidth={3} />
-                          </span>
-                          <span className="text-foreground/90">{f}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Link
-                      to="/auth"
-                      className="mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-cta px-6 py-3 font-display font-semibold text-primary-foreground transition hover:opacity-90 active:scale-[0.98]"
-                    >
-                      Get Access <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
+        <Reveal delay={140}>
+          <div className="mx-auto mt-14 max-w-md">
+            <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-pop">
+              <span aria-hidden className="block h-1 bg-gradient-cta" />
+              <div className="p-8">
+                <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 font-display text-[10px] font-bold uppercase tracking-[0.16em] text-primary">
+                  Most popular
+                </span>
+                <h3 className="mt-5 font-display text-2xl font-bold tracking-[-0.02em]">
+                  Unlimited
+                </h3>
+                <p className="mt-2 font-display text-3xl font-extrabold tracking-[-0.03em]">
+                  Contact{" "}
+                  <span className="text-sm font-medium text-muted-foreground">your reseller</span>
+                </p>
+                <ul className="mt-7 space-y-3.5">
+                  {planFeatures.map((f) => (
+                    <li key={f} className="flex items-start gap-3 text-sm">
+                      <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-primary-foreground">
+                        <Check className="h-3 w-3" strokeWidth={3} />
+                      </span>
+                      <span className="text-foreground/85">{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link
+                  to="/auth"
+                  className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-cta px-6 py-3 font-display font-semibold text-primary-foreground transition hover:opacity-90 active:scale-[0.98]"
+                >
+                  Contact your Reseller <ArrowRight className="h-4 w-4" />
+                </Link>
+                <p className="mt-4 text-center text-[11px] tracking-wide text-muted-foreground">
+                  WhatsApp · Telegram · Bank Transfer
+                </p>
+              </div>
+            </div>
           </div>
+        </Reveal>
 
-          <Reveal delay={200}>
-            <p className="mt-10 text-sm text-muted-foreground">
-              Already have credentials?{" "}
-              <Link to="/auth" className="font-medium text-primary hover:underline">
-                Sign in here →
-              </Link>
-            </p>
-          </Reveal>
-        </div>
+        <Reveal delay={200}>
+          <p className="mt-10 text-center text-sm text-muted-foreground">
+            Already have credentials?{" "}
+            <Link to="/auth" className="font-medium text-primary hover:underline">
+              Sign in here →
+            </Link>
+          </p>
+        </Reveal>
       </section>
 
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-xs text-muted-foreground sm:flex-row">
-          <span>© {new Date().getFullYear()} Farix AI. All rights reserved.</span>
+          <span className="flex items-center gap-2">
+            <span className="grid h-6 w-6 place-items-center rounded-lg bg-gradient-cta text-primary-foreground">
+              <Shield className="h-3 w-3" />
+            </span>
+            <span className="font-display font-semibold text-foreground">Farix AI</span>
+            <span>© {new Date().getFullYear()} · All rights reserved</span>
+          </span>
           <span>Invite-only access platform</span>
         </div>
       </footer>
