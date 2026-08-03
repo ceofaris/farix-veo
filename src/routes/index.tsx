@@ -12,6 +12,10 @@ import {
   Check,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import logoFlow from "@/assets/logo-flow.png.asset.json";
+import logoVeo from "@/assets/logo-veo.png.asset.json";
+import logoChatgpt from "@/assets/logo-chatgpt.png.asset.json";
+import logoVeo31 from "@/assets/logo-veo31.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
