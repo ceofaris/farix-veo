@@ -183,10 +183,10 @@ function Landing() {
         />
         <div className="relative mx-auto max-w-5xl px-5 pb-24 pt-24 text-center sm:pt-32">
           <Reveal>
-            <h1 className="font-display text-[2.5rem] font-extrabold leading-[1.05] tracking-[-0.045em] sm:text-[4.25rem]">
-              Create with <span className="text-gradient-soft">AI</span>
+            <h1 className="font-sans text-[2.5rem] font-semibold leading-[1.05] tracking-[-0.04em] sm:text-[4.5rem]">
+              <span className="text-gradient-metallic">Create with AI</span>
               <br />
-              Without Hassle
+              <span className="text-gradient-ocean">Without Hassle</span>
             </h1>
           </Reveal>
           <Reveal delay={140}>
