@@ -38,10 +38,10 @@ export const Route = createFileRoute("/")({
 });
 
 const marqueeLogos = [
-  { src: logoFlow.url, alt: "Google Flow", h: "h-[72px]" },
-  { src: logoVeo.url, alt: "Google Veo", h: "h-[72px]" },
-  { src: logoChatgpt.url, alt: "ChatGPT", h: "h-[72px]" },
-  { src: logoVeo31.url, alt: "Google Veo 3.1", h: "h-[72px]" },
+  { src: logoFlow.url, alt: "Google Flow", h: "h-[88px]" },
+  { src: logoVeo.url, alt: "Google Veo", h: "h-[88px]" },
+  { src: logoChatgpt.url, alt: "ChatGPT", h: "h-[88px]" },
+  { src: logoVeo31.url, alt: "Google Veo 3.1", h: "h-[88px]" },
 ];
 
 
