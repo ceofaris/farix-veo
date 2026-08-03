@@ -41,10 +41,10 @@ export const Route = createFileRoute("/")({
 });
 
 const marqueeLogos = [
-  { src: logoFlow.url, alt: "Google Flow", h: "h-14" },
-  { src: logoVeo.url, alt: "Google Veo", h: "h-14" },
-  { src: logoChatgpt.url, alt: "ChatGPT", h: "h-14" },
-  { src: logoVeo31.url, alt: "Google Veo 3.1", h: "h-14" },
+  { src: logoFlow.url, alt: "Google Flow", h: "h-[72px]" },
+  { src: logoVeo.url, alt: "Google Veo", h: "h-[72px]" },
+  { src: logoChatgpt.url, alt: "ChatGPT", h: "h-[72px]" },
+  { src: logoVeo31.url, alt: "Google Veo 3.1", h: "h-[72px]" },
 ];
 
 
@@ -144,7 +144,7 @@ function LogoMarquee() {
   const row = [...half, ...half];
   return (
     <div className="relative mt-16 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
-      <div className="flex w-max animate-marquee items-center gap-16 sm:gap-24">
+      <div className="flex w-max animate-marquee items-center gap-20 sm:gap-28">
         {row.map((logo, i) => (
           <img
             key={`${logo.alt}-${i}`}
