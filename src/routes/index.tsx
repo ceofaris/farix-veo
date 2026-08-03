@@ -161,21 +161,21 @@ function Landing() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-background">
-        <div className="relative mx-auto max-w-5xl px-5 pb-24 pt-24 text-center sm:pt-32">
+        <div className="relative mx-auto max-w-5xl px-5 pb-28 pt-28 text-center sm:pt-36">
           <Reveal>
-            <h1 className="font-sans text-[2.5rem] font-bold leading-[1.05] tracking-[-0.04em] sm:text-[4.5rem]">
+            <h1 className="font-sans text-[3rem] font-bold leading-[1.05] tracking-[-0.04em] sm:text-[5.25rem]">
               <span className="text-gradient-metallic">Create with AI</span>
               <br />
               <span className="text-gradient-ocean">Without Hassle</span>
             </h1>
           </Reveal>
           <Reveal delay={140}>
-            <div className="mt-9 flex justify-center">
+            <div className="mt-11 flex justify-center">
               <Link
                 to="/auth"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-cta px-8 py-3.5 font-display font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
+                className="inline-flex items-center gap-2.5 rounded-full bg-gradient-cta px-9 py-4 font-display text-base font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
               >
-                Get Started <ArrowRight className="h-4 w-4" />
+                Get Started <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
           </Reveal>
