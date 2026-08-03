@@ -38,10 +38,10 @@ export const Route = createFileRoute("/")({
 });
 
 const marqueeLogos = [
-  { src: logoFlow.url, alt: "Google Flow", h: "h-[72px]" },
-  { src: logoVeo.url, alt: "Google Veo", h: "h-[72px]" },
-  { src: logoChatgpt.url, alt: "ChatGPT", h: "h-[72px]" },
-  { src: logoVeo31.url, alt: "Google Veo 3.1", h: "h-[72px]" },
+  { src: logoFlow.url, alt: "Google Flow", h: "h-[88px]" },
+  { src: logoVeo.url, alt: "Google Veo", h: "h-[88px]" },
+  { src: logoChatgpt.url, alt: "ChatGPT", h: "h-[88px]" },
+  { src: logoVeo31.url, alt: "Google Veo 3.1", h: "h-[88px]" },
 ];
 
 
@@ -123,8 +123,8 @@ function LogoMarquee() {
   const half = [...marqueeLogos, ...marqueeLogos, ...marqueeLogos];
   const row = [...half, ...half];
   return (
-    <div className="relative mt-16 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
-      <div className="flex w-max animate-marquee items-center gap-20 sm:gap-28">
+    <div className="relative mt-20 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+      <div className="flex w-max animate-marquee items-center gap-24 sm:gap-32">
         {row.map((logo, i) => (
           <img
             key={`${logo.alt}-${i}`}
@@ -161,21 +161,21 @@ function Landing() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-background">
-        <div className="relative mx-auto max-w-5xl px-5 pb-24 pt-24 text-center sm:pt-32">
+        <div className="relative mx-auto max-w-5xl px-5 pb-28 pt-28 text-center sm:pt-36">
           <Reveal>
-            <h1 className="font-sans text-[2.5rem] font-bold leading-[1.05] tracking-[-0.04em] sm:text-[4.5rem]">
+            <h1 className="font-sans text-[3rem] font-bold leading-[1.05] tracking-[-0.04em] sm:text-[5.25rem]">
               <span className="text-gradient-metallic">Create with AI</span>
               <br />
               <span className="text-gradient-ocean">Without Hassle</span>
             </h1>
           </Reveal>
           <Reveal delay={140}>
-            <div className="mt-9 flex justify-center">
+            <div className="mt-11 flex justify-center">
               <Link
                 to="/auth"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-cta px-8 py-3.5 font-display font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
+                className="inline-flex items-center gap-2.5 rounded-full bg-gradient-cta px-9 py-4 font-display text-base font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
               >
-                Get Started <ArrowRight className="h-4 w-4" />
+                Get Started <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
           </Reveal>
@@ -188,7 +188,7 @@ function Landing() {
 
       {/* How it works */}
       <section id="how" className="border-y border-border bg-secondary/40">
-        <div className="mx-auto max-w-6xl px-5 py-24">
+        <div className="mx-auto max-w-6xl px-5 py-28">
           <Reveal>
             <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
               How it works
