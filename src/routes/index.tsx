@@ -37,15 +37,12 @@ export const Route = createFileRoute("/")({
 });
 
 const marqueeLogos = [
-  "Veo 3.1",
-  "ChatGPT",
-  "Google Flow",
-  "Nano Banana",
-  "Midjourney",
-  "ElevenLabs",
-  "Sora",
-  "Claude",
+  { src: logoFlow.url, alt: "Google Flow", h: "h-9" },
+  { src: logoVeo.url, alt: "Google Veo", h: "h-12" },
+  { src: logoChatgpt.url, alt: "ChatGPT", h: "h-11" },
+  { src: logoVeo31.url, alt: "Google Veo 3.1", h: "h-14" },
 ];
+
 
 const features = [
   {
