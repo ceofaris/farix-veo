@@ -3,9 +3,6 @@ import { useEffect } from "react";
 import {
   Shield,
   ArrowRight,
-  Zap,
-  Infinity as InfinityIcon,
-  Lock,
   UserPlus,
   Puzzle,
   Play,
@@ -48,23 +45,6 @@ const marqueeLogos = [
 ];
 
 
-const features = [
-  {
-    icon: Zap,
-    title: "Instant Session Access",
-    body: "Sign in once and your managed sessions are ready — no setup, no shared passwords.",
-  },
-  {
-    icon: InfinityIcon,
-    title: "Unlimited Usage",
-    body: "Generate video, chat, images and voice with premium models. No daily caps.",
-  },
-  {
-    icon: Lock,
-    title: "Secure & Private",
-    body: "Encrypted session storage with strict role-based access. Your data stays yours.",
-  },
-];
 
 const steps = [
   {
