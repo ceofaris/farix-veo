@@ -107,7 +107,7 @@ function Navbar() {
         </Link>
         <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
           {[
-            { label: "Features", href: "#features" },
+            { label: "Home", href: "#" },
             { label: "How it works", href: "#how" },
             { label: "Pricing", href: "#pricing" },
           ].map((l) => (
@@ -205,33 +205,6 @@ function Landing() {
         </div>
       </section>
 
-      {/* Features */}
-      <section id="features" className="mx-auto max-w-6xl px-5 py-24">
-        <Reveal>
-          <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
-            Features
-          </p>
-          <h2 className="mt-4 text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
-            Built for creators, businesses and teams.
-          </h2>
-        </Reveal>
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
-          {features.map((f, i) => {
-            const Icon = f.icon;
-            return (
-              <Reveal key={f.title} delay={i * 100}>
-                <div className="h-full rounded-2xl border border-border bg-card p-7 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-pop">
-                  <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <h3 className="mt-5 font-display text-lg font-semibold">{f.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{f.body}</p>
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
-      </section>
 
       {/* How it works */}
       <section id="how" className="border-y border-border bg-secondary/40">
