@@ -249,3 +249,18 @@
     box-shadow: 0 24px 60px -22px color-mix(in oklab, var(--brand-violet) 70%, transparent);
   }
 }
+
+/* Continuous logo marquee */
+@keyframes farix-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@utility animate-marquee {
+  animation: farix-marquee 30s linear infinite;
+}
+
