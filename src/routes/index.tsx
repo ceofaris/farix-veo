@@ -225,6 +225,25 @@ function Landing() {
         </div>
       </section>
 
+      {/* About */}
+      <section id="about" className="mx-auto max-w-6xl px-5 py-24">
+        <Reveal>
+          <div className="mx-auto max-w-3xl text-center">
+            <p className="font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+              About
+            </p>
+            <h2 className="mt-4 font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
+              About Farix AI
+            </h2>
+            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
+              Farix AI is an invite-only platform that gives creators, teams and businesses managed
+              access to premium AI tools through a single secure login. We handle the accounts, the
+              extension and the access — so you can focus entirely on creating.
+            </p>
+          </div>
+        </Reveal>
+      </section>
+
       {/* Pricing */}
       <section id="pricing" className="mx-auto max-w-6xl px-5 py-24">
         <Reveal>
