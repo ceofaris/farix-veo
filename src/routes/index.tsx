@@ -91,7 +91,9 @@ function Navbar() {
           {[
             { label: "Home", href: "#" },
             { label: "How it works", href: "#how" },
+            { label: "About", href: "#about" },
             { label: "Pricing", href: "#pricing" },
+            { label: "FAQ", href: "#faq" },
           ].map((l) => (
             <a
               key={l.label}
