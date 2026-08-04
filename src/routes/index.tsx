@@ -77,6 +77,93 @@ const planFeatures = [
   "Priority reseller support",
 ];
 
+const faqItems = [
+  {
+    question: "Is Farix AI safe to use?",
+    answer:
+      "Yes. Farix AI gives you managed access to premium AI accounts — like Veo — through a secure Chrome extension. You work directly inside the original, official tools; we simply handle the account setup and access on our end. The extension itself is scoped only to enable that access and doesn't collect your personal data.",
+  },
+  {
+    question: "Do I need to create my own accounts?",
+    answer:
+      "No. You don't need to create or manage any accounts yourself. Once your reseller activates your access, everything is ready to use — no setup required on your end.",
+  },
+  {
+    question: "How do I get access?",
+    answer:
+      "Farix AI is invite-only. You can get an account only through an authorized reseller — public registration isn't available. This keeps access controlled and every account properly managed.",
+  },
+  {
+    question: "Can I use Farix AI on multiple devices or on mobile?",
+    answer:
+      "For the best experience, we recommend using your account on one device at a time. You can use Farix AI on mobile as well, as long as your mobile browser supports extensions.",
+  },
+  {
+    question: "Will I run out of usage?",
+    answer:
+      "No. There's no credit system to track. You get full access until the expiry date set by your reseller — use it freely within that period.",
+  },
+  {
+    question: "Who should I contact for support?",
+    answer:
+      "Please contact the reseller who provided your account — they can help with any support requests or renewals.",
+  },
+];
+
+function FaqAccordion() {
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+
+  return (
+    <div className="mx-auto max-w-3xl space-y-4">
+      {faqItems.map((item, i) => {
+        const isOpen = openIndex === i;
+        return (
+          <Reveal key={item.question} delay={i * 60}>
+            <div
+              className={cn(
+                "rounded-2xl border bg-card transition-all duration-300",
+                isOpen ? "border-primary/40 shadow-card" : "border-border shadow-soft",
+              )}
+            >
+              <button
+                type="button"
+                onClick={() => setOpenIndex(isOpen ? null : i)}
+                className="flex w-full items-center justify-between gap-4 p-6 text-left"
+              >
+                <span className="font-display text-base font-semibold text-foreground">
+                  {item.question}
+                </span>
+                <span
+                  className={cn(
+                    "grid h-8 w-8 shrink-0 place-items-center rounded-full border transition-all duration-300",
+                    isOpen
+                      ? "rotate-180 border-primary/20 bg-primary/10 text-primary"
+                      : "border-border bg-background text-muted-foreground",
+                  )}
+                >
+                  <ChevronDown className="h-4 w-4" />
+                </span>
+              </button>
+              <div
+                className={cn(
+                  "grid transition-all duration-300 ease-out",
+                  isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0",
+                )}
+              >
+                <div className="overflow-hidden px-6">
+                  <p className="pb-6 text-sm leading-relaxed text-muted-foreground">
+                    {item.answer}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        );
+      })}
+    </div>
+  );
+}
+
 function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
