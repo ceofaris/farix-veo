@@ -395,6 +395,27 @@ function Landing() {
         </Reveal>
       </section>
 
+      {/* FAQ */}
+      <section id="faq" className="border-y border-border bg-secondary/40">
+        <div className="mx-auto max-w-6xl px-5 py-28">
+          <Reveal>
+            <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
+              FAQ
+            </p>
+            <h2 className="mt-4 text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
+              Frequently Asked{" "}
+              <span className="text-primary">Questions</span>
+            </h2>
+            <p className="mx-auto mt-4 max-w-lg text-center text-sm leading-relaxed text-muted-foreground">
+              Everything you need to know before you start.
+            </p>
+          </Reveal>
+          <div className="mt-14">
+            <FaqAccordion />
+          </div>
+        </div>
+      </section>
+
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-xs text-muted-foreground sm:flex-row">
           <span className="flex items-center gap-2">
