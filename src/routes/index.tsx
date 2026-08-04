@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
   Shield,
   ArrowRight,
@@ -7,8 +7,10 @@ import {
   Puzzle,
   Play,
   Check,
+  ChevronDown,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import { cn } from "@/lib/utils";
 import logoFlow from "@/assets/logo-flow.png.asset.json";
 import logoVeo from "@/assets/logo-veo.png.asset.json";
 import logoChatgpt from "@/assets/logo-chatgpt.png.asset.json";
