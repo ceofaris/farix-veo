@@ -9,6 +9,8 @@ import { ArrowLeft, Plus, Pencil, Trash2, Power } from "lucide-react";
 import { AccountFormDialog, ToolAccountRow } from "@/components/account-form-dialog";
 import { toast } from "sonner";
 import { ToolExtensionCard } from "@/components/tool-extension-card";
+import { ToolLogo } from "@/routes/_authenticated/king/tools";
+
 
 export const Route = createFileRoute("/_authenticated/king/tools_/$id")({
   component: KingToolAccounts,
