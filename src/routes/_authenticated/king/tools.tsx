@@ -106,37 +106,10 @@ function KingTools() {
                   <Settings className="w-4 h-4 mr-1" /> Manage Accounts
                 </Link>
               </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                aria-label="Edit tool"
-                onClick={() => {
-                  setEditing(t);
-                  setDialogOpen(true);
-                }}
-              >
-                <Pencil className="w-4 h-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                aria-label="Delete tool"
-                className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                onClick={() => deleteTool(t.id)}
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
             </div>
           </Card>
         ))}
       </div>
-
-      <ToolFormDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        tool={editing}
-        onSaved={() => tools.refetch()}
-      />
     </div>
   );
 }
