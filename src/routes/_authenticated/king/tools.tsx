@@ -6,10 +6,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, PageHeader } from "@/components/panel-layout";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Pencil, Trash2, Settings, Wrench, Globe } from "lucide-react";
-import { ToolFormDialog, ToolRow } from "@/components/tool-form-dialog";
+import { Settings, Wrench, Globe } from "lucide-react";
 import { signedLogoUrl } from "@/lib/logo";
-import { toast } from "sonner";
+
+type ToolRow = {
+  id: string;
+  name: string;
+  slug: string;
+  domain: string;
+  logo_url: string | null;
+  is_active: boolean;
+};
 
 export const Route = createFileRoute("/_authenticated/king/tools")({
   component: KingTools,
@@ -36,9 +43,6 @@ function LogoImg({ path, name }: { path: string | null; name: string }) {
 }
 
 function KingTools() {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<ToolRow | null>(null);
-
   const tools = useQuery({
     queryKey: ["tools"],
     queryFn: async () => {
@@ -48,36 +52,13 @@ function KingTools() {
     },
   });
 
-  async function deleteTool(id: string) {
-    if (!confirm("Delete this tool and all its accounts?")) return;
-    const { error } = await supabase.from("tools").delete().eq("id", id);
-    if (error) return toast.error(error.message);
-    toast.success("Deleted");
-    tools.refetch();
-  }
-
   return (
     <div>
-      <PageHeader
-        title="Tools"
-        description="All tools available on the platform."
-        action={
-          <Button
-            size="lg"
-            onClick={() => {
-              setEditing(null);
-              setDialogOpen(true);
-            }}
-            className="shadow-soft transition-transform active:scale-[0.98]"
-          >
-            <Plus className="w-4 h-4 mr-1.5" /> Add New Tool
-          </Button>
-        }
-      />
+      <PageHeader title="Tools" description="Veo 3 and ChatGPT are the platform's fixed tools." />
 
       {tools.isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
-          {[0, 1, 2].map((i) => (
+          {[0, 1].map((i) => (
             <Card key={i} className="animate-pulse h-40" />
           ))}
         </div>
@@ -88,19 +69,10 @@ function KingTools() {
           <div className="h-14 w-14 rounded-2xl bg-accent text-accent-foreground flex items-center justify-center">
             <Wrench className="h-6 w-6" />
           </div>
-          <h2 className="mt-5 text-lg font-semibold">No tools yet</h2>
+          <h2 className="mt-5 text-lg font-semibold">No tools available</h2>
           <p className="mt-2 text-sm text-muted-foreground max-w-sm">
-            Add your first tool to start managing cookie accounts and assigning access to resellers.
+            Veo 3 and ChatGPT are configured at the platform level.
           </p>
-          <Button
-            className="mt-6"
-            onClick={() => {
-              setEditing(null);
-              setDialogOpen(true);
-            }}
-          >
-            <Plus className="w-4 h-4 mr-1.5" /> Add New Tool
-          </Button>
         </Card>
       )}
 
@@ -134,37 +106,10 @@ function KingTools() {
                   <Settings className="w-4 h-4 mr-1" /> Manage Accounts
                 </Link>
               </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                aria-label="Edit tool"
-                onClick={() => {
-                  setEditing(t);
-                  setDialogOpen(true);
-                }}
-              >
-                <Pencil className="w-4 h-4" />
-              </Button>
-              <Button
-                size="sm"
-                variant="ghost"
-                aria-label="Delete tool"
-                className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                onClick={() => deleteTool(t.id)}
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
             </div>
           </Card>
         ))}
       </div>
-
-      <ToolFormDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        tool={editing}
-        onSaved={() => tools.refetch()}
-      />
     </div>
   );
 }
