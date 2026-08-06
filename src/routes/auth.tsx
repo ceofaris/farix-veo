@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Shield } from "lucide-react";
+import { Eye, EyeOff, Shield } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useServerFn } from "@tanstack/react-start";
 import { bootstrapKing } from "@/lib/admin.functions";
