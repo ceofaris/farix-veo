@@ -9,6 +9,8 @@ import { ArrowLeft, Plus, Pencil, Trash2, Power } from "lucide-react";
 import { AccountFormDialog, ToolAccountRow } from "@/components/account-form-dialog";
 import { toast } from "sonner";
 import { ToolExtensionCard } from "@/components/tool-extension-card";
+import { ToolLogo } from "@/components/tool-logo";
+
 
 export const Route = createFileRoute("/_authenticated/king/tools_/$id")({
   component: KingToolAccounts,
@@ -63,14 +65,20 @@ function KingToolAccounts() {
         <ArrowLeft className="w-4 h-4" /> Back to Tools
       </Link>
       <div className="flex items-center justify-between mt-3">
-        <div>
-          <h1 className="text-2xl font-semibold">{tool.data?.name ?? "Tool"}</h1>
-          <p className="text-muted-foreground text-sm mt-1">Manage cookie accounts.</p>
+        <div className="flex items-center gap-4">
+          {tool.data && (
+            <ToolLogo tool={tool.data as { name: string; slug?: string | null; logo_url?: string | null }} className="w-14 h-14" />
+          )}
+          <div>
+            <h1 className="text-2xl font-semibold">{tool.data?.name ?? "Tool"}</h1>
+            <p className="text-muted-foreground text-sm mt-1">Manage cookie accounts.</p>
+          </div>
         </div>
         <Button onClick={() => { setEditing(null); setDialogOpen(true); }}>
           <Plus className="w-4 h-4 mr-1" /> Add Account
         </Button>
       </div>
+
 
       <div className="mt-6">
         <ToolExtensionCard toolId={id} toolName={tool.data?.name ?? "Tool"} />

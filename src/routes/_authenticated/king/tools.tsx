@@ -1,13 +1,12 @@
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, PageHeader } from "@/components/panel-layout";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Wrench, Globe } from "lucide-react";
-import { signedLogoUrl } from "@/lib/logo";
+import { ToolLogo } from "@/components/tool-logo";
 
 type ToolRow = {
   id: string;
@@ -22,25 +21,7 @@ export const Route = createFileRoute("/_authenticated/king/tools")({
   component: KingTools,
 });
 
-function LogoImg({ path, name }: { path: string | null; name: string }) {
-  const [url, setUrl] = useState<string | null>(null);
-  useEffect(() => {
-    signedLogoUrl(path).then(setUrl);
-  }, [path]);
-  if (!url)
-    return (
-      <div className="w-12 h-12 rounded-xl bg-accent text-accent-foreground border border-border flex items-center justify-center text-sm font-semibold">
-        {name.slice(0, 2).toUpperCase()}
-      </div>
-    );
-  return (
-    <img
-      src={url}
-      alt={`${name} logo`}
-      className="w-12 h-12 rounded-xl object-cover bg-muted border border-border"
-    />
-  );
-}
+
 
 function KingTools() {
   const tools = useQuery({
@@ -80,7 +61,7 @@ function KingTools() {
         {tools.data?.map((t) => (
           <Card key={t.id} className="group hover:shadow-pop hover:-translate-y-0.5 transition-all duration-200">
             <div className="flex items-start gap-4">
-              <LogoImg path={t.logo_url} name={t.name} />
+              <ToolLogo tool={t} />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold truncate">{t.name}</h3>
