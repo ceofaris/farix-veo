@@ -6,10 +6,17 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, PageHeader } from "@/components/panel-layout";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Pencil, Trash2, Settings, Wrench, Globe } from "lucide-react";
-import { ToolFormDialog, ToolRow } from "@/components/tool-form-dialog";
+import { Settings, Wrench, Globe } from "lucide-react";
 import { signedLogoUrl } from "@/lib/logo";
-import { toast } from "sonner";
+
+type ToolRow = {
+  id: string;
+  name: string;
+  slug: string;
+  domain: string;
+  logo_url: string | null;
+  is_active: boolean;
+};
 
 export const Route = createFileRoute("/_authenticated/king/tools")({
   component: KingTools,
