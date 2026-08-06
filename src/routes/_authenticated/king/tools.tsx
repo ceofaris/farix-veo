@@ -8,6 +8,7 @@ import { Card, PageHeader } from "@/components/panel-layout";
 import { Badge } from "@/components/ui/badge";
 import { Settings, Wrench, Globe } from "lucide-react";
 import { signedLogoUrl } from "@/lib/logo";
+import { builtInToolLogo } from "@/lib/tool-logos";
 
 type ToolRow = {
   id: string;
@@ -22,25 +23,37 @@ export const Route = createFileRoute("/_authenticated/king/tools")({
   component: KingTools,
 });
 
-function LogoImg({ path, name }: { path: string | null; name: string }) {
-  const [url, setUrl] = useState<string | null>(null);
+export function ToolLogo({
+  tool,
+  className = "w-12 h-12",
+}: {
+  tool: { name: string; slug?: string | null; logo_url?: string | null };
+  className?: string;
+}) {
+  const builtIn = builtInToolLogo(tool);
+  const [url, setUrl] = useState<string | null>(builtIn);
   useEffect(() => {
-    signedLogoUrl(path).then(setUrl);
-  }, [path]);
+    if (builtIn) return;
+    signedLogoUrl(tool.logo_url).then(setUrl);
+  }, [builtIn, tool.logo_url]);
   if (!url)
     return (
-      <div className="w-12 h-12 rounded-xl bg-accent text-accent-foreground border border-border flex items-center justify-center text-sm font-semibold">
-        {name.slice(0, 2).toUpperCase()}
+      <div
+        className={`${className} rounded-xl bg-accent text-accent-foreground border border-border flex items-center justify-center text-sm font-semibold`}
+      >
+        {tool.name.slice(0, 2).toUpperCase()}
       </div>
     );
   return (
     <img
       src={url}
-      alt={`${name} logo`}
-      className="w-12 h-12 rounded-xl object-cover bg-muted border border-border"
+      alt={`${tool.name} logo`}
+      loading="lazy"
+      className={`${className} rounded-xl object-contain p-1.5 bg-background border border-border`}
     />
   );
 }
+
 
 function KingTools() {
   const tools = useQuery({
