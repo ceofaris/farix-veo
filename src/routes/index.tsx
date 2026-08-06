@@ -348,51 +348,43 @@ function Landing() {
           <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
             Pricing
           </p>
-          <h2 className="mt-4 text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
-            One plan. Everything unlocked.
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-center text-sm leading-relaxed text-muted-foreground">
+          <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
             Access is invite-only. Payments are handled directly through your reseller via WhatsApp,
-            Telegram or bank transfer.
+            Telegram, Bank Transfer, Binance, EasyPaisa, JazzCash, or crypto.
           </p>
         </Reveal>
 
         <Reveal delay={140}>
-          <div className="mx-auto mt-14 max-w-md">
-            <div className="overflow-hidden rounded-3xl border border-border bg-card shadow-pop">
-              <span aria-hidden className="block h-1 bg-gradient-cta" />
-              <div className="p-8">
-                <span className="inline-flex rounded-full bg-primary/10 px-3 py-1 font-display text-[10px] font-bold uppercase tracking-[0.16em] text-primary">
-                  Most popular
-                </span>
-                <h3 className="mt-5 font-display text-2xl font-bold tracking-[-0.02em]">
-                  Unlimited
-                </h3>
-                <p className="mt-2 font-display text-3xl font-extrabold tracking-[-0.03em]">
-                  Contact{" "}
-                  <span className="text-sm font-medium text-muted-foreground">your reseller</span>
-                </p>
-                <ul className="mt-7 space-y-3.5">
-                  {planFeatures.map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-sm">
-                      <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-primary-foreground">
-                        <Check className="h-3 w-3" strokeWidth={3} />
-                      </span>
-                      <span className="text-foreground/85">{f}</span>
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  to="/auth"
-                  className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-cta px-6 py-3 font-display font-semibold text-primary-foreground transition hover:opacity-90 active:scale-[0.98]"
-                >
-                  Contact your Reseller <ArrowRight className="h-4 w-4" />
-                </Link>
-                <p className="mt-4 text-center text-[11px] tracking-wide text-muted-foreground">
-                  WhatsApp · Telegram · Bank Transfer
-                </p>
+          <div className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
+            {pricingPlans.map((plan) => (
+              <div
+                key={plan.title}
+                className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-pop"
+              >
+                <span aria-hidden className="block h-1 bg-gradient-cta" />
+                <div className="flex flex-1 flex-col p-7 sm:p-8">
+                  <h3 className="font-display text-2xl font-bold tracking-[-0.02em]">
+                    {plan.title}
+                  </h3>
+                  <ul className="mt-6 space-y-3">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-start gap-3 text-sm">
+                        <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-primary-foreground">
+                          <Check className="h-3 w-3" strokeWidth={3} />
+                        </span>
+                        <span className="text-foreground/85">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    to="/auth"
+                    className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-cta px-6 py-3 font-display font-semibold text-primary-foreground transition hover:opacity-90 active:scale-[0.98]"
+                  >
+                    Contact your Reseller <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </div>
               </div>
-            </div>
+            ))}
           </div>
         </Reveal>
 
