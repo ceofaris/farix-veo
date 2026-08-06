@@ -69,12 +69,25 @@ const steps = [
   },
 ];
 
-const planFeatures = [
-  "Unlimited access to assigned tools",
-  "Veo 3, ChatGPT, Image & Voice models",
-  "Managed accounts, always current",
-  "Secure Chrome extension included",
-  "Priority reseller support",
+const pricingPlans = [
+  {
+    title: "Veo 3",
+    features: [
+      "Unlimited AI Video",
+      "Veo 3 Lite LP Model",
+      "Nano Banana",
+      "Nano Banana 2",
+      "Imagen 4 Ultra",
+    ],
+  },
+  {
+    title: "ChatGPT",
+    features: [
+      "Unlimited Chats",
+      "Image Generation (Limited)",
+      "Image Attachment Support",
+    ],
+  },
 ];
 
 const faqItems = [
