@@ -93,7 +93,7 @@ function KingTools() {
         {tools.data?.map((t) => (
           <Card key={t.id} className="group hover:shadow-pop hover:-translate-y-0.5 transition-all duration-200">
             <div className="flex items-start gap-4">
-              <LogoImg path={t.logo_url} name={t.name} />
+              <ToolLogo tool={t} />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold truncate">{t.name}</h3>
