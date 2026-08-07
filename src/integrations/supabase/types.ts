@@ -186,7 +186,6 @@ export type Database = {
           domain: string
           id: string
           is_active: boolean
-          logo_url: string | null
           name: string
           slug: string
           updated_at: string
@@ -196,7 +195,6 @@ export type Database = {
           domain: string
           id?: string
           is_active?: boolean
-          logo_url?: string | null
           name: string
           slug: string
           updated_at?: string
@@ -206,7 +204,6 @@ export type Database = {
           domain?: string
           id?: string
           is_active?: boolean
-          logo_url?: string | null
           name?: string
           slug?: string
           updated_at?: string

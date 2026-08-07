@@ -67,7 +67,7 @@ function KingToolAccounts() {
       <div className="flex items-center justify-between mt-3">
         <div className="flex items-center gap-4">
           {tool.data && (
-            <ToolLogo tool={tool.data as { name: string; slug?: string | null; logo_url?: string | null }} className="w-14 h-14" />
+            <ToolLogo tool={tool.data as { name: string; slug?: string | null }} className="w-14 h-14" />
           )}
           <div>
             <h1 className="text-2xl font-semibold">{tool.data?.name ?? "Tool"}</h1>
