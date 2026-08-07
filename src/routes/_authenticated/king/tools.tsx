@@ -13,7 +13,6 @@ type ToolRow = {
   name: string;
   slug: string;
   domain: string;
-  logo_url: string | null;
   is_active: boolean;
 };
 

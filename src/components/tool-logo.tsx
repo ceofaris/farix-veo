@@ -1,20 +1,13 @@
-import { useEffect, useState } from "react";
-import { signedLogoUrl } from "@/lib/logo";
 import { builtInToolLogo } from "@/lib/tool-logos";
 
 export function ToolLogo({
   tool,
   className = "w-12 h-12",
 }: {
-  tool: { name: string; slug?: string | null; logo_url?: string | null };
+  tool: { name: string; slug?: string | null };
   className?: string;
 }) {
-  const builtIn = builtInToolLogo(tool);
-  const [url, setUrl] = useState<string | null>(builtIn);
-  useEffect(() => {
-    if (builtIn) return;
-    signedLogoUrl(tool.logo_url).then(setUrl);
-  }, [builtIn, tool.logo_url]);
+  const url = builtInToolLogo(tool);
 
   if (!url)
     return (

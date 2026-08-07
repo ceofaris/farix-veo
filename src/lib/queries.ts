@@ -1,9 +1,9 @@
 import { queryOptions } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-export type ToolLite = { id: string; name: string; slug: string; logo_url: string | null };
+export type ToolLite = { id: string; name: string; slug: string };
 
-/** Shared, long-cached tools list — avoids refetching on every dialog open. */
+/** Shared, long-cached tools list — the platform has exactly two fixed tools. */
 export const activeToolsQuery = queryOptions({
   queryKey: ["tools", "active"],
   staleTime: 10 * 60 * 1000,
@@ -11,7 +11,7 @@ export const activeToolsQuery = queryOptions({
   queryFn: async (): Promise<ToolLite[]> => {
     const { data, error } = await supabase
       .from("tools")
-      .select("id, name, slug, logo_url")
+      .select("id, name, slug")
       .eq("is_active", true)
       .order("name");
     if (error) throw error;
@@ -33,3 +33,23 @@ export const resellerToolIdsQuery = (resellerId: string | undefined) =>
       return (data ?? []).map((r) => r.tool_id as string);
     },
   });
+
+/** Hard-coded marketing copy for the two fixed tools. */
+const DESCRIPTIONS: Array<{ match: RegExp; text: string }> = [
+  {
+    match: /chat\s*-?\s*gpt/i,
+    text: "Full ChatGPT access — GPT-5, Deep Research, Thinking mode, image creation and voice.",
+  },
+  {
+    match: /veo/i,
+    text: "Google Veo 3 video generation — cinematic AI video with native audio, straight from your browser.",
+  },
+];
+
+export function describeTool(tool: { name: string; slug?: string | null }) {
+  const key = `${tool.slug ?? ""} ${tool.name}`;
+  return (
+    DESCRIPTIONS.find((d) => d.match.test(key))?.text ??
+    "Premium AI tool access through the Farix browser extension."
+  );
+}
