@@ -2,39 +2,74 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { StatCard } from "@/components/stat-card";
-
 import { Card } from "@/components/panel-layout";
-import { Users, Wrench, UserCog, KeyRound, Activity } from "lucide-react";
+import { ToolLogo } from "@/components/tool-logo";
+import { Users, UserCog, KeyRound, BadgeCheck } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/king/")({
   component: KingDashboard,
 });
 
+type ToolStat = { id: string; name: string; slug: string; users: number; accounts: number };
+
 function KingDashboard() {
   const stats = useQuery({
-    queryKey: ["king-stats"],
+    queryKey: ["king-analytics"],
+    staleTime: 60 * 1000,
     queryFn: async () => {
-      const [users, resellers, tools, accounts] = await Promise.all([
-        supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "user"),
-        supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "reseller"),
-        supabase.from("tools").select("id", { count: "exact", head: true }),
-        supabase.from("tool_accounts").select("id", { count: "exact", head: true }).eq("is_active", true),
-      ]);
+      const nowIso = new Date().toISOString();
+      const [users, activeUsers, paidUsers, resellers, activeResellers, tools, userTools, accounts] =
+        await Promise.all([
+          supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "user"),
+          supabase
+            .from("profiles")
+            .select("id", { count: "exact", head: true })
+            .eq("role", "user")
+            .eq("is_active", true)
+            .or(`expires_at.is.null,expires_at.gt.${nowIso}`),
+          supabase
+            .from("profiles")
+            .select("id", { count: "exact", head: true })
+            .eq("role", "user")
+            .eq("is_paid", true),
+          supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "reseller"),
+          supabase
+            .from("profiles")
+            .select("id", { count: "exact", head: true })
+            .eq("role", "reseller")
+            .eq("is_active", true),
+          supabase.from("tools").select("id, name, slug").eq("is_active", true).order("name"),
+          supabase.from("user_tools").select("tool_id"),
+          supabase.from("tool_accounts").select("tool_id, is_active"),
+        ]);
+
+      const toolRows = (tools.data ?? []) as { id: string; name: string; slug: string }[];
+      const byTool: ToolStat[] = toolRows.map((t) => ({
+        ...t,
+        users: (userTools.data ?? []).filter((r) => r.tool_id === t.id).length,
+        accounts: (accounts.data ?? []).filter((r) => r.tool_id === t.id && r.is_active).length,
+      }));
+
       return {
         users: users.count ?? 0,
+        activeUsers: activeUsers.count ?? 0,
+        paidUsers: paidUsers.count ?? 0,
         resellers: resellers.count ?? 0,
-        tools: tools.count ?? 0,
-        accounts: accounts.count ?? 0,
+        activeResellers: activeResellers.count ?? 0,
+        accounts: (accounts.data ?? []).filter((a) => a.is_active).length,
+        byTool,
       };
     },
   });
 
+  const d = stats.data;
+
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-4xl font-semibold tracking-tight">King Panel</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">King Panel</h1>
         <p className="text-muted-foreground mt-2">
-          Real-time overview of every tool, reseller and user on the platform.
+          Live overview of users, resellers and the two platform tools.
         </p>
       </div>
 
@@ -42,62 +77,67 @@ function KingDashboard() {
         <StatCard
           icon={Users}
           label="Total Users"
-          value={stats.data?.users ?? "—"}
-          hint="All registered end users"
+          value={d?.users ?? "—"}
+          hint={d ? `${d.activeUsers} currently active` : undefined}
           tone="primary"
         />
         <StatCard
-          icon={UserCog}
-          label="Total Resellers"
-          value={stats.data?.resellers ?? "—"}
-          hint="Reseller accounts"
-          tone="chart-2"
-        />
-        <StatCard
-          icon={Wrench}
-          label="Total Tools"
-          value={stats.data?.tools ?? "—"}
-          hint="Tools available on the platform"
+          icon={BadgeCheck}
+          label="Paid Users"
+          value={d?.paidUsers ?? "—"}
+          hint={d ? `${Math.max(d.users - d.paidUsers, 0)} unpaid` : undefined}
           tone="chart-3"
         />
         <StatCard
+          icon={UserCog}
+          label="Resellers"
+          value={d?.resellers ?? "—"}
+          hint={d ? `${d.activeResellers} active` : undefined}
+          tone="chart-2"
+        />
+        <StatCard
           icon={KeyRound}
-          label="Active Accounts"
-          value={stats.data?.accounts ?? "—"}
-          hint="Cookie accounts currently active"
+          label="Active Cookie Accounts"
+          value={d?.accounts ?? "—"}
+          hint="Across ChatGPT and Veo 3"
           tone="chart-5"
         />
       </div>
 
+      <Card className="p-6 sm:p-8">
+        <div className="font-medium">Tool usage</div>
+        <p className="text-sm text-muted-foreground mt-1">
+          How many users have access to each tool and how many cookie accounts are live.
+        </p>
 
-      <Card className="p-8">
-        <div className="flex items-center gap-2 font-medium">
-          <Activity className="h-4 w-4 text-primary" /> Platform overview
-        </div>
-        <p className="text-sm text-muted-foreground mt-1">Current state of your platform at a glance.</p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-6">
-          <div className="rounded-xl border border-border bg-muted/40 p-5">
-            <div className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Users per reseller</div>
-            <div className="text-2xl font-semibold mt-2">
-              {stats.data && stats.data.resellers > 0
-                ? (stats.data.users / stats.data.resellers).toFixed(1)
-                : "—"}
-            </div>
-          </div>
-          <div className="rounded-xl border border-border bg-muted/40 p-5">
-            <div className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Accounts per tool</div>
-            <div className="text-2xl font-semibold mt-2">
-              {stats.data && stats.data.tools > 0 ? (stats.data.accounts / stats.data.tools).toFixed(1) : "—"}
-            </div>
-          </div>
-          <div className="rounded-xl border border-border bg-muted/40 p-5">
-            <div className="text-xs uppercase tracking-[0.12em] text-muted-foreground">Total records</div>
-            <div className="text-2xl font-semibold mt-2">
-              {stats.data
-                ? stats.data.users + stats.data.resellers + stats.data.tools + stats.data.accounts
-                : "—"}
-            </div>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          {(d?.byTool ?? []).map((t) => {
+            const pct = d && d.users > 0 ? Math.round((t.users / d.users) * 100) : 0;
+            return (
+              <div key={t.id} className="rounded-xl border border-border bg-muted/30 p-5">
+                <div className="flex items-center gap-3">
+                  <ToolLogo tool={t} className="w-10 h-10" />
+                  <div className="min-w-0">
+                    <div className="font-medium truncate">{t.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {t.accounts} active cookie account{t.accounts === 1 ? "" : "s"}
+                    </div>
+                  </div>
+                  <div className="ml-auto text-right">
+                    <div className="text-2xl font-semibold leading-none">{t.users}</div>
+                    <div className="text-[11px] text-muted-foreground mt-1">users</div>
+                  </div>
+                </div>
+                <div className="mt-4 h-1.5 w-full rounded-full bg-border overflow-hidden">
+                  <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
+                </div>
+                <div className="mt-2 text-[11px] text-muted-foreground">
+                  {pct}% of all users have access
+                </div>
+              </div>
+            );
+          })}
+          {!d && [0, 1].map((i) => <div key={i} className="h-32 rounded-xl bg-muted/40 animate-pulse" />)}
         </div>
       </Card>
     </div>
