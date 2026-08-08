@@ -138,12 +138,14 @@ function KingResellers() {
     queryKey: ["reseller-accounts"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("id, email, full_name, created_by, created_at, is_paid, paid_amount, paid_at, user_tools(tools(name))")
-        .eq("role", "user")
+        .from("user_tools")
+        .select(
+          "id, created_at, expires_at, is_paid, paid_amount, paid_at, tools(name), profiles!inner(id, email, full_name, created_by, role)",
+        )
+        .eq("profiles.role", "user")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as unknown as (AccountRow & { paid_at: string | null })[];
+      return data as unknown as AccountRow[];
     },
   });
 
@@ -152,10 +154,11 @@ function KingResellers() {
   const byReseller = useMemo(() => {
     const map = new Map<string, AccountRow[]>();
     for (const a of rows) {
-      if (!a.created_by) continue;
-      const list = map.get(a.created_by) ?? [];
+      const owner = a.profiles?.created_by;
+      if (!owner) continue;
+      const list = map.get(owner) ?? [];
       list.push(a);
-      map.set(a.created_by, list);
+      map.set(owner, list);
     }
     return map;
   }, [rows]);
@@ -165,19 +168,19 @@ function KingResellers() {
     let all = 0;
     let last30 = 0;
     let pendingCount = 0;
-    let pendingResellers = new Set<string>();
+    const pendingResellers = new Set<string>();
     for (const a of rows) {
       if (a.is_paid) {
         all += Number(a.paid_amount ?? 0);
-        const at = (a as AccountRow & { paid_at: string | null }).paid_at;
-        if (at && new Date(at).getTime() >= cutoff) last30 += Number(a.paid_amount ?? 0);
+        if (a.paid_at && new Date(a.paid_at).getTime() >= cutoff) last30 += Number(a.paid_amount ?? 0);
       } else {
         pendingCount += 1;
-        if (a.created_by) pendingResellers.add(a.created_by);
+        if (a.profiles?.created_by) pendingResellers.add(a.profiles.created_by);
       }
     }
     return { all, last30, pendingCount, pendingResellers: pendingResellers.size };
   }, [rows]);
+
 
   const activeResellers = (resellers.data ?? []).filter((r) => r.is_active).length;
 
