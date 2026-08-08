@@ -119,6 +119,23 @@ function KingResellers() {
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
   const del = useServerFn(deleteAuthUser);
+  const setActive = useServerFn(setResellerActive);
+  const [toggling, setToggling] = useState<string | null>(null);
+
+  async function handleToggle(r: ResellerRow, next: boolean) {
+    setToggling(r.id);
+    try {
+      await setActive({ data: { id: r.id, is_active: next } });
+      toast.success(next ? "Reseller enabled" : "Reseller disabled — they can no longer log in");
+      await resellers.refetch();
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setToggling(null);
+    }
+  }
+
+
 
 
 
