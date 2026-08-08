@@ -1,104 +1,118 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { StatCard } from "@/components/stat-card";
 import { Card } from "@/components/panel-layout";
 import { ToolLogo } from "@/components/tool-logo";
-import { Users, UserCog, KeyRound, BadgeCheck } from "lucide-react";
+import { formatRs } from "@/components/mark-paid-dialog";
+import { activeToolsQuery, earningsAccountsQuery, summarizeEarnings } from "@/lib/queries";
+import { Users, KeyRound, BadgeCheck, BadgeAlert, Wallet, CalendarClock } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/king/")({
   component: KingDashboard,
 });
 
-type ToolStat = { id: string; name: string; slug: string; users: number; accounts: number };
-
 function KingDashboard() {
-  const stats = useQuery({
-    queryKey: ["king-analytics"],
+  /** Same query (and cache key) the Resellers page uses — one shared earnings source. */
+  const accounts = useQuery(earningsAccountsQuery);
+  const tools = useQuery(activeToolsQuery);
+
+  const counts = useQuery({
+    queryKey: ["king-counts"],
     staleTime: 60 * 1000,
     queryFn: async () => {
       const nowIso = new Date().toISOString();
-      const [users, activeUsers, resellers, activeResellers, tools, userTools, accounts] =
-        await Promise.all([
-          supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "user"),
-          supabase
-            .from("profiles")
-            .select("id", { count: "exact", head: true })
-            .eq("role", "user")
-            .eq("is_active", true)
-            .or(`expires_at.is.null,expires_at.gt.${nowIso}`),
-          supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "reseller"),
-          supabase
-            .from("profiles")
-            .select("id", { count: "exact", head: true })
-            .eq("role", "reseller")
-            .eq("is_active", true),
-          supabase.from("tools").select("id, name, slug").eq("is_active", true).order("name"),
-          supabase.from("user_tools").select("tool_id, is_paid"),
-          supabase.from("tool_accounts").select("tool_id, is_active"),
-        ]);
-
-      const toolRows = (tools.data ?? []) as { id: string; name: string; slug: string }[];
-      const byTool: ToolStat[] = toolRows.map((t) => ({
-        ...t,
-        users: (userTools.data ?? []).filter((r) => r.tool_id === t.id).length,
-        accounts: (accounts.data ?? []).filter((r) => r.tool_id === t.id && r.is_active).length,
-      }));
-
-      const assignments = userTools.data ?? [];
-
+      const [users, activeUsers, cookieAccounts] = await Promise.all([
+        supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "user"),
+        supabase
+          .from("profiles")
+          .select("id", { count: "exact", head: true })
+          .eq("role", "user")
+          .eq("is_active", true)
+          .or(`expires_at.is.null,expires_at.gt.${nowIso}`),
+        supabase
+          .from("tool_accounts")
+          .select("tool_id")
+          .eq("is_active", true),
+      ]);
       return {
         users: users.count ?? 0,
         activeUsers: activeUsers.count ?? 0,
-        totalAssignments: assignments.length,
-        paidAssignments: assignments.filter((a) => a.is_paid).length,
-        resellers: resellers.count ?? 0,
-        activeResellers: activeResellers.count ?? 0,
-        accounts: (accounts.data ?? []).filter((a) => a.is_active).length,
-        byTool,
+        cookieAccounts: (cookieAccounts.data ?? []) as { tool_id: string }[],
       };
     },
   });
 
+  const rows = accounts.data ?? [];
+  const totals = useMemo(() => summarizeEarnings(rows), [rows]);
 
-  const d = stats.data;
+  const byTool = useMemo(() => {
+    const cookies = counts.data?.cookieAccounts ?? [];
+    return (tools.data ?? []).map((t) => ({
+      ...t,
+      users: new Set(rows.filter((r) => r.tool_id === t.id).map((r) => r.profiles?.id)).size,
+      assignments: rows.filter((r) => r.tool_id === t.id).length,
+      paid: rows.filter((r) => r.tool_id === t.id && r.is_paid).length,
+      earned: rows
+        .filter((r) => r.tool_id === t.id && r.is_paid)
+        .reduce((s, r) => s + Number(r.paid_amount ?? 0), 0),
+      accounts: cookies.filter((c) => c.tool_id === t.id).length,
+    }));
+  }, [tools.data, rows, counts.data]);
+
+  const loaded = accounts.isSuccess && counts.isSuccess;
+  const totalUsers = counts.data?.users ?? 0;
 
   return (
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">King Panel</h1>
         <p className="text-muted-foreground mt-2">
-          Live overview of users, resellers and the two platform tools.
+          Live overview of earnings, users and the two platform tools.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+        <StatCard
+          icon={Wallet}
+          label="Total Earnings (All-time)"
+          value={loaded ? formatRs(totals.all) : "—"}
+          hint="Same source as the Resellers page"
+          tone="primary"
+        />
+        <StatCard
+          icon={CalendarClock}
+          label="Last 30 Days Earnings"
+          value={loaded ? formatRs(totals.last30) : "—"}
+          hint="Payments confirmed in the last 30 days"
+          tone="chart-2"
+        />
         <StatCard
           icon={Users}
           label="Total Users"
-          value={d?.users ?? "—"}
-          hint={d ? `${d.activeUsers} currently active` : undefined}
-          tone="primary"
+          value={loaded ? totalUsers : "—"}
+          hint={loaded ? `${counts.data?.activeUsers ?? 0} currently active` : undefined}
+          tone="chart-3"
         />
         <StatCard
           icon={BadgeCheck}
           label="Paid Accounts"
-          value={d?.paidAssignments ?? "—"}
-          hint={d ? `${Math.max(d.totalAssignments - d.paidAssignments, 0)} unpaid` : undefined}
-
-          tone="chart-3"
+          value={loaded ? totals.paidCount : "—"}
+          hint={loaded ? `of ${totals.total} tool accounts` : undefined}
+          tone="chart-2"
         />
         <StatCard
-          icon={UserCog}
-          label="Resellers"
-          value={d?.resellers ?? "—"}
-          hint={d ? `${d.activeResellers} active` : undefined}
-          tone="chart-2"
+          icon={BadgeAlert}
+          label="Unpaid Accounts"
+          value={loaded ? totals.pendingCount : "—"}
+          hint={loaded ? `${totals.pendingResellers} reseller(s) with pending dues` : undefined}
+          tone="chart-5"
         />
         <StatCard
           icon={KeyRound}
           label="Active Cookie Accounts"
-          value={d?.accounts ?? "—"}
+          value={loaded ? (counts.data?.cookieAccounts.length ?? 0) : "—"}
           hint="Across ChatGPT and Veo 3"
           tone="chart-5"
         />
@@ -107,12 +121,12 @@ function KingDashboard() {
       <Card className="p-6 sm:p-8">
         <div className="font-medium">Tool usage</div>
         <p className="text-sm text-muted-foreground mt-1">
-          How many users have access to each tool and how many cookie accounts are live.
+          Users with access to each tool, payments collected and live cookie accounts.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-          {(d?.byTool ?? []).map((t) => {
-            const pct = d && d.users > 0 ? Math.round((t.users / d.users) * 100) : 0;
+          {byTool.map((t) => {
+            const pct = totalUsers > 0 ? Math.round((t.users / totalUsers) * 100) : 0;
             return (
               <div key={t.id} className="rounded-xl border border-border bg-muted/30 p-5">
                 <div className="flex items-center gap-3">
@@ -131,13 +145,17 @@ function KingDashboard() {
                 <div className="mt-4 h-1.5 w-full rounded-full bg-border overflow-hidden">
                   <div className="h-full rounded-full bg-primary" style={{ width: `${pct}%` }} />
                 </div>
-                <div className="mt-2 text-[11px] text-muted-foreground">
-                  {pct}% of all users have access
+                <div className="mt-2 flex items-center justify-between text-[11px] text-muted-foreground">
+                  <span>{pct}% of all users have access</span>
+                  <span>
+                    {t.paid}/{t.assignments} paid · {formatRs(t.earned)}
+                  </span>
                 </div>
               </div>
             );
           })}
-          {!d && [0, 1].map((i) => <div key={i} className="h-32 rounded-xl bg-muted/40 animate-pulse" />)}
+          {!loaded &&
+            [0, 1].map((i) => <div key={i} className="h-32 rounded-xl bg-muted/40 animate-pulse" />)}
         </div>
       </Card>
     </div>
