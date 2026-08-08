@@ -159,6 +159,21 @@ function KingResellerUsers() {
         <StatCard label="Total Earned" value={formatRs(totalEarned)} icon={Wallet} tone="chart-3" />
       </div>
 
+      <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-border bg-card px-5 py-4 shadow-card">
+        <span className="text-xs uppercase tracking-[0.08em] text-muted-foreground mr-1">
+          Accounts by tool
+        </span>
+        {(allTools.data ?? []).map((t) => (
+          <Badge key={t.id} variant="secondary" className="rounded-full px-3 py-1 text-sm">
+            {t.name}: <span className="ml-1 font-semibold">{countsByTool.get(t.id) ?? 0}</span>
+          </Badge>
+        ))}
+        {(allTools.data ?? []).length === 0 && (
+          <span className="text-sm text-muted-foreground">No tools available.</span>
+        )}
+      </div>
+
+
 
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
