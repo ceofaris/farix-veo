@@ -77,7 +77,9 @@ function KingResellerUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, full_name, is_active, is_paid, paid_amount, expires_at, user_tools(tool_id)")
+        .select(
+          "id, email, full_name, is_active, expires_at, user_tools(id, tool_id, is_paid, paid_amount, expires_at)",
+        )
         .eq("role", "user")
         .eq("created_by", id)
         .order("created_at", { ascending: false });
@@ -89,7 +91,8 @@ function KingResellerUsers() {
   const rows = users.data ?? [];
   const filtered =
     toolFilter === "all" ? rows : rows.filter((u) => u.user_tools?.some((t) => t.tool_id === toolFilter));
-  const paidCount = rows.filter((u) => u.is_paid).length;
+  const allAccounts = rows.flatMap((u) => u.user_tools ?? []);
+  const paidCount = allAccounts.filter((a) => a.is_paid).length;
 
   async function handleDelete(uid: string) {
     if (!confirm("Delete this user?")) return;
@@ -102,15 +105,16 @@ function KingResellerUsers() {
     }
   }
 
-  async function unmarkPaid(u: DetailUser) {
+  async function unmarkPaid(accountId: string) {
     try {
-      await markPaid({ data: { id: u.id, is_paid: false } });
+      await markPaid({ data: { id: accountId, is_paid: false } });
       toast.success("Marked as unpaid");
       users.refetch();
     } catch (e) {
       toast.error((e as Error).message);
     }
   }
+
 
 
   return (
