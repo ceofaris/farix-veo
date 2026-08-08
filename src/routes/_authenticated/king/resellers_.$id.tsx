@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader, TableShell } from "@/components/panel-layout";
 import { StatCard } from "@/components/stat-card";
-import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert, Wallet } from "lucide-react";
 import { UserFormDialog, UserRow } from "@/components/user-form-dialog";
 import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
@@ -93,6 +93,10 @@ function KingResellerUsers() {
     toolFilter === "all" ? rows : rows.filter((u) => u.user_tools?.some((t) => t.tool_id === toolFilter));
   const allAccounts = rows.flatMap((u) => u.user_tools ?? []);
   const paidCount = allAccounts.filter((a) => a.is_paid).length;
+  const totalEarned = allAccounts.reduce(
+    (s, a) => s + (a.is_paid ? Number(a.paid_amount ?? 0) : 0),
+    0,
+  );
 
   async function handleDelete(uid: string) {
     if (!confirm("Delete this user?")) return;
