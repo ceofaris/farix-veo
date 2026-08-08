@@ -445,8 +445,10 @@ function KingResellers() {
 
               <div className="mt-4 space-y-3 pb-8">
                 {drawerAccounts.map((a) => {
-                  const tool = a.user_tools?.map((t) => t.tools?.name).filter(Boolean).join(", ") || "No tool";
-                  const label = `Account #${a.id.slice(0, 4).toUpperCase()} — ${tool}`;
+                  const tool = a.tools?.name ?? "No tool";
+                  const person = a.profiles?.full_name || a.profiles?.email || "User";
+                  const label = `${person} - ${tool}`;
+                  const expired = !!a.expires_at && new Date(a.expires_at).getTime() < Date.now();
                   return (
                     <div
                       key={a.id}
@@ -454,19 +456,44 @@ function KingResellers() {
                     >
                       <div className="min-w-0">
                         <div className="truncate font-medium">{label}</div>
-                        <div className="truncate text-xs text-muted-foreground">
-                          {a.full_name || a.email} · Added{" "}
-                          {new Date(a.created_at).toLocaleDateString(undefined, {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                        <div className="truncate text-xs text-muted-foreground">{a.profiles?.email}</div>
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                          <span>
+                            Added{" "}
+                            {new Date(a.created_at).toLocaleDateString(undefined, {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </span>
+                          {a.expires_at && (
+                            <span
+                              className={cn(
+                                "rounded-full px-2 py-0.5 font-medium",
+                                expired
+                                  ? "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300"
+                                  : "bg-muted text-muted-foreground",
+                              )}
+                            >
+                              {expired ? "Expired" : "Expires"}{" "}
+                              {new Date(a.expires_at).toLocaleDateString(undefined, {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
+                            </span>
+                          )}
                         </div>
                       </div>
                       {a.is_paid ? (
-                        <span className="shrink-0 font-semibold text-emerald-600">
-                          {formatRs(Number(a.paid_amount ?? 0))}
-                        </span>
+                        <div className="flex shrink-0 items-center gap-2">
+                          <span className="font-semibold text-emerald-600">
+                            {formatRs(Number(a.paid_amount ?? 0))}
+                          </span>
+                          <Button size="sm" variant="ghost" onClick={() => unmarkPaid(a.id)}>
+                            Mark Unpaid
+                          </Button>
+                        </div>
                       ) : (
                         <div className="flex shrink-0 items-center gap-2">
                           <span className="text-sm font-medium text-rose-600">Unpaid</span>
@@ -483,6 +510,7 @@ function KingResellers() {
                     </div>
                   );
                 })}
+
                 {drawerAccounts.length === 0 && (
                   <div className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
                     No accounts in this view.
