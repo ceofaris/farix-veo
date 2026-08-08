@@ -12,6 +12,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser, setUserPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { activeToolsQuery, resellerToolIdsQuery } from "@/lib/queries";
+import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
+
 
 export const Route = createFileRoute("/_authenticated/king/resellers_/$id")({
   component: KingResellerUsers,
