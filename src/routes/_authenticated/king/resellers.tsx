@@ -34,15 +34,16 @@ type ResellerWithTools = ResellerRow & {
 };
 
 type AccountRow = {
-  id: string;
-  email: string;
-  full_name: string | null;
-  created_by: string | null;
+  id: string; // user_tools.id
   created_at: string;
+  expires_at: string | null;
   is_paid: boolean;
   paid_amount: number | null;
-  user_tools: { tools: { name: string } | null }[];
+  paid_at: string | null;
+  tools: { name: string } | null;
+  profiles: { id: string; email: string; full_name: string | null; created_by: string | null } | null;
 };
+
 
 function initials(name: string) {
   return name
