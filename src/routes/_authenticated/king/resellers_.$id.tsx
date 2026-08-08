@@ -300,7 +300,7 @@ function KingResellerUsers() {
       </TableShell>
 
       <MarkPaidDialog
-        kind="account"
+        
         target={payTarget}
         onOpenChange={(v) => !v && setPayTarget(null)}
         onSaved={() => users.refetch()}
