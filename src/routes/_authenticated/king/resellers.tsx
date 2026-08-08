@@ -192,28 +192,12 @@ function KingResellers() {
     return (r.full_name ?? "").toLowerCase().includes(q) || r.email.toLowerCase().includes(q);
   });
 
-  const activeReseller = (resellers.data ?? []).find((r) => r.id === activeId) ?? null;
-  const activeAccounts = activeId ? byReseller.get(activeId) ?? [] : [];
-  const activePaid = activeAccounts.filter((a) => a.is_paid);
-  const activeEarned = activePaid.reduce((s, a) => s + Number(a.paid_amount ?? 0), 0);
-  const drawerAccounts = activeAccounts.filter((a) =>
-    tab === "all" ? true : tab === "paid" ? a.is_paid : !a.is_paid,
-  );
-
   function refreshAll() {
     resellers.refetch();
     accounts.refetch();
   }
 
-  async function unmarkPaid(id: string) {
-    try {
-      await unpay({ data: { id, is_paid: false } });
-      toast.success("Marked as unpaid");
-      refreshAll();
-    } catch (e) {
-      toast.error((e as Error).message);
-    }
-  }
+
 
 
   async function handleDelete(id: string) {
