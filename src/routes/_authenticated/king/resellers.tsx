@@ -116,11 +116,9 @@ function KingResellers() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<ResellerRow | null>(null);
   const [search, setSearch] = useState("");
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [tab, setTab] = useState<"all" | "paid" | "unpaid">("all");
-  const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
+  const navigate = useNavigate();
   const del = useServerFn(deleteAuthUser);
-  const unpay = useServerFn(setAccountPaid);
+
 
 
   const resellers = useQuery({
