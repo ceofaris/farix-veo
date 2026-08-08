@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader, TableShell } from "@/components/panel-layout";
 import { StatCard } from "@/components/stat-card";
-import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert, Wallet } from "lucide-react";
 import { UserFormDialog, UserRow } from "@/components/user-form-dialog";
 import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
@@ -93,6 +93,10 @@ function KingResellerUsers() {
     toolFilter === "all" ? rows : rows.filter((u) => u.user_tools?.some((t) => t.tool_id === toolFilter));
   const allAccounts = rows.flatMap((u) => u.user_tools ?? []);
   const paidCount = allAccounts.filter((a) => a.is_paid).length;
+  const totalEarned = allAccounts.reduce(
+    (s, a) => s + (a.is_paid ? Number(a.paid_amount ?? 0) : 0),
+    0,
+  );
 
   async function handleDelete(uid: string) {
     if (!confirm("Delete this user?")) return;
@@ -143,7 +147,7 @@ function KingResellerUsers() {
         }
       />
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Total Accounts" value={allAccounts.length} icon={UsersIcon} tone="primary" />
         <StatCard label="Paid Accounts" value={paidCount} icon={BadgeCheck} tone="chart-2" />
         <StatCard
@@ -152,7 +156,9 @@ function KingResellerUsers() {
           icon={BadgeAlert}
           tone="chart-5"
         />
+        <StatCard label="Total Earned" value={formatRs(totalEarned)} icon={Wallet} tone="chart-3" />
       </div>
+
 
 
       <div className="mt-6 flex flex-wrap items-center gap-2">

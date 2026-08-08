@@ -1,17 +1,16 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { PageHeader, TableShell } from "@/components/panel-layout";
 import { Plus, Pencil, Trash2, Users, ChevronRight, AlertTriangle, Search } from "lucide-react";
 import { ResellerFormDialog, ResellerRow } from "@/components/reseller-form-dialog";
-import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
+import { formatRs } from "@/components/mark-paid-dialog";
 import { useServerFn } from "@tanstack/react-start";
-import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
+import { deleteAuthUser } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -116,11 +115,9 @@ function KingResellers() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<ResellerRow | null>(null);
   const [search, setSearch] = useState("");
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [tab, setTab] = useState<"all" | "paid" | "unpaid">("all");
-  const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
+  const navigate = useNavigate();
   const del = useServerFn(deleteAuthUser);
-  const unpay = useServerFn(setAccountPaid);
+
 
 
   const resellers = useQuery({
@@ -192,28 +189,12 @@ function KingResellers() {
     return (r.full_name ?? "").toLowerCase().includes(q) || r.email.toLowerCase().includes(q);
   });
 
-  const activeReseller = (resellers.data ?? []).find((r) => r.id === activeId) ?? null;
-  const activeAccounts = activeId ? byReseller.get(activeId) ?? [] : [];
-  const activePaid = activeAccounts.filter((a) => a.is_paid);
-  const activeEarned = activePaid.reduce((s, a) => s + Number(a.paid_amount ?? 0), 0);
-  const drawerAccounts = activeAccounts.filter((a) =>
-    tab === "all" ? true : tab === "paid" ? a.is_paid : !a.is_paid,
-  );
-
   function refreshAll() {
     resellers.refetch();
     accounts.refetch();
   }
 
-  async function unmarkPaid(id: string) {
-    try {
-      await unpay({ data: { id, is_paid: false } });
-      toast.success("Marked as unpaid");
-      refreshAll();
-    } catch (e) {
-      toast.error((e as Error).message);
-    }
-  }
+
 
 
   async function handleDelete(id: string) {
@@ -321,10 +302,7 @@ function KingResellers() {
             return (
               <tr
                 key={r.id}
-                onClick={() => {
-                  setTab("all");
-                  setActiveId(r.id);
-                }}
+                onClick={() => navigate({ to: "/king/resellers/$id", params: { id: r.id } })}
                 className="cursor-pointer border-t border-border transition-colors hover:bg-muted/40"
               >
                 <td className="px-5 py-4">
@@ -392,155 +370,8 @@ function KingResellers() {
         </tbody>
       </TableShell>
 
-      <Sheet open={!!activeId} onOpenChange={(v) => !v && setActiveId(null)}>
-        <SheetContent className="w-full overflow-y-auto sm:max-w-xl">
-          {activeReseller && (
-            <>
-              <SheetHeader className="space-y-0">
-                <div className="flex items-center gap-3">
-                  <div
-                    className={cn(
-                      "flex h-12 w-12 items-center justify-center rounded-2xl text-sm font-semibold text-white",
-                      toneFor(activeReseller.id),
-                    )}
-                  >
-                    {initials(activeReseller.full_name || activeReseller.email)}
-                  </div>
-                  <div className="min-w-0">
-                    <SheetTitle className="truncate">{activeReseller.full_name || "Reseller"}</SheetTitle>
-                    <SheetDescription className="truncate">{activeReseller.email}</SheetDescription>
-                  </div>
-                </div>
-              </SheetHeader>
 
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                <div className="rounded-2xl bg-muted/60 p-4">
-                  <div className="text-xs text-muted-foreground">Total Accounts</div>
-                  <div className="mt-1 text-2xl font-semibold">{activeAccounts.length}</div>
-                </div>
-                <div className="rounded-2xl bg-muted/60 p-4">
-                  <div className="text-xs text-muted-foreground">Paid</div>
-                  <div className="mt-1 text-2xl font-semibold text-emerald-600">{activePaid.length}</div>
-                </div>
-                <div className="rounded-2xl bg-muted/60 p-4">
-                  <div className="text-xs text-muted-foreground">Pending</div>
-                  <div className="mt-1 text-2xl font-semibold text-amber-600">
-                    {activeAccounts.length - activePaid.length}
-                  </div>
-                </div>
-                <div className="rounded-2xl bg-muted/60 p-4">
-                  <div className="text-xs text-muted-foreground">Total Earned</div>
-                  <div className="mt-1 text-2xl font-semibold">{formatRs(activeEarned)}</div>
-                </div>
-              </div>
 
-              <div className="mt-6 flex items-center justify-between gap-3">
-                <div className="inline-flex rounded-xl bg-muted p-1">
-                  {(["all", "paid", "unpaid"] as const).map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setTab(t)}
-                      className={cn(
-                        "rounded-lg px-4 py-1.5 text-sm font-medium capitalize transition-colors",
-                        tab === t ? "bg-card shadow-soft" : "text-muted-foreground hover:text-foreground",
-                      )}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-                <Button size="sm" variant="ghost" asChild>
-                  <Link to="/king/resellers/$id" params={{ id: activeReseller.id }}>
-                    Manage users
-                  </Link>
-                </Button>
-              </div>
-
-              <div className="mt-4 space-y-3 pb-8">
-                {drawerAccounts.map((a) => {
-                  const tool = a.tools?.name ?? "No tool";
-                  const person = a.profiles?.full_name || a.profiles?.email || "User";
-                  const label = `${person} - ${tool}`;
-                  const expired = !!a.expires_at && new Date(a.expires_at).getTime() < Date.now();
-                  return (
-                    <div
-                      key={a.id}
-                      className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4 shadow-card"
-                    >
-                      <div className="min-w-0">
-                        <div className="truncate font-medium">{label}</div>
-                        <div className="truncate text-xs text-muted-foreground">{a.profiles?.email}</div>
-                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                          <span>
-                            Added{" "}
-                            {new Date(a.created_at).toLocaleDateString(undefined, {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                          </span>
-                          {a.expires_at && (
-                            <span
-                              className={cn(
-                                "rounded-full px-2 py-0.5 font-medium",
-                                expired
-                                  ? "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300"
-                                  : "bg-muted text-muted-foreground",
-                              )}
-                            >
-                              {expired ? "Expired" : "Expires"}{" "}
-                              {new Date(a.expires_at).toLocaleDateString(undefined, {
-                                month: "short",
-                                day: "numeric",
-                                year: "numeric",
-                              })}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      {a.is_paid ? (
-                        <div className="flex shrink-0 items-center gap-2">
-                          <span className="font-semibold text-emerald-600">
-                            {formatRs(Number(a.paid_amount ?? 0))}
-                          </span>
-                          <Button size="sm" variant="ghost" onClick={() => unmarkPaid(a.id)}>
-                            Mark Unpaid
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="flex shrink-0 items-center gap-2">
-                          <span className="text-sm font-medium text-rose-600">Unpaid</span>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="border-amber-400 text-amber-700 hover:bg-amber-50"
-                            onClick={() => setPayTarget({ id: a.id, name: label })}
-                          >
-                            Mark as Paid
-                          </Button>
-                        </div>
-                      )}
-                    </div>
-                  );
-                })}
-
-                {drawerAccounts.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
-                    No accounts in this view.
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </SheetContent>
-      </Sheet>
-
-      <MarkPaidDialog
-        kind="account"
-        target={payTarget}
-        onOpenChange={(v) => !v && setPayTarget(null)}
-        onSaved={refreshAll}
-      />
 
 
       <ResellerFormDialog open={open} onOpenChange={setOpen} reseller={editing} onSaved={refreshAll} />
