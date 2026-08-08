@@ -331,11 +331,20 @@ function KingResellers() {
                   )}
                 </td>
                 <td className="px-5 py-4 font-semibold">{formatRs(earned)}</td>
-                <td className="px-5 py-4">
-                  <Badge variant={r.is_active ? "default" : "secondary"}>
-                    {r.is_active ? "Active" : "Inactive"}
-                  </Badge>
+                <td className="px-5 py-4" onClick={(e) => e.stopPropagation()}>
+                  <div className="flex items-center gap-2.5">
+                    <Switch
+                      checked={r.is_active}
+                      disabled={toggling === r.id}
+                      onCheckedChange={(v) => handleToggle(r, v)}
+                      aria-label={r.is_active ? "Disable reseller" : "Enable reseller"}
+                    />
+                    <Badge variant={r.is_active ? "default" : "secondary"}>
+                      {r.is_active ? "Active" : "Disabled"}
+                    </Badge>
+                  </div>
                 </td>
+
                 <td className="px-5 py-4 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                   <Button size="sm" variant="ghost" asChild>
                     <Link to="/king/resellers/$id" params={{ id: r.id }} title="Manage users">
