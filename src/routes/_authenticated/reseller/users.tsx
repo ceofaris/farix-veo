@@ -16,7 +16,7 @@ export const Route = createFileRoute("/_authenticated/reseller/users")({
   component: ResellerUsers,
 });
 
-type ResellerUserRow = UserRow & { is_paid: boolean };
+type ResellerUserRow = UserRow & { user_tools: { is_paid: boolean }[] };
 
 function ResellerUsers() {
   const { profile } = useProfile();
@@ -31,7 +31,7 @@ function ResellerUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, full_name, is_active, is_paid, expires_at")
+        .select("id, email, full_name, is_active, expires_at, user_tools(is_paid)")
         .eq("role", "user")
         .eq("created_by", profile!.id)
         .order("created_at", { ascending: false });
@@ -39,6 +39,7 @@ function ResellerUsers() {
       return data as unknown as ResellerUserRow[];
     },
   });
+
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this user?")) return;
@@ -95,8 +96,19 @@ function ResellerUsers() {
                 {u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}
               </td>
               <td className="px-5 py-4">
-                <Badge variant={u.is_paid ? "default" : "secondary"}>{u.is_paid ? "Paid" : "Unpaid"}</Badge>
+                {(() => {
+                  const accounts = u.user_tools ?? [];
+                  const paid = accounts.filter((a) => a.is_paid).length;
+                  if (accounts.length === 0)
+                    return <span className="text-xs text-muted-foreground">No tools</span>;
+                  return (
+                    <Badge variant={paid === accounts.length ? "default" : "secondary"}>
+                      {paid}/{accounts.length} paid
+                    </Badge>
+                  );
+                })()}
               </td>
+
               <td className="px-5 py-4 text-right space-x-1">
                 <Button
                   size="sm"

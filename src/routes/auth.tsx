@@ -34,8 +34,17 @@ function AuthPage() {
   const bootstrap = useServerFn(bootstrapKing);
 
   async function landingRouteFor(userId: string) {
-    const { data } = await supabase.from("profiles").select("role").eq("id", userId).maybeSingle();
-    const role = (data as { role?: string } | null)?.role;
+    const { data } = await supabase
+      .from("profiles")
+      .select("role, is_active")
+      .eq("id", userId)
+      .maybeSingle();
+    const profile = data as { role?: string; is_active?: boolean } | null;
+    if (profile && profile.is_active === false) {
+      await supabase.auth.signOut();
+      return null;
+    }
+    const role = profile?.role;
     if (role === "king") return "/king" as const;
     if (role === "reseller") return "/reseller" as const;
     return "/dashboard" as const;
@@ -44,7 +53,9 @@ function AuthPage() {
   useEffect(() => {
     supabase.auth.getSession().then(async ({ data }) => {
       const user = data.session?.user;
-      if (user) navigate({ to: await landingRouteFor(user.id), replace: true });
+      if (!user) return;
+      const to = await landingRouteFor(user.id);
+      if (to) navigate({ to, replace: true });
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
@@ -58,6 +69,11 @@ function AuthPage() {
       return toast.error(error.message);
     }
     const to = await landingRouteFor(data.user!.id);
+    if (!to) {
+      setLoading(false);
+      return toast.error("Your account has been disabled. Contact the administrator.");
+    }
+
     setLoading(false);
     toast.success("Signed in");
     navigate({ to, replace: true });

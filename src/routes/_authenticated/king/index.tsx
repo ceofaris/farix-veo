@@ -18,7 +18,7 @@ function KingDashboard() {
     staleTime: 60 * 1000,
     queryFn: async () => {
       const nowIso = new Date().toISOString();
-      const [users, activeUsers, paidUsers, resellers, activeResellers, tools, userTools, accounts] =
+      const [users, activeUsers, resellers, activeResellers, tools, userTools, accounts] =
         await Promise.all([
           supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "user"),
           supabase
@@ -27,11 +27,6 @@ function KingDashboard() {
             .eq("role", "user")
             .eq("is_active", true)
             .or(`expires_at.is.null,expires_at.gt.${nowIso}`),
-          supabase
-            .from("profiles")
-            .select("id", { count: "exact", head: true })
-            .eq("role", "user")
-            .eq("is_paid", true),
           supabase.from("profiles").select("id", { count: "exact", head: true }).eq("role", "reseller"),
           supabase
             .from("profiles")
@@ -39,7 +34,7 @@ function KingDashboard() {
             .eq("role", "reseller")
             .eq("is_active", true),
           supabase.from("tools").select("id, name, slug").eq("is_active", true).order("name"),
-          supabase.from("user_tools").select("tool_id"),
+          supabase.from("user_tools").select("tool_id, is_paid"),
           supabase.from("tool_accounts").select("tool_id, is_active"),
         ]);
 
@@ -50,10 +45,13 @@ function KingDashboard() {
         accounts: (accounts.data ?? []).filter((r) => r.tool_id === t.id && r.is_active).length,
       }));
 
+      const assignments = userTools.data ?? [];
+
       return {
         users: users.count ?? 0,
         activeUsers: activeUsers.count ?? 0,
-        paidUsers: paidUsers.count ?? 0,
+        totalAssignments: assignments.length,
+        paidAssignments: assignments.filter((a) => a.is_paid).length,
         resellers: resellers.count ?? 0,
         activeResellers: activeResellers.count ?? 0,
         accounts: (accounts.data ?? []).filter((a) => a.is_active).length,
@@ -61,6 +59,7 @@ function KingDashboard() {
       };
     },
   });
+
 
   const d = stats.data;
 
@@ -83,9 +82,10 @@ function KingDashboard() {
         />
         <StatCard
           icon={BadgeCheck}
-          label="Paid Users"
-          value={d?.paidUsers ?? "—"}
-          hint={d ? `${Math.max(d.users - d.paidUsers, 0)} unpaid` : undefined}
+          label="Paid Accounts"
+          value={d?.paidAssignments ?? "—"}
+          hint={d ? `${Math.max(d.totalAssignments - d.paidAssignments, 0)} unpaid` : undefined}
+
           tone="chart-3"
         />
         <StatCard

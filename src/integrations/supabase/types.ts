@@ -70,9 +70,6 @@ export type Database = {
           full_name: string | null
           id: string
           is_active: boolean
-          is_paid: boolean
-          paid_amount: number | null
-          paid_at: string | null
           role: string
           updated_at: string
         }
@@ -84,9 +81,6 @@ export type Database = {
           full_name?: string | null
           id: string
           is_active?: boolean
-          is_paid?: boolean
-          paid_amount?: number | null
-          paid_at?: string | null
           role?: string
           updated_at?: string
         }
@@ -98,9 +92,6 @@ export type Database = {
           full_name?: string | null
           id?: string
           is_active?: boolean
-          is_paid?: boolean
-          paid_amount?: number | null
-          paid_at?: string | null
           role?: string
           updated_at?: string
         }
@@ -272,7 +263,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_user_role: { Args: { _user_id: string }; Returns: string }
       is_king: { Args: { _user_id: string }; Returns: boolean }
       is_reseller: { Args: { _user_id: string }; Returns: boolean }
     }
