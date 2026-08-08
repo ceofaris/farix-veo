@@ -203,6 +203,17 @@ function KingResellers() {
     accounts.refetch();
   }
 
+  async function unmarkPaid(id: string) {
+    try {
+      await unpay({ data: { id, is_paid: false } });
+      toast.success("Marked as unpaid");
+      refreshAll();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  }
+
+
   async function handleDelete(id: string) {
     if (!confirm("Delete this reseller? This removes their account.")) return;
     try {
