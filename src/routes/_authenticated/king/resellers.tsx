@@ -302,10 +302,7 @@ function KingResellers() {
             return (
               <tr
                 key={r.id}
-                onClick={() => {
-                  setTab("all");
-                  setActiveId(r.id);
-                }}
+                onClick={() => navigate({ to: "/king/resellers/$id", params: { id: r.id } })}
                 className="cursor-pointer border-t border-border transition-colors hover:bg-muted/40"
               >
                 <td className="px-5 py-4">
