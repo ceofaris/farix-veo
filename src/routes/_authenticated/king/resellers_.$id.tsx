@@ -72,7 +72,7 @@ function KingResellerUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, full_name, is_active, is_paid, expires_at, user_tools(tool_id)")
+        .select("id, email, full_name, is_active, is_paid, paid_amount, expires_at, user_tools(tool_id)")
         .eq("role", "user")
         .eq("created_by", id)
         .order("created_at", { ascending: false });
