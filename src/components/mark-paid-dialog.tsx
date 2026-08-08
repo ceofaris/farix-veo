@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useServerFn } from "@tanstack/react-start";
-import { setUserPaid, setAccountPaid } from "@/lib/admin.functions";
+import { setAccountPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
 
 export type PayTarget = { id: string; name: string };
@@ -13,19 +13,16 @@ export function MarkPaidDialog({
   target,
   onOpenChange,
   onSaved,
-  kind = "user",
 }: {
+  /** A single tool assignment (account) to record a payment for. */
   target: PayTarget | null;
   onOpenChange: (v: boolean) => void;
   onSaved: () => void;
-  /** "user" pays a whole profile, "account" pays a single tool assignment */
-  kind?: "user" | "account";
 }) {
   const [amount, setAmount] = useState("");
   const [saving, setSaving] = useState(false);
-  const payUser = useServerFn(setUserPaid);
-  const payAccount = useServerFn(setAccountPaid);
-  const pay = kind === "account" ? payAccount : payUser;
+  const pay = useServerFn(setAccountPaid);
+
 
   useEffect(() => {
     if (target) setAmount("");
