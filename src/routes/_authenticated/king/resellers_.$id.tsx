@@ -12,6 +12,8 @@ import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser, setUserPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { activeToolsQuery, resellerToolIdsQuery } from "@/lib/queries";
+import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
+
 
 export const Route = createFileRoute("/_authenticated/king/resellers_/$id")({
   component: KingResellerUsers,
@@ -29,6 +31,7 @@ export const Route = createFileRoute("/_authenticated/king/resellers_/$id")({
 
 type DetailUser = UserRow & {
   is_paid: boolean;
+  paid_amount: number | null;
   user_tools: { tool_id: string }[];
 };
 
@@ -37,8 +40,10 @@ function KingResellerUsers() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<UserRow | null>(null);
   const [toolFilter, setToolFilter] = useState<string>("all");
+  const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
   const del = useServerFn(deleteAuthUser);
   const markPaid = useServerFn(setUserPaid);
+
 
   const reseller = useQuery({
     queryKey: ["reseller", id],
@@ -67,7 +72,7 @@ function KingResellerUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, full_name, is_active, is_paid, expires_at, user_tools(tool_id)")
+        .select("id, email, full_name, is_active, is_paid, paid_amount, expires_at, user_tools(tool_id)")
         .eq("role", "user")
         .eq("created_by", id)
         .order("created_at", { ascending: false });
@@ -92,15 +97,16 @@ function KingResellerUsers() {
     }
   }
 
-  async function togglePaid(u: DetailUser) {
+  async function unmarkPaid(u: DetailUser) {
     try {
-      await markPaid({ data: { id: u.id, is_paid: !u.is_paid } });
-      toast.success(u.is_paid ? "Marked as unpaid" : "Marked as paid");
+      await markPaid({ data: { id: u.id, is_paid: false } });
+      toast.success("Marked as unpaid");
       users.refetch();
     } catch (e) {
       toast.error((e as Error).message);
     }
   }
+
 
   return (
     <div>
@@ -180,12 +186,28 @@ function KingResellerUsers() {
                 {u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}
               </td>
               <td className="px-5 py-4">
-                <Badge variant={u.is_paid ? "default" : "secondary"}>{u.is_paid ? "Paid" : "Unpaid"}</Badge>
+                {u.is_paid ? (
+                  <span className="font-semibold text-emerald-600">{formatRs(Number(u.paid_amount ?? 0))}</span>
+                ) : (
+                  <Badge variant="secondary">Unpaid</Badge>
+                )}
               </td>
               <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
-                <Button size="sm" variant={u.is_paid ? "ghost" : "default"} onClick={() => togglePaid(u)}>
-                  {u.is_paid ? "Mark Unpaid" : "Mark as Paid"}
-                </Button>
+                {u.is_paid ? (
+                  <Button size="sm" variant="ghost" onClick={() => unmarkPaid(u)}>
+                    Mark Unpaid
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-amber-400 text-amber-700 hover:bg-amber-50"
+                    onClick={() => setPayTarget({ id: u.id, name: u.full_name || u.email })}
+                  >
+                    Mark as Paid
+                  </Button>
+                )}
+
                 <Button
                   size="sm"
                   variant="ghost"
@@ -212,6 +234,12 @@ function KingResellerUsers() {
         </tbody>
       </TableShell>
 
+      <MarkPaidDialog
+        target={payTarget}
+        onOpenChange={(v) => !v && setPayTarget(null)}
+        onSaved={() => users.refetch()}
+      />
+
       <UserFormDialog
         open={open}
         onOpenChange={setOpen}
@@ -220,5 +248,6 @@ function KingResellerUsers() {
         onSaved={() => users.refetch()}
       />
     </div>
+
   );
 }
