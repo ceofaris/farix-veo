@@ -181,12 +181,28 @@ function KingResellerUsers() {
                 {u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}
               </td>
               <td className="px-5 py-4">
-                <Badge variant={u.is_paid ? "default" : "secondary"}>{u.is_paid ? "Paid" : "Unpaid"}</Badge>
+                {u.is_paid ? (
+                  <span className="font-semibold text-emerald-600">{formatRs(Number(u.paid_amount ?? 0))}</span>
+                ) : (
+                  <Badge variant="secondary">Unpaid</Badge>
+                )}
               </td>
               <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
-                <Button size="sm" variant={u.is_paid ? "ghost" : "default"} onClick={() => togglePaid(u)}>
-                  {u.is_paid ? "Mark Unpaid" : "Mark as Paid"}
-                </Button>
+                {u.is_paid ? (
+                  <Button size="sm" variant="ghost" onClick={() => unmarkPaid(u)}>
+                    Mark Unpaid
+                  </Button>
+                ) : (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="border-amber-400 text-amber-700 hover:bg-amber-50"
+                    onClick={() => setPayTarget({ id: u.id, name: u.full_name || u.email })}
+                  >
+                    Mark as Paid
+                  </Button>
+                )}
+
                 <Button
                   size="sm"
                   variant="ghost"
