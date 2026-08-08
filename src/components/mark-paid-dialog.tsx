@@ -7,7 +7,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { setAccountPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
 
-export type PayTarget = { id: string; name: string };
+export type PayTarget = { id: string; name: string; amount?: number | null; editing?: boolean };
 
 export function MarkPaidDialog({
   target,
@@ -25,7 +25,7 @@ export function MarkPaidDialog({
 
 
   useEffect(() => {
-    if (target) setAmount("");
+    if (target) setAmount(target.amount != null ? String(target.amount) : "");
   }, [target]);
 
   const value = Number(amount);
@@ -51,7 +51,7 @@ export function MarkPaidDialog({
     <Dialog open={!!target} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md rounded-2xl">
         <DialogHeader>
-          <DialogTitle>Confirm Payment</DialogTitle>
+          <DialogTitle>{target?.editing ? "Edit Payment Amount" : "Confirm Payment"}</DialogTitle>
           <DialogDescription>{target?.name}</DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
@@ -83,7 +83,7 @@ export function MarkPaidDialog({
             disabled={!valid || saving}
             className="bg-gradient-to-r from-violet-600 to-pink-500 text-white hover:opacity-90"
           >
-            {saving ? "Saving…" : "Confirm Payment"}
+            {saving ? "Saving…" : target?.editing ? "Save Amount" : "Confirm Payment"}
           </Button>
         </DialogFooter>
       </DialogContent>

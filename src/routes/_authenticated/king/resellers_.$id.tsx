@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -48,6 +48,12 @@ function KingResellerUsers() {
   const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
   const del = useServerFn(deleteAuthUser);
   const markPaid = useServerFn(setAccountPaid);
+  const qc = useQueryClient();
+
+  function refreshEarnings() {
+    users.refetch();
+    qc.invalidateQueries({ queryKey: ["reseller-accounts"] });
+  }
 
 
   const reseller = useQuery({
@@ -119,7 +125,7 @@ function KingResellerUsers() {
     try {
       await markPaid({ data: { id: accountId, is_paid: false } });
       toast.success("Marked as unpaid");
-      users.refetch();
+      refreshEarnings();
     } catch (e) {
       toast.error((e as Error).message);
     }
@@ -276,9 +282,25 @@ function KingResellerUsers() {
                   </td>
                   <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
                     {a.is_paid ? (
-                      <Button size="sm" variant="ghost" onClick={() => unmarkPaid(a.id)}>
-                        Mark Unpaid
-                      </Button>
+                      <>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            setPayTarget({
+                              id: a.id,
+                              name: `${u.full_name || u.email} - ${toolName}`,
+                              amount: a.paid_amount == null ? null : Number(a.paid_amount),
+                              editing: true,
+                            })
+                          }
+                        >
+                          Edit Amount
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => unmarkPaid(a.id)}>
+                          Mark Unpaid
+                        </Button>
+                      </>
                     ) : (
                       <Button
                         size="sm"
@@ -324,7 +346,7 @@ function KingResellerUsers() {
         
         target={payTarget}
         onOpenChange={(v) => !v && setPayTarget(null)}
-        onSaved={() => users.refetch()}
+        onSaved={refreshEarnings}
       />
 
 
@@ -333,7 +355,7 @@ function KingResellerUsers() {
         onOpenChange={setOpen}
         user={editing}
         ownerId={id}
-        onSaved={() => users.refetch()}
+        onSaved={refreshEarnings}
       />
     </div>
 
