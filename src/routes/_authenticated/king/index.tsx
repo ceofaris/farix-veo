@@ -82,9 +82,10 @@ function KingDashboard() {
         />
         <StatCard
           icon={BadgeCheck}
-          label="Paid Users"
-          value={d?.paidUsers ?? "—"}
-          hint={d ? `${Math.max(d.users - d.paidUsers, 0)} unpaid` : undefined}
+          label="Paid Accounts"
+          value={d?.paidAssignments ?? "—"}
+          hint={d ? `${Math.max(d.totalAssignments - d.paidAssignments, 0)} unpaid` : undefined}
+
           tone="chart-3"
         />
         <StatCard
