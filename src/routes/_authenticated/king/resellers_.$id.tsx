@@ -30,10 +30,15 @@ export const Route = createFileRoute("/_authenticated/king/resellers_/$id")({
 });
 
 type DetailUser = UserRow & {
-  is_paid: boolean;
-  paid_amount: number | null;
-  user_tools: { tool_id: string }[];
+  user_tools: {
+    id: string;
+    tool_id: string;
+    is_paid: boolean;
+    paid_amount: number | null;
+    expires_at: string | null;
+  }[];
 };
+
 
 function KingResellerUsers() {
   const { id } = Route.useParams();
