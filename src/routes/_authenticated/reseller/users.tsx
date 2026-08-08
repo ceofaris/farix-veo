@@ -96,8 +96,19 @@ function ResellerUsers() {
                 {u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}
               </td>
               <td className="px-5 py-4">
-                <Badge variant={u.is_paid ? "default" : "secondary"}>{u.is_paid ? "Paid" : "Unpaid"}</Badge>
+                {(() => {
+                  const accounts = u.user_tools ?? [];
+                  const paid = accounts.filter((a) => a.is_paid).length;
+                  if (accounts.length === 0)
+                    return <span className="text-xs text-muted-foreground">No tools</span>;
+                  return (
+                    <Badge variant={paid === accounts.length ? "default" : "secondary"}>
+                      {paid}/{accounts.length} paid
+                    </Badge>
+                  );
+                })()}
               </td>
+
               <td className="px-5 py-4 text-right space-x-1">
                 <Button
                   size="sm"
