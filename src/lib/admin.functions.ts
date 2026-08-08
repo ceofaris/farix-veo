@@ -195,7 +195,6 @@ export const createEndUser = createServerFn({ method: "POST" })
       full_name: data.full_name,
       role: "user",
       is_active: data.is_active,
-      is_paid: false,
       expires_at,
       created_by: owner,
     });
