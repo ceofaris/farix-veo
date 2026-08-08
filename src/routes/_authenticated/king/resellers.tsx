@@ -1,17 +1,16 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { PageHeader, TableShell } from "@/components/panel-layout";
 import { Plus, Pencil, Trash2, Users, ChevronRight, AlertTriangle, Search } from "lucide-react";
 import { ResellerFormDialog, ResellerRow } from "@/components/reseller-form-dialog";
-import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
+import { formatRs } from "@/components/mark-paid-dialog";
 import { useServerFn } from "@tanstack/react-start";
-import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
+import { deleteAuthUser } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
