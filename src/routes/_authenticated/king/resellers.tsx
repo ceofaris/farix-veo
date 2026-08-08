@@ -120,6 +120,8 @@ function KingResellers() {
   const [tab, setTab] = useState<"all" | "paid" | "unpaid">("all");
   const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
   const del = useServerFn(deleteAuthUser);
+  const unpay = useServerFn(setAccountPaid);
+
 
   const resellers = useQuery({
     queryKey: ["resellers"],
