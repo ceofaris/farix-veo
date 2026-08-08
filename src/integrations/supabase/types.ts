@@ -219,20 +219,35 @@ export type Database = {
       user_tools: {
         Row: {
           created_at: string
+          expires_at: string
           id: string
+          is_paid: boolean
+          paid_amount: number | null
+          paid_at: string | null
           tool_id: string
+          updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
+          expires_at?: string
           id?: string
+          is_paid?: boolean
+          paid_amount?: number | null
+          paid_at?: string | null
           tool_id: string
+          updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
+          expires_at?: string
           id?: string
+          is_paid?: boolean
+          paid_amount?: number | null
+          paid_at?: string | null
           tool_id?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: [

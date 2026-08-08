@@ -11,7 +11,7 @@ import { Plus, Pencil, Trash2, Users, ChevronRight, AlertTriangle, Search } from
 import { ResellerFormDialog, ResellerRow } from "@/components/reseller-form-dialog";
 import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
 import { useServerFn } from "@tanstack/react-start";
-import { deleteAuthUser } from "@/lib/admin.functions";
+import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -34,15 +34,16 @@ type ResellerWithTools = ResellerRow & {
 };
 
 type AccountRow = {
-  id: string;
-  email: string;
-  full_name: string | null;
-  created_by: string | null;
+  id: string; // user_tools.id
   created_at: string;
+  expires_at: string | null;
   is_paid: boolean;
   paid_amount: number | null;
-  user_tools: { tools: { name: string } | null }[];
+  paid_at: string | null;
+  tools: { name: string } | null;
+  profiles: { id: string; email: string; full_name: string | null; created_by: string | null } | null;
 };
+
 
 function initials(name: string) {
   return name
@@ -119,6 +120,8 @@ function KingResellers() {
   const [tab, setTab] = useState<"all" | "paid" | "unpaid">("all");
   const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
   const del = useServerFn(deleteAuthUser);
+  const unpay = useServerFn(setAccountPaid);
+
 
   const resellers = useQuery({
     queryKey: ["resellers"],
@@ -137,12 +140,14 @@ function KingResellers() {
     queryKey: ["reseller-accounts"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("id, email, full_name, created_by, created_at, is_paid, paid_amount, paid_at, user_tools(tools(name))")
-        .eq("role", "user")
+        .from("user_tools")
+        .select(
+          "id, created_at, expires_at, is_paid, paid_amount, paid_at, tools(name), profiles!inner(id, email, full_name, created_by, role)",
+        )
+        .eq("profiles.role", "user")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as unknown as (AccountRow & { paid_at: string | null })[];
+      return data as unknown as AccountRow[];
     },
   });
 
@@ -151,10 +156,11 @@ function KingResellers() {
   const byReseller = useMemo(() => {
     const map = new Map<string, AccountRow[]>();
     for (const a of rows) {
-      if (!a.created_by) continue;
-      const list = map.get(a.created_by) ?? [];
+      const owner = a.profiles?.created_by;
+      if (!owner) continue;
+      const list = map.get(owner) ?? [];
       list.push(a);
-      map.set(a.created_by, list);
+      map.set(owner, list);
     }
     return map;
   }, [rows]);
@@ -164,19 +170,19 @@ function KingResellers() {
     let all = 0;
     let last30 = 0;
     let pendingCount = 0;
-    let pendingResellers = new Set<string>();
+    const pendingResellers = new Set<string>();
     for (const a of rows) {
       if (a.is_paid) {
         all += Number(a.paid_amount ?? 0);
-        const at = (a as AccountRow & { paid_at: string | null }).paid_at;
-        if (at && new Date(at).getTime() >= cutoff) last30 += Number(a.paid_amount ?? 0);
+        if (a.paid_at && new Date(a.paid_at).getTime() >= cutoff) last30 += Number(a.paid_amount ?? 0);
       } else {
         pendingCount += 1;
-        if (a.created_by) pendingResellers.add(a.created_by);
+        if (a.profiles?.created_by) pendingResellers.add(a.profiles.created_by);
       }
     }
     return { all, last30, pendingCount, pendingResellers: pendingResellers.size };
   }, [rows]);
+
 
   const activeResellers = (resellers.data ?? []).filter((r) => r.is_active).length;
 
@@ -198,6 +204,17 @@ function KingResellers() {
     resellers.refetch();
     accounts.refetch();
   }
+
+  async function unmarkPaid(id: string) {
+    try {
+      await unpay({ data: { id, is_paid: false } });
+      toast.success("Marked as unpaid");
+      refreshAll();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  }
+
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this reseller? This removes their account.")) return;
@@ -441,8 +458,10 @@ function KingResellers() {
 
               <div className="mt-4 space-y-3 pb-8">
                 {drawerAccounts.map((a) => {
-                  const tool = a.user_tools?.map((t) => t.tools?.name).filter(Boolean).join(", ") || "No tool";
-                  const label = `Account #${a.id.slice(0, 4).toUpperCase()} — ${tool}`;
+                  const tool = a.tools?.name ?? "No tool";
+                  const person = a.profiles?.full_name || a.profiles?.email || "User";
+                  const label = `${person} - ${tool}`;
+                  const expired = !!a.expires_at && new Date(a.expires_at).getTime() < Date.now();
                   return (
                     <div
                       key={a.id}
@@ -450,19 +469,44 @@ function KingResellers() {
                     >
                       <div className="min-w-0">
                         <div className="truncate font-medium">{label}</div>
-                        <div className="truncate text-xs text-muted-foreground">
-                          {a.full_name || a.email} · Added{" "}
-                          {new Date(a.created_at).toLocaleDateString(undefined, {
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                        <div className="truncate text-xs text-muted-foreground">{a.profiles?.email}</div>
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                          <span>
+                            Added{" "}
+                            {new Date(a.created_at).toLocaleDateString(undefined, {
+                              month: "short",
+                              day: "numeric",
+                              year: "numeric",
+                            })}
+                          </span>
+                          {a.expires_at && (
+                            <span
+                              className={cn(
+                                "rounded-full px-2 py-0.5 font-medium",
+                                expired
+                                  ? "bg-rose-100 text-rose-700 dark:bg-rose-500/15 dark:text-rose-300"
+                                  : "bg-muted text-muted-foreground",
+                              )}
+                            >
+                              {expired ? "Expired" : "Expires"}{" "}
+                              {new Date(a.expires_at).toLocaleDateString(undefined, {
+                                month: "short",
+                                day: "numeric",
+                                year: "numeric",
+                              })}
+                            </span>
+                          )}
                         </div>
                       </div>
                       {a.is_paid ? (
-                        <span className="shrink-0 font-semibold text-emerald-600">
-                          {formatRs(Number(a.paid_amount ?? 0))}
-                        </span>
+                        <div className="flex shrink-0 items-center gap-2">
+                          <span className="font-semibold text-emerald-600">
+                            {formatRs(Number(a.paid_amount ?? 0))}
+                          </span>
+                          <Button size="sm" variant="ghost" onClick={() => unmarkPaid(a.id)}>
+                            Mark Unpaid
+                          </Button>
+                        </div>
                       ) : (
                         <div className="flex shrink-0 items-center gap-2">
                           <span className="text-sm font-medium text-rose-600">Unpaid</span>
@@ -479,6 +523,7 @@ function KingResellers() {
                     </div>
                   );
                 })}
+
                 {drawerAccounts.length === 0 && (
                   <div className="rounded-2xl border border-dashed border-border p-10 text-center text-sm text-muted-foreground">
                     No accounts in this view.
@@ -490,7 +535,13 @@ function KingResellers() {
         </SheetContent>
       </Sheet>
 
-      <MarkPaidDialog target={payTarget} onOpenChange={(v) => !v && setPayTarget(null)} onSaved={refreshAll} />
+      <MarkPaidDialog
+        kind="account"
+        target={payTarget}
+        onOpenChange={(v) => !v && setPayTarget(null)}
+        onSaved={refreshAll}
+      />
+
 
       <ResellerFormDialog open={open} onOpenChange={setOpen} reseller={editing} onSaved={refreshAll} />
     </div>
