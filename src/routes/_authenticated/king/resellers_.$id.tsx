@@ -144,10 +144,16 @@ function KingResellerUsers() {
       />
 
       <div className="mt-6 grid gap-4 sm:grid-cols-3">
-        <StatCard label="Total Users" value={rows.length} icon={UsersIcon} tone="primary" />
-        <StatCard label="Paid Users" value={paidCount} icon={BadgeCheck} tone="chart-2" />
-        <StatCard label="Unpaid Users" value={rows.length - paidCount} icon={BadgeAlert} tone="chart-5" />
+        <StatCard label="Total Accounts" value={allAccounts.length} icon={UsersIcon} tone="primary" />
+        <StatCard label="Paid Accounts" value={paidCount} icon={BadgeCheck} tone="chart-2" />
+        <StatCard
+          label="Unpaid Accounts"
+          value={allAccounts.length - paidCount}
+          icon={BadgeAlert}
+          tone="chart-5"
+        />
       </div>
+
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <span className="text-xs uppercase tracking-[0.08em] text-muted-foreground mr-1">Filter</span>
