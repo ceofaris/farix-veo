@@ -179,66 +179,110 @@ function KingResellerUsers() {
       <TableShell>
         <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
           <tr>
-            <th className="px-5 py-3.5 font-semibold">Name</th>
-            <th className="px-5 py-3.5 font-semibold">Email</th>
-            <th className="px-5 py-3.5 font-semibold">Tool</th>
+            <th className="px-5 py-3.5 font-semibold">Account</th>
             <th className="px-5 py-3.5 font-semibold">Expiry</th>
             <th className="px-5 py-3.5 font-semibold">Payment</th>
             <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filtered.map((u) => (
-            <tr key={u.id} className="border-t border-border transition-colors hover:bg-muted/40">
-              <td className="px-5 py-4">{u.full_name || <span className="text-muted-foreground">—</span>}</td>
-              <td className="px-5 py-4 text-foreground/80">{u.email}</td>
-              <td className="px-5 py-4 text-xs text-muted-foreground">
-                {u.user_tools?.length
-                  ? u.user_tools.map((t) => toolMap.get(t.tool_id) ?? "—").join(", ")
-                  : "—"}
-              </td>
-              <td className="px-5 py-4 text-muted-foreground">
-                {u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}
-              </td>
-              <td className="px-5 py-4">
-                {u.is_paid ? (
-                  <span className="font-semibold text-emerald-600">{formatRs(Number(u.paid_amount ?? 0))}</span>
-                ) : (
-                  <Badge variant="secondary">Unpaid</Badge>
-                )}
-              </td>
-              <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
-                {u.is_paid ? (
-                  <Button size="sm" variant="ghost" onClick={() => unmarkPaid(u)}>
-                    Mark Unpaid
-                  </Button>
-                ) : (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    className="border-amber-400 text-amber-700 hover:bg-amber-50"
-                    onClick={() => setPayTarget({ id: u.id, name: u.full_name || u.email })}
-                  >
-                    Mark as Paid
-                  </Button>
-                )}
+          {filtered.flatMap((u) => {
+            const accounts = (u.user_tools ?? []).filter(
+              (a) => toolFilter === "all" || a.tool_id === toolFilter,
+            );
+            if (accounts.length === 0) {
+              return [
+                <tr key={u.id} className="border-t border-border transition-colors hover:bg-muted/40">
+                  <td className="px-5 py-4">
+                    <div className="font-medium">{u.full_name || u.email}</div>
+                    <div className="text-xs text-muted-foreground">{u.email}</div>
+                  </td>
+                  <td className="px-5 py-4 text-muted-foreground">—</td>
+                  <td className="px-5 py-4 text-xs text-muted-foreground">No tools assigned</td>
+                  <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setEditing(u);
+                        setOpen(true);
+                      }}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => handleDelete(u.id)}>
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </td>
+                </tr>,
+              ];
+            }
+            return accounts.map((a) => {
+              const toolName = toolMap.get(a.tool_id) ?? "—";
+              const expired = !!a.expires_at && new Date(a.expires_at).getTime() < Date.now();
+              return (
+                <tr key={a.id} className="border-t border-border transition-colors hover:bg-muted/40">
+                  <td className="px-5 py-4">
+                    <div className="font-medium">
+                      {u.full_name || u.email} - {toolName}
+                    </div>
+                    <div className="text-xs text-muted-foreground">{u.email}</div>
+                  </td>
+                  <td className="px-5 py-4 text-sm text-muted-foreground">
+                    {a.expires_at ? (
+                      <span className={expired ? "font-medium text-rose-600" : undefined}>
+                        {expired ? "Expired " : ""}
+                        {new Date(a.expires_at).toLocaleDateString()}
+                      </span>
+                    ) : (
+                      "—"
+                    )}
+                  </td>
+                  <td className="px-5 py-4">
+                    {a.is_paid ? (
+                      <span className="font-semibold text-emerald-600">
+                        {formatRs(Number(a.paid_amount ?? 0))}
+                      </span>
+                    ) : (
+                      <Badge variant="secondary">Unpaid</Badge>
+                    )}
+                  </td>
+                  <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
+                    {a.is_paid ? (
+                      <Button size="sm" variant="ghost" onClick={() => unmarkPaid(a.id)}>
+                        Mark Unpaid
+                      </Button>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-amber-400 text-amber-700 hover:bg-amber-50"
+                        onClick={() =>
+                          setPayTarget({ id: a.id, name: `${u.full_name || u.email} - ${toolName}` })
+                        }
+                      >
+                        Mark as Paid
+                      </Button>
+                    )}
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => {
+                        setEditing(u);
+                        setOpen(true);
+                      }}
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </Button>
+                    <Button size="sm" variant="ghost" onClick={() => handleDelete(u.id)}>
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </td>
+                </tr>
+              );
+            });
+          })}
 
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => {
-                    setEditing(u);
-                    setOpen(true);
-                  }}
-                >
-                  <Pencil className="w-4 h-4" />
-                </Button>
-                <Button size="sm" variant="ghost" onClick={() => handleDelete(u.id)}>
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </td>
-            </tr>
-          ))}
           {filtered.length === 0 && (
             <tr>
               <td colSpan={6} className="px-5 py-14 text-center text-muted-foreground">
