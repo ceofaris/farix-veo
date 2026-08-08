@@ -143,7 +143,7 @@ function KingResellerUsers() {
         }
       />
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-3">
+      <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard label="Total Accounts" value={allAccounts.length} icon={UsersIcon} tone="primary" />
         <StatCard label="Paid Accounts" value={paidCount} icon={BadgeCheck} tone="chart-2" />
         <StatCard
@@ -152,7 +152,9 @@ function KingResellerUsers() {
           icon={BadgeAlert}
           tone="chart-5"
         />
+        <StatCard label="Total Earned" value={formatRs(totalEarned)} icon={Wallet} tone="chart-3" />
       </div>
+
 
 
       <div className="mt-6 flex flex-wrap items-center gap-2">
