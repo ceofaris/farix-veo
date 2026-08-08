@@ -15,6 +15,7 @@ import { Switch } from "@/components/ui/switch";
 
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import { earningsAccountsQuery, summarizeEarnings, EarningsAccount } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/king/resellers")({
   component: KingResellers,
@@ -34,16 +35,7 @@ type ResellerWithTools = ResellerRow & {
   reseller_tools: { tool_id: string; tools: { name: string } | null }[];
 };
 
-type AccountRow = {
-  id: string; // user_tools.id
-  created_at: string;
-  expires_at: string | null;
-  is_paid: boolean;
-  paid_amount: number | null;
-  paid_at: string | null;
-  tools: { name: string } | null;
-  profiles: { id: string; email: string; full_name: string | null; created_by: string | null } | null;
-};
+type AccountRow = EarningsAccount;
 
 
 function initials(name: string) {
@@ -152,20 +144,7 @@ function KingResellers() {
     },
   });
 
-  const accounts = useQuery({
-    queryKey: ["reseller-accounts"],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("user_tools")
-        .select(
-          "id, created_at, expires_at, is_paid, paid_amount, paid_at, tools(name), profiles!inner(id, email, full_name, created_by, role)",
-        )
-        .eq("profiles.role", "user")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      return data as unknown as AccountRow[];
-    },
-  });
+  const accounts = useQuery(earningsAccountsQuery);
 
   const rows = accounts.data ?? [];
 
@@ -181,24 +160,7 @@ function KingResellers() {
     return map;
   }, [rows]);
 
-  const totals = useMemo(() => {
-    const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
-    let all = 0;
-    let last30 = 0;
-    let pendingCount = 0;
-    const pendingResellers = new Set<string>();
-    for (const a of rows) {
-      if (a.is_paid) {
-        all += Number(a.paid_amount ?? 0);
-        if (a.paid_at && new Date(a.paid_at).getTime() >= cutoff) last30 += Number(a.paid_amount ?? 0);
-      } else {
-        pendingCount += 1;
-        if (a.profiles?.created_by) pendingResellers.add(a.profiles.created_by);
-      }
-    }
-    return { all, last30, pendingCount, pendingResellers: pendingResellers.size };
-  }, [rows]);
-
+  const totals = useMemo(() => summarizeEarnings(rows), [rows]);
 
   const activeResellers = (resellers.data ?? []).filter((r) => r.is_active).length;
 
