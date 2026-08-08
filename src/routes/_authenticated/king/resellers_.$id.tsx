@@ -31,6 +31,7 @@ export const Route = createFileRoute("/_authenticated/king/resellers_/$id")({
 
 type DetailUser = UserRow & {
   is_paid: boolean;
+  paid_amount: number | null;
   user_tools: { tool_id: string }[];
 };
 
@@ -39,8 +40,10 @@ function KingResellerUsers() {
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<UserRow | null>(null);
   const [toolFilter, setToolFilter] = useState<string>("all");
+  const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
   const del = useServerFn(deleteAuthUser);
   const markPaid = useServerFn(setUserPaid);
+
 
   const reseller = useQuery({
     queryKey: ["reseller", id],
