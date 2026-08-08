@@ -92,15 +92,16 @@ function KingResellerUsers() {
     }
   }
 
-  async function togglePaid(u: DetailUser) {
+  async function unmarkPaid(u: DetailUser) {
     try {
-      await markPaid({ data: { id: u.id, is_paid: !u.is_paid } });
-      toast.success(u.is_paid ? "Marked as unpaid" : "Marked as paid");
+      await markPaid({ data: { id: u.id, is_paid: false } });
+      toast.success("Marked as unpaid");
       users.refetch();
     } catch (e) {
       toast.error((e as Error).message);
     }
   }
+
 
   return (
     <div>
