@@ -234,6 +234,12 @@ function KingResellerUsers() {
         </tbody>
       </TableShell>
 
+      <MarkPaidDialog
+        target={payTarget}
+        onOpenChange={(v) => !v && setPayTarget(null)}
+        onSaved={() => users.refetch()}
+      />
+
       <UserFormDialog
         open={open}
         onOpenChange={setOpen}
@@ -242,5 +248,6 @@ function KingResellerUsers() {
         onSaved={() => users.refetch()}
       />
     </div>
+
   );
 }
