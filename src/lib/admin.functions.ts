@@ -286,4 +286,31 @@ export const setUserPaid = createServerFn({ method: "POST" })
     return { ok: true };
   });
 
+/** King-only: set payment status for a single tool assignment (account). */
+export const setAccountPaid = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z
+      .object({
+        id: z.string().uuid(), // user_tools.id
+        is_paid: z.boolean(),
+        amount: z.number().positive().optional(),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await (await import("@/lib/admin.server")).assertRole(context.userId, ["king"]);
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    if (data.is_paid && !(data.amount && data.amount > 0)) {
+      throw new Error("Enter a valid payment amount.");
+    }
+    const patch = data.is_paid
+      ? { is_paid: true, paid_amount: data.amount!, paid_at: new Date().toISOString() }
+      : { is_paid: false, paid_amount: null, paid_at: null };
+    const { error } = await supabaseAdmin.from("user_tools").update(patch).eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
+
+
 
