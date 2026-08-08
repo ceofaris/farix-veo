@@ -92,6 +92,12 @@ function KingResellerUsers() {
   const filtered =
     toolFilter === "all" ? rows : rows.filter((u) => u.user_tools?.some((t) => t.tool_id === toolFilter));
   const allAccounts = rows.flatMap((u) => u.user_tools ?? []);
+  const countsByTool = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const a of allAccounts) m.set(a.tool_id, (m.get(a.tool_id) ?? 0) + 1);
+    return m;
+  }, [allAccounts]);
+
   const paidCount = allAccounts.filter((a) => a.is_paid).length;
   const totalEarned = allAccounts.reduce(
     (s, a) => s + (a.is_paid ? Number(a.paid_amount ?? 0) : 0),
