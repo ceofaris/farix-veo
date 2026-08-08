@@ -53,3 +53,57 @@ export function describeTool(tool: { name: string; slug?: string | null }) {
     "Premium AI tool access through the Farix browser extension."
   );
 }
+
+/** Single source of truth for earnings + account stats (shared by Dashboard and Resellers). */
+export type EarningsAccount = {
+  id: string;
+  created_at: string;
+  expires_at: string | null;
+  is_paid: boolean;
+  paid_amount: number | null;
+  paid_at: string | null;
+  tool_id: string;
+  tools: { name: string } | null;
+  profiles: { id: string; email: string; full_name: string | null; created_by: string | null } | null;
+};
+
+export const earningsAccountsQuery = queryOptions({
+  queryKey: ["reseller-accounts"],
+  staleTime: 60 * 1000,
+  queryFn: async (): Promise<EarningsAccount[]> => {
+    const { data, error } = await supabase
+      .from("user_tools")
+      .select(
+        "id, created_at, expires_at, is_paid, paid_amount, paid_at, tool_id, tools(name), profiles!inner(id, email, full_name, created_by, role)",
+      )
+      .eq("profiles.role", "user")
+      .order("created_at", { ascending: false });
+    if (error) throw error;
+    return (data ?? []) as unknown as EarningsAccount[];
+  },
+});
+
+export function summarizeEarnings(rows: EarningsAccount[]) {
+  const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
+  let all = 0;
+  let last30 = 0;
+  let paidCount = 0;
+  const pendingResellers = new Set<string>();
+  for (const a of rows) {
+    if (a.is_paid) {
+      paidCount += 1;
+      all += Number(a.paid_amount ?? 0);
+      if (a.paid_at && new Date(a.paid_at).getTime() >= cutoff) last30 += Number(a.paid_amount ?? 0);
+    } else if (a.profiles?.created_by) {
+      pendingResellers.add(a.profiles.created_by);
+    }
+  }
+  return {
+    all,
+    last30,
+    total: rows.length,
+    paidCount,
+    pendingCount: rows.length - paidCount,
+    pendingResellers: pendingResellers.size,
+  };
+}
