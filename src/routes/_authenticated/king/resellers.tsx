@@ -11,7 +11,7 @@ import { Plus, Pencil, Trash2, Users, ChevronRight, AlertTriangle, Search } from
 import { ResellerFormDialog, ResellerRow } from "@/components/reseller-form-dialog";
 import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
 import { useServerFn } from "@tanstack/react-start";
-import { deleteAuthUser } from "@/lib/admin.functions";
+import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
