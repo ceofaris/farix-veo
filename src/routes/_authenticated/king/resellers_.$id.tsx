@@ -9,7 +9,7 @@ import { StatCard } from "@/components/stat-card";
 import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert } from "lucide-react";
 import { UserFormDialog, UserRow } from "@/components/user-form-dialog";
 import { useServerFn } from "@tanstack/react-start";
-import { deleteAuthUser, setUserPaid } from "@/lib/admin.functions";
+import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { activeToolsQuery, resellerToolIdsQuery } from "@/lib/queries";
 import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
@@ -47,7 +47,7 @@ function KingResellerUsers() {
   const [toolFilter, setToolFilter] = useState<string>("all");
   const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
   const del = useServerFn(deleteAuthUser);
-  const markPaid = useServerFn(setUserPaid);
+  const markPaid = useServerFn(setAccountPaid);
 
 
   const reseller = useQuery({
