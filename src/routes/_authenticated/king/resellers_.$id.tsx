@@ -285,8 +285,8 @@ function KingResellerUsers() {
 
           {filtered.length === 0 && (
             <tr>
-              <td colSpan={6} className="px-5 py-14 text-center text-muted-foreground">
-                No users match this filter.
+              <td colSpan={4} className="px-5 py-14 text-center text-muted-foreground">
+                No accounts match this filter.
               </td>
             </tr>
           )}
@@ -294,10 +294,12 @@ function KingResellerUsers() {
       </TableShell>
 
       <MarkPaidDialog
+        kind="account"
         target={payTarget}
         onOpenChange={(v) => !v && setPayTarget(null)}
         onSaved={() => users.refetch()}
       />
+
 
       <UserFormDialog
         open={open}
