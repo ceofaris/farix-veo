@@ -535,7 +535,13 @@ function KingResellers() {
         </SheetContent>
       </Sheet>
 
-      <MarkPaidDialog target={payTarget} onOpenChange={(v) => !v && setPayTarget(null)} onSaved={refreshAll} />
+      <MarkPaidDialog
+        kind="account"
+        target={payTarget}
+        onOpenChange={(v) => !v && setPayTarget(null)}
+        onSaved={refreshAll}
+      />
+
 
       <ResellerFormDialog open={open} onOpenChange={setOpen} reseller={editing} onSaved={refreshAll} />
     </div>
