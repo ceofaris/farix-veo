@@ -262,15 +262,32 @@ export const updateEndUser = createServerFn({ method: "POST" })
         target.created_by ?? context.userId,
         data.tool_ids,
       );
-      await supabaseAdmin.from("user_tools").delete().eq("user_id", data.id);
-      if (tool_ids.length) {
-        await supabaseAdmin
-          .from("user_tools")
-          .insert(tool_ids.map((tid) => ({ user_id: data.id, tool_id: tid })));
+      const veoId = await (await import("@/lib/admin.server")).veoToolId();
+      const { data: existing } = await supabaseAdmin
+        .from("user_tools")
+        .select("id, tool_id")
+        .eq("user_id", data.id);
+      const current = new Map((existing ?? []).map((r) => [r.tool_id as string, r.id as string]));
+
+      // Remove only the de-selected tools so credits on kept assignments survive.
+      const removed = [...current.entries()].filter(([tid]) => !tool_ids.includes(tid)).map(([, id]) => id);
+      if (removed.length) await supabaseAdmin.from("user_tools").delete().in("id", removed);
+
+      const added = tool_ids.filter((tid) => !current.has(tid));
+      if (added.length) {
+        const credits = data.veo_credits ?? 45000;
+        await supabaseAdmin.from("user_tools").insert(
+          added.map((tid) => ({
+            user_id: data.id,
+            tool_id: tid,
+            ...(tid === veoId ? { credits, total_credits: credits, credits_used: 0 } : {}),
+          })),
+        );
       }
     }
     return { ok: true };
   });
+
 
 /** King-only: enable or disable a reseller account. */
 export const setResellerActive = createServerFn({ method: "POST" })
