@@ -6,8 +6,26 @@ import { StatCard } from "@/components/stat-card";
 import { Card } from "@/components/panel-layout";
 import { ToolLogo } from "@/components/tool-logo";
 import { formatRs } from "@/components/mark-paid-dialog";
-import { activeToolsQuery, earningsAccountsQuery, summarizeEarnings } from "@/lib/queries";
-import { Users, KeyRound, BadgeCheck, BadgeAlert, Wallet, CalendarClock } from "lucide-react";
+import {
+  activeToolsQuery,
+  earningsAccountsQuery,
+  summarizeEarnings,
+  summarizeVeoCredits,
+  creditUsageThisMonthQuery,
+  formatCredits,
+} from "@/lib/queries";
+import {
+  Users,
+  KeyRound,
+  BadgeCheck,
+  BadgeAlert,
+  Wallet,
+  CalendarClock,
+  Coins,
+  Activity,
+  Video,
+  Zap,
+} from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/king/")({
   component: KingDashboard,
@@ -44,8 +62,15 @@ function KingDashboard() {
     },
   });
 
+  const usage = useQuery(creditUsageThisMonthQuery);
+
   const rows = accounts.data ?? [];
   const totals = useMemo(() => summarizeEarnings(rows), [rows]);
+  const veo = useMemo(() => summarizeVeoCredits(rows), [rows]);
+  const usedThisMonth = useMemo(
+    () => (usage.data ?? []).reduce((s, r) => s + Number(r.amount ?? 0), 0),
+    [usage.data],
+  );
 
   const byTool = useMemo(() => {
     const cookies = counts.data?.cookieAccounts ?? [];
@@ -116,6 +141,47 @@ function KingDashboard() {
           hint="Across ChatGPT and Veo 3"
           tone="chart-5"
         />
+      </div>
+
+      <div>
+        <h2 className="text-lg font-medium">Veo 3 credits</h2>
+        <p className="text-sm text-muted-foreground mt-1">
+          Only Veo 3 uses credits — each video generation costs 30. ChatGPT is unlimited.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mt-5">
+          <StatCard
+            icon={Coins}
+            label="Total Veo Credits Distributed"
+            value={loaded ? formatCredits(veo.distributed) : "—"}
+            hint="All-time credits given"
+            tone="primary"
+          />
+          <StatCard
+            icon={Activity}
+            label="Veo Credits Used (This Month)"
+            value={usage.isSuccess ? formatCredits(usedThisMonth) : "—"}
+            hint={
+              usage.isSuccess
+                ? `${formatCredits(Math.floor(usedThisMonth / 30))} videos generated`
+                : undefined
+            }
+            tone="chart-2"
+          />
+          <StatCard
+            icon={Video}
+            label="Total Veo Users"
+            value={loaded ? veo.users : "—"}
+            hint={loaded ? `${formatCredits(veo.used)} credits used all-time` : undefined}
+            tone="chart-3"
+          />
+          <StatCard
+            icon={Zap}
+            label="Active Veo Users"
+            value={loaded ? veo.activeUsers : "—"}
+            hint={loaded ? `${formatCredits(veo.remaining)} credits remaining` : undefined}
+            tone="chart-5"
+          />
+        </div>
       </div>
 
       <Card className="p-6 sm:p-8">
