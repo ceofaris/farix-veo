@@ -58,6 +58,7 @@ function KingResellerUsers() {
   function refreshEarnings() {
     users.refetch();
     qc.invalidateQueries({ queryKey: ["reseller-accounts"] });
+    qc.invalidateQueries({ queryKey: ["credit-usage"] });
   }
 
 
@@ -417,7 +418,7 @@ function KingResellerUsers() {
 
           {filtered.length === 0 && (
             <tr>
-              <td colSpan={4} className="px-5 py-14 text-center text-muted-foreground">
+              <td colSpan={5} className="px-5 py-14 text-center text-muted-foreground">
                 No accounts match this filter.
               </td>
             </tr>
