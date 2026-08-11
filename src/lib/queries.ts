@@ -54,6 +54,18 @@ export function describeTool(tool: { name: string; slug?: string | null }) {
   );
 }
 
+/** Veo 3 is the only credit-based tool. */
+export const VEO_SLUG = "veo-3";
+export const DEFAULT_VEO_CREDITS = 45000;
+export const VIDEO_CREDIT_COST = 30;
+
+export function isVeo(tool: { slug?: string | null; name?: string | null } | null | undefined) {
+  const key = `${tool?.slug ?? ""} ${tool?.name ?? ""}`;
+  return /veo/i.test(key);
+}
+
+export const formatCredits = (n: number) => new Intl.NumberFormat("en-US").format(Math.max(0, n));
+
 /** Single source of truth for earnings + account stats (shared by Dashboard and Resellers). */
 export type EarningsAccount = {
   id: string;
@@ -63,7 +75,10 @@ export type EarningsAccount = {
   paid_amount: number | null;
   paid_at: string | null;
   tool_id: string;
-  tools: { name: string } | null;
+  credits: number;
+  total_credits: number;
+  credits_used: number;
+  tools: { name: string; slug: string } | null;
   profiles: { id: string; email: string; full_name: string | null; created_by: string | null } | null;
 };
 
@@ -74,7 +89,7 @@ export const earningsAccountsQuery = queryOptions({
     const { data, error } = await supabase
       .from("user_tools")
       .select(
-        "id, created_at, expires_at, is_paid, paid_amount, paid_at, tool_id, tools(name), profiles!inner(id, email, full_name, created_by, role)",
+        "id, created_at, expires_at, is_paid, paid_amount, paid_at, tool_id, credits, total_credits, credits_used, tools(name, slug), profiles!inner(id, email, full_name, created_by, role)",
       )
       .eq("profiles.role", "user")
       .order("created_at", { ascending: false });
@@ -82,6 +97,39 @@ export const earningsAccountsQuery = queryOptions({
     return (data ?? []) as unknown as EarningsAccount[];
   },
 });
+
+function monthStartIso() {
+  const d = new Date();
+  return new Date(d.getFullYear(), d.getMonth(), 1).toISOString();
+}
+
+/** Credit usage rows for the current calendar month (RLS scopes them to the caller). */
+export const creditUsageThisMonthQuery = queryOptions({
+  queryKey: ["credit-usage", "this-month"],
+  staleTime: 60 * 1000,
+  queryFn: async (): Promise<{ user_id: string; amount: number }[]> => {
+    const { data, error } = await supabase
+      .from("credit_usage")
+      .select("user_id, amount")
+      .gte("created_at", monthStartIso());
+    if (error) throw error;
+    return (data ?? []) as { user_id: string; amount: number }[];
+  },
+});
+
+/** Veo credit totals from the shared accounts query. */
+export function summarizeVeoCredits(rows: EarningsAccount[]) {
+  const veo = rows.filter((r) => isVeo(r.tools));
+  return {
+    accounts: veo,
+    distributed: veo.reduce((s, r) => s + Number(r.total_credits ?? 0), 0),
+    remaining: veo.reduce((s, r) => s + Number(r.credits ?? 0), 0),
+    used: veo.reduce((s, r) => s + Number(r.credits_used ?? 0), 0),
+    users: veo.length,
+    activeUsers: veo.filter((r) => Number(r.credits ?? 0) > 0).length,
+  };
+}
+
 
 export function summarizeEarnings(rows: EarningsAccount[]) {
   const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
