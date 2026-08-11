@@ -161,6 +161,7 @@ export const createEndUser = createServerFn({ method: "POST" })
         is_active: z.boolean().default(true),
         owner_id: z.string().uuid().optional(),
         tool_ids: z.array(z.string().uuid()).default([]),
+        veo_credits: z.number().int().min(0).default(45000),
       })
       .parse(d),
   )
@@ -199,10 +200,20 @@ export const createEndUser = createServerFn({ method: "POST" })
       created_by: owner,
     });
     if (tool_ids.length) {
-      await supabaseAdmin.from("user_tools").insert(tool_ids.map((tid) => ({ user_id: uid, tool_id: tid })));
+      const veoId = await (await import("@/lib/admin.server")).veoToolId();
+      await supabaseAdmin.from("user_tools").insert(
+        tool_ids.map((tid) => ({
+          user_id: uid,
+          tool_id: tid,
+          ...(tid === veoId
+            ? { credits: data.veo_credits, total_credits: data.veo_credits, credits_used: 0 }
+            : {}),
+        })),
+      );
     }
     return { ok: true, id: uid };
   });
+
 
 export const updateEndUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
@@ -214,6 +225,8 @@ export const updateEndUser = createServerFn({ method: "POST" })
         days: z.number().int().min(0).optional(),
         is_active: z.boolean(),
         tool_ids: z.array(z.string().uuid()).optional(),
+        veo_credits: z.number().int().min(0).optional(),
+
       })
       .parse(d),
   )
@@ -249,15 +262,32 @@ export const updateEndUser = createServerFn({ method: "POST" })
         target.created_by ?? context.userId,
         data.tool_ids,
       );
-      await supabaseAdmin.from("user_tools").delete().eq("user_id", data.id);
-      if (tool_ids.length) {
-        await supabaseAdmin
-          .from("user_tools")
-          .insert(tool_ids.map((tid) => ({ user_id: data.id, tool_id: tid })));
+      const veoId = await (await import("@/lib/admin.server")).veoToolId();
+      const { data: existing } = await supabaseAdmin
+        .from("user_tools")
+        .select("id, tool_id")
+        .eq("user_id", data.id);
+      const current = new Map((existing ?? []).map((r) => [r.tool_id as string, r.id as string]));
+
+      // Remove only the de-selected tools so credits on kept assignments survive.
+      const removed = [...current.entries()].filter(([tid]) => !tool_ids.includes(tid)).map(([, id]) => id);
+      if (removed.length) await supabaseAdmin.from("user_tools").delete().in("id", removed);
+
+      const added = tool_ids.filter((tid) => !current.has(tid));
+      if (added.length) {
+        const credits = data.veo_credits ?? 45000;
+        await supabaseAdmin.from("user_tools").insert(
+          added.map((tid) => ({
+            user_id: data.id,
+            tool_id: tid,
+            ...(tid === veoId ? { credits, total_credits: credits, credits_used: 0 } : {}),
+          })),
+        );
       }
     }
     return { ok: true };
   });
+
 
 /** King-only: enable or disable a reseller account. */
 export const setResellerActive = createServerFn({ method: "POST" })

@@ -6,12 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader, TableShell } from "@/components/panel-layout";
 import { StatCard } from "@/components/stat-card";
-import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert, Wallet } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert, Wallet, Coins } from "lucide-react";
 import { UserFormDialog, UserRow } from "@/components/user-form-dialog";
 import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
-import { activeToolsQuery, resellerToolIdsQuery } from "@/lib/queries";
+import { activeToolsQuery, resellerToolIdsQuery, isVeo, formatCredits } from "@/lib/queries";
+import { CreditsDialog, CreditsTarget } from "@/components/credits-dialog";
 import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
 
 
@@ -36,6 +37,9 @@ type DetailUser = UserRow & {
     is_paid: boolean;
     paid_amount: number | null;
     expires_at: string | null;
+    credits: number;
+    total_credits: number;
+    credits_used: number;
   }[];
 };
 
@@ -46,6 +50,7 @@ function KingResellerUsers() {
   const [editing, setEditing] = useState<UserRow | null>(null);
   const [toolFilter, setToolFilter] = useState<string>("all");
   const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
+  const [creditTarget, setCreditTarget] = useState<CreditsTarget | null>(null);
   const del = useServerFn(deleteAuthUser);
   const markPaid = useServerFn(setAccountPaid);
   const qc = useQueryClient();
@@ -53,6 +58,7 @@ function KingResellerUsers() {
   function refreshEarnings() {
     users.refetch();
     qc.invalidateQueries({ queryKey: ["reseller-accounts"] });
+    qc.invalidateQueries({ queryKey: ["credit-usage"] });
   }
 
 
@@ -75,6 +81,7 @@ function KingResellerUsers() {
     () => new Map((allTools.data ?? []).map((t) => [t.id, t.name])),
     [allTools.data],
   );
+  const veoToolId = (allTools.data ?? []).find((t) => isVeo(t))?.id ?? null;
   const filterTools = (allTools.data ?? []).filter((t) => (assignedIds.data ?? []).includes(t.id));
 
   const users = useQuery({
@@ -84,7 +91,7 @@ function KingResellerUsers() {
       const { data, error } = await supabase
         .from("profiles")
         .select(
-          "id, email, full_name, is_active, expires_at, user_tools(id, tool_id, is_paid, paid_amount, expires_at)",
+          "id, email, full_name, is_active, expires_at, user_tools(id, tool_id, is_paid, paid_amount, expires_at, credits, total_credits, credits_used)",
         )
         .eq("role", "user")
         .eq("created_by", id)
@@ -103,6 +110,11 @@ function KingResellerUsers() {
     for (const a of allAccounts) m.set(a.tool_id, (m.get(a.tool_id) ?? 0) + 1);
     return m;
   }, [allAccounts]);
+
+  const veoAccounts = allAccounts.filter((a) => a.tool_id === veoToolId);
+  const creditsGiven = veoAccounts.reduce((s, a) => s + Number(a.total_credits ?? 0), 0);
+  const creditsUsed = veoAccounts.reduce((s, a) => s + Number(a.credits_used ?? 0), 0);
+  const creditsLeft = veoAccounts.reduce((s, a) => s + Number(a.credits ?? 0), 0);
 
   const paidCount = allAccounts.filter((a) => a.is_paid).length;
   const totalEarned = allAccounts.reduce(
@@ -188,6 +200,30 @@ function KingResellerUsers() {
 
 
 
+      <div className="mt-4 rounded-2xl border border-border bg-card px-5 py-4 shadow-card">
+        <div className="flex items-center gap-2 text-sm font-medium">
+          <Coins className="h-4 w-4 text-primary" /> Veo 3 credits
+        </div>
+        <div className="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+          <div>
+            <div className="text-xs text-muted-foreground">Credits given</div>
+            <div className="font-semibold">{formatCredits(creditsGiven)}</div>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground">Credits used</div>
+            <div className="font-semibold">{formatCredits(creditsUsed)}</div>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground">Remaining</div>
+            <div className="font-semibold">{formatCredits(creditsLeft)}</div>
+          </div>
+          <div>
+            <div className="text-xs text-muted-foreground">Users with Veo 3</div>
+            <div className="font-semibold">{veoAccounts.length}</div>
+          </div>
+        </div>
+      </div>
+
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <span className="text-xs uppercase tracking-[0.08em] text-muted-foreground mr-1">Filter</span>
         <Button
@@ -214,6 +250,7 @@ function KingResellerUsers() {
           <tr>
             <th className="px-5 py-3.5 font-semibold">Account</th>
             <th className="px-5 py-3.5 font-semibold">Expiry</th>
+            <th className="px-5 py-3.5 font-semibold">Credits</th>
             <th className="px-5 py-3.5 font-semibold">Payment</th>
             <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
           </tr>
@@ -230,6 +267,7 @@ function KingResellerUsers() {
                     <div className="font-medium">{u.full_name || u.email}</div>
                     <div className="text-xs text-muted-foreground">{u.email}</div>
                   </td>
+                  <td className="px-5 py-4 text-muted-foreground">—</td>
                   <td className="px-5 py-4 text-muted-foreground">—</td>
                   <td className="px-5 py-4 text-xs text-muted-foreground">No tools assigned</td>
                   <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
@@ -269,6 +307,52 @@ function KingResellerUsers() {
                       </span>
                     ) : (
                       "—"
+                    )}
+                  </td>
+                  <td className="px-5 py-4 text-sm">
+                    {a.tool_id === veoToolId ? (
+                      <div>
+                        <div className="font-medium">{formatCredits(a.credits)} left</div>
+                        <div className="text-xs text-muted-foreground">
+                          {formatCredits(a.credits_used)} used of {formatCredits(a.total_credits)}
+                        </div>
+                        <div className="mt-1 flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 px-2 text-xs"
+                            onClick={() =>
+                              setCreditTarget({
+                                userId: u.id,
+                                name: u.full_name || u.email,
+                                credits: a.credits,
+                                used: a.credits_used,
+                                mode: "add",
+                              })
+                            }
+                          >
+                            Add
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="h-7 px-2 text-xs"
+                            onClick={() =>
+                              setCreditTarget({
+                                userId: u.id,
+                                name: u.full_name || u.email,
+                                credits: a.credits,
+                                used: a.credits_used,
+                                mode: "set",
+                              })
+                            }
+                          >
+                            Set
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Unlimited</span>
                     )}
                   </td>
                   <td className="px-5 py-4">
@@ -334,13 +418,19 @@ function KingResellerUsers() {
 
           {filtered.length === 0 && (
             <tr>
-              <td colSpan={4} className="px-5 py-14 text-center text-muted-foreground">
+              <td colSpan={5} className="px-5 py-14 text-center text-muted-foreground">
                 No accounts match this filter.
               </td>
             </tr>
           )}
         </tbody>
       </TableShell>
+
+      <CreditsDialog
+        target={creditTarget}
+        onOpenChange={(v) => !v && setCreditTarget(null)}
+        onSaved={refreshEarnings}
+      />
 
       <MarkPaidDialog
         

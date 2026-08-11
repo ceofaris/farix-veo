@@ -1,5 +1,12 @@
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
+/** Id of the only credit-based tool (Veo 3), or null when it is missing. */
+export async function veoToolId(): Promise<string | null> {
+  const { data } = await supabaseAdmin.from("tools").select("id").eq("slug", "veo-3").maybeSingle();
+  return (data?.id as string) ?? null;
+}
+
+
 export async function assertRole(userId: string, roles: string[]) {
   const { data, error } = await supabaseAdmin
     .from("profiles")
