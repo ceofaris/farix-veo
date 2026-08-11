@@ -225,6 +225,8 @@ export const updateEndUser = createServerFn({ method: "POST" })
         days: z.number().int().min(0).optional(),
         is_active: z.boolean(),
         tool_ids: z.array(z.string().uuid()).optional(),
+        veo_credits: z.number().int().min(0).optional(),
+
       })
       .parse(d),
   )
