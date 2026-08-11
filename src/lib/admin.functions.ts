@@ -161,6 +161,7 @@ export const createEndUser = createServerFn({ method: "POST" })
         is_active: z.boolean().default(true),
         owner_id: z.string().uuid().optional(),
         tool_ids: z.array(z.string().uuid()).default([]),
+        veo_credits: z.number().int().min(0).default(45000),
       })
       .parse(d),
   )
@@ -199,10 +200,20 @@ export const createEndUser = createServerFn({ method: "POST" })
       created_by: owner,
     });
     if (tool_ids.length) {
-      await supabaseAdmin.from("user_tools").insert(tool_ids.map((tid) => ({ user_id: uid, tool_id: tid })));
+      const veoId = await (await import("@/lib/admin.server")).veoToolId();
+      await supabaseAdmin.from("user_tools").insert(
+        tool_ids.map((tid) => ({
+          user_id: uid,
+          tool_id: tid,
+          ...(tid === veoId
+            ? { credits: data.veo_credits, total_credits: data.veo_credits, credits_used: 0 }
+            : {}),
+        })),
+      );
     }
     return { ok: true, id: uid };
   });
+
 
 export const updateEndUser = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
