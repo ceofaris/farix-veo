@@ -333,6 +333,16 @@ export type Database = {
         Args: { _cost: number; _user_id: string }
         Returns: Json
       }
+      get_random_flow_account: {
+        Args: never
+        Returns: {
+          cookie_data: string
+          id: string
+          label: string
+          notes: string
+          tool_id: string
+        }[]
+      }
       is_king: { Args: { _user_id: string }; Returns: boolean }
       is_reseller: { Args: { _user_id: string }; Returns: boolean }
       set_credits: {
