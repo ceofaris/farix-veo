@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      active_sessions: {
+        Row: {
+          created_at: string
+          last_seen: string
+          started_at: string
+          tool_account_id: string | null
+          tool_slug: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          last_seen?: string
+          started_at?: string
+          tool_account_id?: string | null
+          tool_slug?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          last_seen?: string
+          started_at?: string
+          tool_account_id?: string | null
+          tool_slug?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "active_sessions_tool_account_id_fkey"
+            columns: ["tool_account_id"]
+            isOneToOne: false
+            referencedRelation: "tool_accounts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "active_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       credit_usage: {
         Row: {
           amount: number
@@ -345,6 +390,7 @@ export type Database = {
       }
       is_king: { Args: { _user_id: string }; Returns: boolean }
       is_reseller: { Args: { _user_id: string }; Returns: boolean }
+      set_active_session: { Args: { p_tool_account_id: string }; Returns: Json }
       set_credits: {
         Args: { _amount: number; _user_id: string }
         Returns: Json
