@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useProfile } from "@/hooks/use-profile";
 import { PanelLayout } from "@/components/panel-layout";
-import { LayoutDashboard, Wrench, UserCog } from "lucide-react";
+import { LayoutDashboard, Wrench, UserCog, FlaskConical } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/king")({
   component: KingLayout,
@@ -25,6 +25,7 @@ function KingLayout() {
         { to: "/king", label: "Dashboard", icon: LayoutDashboard },
         { to: "/king/tools", label: "Tools", icon: Wrench },
         { to: "/king/resellers", label: "Resellers", icon: UserCog },
+        { to: "/king/extension-lab", label: "Extension Lab", icon: FlaskConical },
       ]}
     >
       <Outlet />
