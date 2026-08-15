@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Farix AI — Veo Session",
+  "version": "1.0.0",
+  "description": "Securely launch managed Farix AI Veo sessions and track video-generation credits.",
+  "permissions": [
+    "storage",
+    "cookies",
+    "tabs",
+    "scripting",
+    "management"
+  ],
+  "host_permissions": [
+    "https://labs.google/*",
+    "https://*.supabase.co/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Farix AI",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://labs.google/fx/tools/flow*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "minimum_chrome_version": "100"
+}
