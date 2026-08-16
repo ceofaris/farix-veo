@@ -2,22 +2,24 @@
   "use strict";
 
   /*
-   * Veo credit metering.
+   * Veo generation metering.
    *
-   * Detection is deliberately disabled on the Flow listing page. A project
-   * must finish loading and remain quiet before detection is armed. Everything
-   * discovered before that point becomes baseline media and can never be
-   * billed. New video sources appearing together are treated as one generation.
+   * Billing is deliberately guarded by two independent conditions:
+   *   1. the tab is inside a concrete Flow project editor; and
+   *   2. the user has just started a generation from that editor.
+   *
+   * Existing/lazily-loaded project media is always learned without billing.
+   * A generation's newly-created video outputs are batched into one message.
    */
 
-  const PROJECT_PATH = /^\/fx\/tools\/flow\/project(?:\/|$)/;
-  const BASELINE_MIN_MS = 10_000;
-  const BASELINE_QUIET_MS = 3_000;
-  const SOURCE_SETTLE_MS = 1_200;
-  const GENERATION_BATCH_MS = 3_500;
-  const GENERATION_COOLDOWN_MS = 8_000;
+  const PROJECT_PATH = /^\/fx\/tools\/flow\/project\/[^/?#]+(?:\/|$)/;
+  const BASELINE_MIN_MS = 2_000;
+  const BASELINE_QUIET_MS = 1_800;
+  const BASELINE_MAX_MS = 15_000;
+  const SOURCE_SETTLE_MS = 900;
+  const OUTPUT_BATCH_MS = 2_500;
+  const GENERATION_INTENT_MS = 15 * 60 * 1000;
 
-  let currentProjectUrl = "";
   let projectState = null;
   let warningElement = null;
   let statusElement = null;
@@ -26,25 +28,23 @@
     return PROJECT_PATH.test(window.location.pathname);
   }
 
-  function normalizeProjectUrl() {
-    return `${window.location.origin}${window.location.pathname}`;
+  function projectKey() {
+    return isProjectPage() ? `${window.location.origin}${window.location.pathname}` : "";
   }
 
   function mediaSource(video) {
     if (!(video instanceof HTMLVideoElement)) return "";
-
-    const directSource =
+    const source =
       video.currentSrc ||
       video.src ||
       video.getAttribute("src") ||
       video.querySelector("source[src]")?.src ||
       video.querySelector("source[src]")?.getAttribute("src") ||
       "";
-
-    return String(directSource).split("#")[0].trim().slice(0, 1000);
+    return String(source).split("#")[0].trim().slice(0, 1600);
   }
 
-  function mediaIdentity(video) {
+  function mediaKey(video) {
     const source = mediaSource(video);
     if (source) return `src:${source}`;
 
@@ -53,194 +53,203 @@
       video.getAttribute("data-media-id") ||
       video.getAttribute("data-testid") ||
       video.id;
-
     return stableId ? `id:${stableId}` : "";
   }
 
-  function isVisibleVideo(video) {
-    if (!(video instanceof HTMLVideoElement)) return false;
+  function isActualVideoOutput(video) {
+    if (!(video instanceof HTMLVideoElement) || !mediaSource(video)) return false;
     const rect = video.getBoundingClientRect();
-    return Boolean(mediaSource(video)) && rect.width >= 160 && rect.height >= 90;
+    if (rect.width < 240 || rect.height < 120) return false;
+    if (video.closest('[aria-hidden="true"], [hidden]')) return false;
+    return true;
   }
 
-  function clearProjectTimers(state) {
+  function clearStateTimers(state) {
     if (!state) return;
     window.clearTimeout(state.baselineTimer);
-    window.clearTimeout(state.candidateTimer);
+    window.clearTimeout(state.baselineMaxTimer);
+    window.clearTimeout(state.outputTimer);
     state.baselineTimer = 0;
-    state.candidateTimer = 0;
+    state.baselineMaxTimer = 0;
+    state.outputTimer = 0;
   }
 
-  function addCurrentMediaToBaseline(state) {
+  function snapshotCurrentMedia(state) {
     if (!state || state !== projectState) return;
-
     document.querySelectorAll("video").forEach((video) => {
-      const identity = mediaIdentity(video);
-      if (identity) state.seenMedia.add(identity);
+      const key = mediaKey(video);
+      if (key) state.knownMediaKeys.add(key);
     });
   }
 
-  function armDetectionWhenSettled(state) {
-    if (!state || state !== projectState || state.armed || !isProjectPage()) return;
+  function finishBaseline(state) {
+    if (!state || state !== projectState || state.ready || !isProjectPage()) return;
+    snapshotCurrentMedia(state);
+    state.ready = true;
+    window.clearTimeout(state.baselineTimer);
+    window.clearTimeout(state.baselineMaxTimer);
+    state.baselineTimer = 0;
+    state.baselineMaxTimer = 0;
+  }
 
-    addCurrentMediaToBaseline(state);
+  function scheduleBaseline(state) {
+    if (!state || state !== projectState || state.ready || !isProjectPage()) return;
+    snapshotCurrentMedia(state);
     window.clearTimeout(state.baselineTimer);
 
     const elapsed = Date.now() - state.enteredAt;
-    const remainingMinimum = Math.max(0, BASELINE_MIN_MS - elapsed);
-    const delay = Math.max(BASELINE_QUIET_MS, remainingMinimum);
-
-    state.baselineTimer = window.setTimeout(() => {
-      if (state !== projectState || !isProjectPage()) return;
-
-      // Take one final snapshot at the exact moment detection becomes active.
-      addCurrentMediaToBaseline(state);
-      state.armed = true;
-    }, delay);
+    const delay = Math.max(BASELINE_QUIET_MS, BASELINE_MIN_MS - elapsed);
+    state.baselineTimer = window.setTimeout(() => finishBaseline(state), delay);
   }
 
-  function enterProject() {
-    const projectUrl = normalizeProjectUrl();
-    if (projectState && currentProjectUrl === projectUrl) return;
-
-    clearProjectTimers(projectState);
-    currentProjectUrl = projectUrl;
+  function enterProject(key) {
+    clearStateTimers(projectState);
     projectState = {
+      key,
       enteredAt: Date.now(),
-      armed: false,
+      ready: false,
       blocked: false,
       baselineTimer: 0,
-      candidateTimer: 0,
-      cooldownUntil: 0,
-      seenMedia: new Set(),
-      pendingMedia: new Set()
+      baselineMaxTimer: 0,
+      outputTimer: 0,
+      generationIntentUntil: 0,
+      knownMediaKeys: new Set(),
+      pendingOutputKeys: new Set()
     };
-
-    addCurrentMediaToBaseline(projectState);
-    armDetectionWhenSettled(projectState);
-  }
-
-  function leaveProject() {
-    clearProjectTimers(projectState);
-    currentProjectUrl = "";
-    projectState = null;
+    snapshotCurrentMedia(projectState);
+    scheduleBaseline(projectState);
+    projectState.baselineMaxTimer = window.setTimeout(
+      () => finishBaseline(projectState),
+      BASELINE_MAX_MS
+    );
   }
 
   function syncRoute() {
-    if (!isProjectPage()) {
-      leaveProject();
+    const key = projectKey();
+    if (!key) {
+      clearStateTimers(projectState);
+      projectState = null;
       return;
     }
-
-    enterProject();
+    if (!projectState || projectState.key !== key) enterProject(key);
   }
 
-  function submitGenerationBatch(state) {
+  function hasGenerationIntent(state) {
+    return Boolean(state && Date.now() <= state.generationIntentUntil);
+  }
+
+  function markGenerationIntent(event) {
+    syncRoute();
+    const state = projectState;
+    if (!state || !state.ready || state.blocked || !isProjectPage()) return;
+
+    const path = typeof event.composedPath === "function" ? event.composedPath() : [];
+    const control = path.find(
+      (node) =>
+        node instanceof HTMLElement &&
+        (node.matches("button, [role='button']") || node.getAttribute("type") === "submit")
+    );
+    if (!(control instanceof HTMLElement)) return;
+
+    const label = `${control.innerText || ""} ${control.getAttribute("aria-label") || ""} ${control.getAttribute("title") || ""}`
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+
+    // Flow changes labels periodically. These terms cover create/generate,
+    // retry, extend and submit controls while explicitly excluding New project.
+    if (!/(generate|create|submit|send|retry|redo|extend)/i.test(label)) return;
+    if (/new project/i.test(label)) return;
+
+    state.generationIntentUntil = Date.now() + GENERATION_INTENT_MS;
+    state.pendingOutputKeys.clear();
+    window.clearTimeout(state.outputTimer);
+    state.outputTimer = 0;
+  }
+
+  function submitOutputBatch(state) {
     if (
       !state ||
       state !== projectState ||
-      !state.armed ||
+      !state.ready ||
       state.blocked ||
       !isProjectPage() ||
-      state.pendingMedia.size === 0
+      !hasGenerationIntent(state) ||
+      state.pendingOutputKeys.size === 0
     ) {
       return;
     }
 
-    const identities = [...state.pendingMedia].sort();
-    state.pendingMedia.clear();
-    state.candidateTimer = 0;
-    state.cooldownUntil = Date.now() + GENERATION_COOLDOWN_MS;
+    const outputKeys = [...state.pendingOutputKeys].sort();
+    state.pendingOutputKeys.clear();
+    state.outputTimer = 0;
+    // Consume the intent before messaging so this generation can never send a
+    // second request, even if Flow re-renders the output during the RPC.
+    state.generationIntentUntil = 0;
+    const generationKey = `${state.key}|${outputKeys.join("|")}`.slice(0, 5000);
 
-    // All outputs that appeared in this short window belong to one generation.
-    // The key is deterministic, and the background worker also deduplicates it.
-    const generationKey = identities.join("|").slice(0, 4000);
-
-    chrome.runtime.sendMessage(
-      { type: "MEDIA_DETECTED", generationKey },
-      (response) => {
-        void chrome.runtime.lastError;
-        if (state !== projectState) return;
-
-        const result = response?.result;
-        if (response?.ok && result?.deducted === false) {
-          // A failed/insufficient deduction stops further requests for this
-          // project visit. The background script already shows one warning.
-          state.blocked = true;
-          state.pendingMedia.clear();
-          window.clearTimeout(state.candidateTimer);
-          state.candidateTimer = 0;
-        }
+    chrome.runtime.sendMessage({ type: "MEDIA_DETECTED", generationKey }, (response) => {
+      void chrome.runtime.lastError;
+      if (state !== projectState) return;
+      if (!response?.ok || response?.result?.deducted === false) {
+        state.blocked = true;
+        state.pendingOutputKeys.clear();
+        window.clearTimeout(state.outputTimer);
+        state.outputTimer = 0;
       }
-    );
+    });
   }
 
-  function queueNewVideo(video, state) {
-    if (
-      !state ||
-      state !== projectState ||
-      !state.armed ||
-      state.blocked ||
-      !isProjectPage()
-    ) {
-      return;
-    }
+  function inspectVideoAfterSettling(video, state) {
+    window.setTimeout(() => {
+      if (!state || state !== projectState || !isProjectPage()) return;
+      const key = mediaKey(video);
+      if (!key || state.knownMediaKeys.has(key)) return;
 
-    const identity = mediaIdentity(video);
-    if (!identity || state.seenMedia.has(identity)) return;
+      // Learn every source immediately. Media that appears without an active
+      // generation intent is old/lazy UI media and can never be billed later.
+      state.knownMediaKeys.add(key);
+      if (!state.ready || !hasGenerationIntent(state) || !isActualVideoOutput(video)) return;
 
-    // Mark before any async work so repeated mutations for the same source can
-    // never create repeated requests.
-    state.seenMedia.add(identity);
-
-    if (!isVisibleVideo(video)) return;
-    if (Date.now() < state.cooldownUntil) return;
-
-    state.pendingMedia.add(identity);
-    if (state.candidateTimer) return;
-
-    state.candidateTimer = window.setTimeout(
-      () => submitGenerationBatch(state),
-      GENERATION_BATCH_MS
-    );
+      state.pendingOutputKeys.add(key);
+      if (!state.outputTimer) {
+        state.outputTimer = window.setTimeout(() => submitOutputBatch(state), OUTPUT_BATCH_MS);
+      }
+    }, SOURCE_SETTLE_MS);
   }
 
-  function inspectVideo(video) {
-    const state = projectState;
-    if (!state || !isProjectPage()) return;
-
-    if (!state.armed) {
-      addCurrentMediaToBaseline(state);
-      armDetectionWhenSettled(state);
-      return;
-    }
-
-    window.setTimeout(() => queueNewVideo(video, state), SOURCE_SETTLE_MS);
-  }
-
-  function inspectNode(node) {
-    if (!(node instanceof Element)) return;
-    if (node.matches("video")) inspectVideo(node);
-    node.querySelectorAll?.("video").forEach(inspectVideo);
+  function videosInNode(node) {
+    if (!(node instanceof Element)) return [];
+    const videos = [];
+    if (node instanceof HTMLVideoElement) videos.push(node);
+    node.querySelectorAll?.("video").forEach((video) => videos.push(video));
+    return videos;
   }
 
   function handleMutations(mutations) {
-    const previousProjectUrl = currentProjectUrl;
+    const previousKey = projectState?.key || "";
     syncRoute();
-
-    // A route transition only establishes a baseline; never inspect the same
-    // navigation mutation as a generation.
-    if (!isProjectPage() || previousProjectUrl !== currentProjectUrl) return;
-
     const state = projectState;
-    for (const mutation of mutations) {
-      if (mutation.type === "attributes" && mutation.target instanceof HTMLVideoElement) {
-        inspectVideo(mutation.target);
-      }
-      mutation.addedNodes.forEach(inspectNode);
-    }
+    if (!state || state.key !== previousKey || !isProjectPage()) return;
 
-    if (state && !state.armed) armDetectionWhenSettled(state);
+    let mediaChanged = false;
+    for (const mutation of mutations) {
+      const videos =
+        mutation.type === "attributes" && mutation.target instanceof HTMLVideoElement
+          ? [mutation.target]
+          : [...mutation.addedNodes].flatMap(videosInNode);
+      if (videos.length) mediaChanged = true;
+
+      if (!state.ready) {
+        videos.forEach((video) => {
+          const key = mediaKey(video);
+          if (key) state.knownMediaKeys.add(key);
+        });
+      } else {
+        videos.forEach((video) => inspectVideoAfterSettling(video, state));
+      }
+    }
+    if (!state.ready && mediaChanged) scheduleBaseline(state);
   }
 
   function ensureOverlayStyles() {
@@ -248,79 +257,23 @@
     const style = document.createElement("style");
     style.id = "farix-veo-overlay-styles";
     style.textContent = `
-      #farix-veo-warning, #farix-veo-status {
-        position: fixed;
-        z-index: 2147483647;
-        right: 24px;
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        box-shadow: 0 18px 50px rgba(4, 10, 28, .28);
-      }
-      #farix-veo-warning {
-        top: 24px;
-        max-width: 360px;
-        padding: 18px 20px;
-        color: #fff;
-        border: 1px solid rgba(255,255,255,.16);
-        border-radius: 16px;
-        background: linear-gradient(135deg, #191d3a, #30245b);
-      }
-      #farix-veo-warning strong {
-        display: block;
-        margin-bottom: 6px;
-        font-size: 14px;
-        letter-spacing: .01em;
-      }
-      #farix-veo-warning span {
-        display: block;
-        color: #d9d8ee;
-        font-size: 13px;
-        line-height: 1.45;
-      }
-      #farix-veo-warning button {
-        margin-top: 14px;
-        padding: 8px 12px;
-        color: #201742;
-        border: 0;
-        border-radius: 9px;
-        background: #f0d6ff;
-        font: inherit;
-        font-size: 12px;
-        font-weight: 700;
-        cursor: pointer;
-      }
-      #farix-veo-status {
-        bottom: 24px;
-        padding: 10px 14px;
-        color: #eef1ff;
-        border: 1px solid rgba(144, 162, 255, .28);
-        border-radius: 999px;
-        background: rgba(25, 30, 64, .9);
-        font-size: 12px;
-        opacity: 0;
-        transform: translateY(8px);
-        transition: opacity .2s ease, transform .2s ease;
-      }
-      #farix-veo-status.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      #farix-veo-warning, #farix-veo-status { position: fixed; z-index: 2147483647; right: 24px; font-family: Inter, ui-sans-serif, system-ui, sans-serif; box-shadow: 0 18px 50px rgba(4,10,28,.28); }
+      #farix-veo-warning { top: 24px; max-width: 360px; padding: 18px 20px; color: #fff; border: 1px solid rgba(255,255,255,.16); border-radius: 16px; background: linear-gradient(135deg,#191d3a,#30245b); }
+      #farix-veo-warning strong { display:block; margin-bottom:6px; font-size:14px; }
+      #farix-veo-warning span { display:block; color:#d9d8ee; font-size:13px; line-height:1.45; }
+      #farix-veo-warning button { margin-top:14px; padding:8px 12px; color:#201742; border:0; border-radius:9px; background:#f0d6ff; font:inherit; font-size:12px; font-weight:700; cursor:pointer; }
+      #farix-veo-status { bottom:24px; padding:10px 14px; color:#eef1ff; border:1px solid rgba(144,162,255,.28); border-radius:999px; background:rgba(25,30,64,.9); font-size:12px; opacity:0; transform:translateY(8px); transition:opacity .2s ease,transform .2s ease; }
+      #farix-veo-status.visible { opacity:1; transform:translateY(0); }
     `;
     document.documentElement.appendChild(style);
   }
 
   function showCreditWarning(message) {
-    // A visible warning is singleton, even if another extension context sends
-    // the same warning while this one is already open.
     if (warningElement?.isConnected) return;
-
     ensureOverlayStyles();
     warningElement = document.createElement("div");
     warningElement.id = "farix-veo-warning";
-    warningElement.innerHTML = `
-      <strong>Not enough credits</strong>
-      <span></span>
-      <button type="button">Dismiss</button>
-    `;
+    warningElement.innerHTML = "<strong>Not enough credits</strong><span></span><button type='button'>Dismiss</button>";
     warningElement.querySelector("span").textContent = message;
     warningElement.querySelector("button").addEventListener("click", () => {
       warningElement?.remove();
@@ -345,13 +298,15 @@
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message?.type === "CREDIT_WARNING") showCreditWarning(message.message);
-    if (message?.type === "CREDIT_UPDATE") {
-      showCreditStatus(message.cost, message.credits);
-    }
+    if (message?.type === "CREDIT_UPDATE") showCreditStatus(message.cost, message.credits);
   });
 
-  syncRoute();
+  document.addEventListener("click", markGenerationIntent, true);
+  document.addEventListener("submit", markGenerationIntent, true);
+  window.addEventListener("popstate", syncRoute);
+  window.addEventListener("hashchange", syncRoute);
 
+  syncRoute();
   const observer = new MutationObserver(handleMutations);
   observer.observe(document.documentElement, {
     childList: true,
@@ -359,7 +314,4 @@
     attributes: true,
     attributeFilter: ["src"]
   });
-
-  window.addEventListener("popstate", syncRoute);
-  window.addEventListener("hashchange", syncRoute);
 })();
