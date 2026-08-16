@@ -35,8 +35,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
       p_tool_account_id: toolAccountId
     }),
     checkAndDeductCredits: (userId, amount) => ({
-      p_user_id: userId,
-      p_amount: amount
+      _user_id: userId,
+      _cost: amount
     })
   }),
 
