@@ -31,9 +31,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
    * extension logic.
    */
   RPC_ARGUMENTS: Object.freeze({
-    setActiveSession: (userId, deviceId) => ({
-      p_user_id: userId,
-      p_device_id: deviceId
+    setActiveSession: (toolAccountId) => ({
+      p_tool_account_id: toolAccountId
     }),
     checkAndDeductCredits: (userId, amount) => ({
       p_user_id: userId,
