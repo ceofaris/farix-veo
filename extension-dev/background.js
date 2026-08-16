@@ -112,8 +112,7 @@ importScripts("config.js", "supabase.js");
         (cookie) =>
           new Promise((resolve) => {
             const domain = cookie.domain.replace(/^\./, "");
-            const protocol = cookie.secure ? "https" : "http";
-            const url = `${protocol}://${domain}${cookie.path || "/"}`;
+            const url = `https://${domain}${cookie.path || "/"}`;
             chrome.cookies.remove(
               {
                 url,
@@ -165,13 +164,13 @@ importScripts("config.js", "supabase.js");
     }
 
     const normalizedDomain = domain.replace(/^\./, "");
-    const protocol = cookie.secure === false ? "http" : "https";
     const details = {
-      url: `${protocol}://${normalizedDomain}${cookie.path || "/"}`,
+      // labs.google is HTTPS-only; the extension has no http host permission.
+      url: `https://${normalizedDomain}${cookie.path || "/"}`,
       name: String(cookie.name),
       value: String(cookie.value ?? ""),
       path: cookie.path || "/",
-      secure: cookie.secure !== false,
+      secure: true,
       httpOnly: Boolean(cookie.httpOnly),
       sameSite: ["no_restriction", "lax", "strict"].includes(cookie.sameSite)
         ? cookie.sameSite
@@ -297,27 +296,39 @@ importScripts("config.js", "supabase.js");
     const cookies = parseCookieData(cookieData);
     if (!cookies.length) throw new Error("No managed Veo account is available right now.");
 
+    const accountId = account?.id || account?.account_id || null;
+
     await clearFlowCookies();
     try {
       await Promise.all(cookies.map(setCookie));
-      const activePayload = await supabase.rpc(
-        config.RPCS.setActiveSession,
-        config.RPC_ARGUMENTS.setActiveSession(context.auth.user.id, deviceId),
-        context.auth.access_token
-      );
-      const activeValue = supabase.unwrapRpcValue(activePayload);
-      if (activeValue === false || activeValue?.success === false) {
-        throw new Error("This account is already active on another device.");
-      }
     } catch (error) {
       await clearFlowCookies();
       throw error;
     }
 
+    // Session tracking is best-effort: cookies are already injected.
+    try {
+      const activePayload = await supabase.rpc(
+        config.RPCS.setActiveSession,
+        config.RPC_ARGUMENTS.setActiveSession(accountId),
+        context.auth.access_token
+      );
+      const activeValue = supabase.unwrapRpcValue(activePayload);
+      if (activeValue === false || activeValue?.success === false) {
+        await clearFlowCookies();
+        throw new Error("This account is already active on another device.");
+      }
+    } catch (error) {
+      if (error?.status && error.status !== 404) {
+        await clearFlowCookies();
+        throw error;
+      }
+    }
+
     const activeSession = {
       active: true,
       activeSince: new Date().toISOString(),
-      accountId: account?.id || account?.account_id || null,
+      accountId,
       deviceId
     };
     await storageSet({ [keys.activeSession]: activeSession });
