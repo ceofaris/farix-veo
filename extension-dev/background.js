@@ -112,8 +112,7 @@ importScripts("config.js", "supabase.js");
         (cookie) =>
           new Promise((resolve) => {
             const domain = cookie.domain.replace(/^\./, "");
-            const protocol = cookie.secure ? "https" : "http";
-            const url = `${protocol}://${domain}${cookie.path || "/"}`;
+            const url = `https://${domain}${cookie.path || "/"}`;
             chrome.cookies.remove(
               {
                 url,
