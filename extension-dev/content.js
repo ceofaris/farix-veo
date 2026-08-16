@@ -1,8 +1,25 @@
 (() => {
   "use strict";
 
+  /*
+   * Credit metering for Google Flow.
+   *
+   * Rules:
+   * - Credits are NEVER deducted on login, popup open, session inject or page load.
+   * - Only a genuinely NEW generated video that appears while the page is open counts.
+   *
+   * To achieve that, every navigation starts a "baseline" window. Videos that
+   * already exist (or appear immediately, i.e. previously generated results being
+   * rendered) are recorded as seen and never billed.
+   */
+
+  const BASELINE_MS = 8000;
+  const SETTLE_MS = 1500;
+
   const seenVideos = new WeakSet();
   const sentKeys = new Set();
+  let baselineUntil = Date.now() + BASELINE_MS;
+  let lastUrl = location.href;
   let warningElement = null;
   let statusElement = null;
 
@@ -10,47 +27,65 @@
     return /^\/fx\/tools\/flow(?:[/?#]|$)/.test(window.location.pathname);
   }
 
+  function inBaseline() {
+    return Date.now() < baselineUntil;
+  }
+
+  function resetBaseline() {
+    baselineUntil = Date.now() + BASELINE_MS;
+    // Snapshot whatever is already rendered so it can never be billed.
+    document.querySelectorAll("video").forEach(markSeen);
+  }
+
+  function markSeen(video) {
+    if (!(video instanceof HTMLVideoElement)) return;
+    seenVideos.add(video);
+    const key = stableKey(video);
+    if (key) sentKeys.add(key);
+  }
+
   function stableKey(video) {
-    const source =
-      video.currentSrc ||
-      video.src ||
-      video.getAttribute("src") ||
-      video.getAttribute("poster") ||
-      `${video.videoWidth}x${video.videoHeight}:${video.closest("main")?.textContent?.slice(0, 120) || ""}`;
-    return source.trim().slice(0, 500);
+    const source = video.currentSrc || video.src || video.getAttribute("src") || "";
+    if (!source) return "";
+    return source.split("#")[0].trim().slice(0, 500);
   }
 
-  function isVisibleVideo(video) {
+  function isGeneratedVideo(video) {
     const rect = video.getBoundingClientRect();
-    const hasSize = rect.width >= 96 && rect.height >= 96;
     const hasSource = Boolean(video.currentSrc || video.src || video.getAttribute("src"));
-    return hasSize || (hasSource && rect.width > 0 && rect.height > 0);
+    return hasSource && rect.width >= 160 && rect.height >= 90;
   }
 
-  function sendVideo(video) {
-    if (!isFlowPage() || seenVideos.has(video) || !isVisibleVideo(video)) return;
+  function reportGeneration(video) {
+    if (!isFlowPage() || seenVideos.has(video)) return;
+    if (!isGeneratedVideo(video)) return;
+
     const key = stableKey(video);
     if (!key || sentKeys.has(key)) return;
+
     seenVideos.add(video);
     sentKeys.add(key);
 
+    if (inBaseline()) return; // pre-existing content, not a new generation
+
     chrome.runtime.sendMessage(
-      {
-        type: "MEDIA_DETECTED",
-        generationKey: key
-      },
-      () => void chrome.runtime.lastError
+      { type: "MEDIA_DETECTED", generationKey: key },
+      () => void chrome.runtime.lastError,
     );
   }
 
   function inspectVideo(video) {
     if (!(video instanceof HTMLVideoElement) || seenVideos.has(video)) return;
-    if (isVisibleVideo(video)) {
-      sendVideo(video);
+    if (inBaseline()) {
+      // Give the src a moment to attach, then record it as baseline content.
+      window.setTimeout(() => {
+        if (inBaseline()) markSeen(video);
+        else reportGeneration(video);
+      }, SETTLE_MS);
       return;
     }
-
-    window.setTimeout(() => sendVideo(video), 1200);
+    // Wait for the source to attach before billing.
+    window.setTimeout(() => reportGeneration(video), SETTLE_MS);
   }
 
   function scanAddedNode(node) {
@@ -130,7 +165,7 @@
     warningElement = document.createElement("div");
     warningElement.id = "farix-veo-warning";
     warningElement.innerHTML = `
-      <strong>Generation paused</strong>
+      <strong>Not enough credits</strong>
       <span></span>
       <button type="button">Dismiss</button>
     `;
@@ -166,11 +201,24 @@
   });
 
   if (isFlowPage()) {
+    resetBaseline();
+
     const observer = new MutationObserver((mutations) => {
+      if (lastUrl !== location.href) {
+        lastUrl = location.href;
+        resetBaseline();
+      }
       for (const mutation of mutations) {
         mutation.addedNodes.forEach(scanAddedNode);
       }
     });
     observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    document.addEventListener("DOMContentLoaded", resetBaseline, { once: true });
+    window.addEventListener("load", () => {
+      document.querySelectorAll("video").forEach((video) => {
+        if (inBaseline()) markSeen(video);
+      });
+    });
   }
 })();
