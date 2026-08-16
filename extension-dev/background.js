@@ -328,7 +328,7 @@ importScripts("config.js", "supabase.js");
     const activeSession = {
       active: true,
       activeSince: new Date().toISOString(),
-      accountId: account?.id || account?.account_id || null,
+      accountId,
       deviceId
     };
     await storageSet({ [keys.activeSession]: activeSession });
