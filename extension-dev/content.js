@@ -2,96 +2,245 @@
   "use strict";
 
   /*
-   * Credit metering for Google Flow.
+   * Veo credit metering.
    *
-   * Rules:
-   * - Credits are NEVER deducted on login, popup open, session inject or page load.
-   * - Only a genuinely NEW generated video that appears while the page is open counts.
-   *
-   * To achieve that, every navigation starts a "baseline" window. Videos that
-   * already exist (or appear immediately, i.e. previously generated results being
-   * rendered) are recorded as seen and never billed.
+   * Detection is deliberately disabled on the Flow listing page. A project
+   * must finish loading and remain quiet before detection is armed. Everything
+   * discovered before that point becomes baseline media and can never be
+   * billed. New video sources appearing together are treated as one generation.
    */
 
-  const BASELINE_MS = 8000;
-  const SETTLE_MS = 1500;
+  const PROJECT_PATH = /^\/fx\/tools\/flow\/project(?:\/|$)/;
+  const BASELINE_MIN_MS = 10_000;
+  const BASELINE_QUIET_MS = 3_000;
+  const SOURCE_SETTLE_MS = 1_200;
+  const GENERATION_BATCH_MS = 3_500;
+  const GENERATION_COOLDOWN_MS = 8_000;
 
-  const seenVideos = new WeakSet();
-  const sentKeys = new Set();
-  let baselineUntil = Date.now() + BASELINE_MS;
-  let lastUrl = location.href;
+  let currentProjectUrl = "";
+  let projectState = null;
   let warningElement = null;
   let statusElement = null;
 
-  function isFlowPage() {
-    return /^\/fx\/tools\/flow(?:[/?#]|$)/.test(window.location.pathname);
+  function isProjectPage() {
+    return PROJECT_PATH.test(window.location.pathname);
   }
 
-  function inBaseline() {
-    return Date.now() < baselineUntil;
+  function normalizeProjectUrl() {
+    return `${window.location.origin}${window.location.pathname}`;
   }
 
-  function resetBaseline() {
-    baselineUntil = Date.now() + BASELINE_MS;
-    // Snapshot whatever is already rendered so it can never be billed.
-    document.querySelectorAll("video").forEach(markSeen);
+  function mediaSource(video) {
+    if (!(video instanceof HTMLVideoElement)) return "";
+
+    const directSource =
+      video.currentSrc ||
+      video.src ||
+      video.getAttribute("src") ||
+      video.querySelector("source[src]")?.src ||
+      video.querySelector("source[src]")?.getAttribute("src") ||
+      "";
+
+    return String(directSource).split("#")[0].trim().slice(0, 1000);
   }
 
-  function markSeen(video) {
-    if (!(video instanceof HTMLVideoElement)) return;
-    seenVideos.add(video);
-    const key = stableKey(video);
-    if (key) sentKeys.add(key);
+  function mediaIdentity(video) {
+    const source = mediaSource(video);
+    if (source) return `src:${source}`;
+
+    const stableId =
+      video.getAttribute("data-generation-id") ||
+      video.getAttribute("data-media-id") ||
+      video.getAttribute("data-testid") ||
+      video.id;
+
+    return stableId ? `id:${stableId}` : "";
   }
 
-  function stableKey(video) {
-    const source = video.currentSrc || video.src || video.getAttribute("src") || "";
-    if (!source) return "";
-    return source.split("#")[0].trim().slice(0, 500);
-  }
-
-  function isGeneratedVideo(video) {
+  function isVisibleVideo(video) {
+    if (!(video instanceof HTMLVideoElement)) return false;
     const rect = video.getBoundingClientRect();
-    const hasSource = Boolean(video.currentSrc || video.src || video.getAttribute("src"));
-    return hasSource && rect.width >= 160 && rect.height >= 90;
+    return Boolean(mediaSource(video)) && rect.width >= 160 && rect.height >= 90;
   }
 
-  function reportGeneration(video) {
-    if (!isFlowPage() || seenVideos.has(video)) return;
-    if (!isGeneratedVideo(video)) return;
+  function clearProjectTimers(state) {
+    if (!state) return;
+    window.clearTimeout(state.baselineTimer);
+    window.clearTimeout(state.candidateTimer);
+    state.baselineTimer = 0;
+    state.candidateTimer = 0;
+  }
 
-    const key = stableKey(video);
-    if (!key || sentKeys.has(key)) return;
+  function addCurrentMediaToBaseline(state) {
+    if (!state || state !== projectState) return;
 
-    seenVideos.add(video);
-    sentKeys.add(key);
+    document.querySelectorAll("video").forEach((video) => {
+      const identity = mediaIdentity(video);
+      if (identity) state.seenMedia.add(identity);
+    });
+  }
 
-    if (inBaseline()) return; // pre-existing content, not a new generation
+  function armDetectionWhenSettled(state) {
+    if (!state || state !== projectState || state.armed || !isProjectPage()) return;
+
+    addCurrentMediaToBaseline(state);
+    window.clearTimeout(state.baselineTimer);
+
+    const elapsed = Date.now() - state.enteredAt;
+    const remainingMinimum = Math.max(0, BASELINE_MIN_MS - elapsed);
+    const delay = Math.max(BASELINE_QUIET_MS, remainingMinimum);
+
+    state.baselineTimer = window.setTimeout(() => {
+      if (state !== projectState || !isProjectPage()) return;
+
+      // Take one final snapshot at the exact moment detection becomes active.
+      addCurrentMediaToBaseline(state);
+      state.armed = true;
+    }, delay);
+  }
+
+  function enterProject() {
+    const projectUrl = normalizeProjectUrl();
+    if (projectState && currentProjectUrl === projectUrl) return;
+
+    clearProjectTimers(projectState);
+    currentProjectUrl = projectUrl;
+    projectState = {
+      enteredAt: Date.now(),
+      armed: false,
+      blocked: false,
+      baselineTimer: 0,
+      candidateTimer: 0,
+      cooldownUntil: 0,
+      seenMedia: new Set(),
+      pendingMedia: new Set()
+    };
+
+    addCurrentMediaToBaseline(projectState);
+    armDetectionWhenSettled(projectState);
+  }
+
+  function leaveProject() {
+    clearProjectTimers(projectState);
+    currentProjectUrl = "";
+    projectState = null;
+  }
+
+  function syncRoute() {
+    if (!isProjectPage()) {
+      leaveProject();
+      return;
+    }
+
+    enterProject();
+  }
+
+  function submitGenerationBatch(state) {
+    if (
+      !state ||
+      state !== projectState ||
+      !state.armed ||
+      state.blocked ||
+      !isProjectPage() ||
+      state.pendingMedia.size === 0
+    ) {
+      return;
+    }
+
+    const identities = [...state.pendingMedia].sort();
+    state.pendingMedia.clear();
+    state.candidateTimer = 0;
+    state.cooldownUntil = Date.now() + GENERATION_COOLDOWN_MS;
+
+    // All outputs that appeared in this short window belong to one generation.
+    // The key is deterministic, and the background worker also deduplicates it.
+    const generationKey = identities.join("|").slice(0, 4000);
 
     chrome.runtime.sendMessage(
-      { type: "MEDIA_DETECTED", generationKey: key },
-      () => void chrome.runtime.lastError,
+      { type: "MEDIA_DETECTED", generationKey },
+      (response) => {
+        void chrome.runtime.lastError;
+        if (state !== projectState) return;
+
+        const result = response?.result;
+        if (response?.ok && result?.deducted === false) {
+          // A failed/insufficient deduction stops further requests for this
+          // project visit. The background script already shows one warning.
+          state.blocked = true;
+          state.pendingMedia.clear();
+          window.clearTimeout(state.candidateTimer);
+          state.candidateTimer = 0;
+        }
+      }
+    );
+  }
+
+  function queueNewVideo(video, state) {
+    if (
+      !state ||
+      state !== projectState ||
+      !state.armed ||
+      state.blocked ||
+      !isProjectPage()
+    ) {
+      return;
+    }
+
+    const identity = mediaIdentity(video);
+    if (!identity || state.seenMedia.has(identity)) return;
+
+    // Mark before any async work so repeated mutations for the same source can
+    // never create repeated requests.
+    state.seenMedia.add(identity);
+
+    if (!isVisibleVideo(video)) return;
+    if (Date.now() < state.cooldownUntil) return;
+
+    state.pendingMedia.add(identity);
+    if (state.candidateTimer) return;
+
+    state.candidateTimer = window.setTimeout(
+      () => submitGenerationBatch(state),
+      GENERATION_BATCH_MS
     );
   }
 
   function inspectVideo(video) {
-    if (!(video instanceof HTMLVideoElement) || seenVideos.has(video)) return;
-    if (inBaseline()) {
-      // Give the src a moment to attach, then record it as baseline content.
-      window.setTimeout(() => {
-        if (inBaseline()) markSeen(video);
-        else reportGeneration(video);
-      }, SETTLE_MS);
+    const state = projectState;
+    if (!state || !isProjectPage()) return;
+
+    if (!state.armed) {
+      addCurrentMediaToBaseline(state);
+      armDetectionWhenSettled(state);
       return;
     }
-    // Wait for the source to attach before billing.
-    window.setTimeout(() => reportGeneration(video), SETTLE_MS);
+
+    window.setTimeout(() => queueNewVideo(video, state), SOURCE_SETTLE_MS);
   }
 
-  function scanAddedNode(node) {
+  function inspectNode(node) {
     if (!(node instanceof Element)) return;
     if (node.matches("video")) inspectVideo(node);
     node.querySelectorAll?.("video").forEach(inspectVideo);
+  }
+
+  function handleMutations(mutations) {
+    const previousProjectUrl = currentProjectUrl;
+    syncRoute();
+
+    // A route transition only establishes a baseline; never inspect the same
+    // navigation mutation as a generation.
+    if (!isProjectPage() || previousProjectUrl !== currentProjectUrl) return;
+
+    const state = projectState;
+    for (const mutation of mutations) {
+      if (mutation.type === "attributes" && mutation.target instanceof HTMLVideoElement) {
+        inspectVideo(mutation.target);
+      }
+      mutation.addedNodes.forEach(inspectNode);
+    }
+
+    if (state && !state.armed) armDetectionWhenSettled(state);
   }
 
   function ensureOverlayStyles() {
@@ -160,8 +309,11 @@
   }
 
   function showCreditWarning(message) {
+    // A visible warning is singleton, even if another extension context sends
+    // the same warning while this one is already open.
+    if (warningElement?.isConnected) return;
+
     ensureOverlayStyles();
-    warningElement?.remove();
     warningElement = document.createElement("div");
     warningElement.id = "farix-veo-warning";
     warningElement.innerHTML = `
@@ -192,33 +344,22 @@
   }
 
   chrome.runtime.onMessage.addListener((message) => {
-    if (message?.type === "CREDIT_WARNING") {
-      showCreditWarning(message.message);
-    }
+    if (message?.type === "CREDIT_WARNING") showCreditWarning(message.message);
     if (message?.type === "CREDIT_UPDATE") {
       showCreditStatus(message.cost, message.credits);
     }
   });
 
-  if (isFlowPage()) {
-    resetBaseline();
+  syncRoute();
 
-    const observer = new MutationObserver((mutations) => {
-      if (lastUrl !== location.href) {
-        lastUrl = location.href;
-        resetBaseline();
-      }
-      for (const mutation of mutations) {
-        mutation.addedNodes.forEach(scanAddedNode);
-      }
-    });
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+  const observer = new MutationObserver(handleMutations);
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["src"]
+  });
 
-    document.addEventListener("DOMContentLoaded", resetBaseline, { once: true });
-    window.addEventListener("load", () => {
-      document.querySelectorAll("video").forEach((video) => {
-        if (inBaseline()) markSeen(video);
-      });
-    });
-  }
+  window.addEventListener("popstate", syncRoute);
+  window.addEventListener("hashchange", syncRoute);
 })();
