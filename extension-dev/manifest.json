@@ -28,10 +28,20 @@
         "https://labs.google/fx/tools/flow*"
       ],
       "js": [
+        "lockdown.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://labs.google/fx/tools/flow*"
+      ],
+      "js": [
         "content.js"
       ],
       "run_at": "document_idle"
     }
   ],
+
   "minimum_chrome_version": "100"
 }
