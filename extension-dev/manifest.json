@@ -12,6 +12,7 @@
   ],
   "host_permissions": [
     "https://labs.google/*",
+    "https://*.labs.google/*",
     "https://*.supabase.co/*"
   ],
   "background": {
