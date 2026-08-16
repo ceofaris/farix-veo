@@ -25,12 +25,15 @@
   "content_scripts": [
     {
       "matches": [
+        "https://labs.google/fx/tools/flow",
+        "https://labs.google/fx/tools/flow/*",
         "https://labs.google/fx/tools/flow*"
       ],
       "js": [
         "lockdown.js"
       ],
-      "run_at": "document_start"
+      "run_at": "document_start",
+      "all_frames": false
     },
     {
       "matches": [

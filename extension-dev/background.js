@@ -460,6 +460,19 @@ importScripts("config.js", "supabase.js");
     return true;
   });
 
+  // Heartbeat port used by the content-script lockdown watchdog.
+  chrome.runtime.onConnect.addListener((port) => {
+    if (port.name !== "flow-lockdown") return;
+    port.onMessage.addListener(() => {
+      try {
+        port.postMessage({ type: "LOCKDOWN_ALIVE" });
+      } catch {
+        /* port closed */
+      }
+    });
+    port.onDisconnect.addListener(() => void chrome.runtime.lastError);
+  });
+
   chrome.runtime.onInstalled.addListener(() => {
     void getDeviceId();
   });
