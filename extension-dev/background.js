@@ -164,13 +164,13 @@ importScripts("config.js", "supabase.js");
     }
 
     const normalizedDomain = domain.replace(/^\./, "");
-    const protocol = cookie.secure === false ? "http" : "https";
     const details = {
-      url: `${protocol}://${normalizedDomain}${cookie.path || "/"}`,
+      // labs.google is HTTPS-only; the extension has no http host permission.
+      url: `https://${normalizedDomain}${cookie.path || "/"}`,
       name: String(cookie.name),
       value: String(cookie.value ?? ""),
       path: cookie.path || "/",
-      secure: cookie.secure !== false,
+      secure: true,
       httpOnly: Boolean(cookie.httpOnly),
       sameSite: ["no_restriction", "lax", "strict"].includes(cookie.sameSite)
         ? cookie.sameSite
