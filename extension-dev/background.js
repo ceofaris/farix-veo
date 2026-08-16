@@ -296,21 +296,33 @@ importScripts("config.js", "supabase.js");
     const cookies = parseCookieData(cookieData);
     if (!cookies.length) throw new Error("No managed Veo account is available right now.");
 
+    const accountId = account?.id || account?.account_id || null;
+
     await clearFlowCookies();
     try {
       await Promise.all(cookies.map(setCookie));
+    } catch (error) {
+      await clearFlowCookies();
+      throw error;
+    }
+
+    // Session tracking is best-effort: cookies are already injected.
+    try {
       const activePayload = await supabase.rpc(
         config.RPCS.setActiveSession,
-        config.RPC_ARGUMENTS.setActiveSession(context.auth.user.id, deviceId),
+        config.RPC_ARGUMENTS.setActiveSession(accountId),
         context.auth.access_token
       );
       const activeValue = supabase.unwrapRpcValue(activePayload);
       if (activeValue === false || activeValue?.success === false) {
+        await clearFlowCookies();
         throw new Error("This account is already active on another device.");
       }
     } catch (error) {
-      await clearFlowCookies();
-      throw error;
+      if (error?.status && error.status !== 404) {
+        await clearFlowCookies();
+        throw error;
+      }
     }
 
     const activeSession = {
