@@ -374,8 +374,25 @@ importScripts("config.js", "supabase.js");
         context.auth.access_token
       );
       const value = supabase.unwrapRpcValue(result);
+
+      // The RPC answers with { ok: false, reason } instead of an HTTP error.
+      if (value && typeof value === "object" && value.ok === false) {
+        const reasons = {
+          insufficient_credits: "You do not have enough credits for another Veo generation.",
+          no_access: "Your account does not have Veo 3 access.",
+          invalid_cost: "Credit configuration is invalid. Contact support."
+        };
+        const text = reasons[value.reason] || "Credits could not be deducted.";
+        if (Number.isFinite(Number(value.remaining))) {
+          await storageSet({ [keys.credits]: Math.max(0, Number(value.remaining)) });
+        }
+        await sendTabMessage(sender.tab.id, { type: "CREDIT_WARNING", message: text });
+        return { deducted: false, error: text };
+      }
+
       const remaining = Number(
-        value?.credits_remaining ??
+        value?.remaining ??
+          value?.credits_remaining ??
           value?.remaining_credits ??
           value?.credits ??
           (typeof value === "number" ? value : NaN)

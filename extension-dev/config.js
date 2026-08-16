@@ -36,7 +36,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
     }),
     checkAndDeductCredits: (userId, amount) => ({
       _user_id: userId,
-      _cost: amount
+      _cost: amount,
+      _reason: "video_generation"
     })
   }),
 

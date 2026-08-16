@@ -377,12 +377,10 @@ export type Database = {
         Args: { _actor: string; _user_id: string }
         Returns: boolean
       }
-      check_and_deduct_credits:
-        | { Args: { _cost: number; _user_id: string }; Returns: Json }
-        | {
-            Args: { _cost: number; _reason?: string; _user_id: string }
-            Returns: Json
-          }
+      check_and_deduct_credits: {
+        Args: { _cost: number; _reason?: string; _user_id: string }
+        Returns: Json
+      }
       get_random_flow_account: {
         Args: never
         Returns: {
