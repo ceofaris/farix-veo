@@ -44,6 +44,20 @@ importScripts("config.js", "supabase.js");
     return Boolean(tab?.id && typeof tab.url === "string" && /^https:\/\/labs\.google\/fx\/tools\/flow(?:[/?#]|$)/.test(tab.url));
   }
 
+  function isFlowProjectTab(tab) {
+    if (!tab?.id || typeof tab.url !== "string") return false;
+    try {
+      const url = new URL(tab.url);
+      return (
+        url.protocol === "https:" &&
+        url.hostname === FLOW_HOST &&
+        /^\/fx\/tools\/flow\/project\/[^/?#]+(?:\/|$)/.test(url.pathname)
+      );
+    } catch {
+      return false;
+    }
+  }
+
   function isExpired(expiresAt) {
     return Boolean(expiresAt && new Date(expiresAt).getTime() <= Date.now());
   }
@@ -357,7 +371,9 @@ importScripts("config.js", "supabase.js");
   }
 
   async function handleMediaDetected(message, sender) {
-    if (!isFlowTab(sender.tab) || !message?.generationKey) return { ignored: true };
+    // Defense in depth: even a stale/compromised listing-page content script
+    // can never invoke the deduction RPC. Only concrete project URLs pass.
+    if (!isFlowProjectTab(sender.tab) || !message?.generationKey) return { ignored: true };
     const context = await getAuthenticatedContext();
     if (!context.auth) return { ignored: true };
 
