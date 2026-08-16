@@ -64,6 +64,7 @@ export type Database = {
           amount: number
           created_at: string
           id: string
+          reason: string
           tool_id: string
           user_id: string
           user_tool_id: string | null
@@ -72,6 +73,7 @@ export type Database = {
           amount: number
           created_at?: string
           id?: string
+          reason?: string
           tool_id: string
           user_id: string
           user_tool_id?: string | null
@@ -80,6 +82,7 @@ export type Database = {
           amount?: number
           created_at?: string
           id?: string
+          reason?: string
           tool_id?: string
           user_id?: string
           user_tool_id?: string | null
@@ -374,10 +377,12 @@ export type Database = {
         Args: { _actor: string; _user_id: string }
         Returns: boolean
       }
-      check_and_deduct_credits: {
-        Args: { _cost: number; _user_id: string }
-        Returns: Json
-      }
+      check_and_deduct_credits:
+        | { Args: { _cost: number; _user_id: string }; Returns: Json }
+        | {
+            Args: { _cost: number; _reason?: string; _user_id: string }
+            Returns: Json
+          }
       get_random_flow_account: {
         Args: never
         Returns: {
