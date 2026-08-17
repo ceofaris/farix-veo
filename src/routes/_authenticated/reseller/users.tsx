@@ -112,6 +112,7 @@ function ResellerUsers() {
           <tr>
             <th className="px-5 py-3.5 font-semibold">Name</th>
             <th className="px-5 py-3.5 font-semibold">Email</th>
+            <th className="px-5 py-3.5 font-semibold">Tools</th>
             <th className="px-5 py-3.5 font-semibold">Status</th>
             <th className="px-5 py-3.5 font-semibold">Expiry</th>
             <th className="px-5 py-3.5 font-semibold">Payment</th>
@@ -123,6 +124,19 @@ function ResellerUsers() {
             <tr key={u.id} className="border-t border-border transition-colors hover:bg-muted/40">
               <td className="px-5 py-4">{u.full_name || <span className="text-muted-foreground">—</span>}</td>
               <td className="px-5 py-4 text-foreground/80">{u.email}</td>
+              <td className="px-5 py-4">
+                {(u.user_tools ?? []).length === 0 ? (
+                  <span className="text-xs text-muted-foreground">None</span>
+                ) : (
+                  <div className="flex flex-wrap gap-1">
+                    {(u.user_tools ?? []).map((a, i) => (
+                      <Badge key={i} variant="outline">
+                        {a.tools?.name ?? "—"}
+                      </Badge>
+                    ))}
+                  </div>
+                )}
+              </td>
               <td className="px-5 py-4">
                 <Badge variant={u.is_active ? "default" : "secondary"}>
                   {u.is_active ? "Active" : "Inactive"}
@@ -177,7 +191,7 @@ function ResellerUsers() {
         onOpenChange={setOpen}
         user={editing}
         ownerId={profile?.id}
-        hideTools
+        
         onSaved={() => users.refetch()}
       />
 
