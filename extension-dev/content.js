@@ -1,221 +1,103 @@
 (() => {
   "use strict";
 
-  /*
-   * Veo generation metering.
-   *
-   * Billing is deliberately guarded by two independent conditions:
-   *   1. the tab is inside a concrete Flow project editor; and
-   *   2. the user has just started a generation from that editor.
-   *
-   * Existing/lazily-loaded project media is always learned without billing.
-   * A generation's newly-created video outputs are batched into one message.
-   */
+  // Competitor-style detection: DOM <video> baseline seeding, no network hooks.
+  const SEED_MS = 4000;
 
-  const PROJECT_PATH = /^\/fx\/tools\/flow\/project\/[^/?#]+(?:\/|$)/;
-  const BASELINE_MIN_MS = 2_000;
-  const BASELINE_QUIET_MS = 1_800;
-  const BASELINE_MAX_MS = 15_000;
-  const SOURCE_SETTLE_MS = 900;
-  const OUTPUT_BATCH_MS = 2_500;
-  const GENERATION_INTENT_MS = 15 * 60 * 1000;
-
-  let projectState = null;
   let warningElement = null;
   let statusElement = null;
+  let warned = false;
 
-  function isProjectPage() {
-    return PROJECT_PATH.test(window.location.pathname);
-  }
+  /** @type {{ key: string, knownMediaKeys: Set<string>, seeding: boolean, seedTimer: number, blocked: boolean } | null} */
+  let projectState = null;
 
   function projectKey() {
-    return isProjectPage() ? `${window.location.origin}${window.location.pathname}` : "";
+    const match = location.pathname.match(/^\/fx\/tools\/flow\/project\/([^/?#]+)/);
+    return match ? match[1] : "";
   }
 
-  function mediaSource(video) {
-    if (!(video instanceof HTMLVideoElement)) return "";
-    const source =
-      video.currentSrc ||
-      video.src ||
-      video.getAttribute("src") ||
-      video.querySelector("source[src]")?.src ||
-      video.querySelector("source[src]")?.getAttribute("src") ||
-      "";
-    return String(source).split("#")[0].trim().slice(0, 1600);
+  function isProjectPage() {
+    return location.hostname === "labs.google" && Boolean(projectKey());
   }
 
   function mediaKey(video) {
-    const source = mediaSource(video);
-    if (source) return `src:${source}`;
-
-    const stableId =
-      video.getAttribute("data-generation-id") ||
-      video.getAttribute("data-media-id") ||
-      video.getAttribute("data-testid") ||
-      video.id;
-    return stableId ? `id:${stableId}` : "";
+    const src = video?.currentSrc || video?.getAttribute("src") || video?.src || "";
+    if (!src || src.startsWith("data:")) return "";
+    return `v:${src}`;
   }
 
-  function isActualVideoOutput(video) {
-    if (!(video instanceof HTMLVideoElement) || !mediaSource(video)) return false;
-    const rect = video.getBoundingClientRect();
-    if (rect.width < 240 || rect.height < 120) return false;
-    if (video.closest('[aria-hidden="true"], [hidden]')) return false;
-    return true;
-  }
-
-  function clearStateTimers(state) {
-    if (!state) return;
-    window.clearTimeout(state.baselineTimer);
-    window.clearTimeout(state.baselineMaxTimer);
-    window.clearTimeout(state.outputTimer);
-    state.baselineTimer = 0;
-    state.baselineMaxTimer = 0;
-    state.outputTimer = 0;
-  }
-
-  function snapshotCurrentMedia(state) {
-    if (!state || state !== projectState) return;
+  function seedAll(state) {
     document.querySelectorAll("video").forEach((video) => {
       const key = mediaKey(video);
       if (key) state.knownMediaKeys.add(key);
     });
   }
 
-  function finishBaseline(state) {
-    if (!state || state !== projectState || state.ready || !isProjectPage()) return;
-    snapshotCurrentMedia(state);
-    state.ready = true;
-    window.clearTimeout(state.baselineTimer);
-    window.clearTimeout(state.baselineMaxTimer);
-    state.baselineTimer = 0;
-    state.baselineMaxTimer = 0;
-  }
-
-  function scheduleBaseline(state) {
-    if (!state || state !== projectState || state.ready || !isProjectPage()) return;
-    snapshotCurrentMedia(state);
-    window.clearTimeout(state.baselineTimer);
-
-    const elapsed = Date.now() - state.enteredAt;
-    const delay = Math.max(BASELINE_QUIET_MS, BASELINE_MIN_MS - elapsed);
-    state.baselineTimer = window.setTimeout(() => finishBaseline(state), delay);
-  }
-
-  function enterProject(key) {
-    clearStateTimers(projectState);
-    projectState = {
+  function startProject(key) {
+    const state = {
       key,
-      enteredAt: Date.now(),
-      ready: false,
-      blocked: false,
-      baselineTimer: 0,
-      baselineMaxTimer: 0,
-      outputTimer: 0,
-      generationIntentUntil: 0,
       knownMediaKeys: new Set(),
-      pendingOutputKeys: new Set()
+      seeding: true,
+      seedTimer: 0,
+      blocked: false
     };
-    snapshotCurrentMedia(projectState);
-    scheduleBaseline(projectState);
-    projectState.baselineMaxTimer = window.setTimeout(
-      () => finishBaseline(projectState),
-      BASELINE_MAX_MS
-    );
+    projectState = state;
+    seedAll(state);
+
+    // Keep re-seeding across the whole seeding window: Flow hydrates lazily.
+    const interval = window.setInterval(() => {
+      if (projectState !== state) {
+        window.clearInterval(interval);
+        return;
+      }
+      seedAll(state);
+    }, 400);
+
+    state.seedTimer = window.setTimeout(() => {
+      window.clearInterval(interval);
+      if (projectState !== state) return;
+      seedAll(state);
+      state.seeding = false;
+    }, SEED_MS);
   }
 
   function syncRoute() {
-    const key = projectKey();
-    if (!key) {
-      clearStateTimers(projectState);
+    if (!isProjectPage()) {
       projectState = null;
       return;
     }
-    if (!projectState || projectState.key !== key) enterProject(key);
+    const key = projectKey();
+    if (projectState?.key === key) return;
+    startProject(key);
   }
 
-  function hasGenerationIntent(state) {
-    return Boolean(state && Date.now() <= state.generationIntentUntil);
-  }
+  function reportGeneration(state, key) {
+    // Mark known before the round-trip so a re-render can never double bill.
+    state.knownMediaKeys.add(key);
+    if (state.blocked) return;
 
-  function markGenerationIntent(event) {
-    syncRoute();
-    const state = projectState;
-    if (!state || !state.ready || state.blocked || !isProjectPage()) return;
-
-    const path = typeof event.composedPath === "function" ? event.composedPath() : [];
-    const control = path.find(
-      (node) =>
-        node instanceof HTMLElement &&
-        (node.matches("button, [role='button']") || node.getAttribute("type") === "submit")
-    );
-    if (!(control instanceof HTMLElement)) return;
-
-    const label = `${control.innerText || ""} ${control.getAttribute("aria-label") || ""} ${control.getAttribute("title") || ""}`
-      .replace(/\s+/g, " ")
-      .trim()
-      .toLowerCase();
-
-    // Flow changes labels periodically. These terms cover create/generate,
-    // retry, extend and submit controls while explicitly excluding New project.
-    if (!/(generate|create|submit|send|retry|redo|extend)/i.test(label)) return;
-    if (/new project/i.test(label)) return;
-
-    state.generationIntentUntil = Date.now() + GENERATION_INTENT_MS;
-    state.pendingOutputKeys.clear();
-    window.clearTimeout(state.outputTimer);
-    state.outputTimer = 0;
-  }
-
-  function submitOutputBatch(state) {
-    if (
-      !state ||
-      state !== projectState ||
-      !state.ready ||
-      state.blocked ||
-      !isProjectPage() ||
-      !hasGenerationIntent(state) ||
-      state.pendingOutputKeys.size === 0
-    ) {
-      return;
-    }
-
-    const outputKeys = [...state.pendingOutputKeys].sort();
-    state.pendingOutputKeys.clear();
-    state.outputTimer = 0;
-    // Consume the intent before messaging so this generation can never send a
-    // second request, even if Flow re-renders the output during the RPC.
-    state.generationIntentUntil = 0;
-    const generationKey = `${state.key}|${outputKeys.join("|")}`.slice(0, 5000);
-
-    chrome.runtime.sendMessage({ type: "MEDIA_DETECTED", generationKey }, (response) => {
+    chrome.runtime.sendMessage({ type: "MEDIA_DETECTED", generationKey: key }, (response) => {
       void chrome.runtime.lastError;
-      if (state !== projectState) return;
-      if (!response?.ok || response?.result?.deducted === false) {
-        state.blocked = true;
-        state.pendingOutputKeys.clear();
-        window.clearTimeout(state.outputTimer);
-        state.outputTimer = 0;
-      }
+      if (projectState !== state) return;
+      if (!response?.ok || response?.result?.deducted === false) state.blocked = true;
     });
   }
 
-  function inspectVideoAfterSettling(video, state) {
-    window.setTimeout(() => {
-      if (!state || state !== projectState || !isProjectPage()) return;
-      const key = mediaKey(video);
-      if (!key || state.knownMediaKeys.has(key)) return;
+  function considerVideo(video) {
+    syncRoute();
+    const state = projectState;
+    if (!state || !isProjectPage()) return;
 
-      // Learn every source immediately. Media that appears without an active
-      // generation intent is old/lazy UI media and can never be billed later.
+    const key = mediaKey(video);
+    if (!key) return;
+    if (state.knownMediaKeys.has(key)) return;
+
+    if (state.seeding) {
       state.knownMediaKeys.add(key);
-      if (!state.ready || !hasGenerationIntent(state) || !isActualVideoOutput(video)) return;
+      return;
+    }
 
-      state.pendingOutputKeys.add(key);
-      if (!state.outputTimer) {
-        state.outputTimer = window.setTimeout(() => submitOutputBatch(state), OUTPUT_BATCH_MS);
-      }
-    }, SOURCE_SETTLE_MS);
+    reportGeneration(state, key);
   }
 
   function videosInNode(node) {
@@ -227,29 +109,17 @@
   }
 
   function handleMutations(mutations) {
-    const previousKey = projectState?.key || "";
-    syncRoute();
-    const state = projectState;
-    if (!state || state.key !== previousKey || !isProjectPage()) return;
-
-    let mediaChanged = false;
+    if (!isProjectPage()) {
+      projectState = null;
+      return;
+    }
     for (const mutation of mutations) {
       const videos =
         mutation.type === "attributes" && mutation.target instanceof HTMLVideoElement
           ? [mutation.target]
           : [...mutation.addedNodes].flatMap(videosInNode);
-      if (videos.length) mediaChanged = true;
-
-      if (!state.ready) {
-        videos.forEach((video) => {
-          const key = mediaKey(video);
-          if (key) state.knownMediaKeys.add(key);
-        });
-      } else {
-        videos.forEach((video) => inspectVideoAfterSettling(video, state));
-      }
+      videos.forEach(considerVideo);
     }
-    if (!state.ready && mediaChanged) scheduleBaseline(state);
   }
 
   function ensureOverlayStyles() {
@@ -269,7 +139,9 @@
   }
 
   function showCreditWarning(message) {
+    if (warned && warningElement?.isConnected) return;
     if (warningElement?.isConnected) return;
+    warned = true;
     ensureOverlayStyles();
     warningElement = document.createElement("div");
     warningElement.id = "farix-veo-warning";
@@ -301,12 +173,26 @@
     if (message?.type === "CREDIT_UPDATE") showCreditStatus(message.cost, message.credits);
   });
 
-  document.addEventListener("click", markGenerationIntent, true);
-  document.addEventListener("submit", markGenerationIntent, true);
+  document.addEventListener(
+    "loadeddata",
+    (event) => {
+      if (event.target instanceof HTMLVideoElement) considerVideo(event.target);
+    },
+    true
+  );
+  document.addEventListener(
+    "play",
+    (event) => {
+      if (event.target instanceof HTMLVideoElement) considerVideo(event.target);
+    },
+    true
+  );
+
   window.addEventListener("popstate", syncRoute);
   window.addEventListener("hashchange", syncRoute);
 
   syncRoute();
+
   const observer = new MutationObserver(handleMutations);
   observer.observe(document.documentElement, {
     childList: true,
