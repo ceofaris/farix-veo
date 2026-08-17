@@ -3,18 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Farix AI</title>
+    <title>Farix</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <main class="shell">
       <header class="brand">
         <div class="brand-mark" aria-hidden="true">F</div>
-        <div>
-          <p class="eyebrow">Farix AI</p>
-          <h1>Veo session</h1>
+        <div class="brand-text">
+          <p class="brand-name">Farix</p>
+          <p class="brand-sub">Veo session</p>
         </div>
-        <span class="connection-dot" title="Extension ready"></span>
+        <span id="header-dot" class="dot idle" title="Session status"></span>
       </header>
 
       <section id="configuration-notice" class="notice hidden" role="alert">
@@ -22,11 +22,11 @@
         <span>Add the Supabase project values in <code>config.js</code>.</span>
       </section>
 
+      <!-- Logged out -->
       <section id="login-view" class="view">
         <div class="intro">
-          <p class="kicker">Welcome back</p>
-          <h2>Pick up where your ideas left off.</h2>
-          <p>Sign in to launch a managed Veo session through Farix AI.</p>
+          <h1>Welcome back</h1>
+          <p>Sign in to launch your managed Veo session.</p>
         </div>
         <form id="login-form" class="form">
           <label>
@@ -35,67 +35,38 @@
           </label>
           <label>
             Password
-            <input id="password" type="password" autocomplete="current-password" placeholder="Your password" required />
+            <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" required />
           </label>
-          <button id="login-button" class="primary-button" type="submit">
-            <span>Sign in</span>
-            <span class="button-arrow" aria-hidden="true">↗</span>
-          </button>
+          <button id="login-button" class="btn primary" type="submit">Sign in</button>
         </form>
       </section>
 
+      <!-- Logged in -->
       <section id="app-view" class="view hidden">
-        <div class="profile-line">
-          <div class="avatar" id="avatar">F</div>
-          <div>
-            <p id="user-name" class="user-name">Farix user</p>
-            <p id="user-email" class="muted">—</p>
-          </div>
-          <span id="plan-badge" class="badge">Veo</span>
+        <div class="card user-card">
+          <span class="label">Signed in as</span>
+          <p id="user-email" class="value">—</p>
         </div>
 
-        <div class="credits-card">
-          <div>
-            <p class="card-label">Available credits</p>
-            <p id="credits" class="credits">—</p>
-          </div>
-          <div class="credit-orbit" aria-hidden="true"><span></span></div>
-        </div>
-
-        <div class="details-grid">
-          <div>
-            <span class="detail-label">Plan</span>
-            <strong id="plan">—</strong>
-          </div>
-          <div>
-            <span class="detail-label">Access until</span>
-            <strong id="expiry">—</strong>
-          </div>
-        </div>
-
-        <div class="session-panel">
-          <div class="session-heading">
+        <div class="card session-card">
+          <div class="session-row">
             <div>
-              <p class="card-label">Veo workspace</p>
-              <p id="session-copy" class="session-copy">No managed session is active.</p>
+              <span class="label">Active profile</span>
+              <p id="session-copy" class="value">No session injected</p>
             </div>
-            <span id="session-status" class="status-pill idle">Not injected</span>
+            <span id="session-status" class="pill idle">Inactive</span>
           </div>
-          <button id="inject-button" class="primary-button session-button" type="button">
-            <span id="inject-label">Inject session</span>
-            <span class="button-arrow" aria-hidden="true">↗</span>
-          </button>
+          <p id="expiry-line" class="muted">Access until —</p>
         </div>
 
-        <p id="error-message" class="error-message hidden" role="alert"></p>
-        <button id="logout-button" class="text-button" type="button">Log out</button>
+        <button id="inject-button" class="btn primary" type="button">Inject Session</button>
+        <button id="clear-button" class="btn ghost" type="button">Clear Session</button>
+
+        <p id="error-message" class="error hidden" role="alert"></p>
+        <button id="logout-button" class="link" type="button">Log out</button>
       </section>
 
-      <footer>
-        <span>Veo access, made simple</span>
-        <span class="footer-dot"></span>
-        <span>30 credits per generation</span>
-      </footer>
+      <footer>Unlimited Veo access until your plan expires</footer>
     </main>
     <script src="config.js"></script>
     <script src="supabase.js"></script>

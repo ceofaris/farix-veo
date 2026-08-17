@@ -10,7 +10,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { useQuery } from "@tanstack/react-query";
 import { createEndUser, updateEndUser } from "@/lib/admin.functions";
 import { supabase } from "@/integrations/supabase/client";
-import { activeToolsQuery, resellerToolIdsQuery, isVeo, DEFAULT_VEO_CREDITS } from "@/lib/queries";
+import { activeToolsQuery, resellerToolIdsQuery } from "@/lib/queries";
 
 export type UserRow = {
   id: string;
@@ -43,8 +43,6 @@ export function UserFormDialog({
   const [isActive, setIsActive] = useState(true);
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
-  const [veoCredits, setVeoCredits] = useState(DEFAULT_VEO_CREDITS);
-  const [existingVeo, setExistingVeo] = useState(false);
   const create = useServerFn(createEndUser);
   const update = useServerFn(updateEndUser);
 
@@ -63,29 +61,21 @@ export function UserFormDialog({
     setDays(30);
     setIsActive(user?.is_active ?? true);
     setSelected(new Set());
-    setVeoCredits(DEFAULT_VEO_CREDITS);
-    setExistingVeo(false);
     if (user) {
       let cancelled = false;
       (async () => {
         const { data } = await supabase
           .from("user_tools")
-          .select("tool_id, credits, tools(slug, name)")
+          .select("tool_id")
           .eq("user_id", user.id);
         if (cancelled) return;
         setSelected(new Set((data ?? []).map((r) => r.tool_id as string)));
-        const veoRow = (data ?? []).find((r) => isVeo(r.tools as { slug: string; name: string } | null));
-        setExistingVeo(!!veoRow);
       })();
       return () => {
         cancelled = true;
       };
     }
   }, [open, user]);
-
-  const veoTool = (allTools.data ?? []).find((t) => isVeo(t));
-  const effectiveIds = hideTools ? (ownerToolIds.data ?? []) : Array.from(selected);
-  const veoSelected = !!veoTool && effectiveIds.includes(veoTool.id) && !existingVeo;
 
   function toggleTool(id: string) {
     const next = new Set(selected);
@@ -98,12 +88,11 @@ export function UserFormDialog({
     setSaving(true);
     try {
       const tool_ids = hideTools ? (ownerToolIds.data ?? []) : Array.from(selected);
-      const veo_credits = veoCredits;
       if (user) {
-        await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive, tool_ids, veo_credits } });
+        await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive, tool_ids } });
       } else {
         await create({
-          data: { email, password, full_name: fullName, days, is_active: isActive, owner_id: ownerId, tool_ids, veo_credits },
+          data: { email, password, full_name: fullName, days, is_active: isActive, owner_id: ownerId, tool_ids },
         });
       }
       toast.success(user ? "User updated" : "User created");
@@ -159,23 +148,6 @@ export function UserFormDialog({
                   </label>
                 ))}
               </div>
-            </div>
-          )}
-          {veoSelected && (
-            <div>
-              <Label>Veo 3 Credits</Label>
-              <Input
-                type="number"
-                min={0}
-                step={30}
-                value={veoCredits}
-                onChange={(e) => setVeoCredits(Number(e.target.value))}
-                className="bg-background border-border"
-              />
-              <p className="text-xs text-muted-foreground mt-1">
-                Applied when Veo 3 access is first granted (default 45,000). Each video costs 30
-                credits. ChatGPT is unlimited.
-              </p>
             </div>
           )}
           <div className="flex items-center gap-3">

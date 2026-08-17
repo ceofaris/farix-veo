@@ -3,11 +3,9 @@
 Manifest V3 Chrome extension for the Farix AI managed-account workflow:
 
 - Supabase email/password login
-- Profile, plan, expiry, and credit balance display
+- Profile, plan, and expiry display
 - Managed Flow cookie injection through `get_random_flow_account`
 - Single-device activation through `set_active_session`
-- 30-credit deduction when a newly-added video appears on the Flow page
-- In-page low-credit warning overlay
 - Cookie and local-session cleanup on logout and disable/unload paths
 
 ## Configure Supabase
@@ -22,10 +20,9 @@ Manifest V3 Chrome extension for the Farix AI managed-account workflow:
 The default data contract expects:
 
 - `profiles`: one row keyed by `id`
-- `user_tools`: one row keyed by `user_id`, with `credits`, `plan`, `tools`, and `expiry`/`expires_at`
+- `user_tools`: one row keyed by `user_id`, with `plan`, `tools`, and `expiry`/`expires_at`
 - `get_random_flow_account()`: returns an account containing `cookie_data`
 - `set_active_session(p_user_id, p_device_id)`: rejects an account already active elsewhere
-- `check_and_deduct_credits(p_user_id, p_amount)`: returns a remaining-credit field, or the extension will refresh the profile
 
 `cookie_data` can be a JSON array of Chrome cookie objects, a `{ "cookies": [...] }` object, or a name/value map. For safety, cookie injection is limited to `labs.google` and its subdomains.
 

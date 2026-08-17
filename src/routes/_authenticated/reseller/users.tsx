@@ -11,9 +11,9 @@ import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/use-profile";
-import { isVeo, formatCredits, creditUsageThisMonthQuery } from "@/lib/queries";
+import { isVeo } from "@/lib/queries";
 import { StatCard } from "@/components/stat-card";
-import { Coins, Activity, Video } from "lucide-react";
+import { Users as UsersIcon, Activity, Video } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/reseller/users")({
   component: ResellerUsers,
@@ -22,9 +22,6 @@ export const Route = createFileRoute("/_authenticated/reseller/users")({
 type ResellerUserRow = UserRow & {
   user_tools: {
     is_paid: boolean;
-    credits: number;
-    total_credits: number;
-    credits_used: number;
     tools: { slug: string; name: string } | null;
   }[];
 };
@@ -42,7 +39,7 @@ function ResellerUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, full_name, is_active, expires_at, user_tools(is_paid, credits, total_credits, credits_used, tools(slug, name))")
+        .select("id, email, full_name, is_active, expires_at, user_tools(is_paid, tools(slug, name))")
         .eq("role", "user")
         .eq("created_by", profile!.id)
         .order("created_at", { ascending: false });
@@ -52,12 +49,9 @@ function ResellerUsers() {
   });
 
 
-  const usage = useQuery(creditUsageThisMonthQuery);
-
-  const veoRows = (users.data ?? []).flatMap((u) => (u.user_tools ?? []).filter((a) => isVeo(a.tools)));
-  const given = veoRows.reduce((s, a) => s + Number(a.total_credits ?? 0), 0);
-  const left = veoRows.reduce((s, a) => s + Number(a.credits ?? 0), 0);
-  const usedMonth = (usage.data ?? []).reduce((s, r) => s + Number(r.amount ?? 0), 0);
+  const rows = users.data ?? [];
+  const veoRows = rows.flatMap((u) => (u.user_tools ?? []).filter((a) => isVeo(a.tools)));
+  const activeUsers = rows.filter((u) => u.is_active).length;
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this user?")) return;
@@ -91,24 +85,24 @@ function ResellerUsers() {
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-6">
         <StatCard
-          icon={Coins}
-          label="Veo Credits Given"
-          value={formatCredits(given)}
-          hint={`${formatCredits(left)} remaining`}
+          icon={UsersIcon}
+          label="Total Users"
+          value={rows.length}
+          hint="Accounts you created"
           tone="primary"
         />
         <StatCard
           icon={Activity}
-          label="Credits Used (This Month)"
-          value={usage.isSuccess ? formatCredits(usedMonth) : "—"}
-          hint="30 credits per video"
+          label="Active Users"
+          value={activeUsers}
+          hint="Access until expiry"
           tone="chart-2"
         />
         <StatCard
           icon={Video}
           label="Users with Veo 3"
           value={veoRows.length}
-          hint="ChatGPT is unlimited"
+          hint="Unlimited generations"
           tone="chart-3"
         />
       </div>
@@ -120,7 +114,6 @@ function ResellerUsers() {
             <th className="px-5 py-3.5 font-semibold">Email</th>
             <th className="px-5 py-3.5 font-semibold">Status</th>
             <th className="px-5 py-3.5 font-semibold">Expiry</th>
-            <th className="px-5 py-3.5 font-semibold">Veo Credits</th>
             <th className="px-5 py-3.5 font-semibold">Payment</th>
             <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
           </tr>
@@ -137,20 +130,6 @@ function ResellerUsers() {
               </td>
               <td className="px-5 py-4 text-muted-foreground">
                 {u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}
-              </td>
-              <td className="px-5 py-4 text-sm">
-                {(() => {
-                  const veo = (u.user_tools ?? []).find((a) => isVeo(a.tools));
-                  if (!veo) return <span className="text-xs text-muted-foreground">No Veo 3</span>;
-                  return (
-                    <div>
-                      <div className="font-medium">{formatCredits(veo.credits)} left</div>
-                      <div className="text-xs text-muted-foreground">
-                        {formatCredits(veo.credits_used)} used of {formatCredits(veo.total_credits)}
-                      </div>
-                    </div>
-                  );
-                })()}
               </td>
               <td className="px-5 py-4">
                 {(() => {

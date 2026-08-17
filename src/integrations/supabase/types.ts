@@ -59,58 +59,6 @@ export type Database = {
           },
         ]
       }
-      credit_usage: {
-        Row: {
-          amount: number
-          created_at: string
-          id: string
-          reason: string
-          tool_id: string
-          user_id: string
-          user_tool_id: string | null
-        }
-        Insert: {
-          amount: number
-          created_at?: string
-          id?: string
-          reason?: string
-          tool_id: string
-          user_id: string
-          user_tool_id?: string | null
-        }
-        Update: {
-          amount?: number
-          created_at?: string
-          id?: string
-          reason?: string
-          tool_id?: string
-          user_id?: string
-          user_tool_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "credit_usage_tool_id_fkey"
-            columns: ["tool_id"]
-            isOneToOne: false
-            referencedRelation: "tools"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "credit_usage_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "credit_usage_user_tool_id_fkey"
-            columns: ["user_tool_id"]
-            isOneToOne: false
-            referencedRelation: "user_tools"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       extension_versions: {
         Row: {
           created_at: string
@@ -307,43 +255,34 @@ export type Database = {
       user_tools: {
         Row: {
           created_at: string
-          credits: number
-          credits_used: number
           expires_at: string
           id: string
           is_paid: boolean
           paid_amount: number | null
           paid_at: string | null
           tool_id: string
-          total_credits: number
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          credits?: number
-          credits_used?: number
           expires_at?: string
           id?: string
           is_paid?: boolean
           paid_amount?: number | null
           paid_at?: string | null
           tool_id: string
-          total_credits?: number
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
-          credits?: number
-          credits_used?: number
           expires_at?: string
           id?: string
           is_paid?: boolean
           paid_amount?: number | null
           paid_at?: string | null
           tool_id?: string
-          total_credits?: number
           updated_at?: string
           user_id?: string
         }
@@ -369,18 +308,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      add_credits: {
-        Args: { _amount: number; _user_id: string }
-        Returns: Json
-      }
-      can_manage_credits: {
-        Args: { _actor: string; _user_id: string }
-        Returns: boolean
-      }
-      check_and_deduct_credits: {
-        Args: { _cost: number; _reason?: string; _user_id: string }
-        Returns: Json
-      }
       get_random_flow_account: {
         Args: never
         Returns: {
@@ -394,10 +321,6 @@ export type Database = {
       is_king: { Args: { _user_id: string }; Returns: boolean }
       is_reseller: { Args: { _user_id: string }; Returns: boolean }
       set_active_session: { Args: { p_tool_account_id: string }; Returns: Json }
-      set_credits: {
-        Args: { _amount: number; _user_id: string }
-        Returns: Json
-      }
     }
     Enums: {
       [_ in never]: never

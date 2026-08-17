@@ -8,7 +8,7 @@
   const loginForm = $("login-form");
   const loginButton = $("login-button");
   const injectButton = $("inject-button");
-  const injectLabel = $("inject-label");
+  const clearButton = $("clear-button");
   const errorMessage = $("error-message");
 
   function send(message) {
@@ -36,7 +36,7 @@
   }
 
   function formatDate(value) {
-    if (!value) return "No expiry";
+    if (!value) return "No expiry set";
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return String(value);
     return new Intl.DateTimeFormat(undefined, {
@@ -46,37 +46,27 @@
     }).format(date);
   }
 
-  function getInitial(name, email) {
-    return (name || email || "F").trim().charAt(0).toUpperCase();
-  }
-
   function render(state) {
     const authenticated = Boolean(state?.authenticated);
     loginView.classList.toggle("hidden", authenticated);
     appView.classList.toggle("hidden", !authenticated);
 
+    const active = authenticated && Boolean(state.active);
+    $("header-dot").className = `dot ${active ? "active" : "idle"}`;
     if (!authenticated) return;
 
-    $("user-name").textContent = state.name || "Farix user";
     $("user-email").textContent = state.email || "—";
-    $("avatar").textContent = getInitial(state.name, state.email);
-    $("plan-badge").textContent = state.plan || "Veo";
-    $("credits").textContent = Number(state.credits ?? 0).toLocaleString();
-    $("plan").textContent = state.plan || "Veo";
-    $("expiry").textContent = formatDate(state.expiresAt);
-
-    const active = Boolean(state.active);
-    $("session-status").textContent = active ? "Active" : "Not injected";
-    $("session-status").className = `status-pill ${active ? "active" : "idle"}`;
-    $("session-copy").textContent = active
-      ? "Your managed account is ready in the Flow workspace."
-      : "No managed session is active.";
-    injectLabel.textContent = active ? "Restart session" : "Inject session";
+    $("session-status").textContent = active ? "Active" : "Inactive";
+    $("session-status").className = `pill ${active ? "active" : "idle"}`;
+    $("session-copy").textContent = active ? "Session active" : "No session injected";
+    $("expiry-line").textContent = `Access until ${formatDate(state.expiresAt)}`;
+    injectButton.textContent = active ? "Restart Session" : "Inject Session";
+    clearButton.disabled = !active;
   }
 
   function setBusy(button, busy, label) {
     button.disabled = busy;
-    if (label) button.querySelector("span").textContent = label;
+    if (label) button.textContent = label;
   }
 
   async function loadState() {
@@ -123,15 +113,29 @@
 
   injectButton.addEventListener("click", async () => {
     setError("");
+    const label = injectButton.textContent;
     setBusy(injectButton, true, "Preparing session…");
     try {
       const response = await send({ type: "INJECT_SESSION" });
       render(response.state);
-      setBusy(injectButton, false);
+      injectButton.disabled = false;
       window.setTimeout(() => window.close(), 250);
     } catch (error) {
-      setBusy(injectButton, false, "Inject session");
+      setBusy(injectButton, false, label);
       setError(error.message);
+    }
+  });
+
+  clearButton.addEventListener("click", async () => {
+    setError("");
+    setBusy(clearButton, true, "Clearing…");
+    try {
+      const response = await send({ type: "CLEAR_SESSION" });
+      render(response.state);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setBusy(clearButton, false, "Clear Session");
     }
   });
 
@@ -144,6 +148,7 @@
       render(response.state);
     } catch (error) {
       setError(error.message);
+    } finally {
       button.disabled = false;
     }
   });

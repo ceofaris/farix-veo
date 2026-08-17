@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ToolLogo } from "@/components/tool-logo";
 import { signedExtensionUrl } from "@/lib/extension";
-import { isVeo, formatCredits, VIDEO_CREDIT_COST, activeToolsQuery, describeTool } from "@/lib/queries";
+import { activeToolsQuery, describeTool } from "@/lib/queries";
 import { cn } from "@/lib/utils";
 import { Download, Lock, LogOut, Menu, Shield, X, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
@@ -62,15 +62,10 @@ function UserOrRedirect() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("user_tools")
-        .select("tool_id, credits, total_credits, credits_used")
+        .select("tool_id, expires_at")
         .eq("user_id", profile!.id);
       if (error) throw error;
-      return (data ?? []) as {
-        tool_id: string;
-        credits: number;
-        total_credits: number;
-        credits_used: number;
-      }[];
+      return (data ?? []) as { tool_id: string; expires_at: string | null }[];
     },
   });
 
@@ -264,38 +259,17 @@ function UserOrRedirect() {
 
                   {hasAccess && assignment && (
                     <div className="rounded-xl border border-border bg-muted/40 px-4 py-3">
-                      {isVeo(tool) ? (
-                        <>
-                          <div className="flex items-baseline justify-between gap-3">
-                            <span className="text-xs uppercase tracking-[0.08em] text-muted-foreground">
-                              Credits remaining
-                            </span>
-                            <span className="text-lg font-semibold">
-                              {formatCredits(assignment.credits)}
-                            </span>
-                          </div>
-                          <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-border">
-                            <div
-                              className="h-full rounded-full bg-primary transition-all"
-                              style={{
-                                width: `${Math.min(
-                                  100,
-                                  assignment.total_credits > 0
-                                    ? (assignment.credits / assignment.total_credits) * 100
-                                    : 0,
-                                )}%`,
-                              }}
-                            />
-                          </div>
-                          <div className="mt-2 text-xs text-muted-foreground">
-                            {formatCredits(assignment.credits_used)} used ·{" "}
-                            {formatCredits(Math.floor(assignment.credits / VIDEO_CREDIT_COST))} videos
-                            left (30 credits each)
-                          </div>
-                        </>
-                      ) : (
-                        <div className="text-xs text-muted-foreground">Unlimited usage</div>
-                      )}
+                      <div className="flex items-baseline justify-between gap-3">
+                        <span className="text-xs uppercase tracking-[0.08em] text-muted-foreground">
+                          Access
+                        </span>
+                        <span className="text-sm font-semibold">Unlimited</span>
+                      </div>
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        {assignment.expires_at
+                          ? `Valid until ${new Date(assignment.expires_at).toLocaleDateString()}`
+                          : "No expiry set"}
+                      </div>
                     </div>
                   )}
 
