@@ -109,10 +109,8 @@
   }
 
   function handleMutations(mutations) {
-    if (!isProjectPage()) {
-      projectState = null;
-      return;
-    }
+    syncRoute();
+    if (!projectState) return;
     for (const mutation of mutations) {
       const videos =
         mutation.type === "attributes" && mutation.target instanceof HTMLVideoElement
