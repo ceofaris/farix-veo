@@ -85,9 +85,13 @@ export function UserFormDialog({
   }
 
   async function save() {
+    const tool_ids = hideTools ? (ownerToolIds.data ?? []) : Array.from(selected);
+    if (!hideTools && tool_ids.length === 0) {
+      toast.error("Select at least one tool");
+      return;
+    }
     setSaving(true);
     try {
-      const tool_ids = hideTools ? (ownerToolIds.data ?? []) : Array.from(selected);
       if (user) {
         await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive, tool_ids } });
       } else {
