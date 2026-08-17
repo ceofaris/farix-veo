@@ -221,9 +221,12 @@ function KingResellerUsers() {
         </thead>
         <tbody>
           {filtered.flatMap((u) => {
-            const accounts = (u.user_tools ?? []).filter(
-              (a) => toolFilter === "all" || a.tool_id === toolFilter,
-            );
+            const accounts = (u.user_tools ?? [])
+              .filter((a) => toolFilter === "all" || a.tool_id === toolFilter)
+              .slice()
+              .sort((a, b) =>
+                (toolMap.get(a.tool_id) ?? "").localeCompare(toolMap.get(b.tool_id) ?? ""),
+              );
             if (accounts.length === 0) {
               return [
                 <tr key={u.id} className="border-t border-border transition-colors hover:bg-muted/40">
@@ -257,8 +260,13 @@ function KingResellerUsers() {
               return (
                 <tr key={a.id} className="border-t border-border transition-colors hover:bg-muted/40">
                   <td className="px-5 py-4">
-                    <div className="font-medium">
-                      {u.full_name || u.email} - {toolName}
+                    <div className="flex items-center gap-2">
+                      <span className="font-medium">
+                        {u.full_name || u.email} – {toolName}
+                      </span>
+                      <Badge variant="outline" className="rounded-full text-[10px] px-2 py-0">
+                        {toolName}
+                      </Badge>
                     </div>
                     <div className="text-xs text-muted-foreground">{u.email}</div>
                   </td>
