@@ -30,32 +30,8 @@ importScripts("config.js", "supabase.js");
     });
   }
 
-  function sendTabMessage(tabId, message) {
-    return new Promise((resolve) => {
-      chrome.tabs.sendMessage(tabId, message, () => {
-        // A tab can navigate away between detection and delivery.
-        void chrome.runtime.lastError;
-        resolve();
-      });
-    });
-  }
-
   function isFlowTab(tab) {
     return Boolean(tab?.id && typeof tab.url === "string" && /^https:\/\/labs\.google\/fx\/tools\/flow(?:[/?#]|$)/.test(tab.url));
-  }
-
-  function isFlowProjectTab(tab) {
-    if (!tab?.id || typeof tab.url !== "string") return false;
-    try {
-      const url = new URL(tab.url);
-      return (
-        url.protocol === "https:" &&
-        url.hostname === FLOW_HOST &&
-        /^\/fx\/tools\/flow\/project\/[^/?#]+(?:\/|$)/.test(url.pathname)
-      );
-    } catch {
-      return false;
-    }
   }
 
   function isExpired(expiresAt) {
@@ -72,9 +48,6 @@ importScripts("config.js", "supabase.js");
     if (error?.status === 401) return "Your Farix session expired. Please log in again.";
     if (error?.status === 409 || error?.code === "ACTIVE_SESSION_EXISTS") {
       return "This account is already active on another device.";
-    }
-    if (error?.code === "INSUFFICIENT_CREDITS" || error?.status === 402) {
-      return "You do not have enough credits for another Veo generation.";
     }
     return error?.message || "Something went wrong. Please try again.";
   }
@@ -110,9 +83,7 @@ importScripts("config.js", "supabase.js");
     await storageRemove([
       keys.auth,
       keys.profile,
-      keys.credits,
-      keys.activeSession,
-      keys.recentGenerations
+      keys.activeSession
     ]);
   }
 
@@ -228,16 +199,15 @@ importScripts("config.js", "supabase.js");
   }
 
   async function getAuthenticatedContext() {
-    const stored = await storageGet([keys.auth, keys.profile, keys.credits, keys.activeSession]);
+    const stored = await storageGet([keys.auth, keys.profile, keys.activeSession]);
     const auth = await refreshStoredSession(stored);
     if (!auth?.access_token || !auth.user?.id) {
-      return { auth: null, profile: null, credits: 0, activeSession: null };
+      return { auth: null, profile: null, activeSession: null };
     }
 
     return {
       auth,
       profile: stored[keys.profile] || null,
-      credits: Number(stored[keys.credits] ?? stored[keys.profile]?.credits ?? 0),
       activeSession: stored[keys.activeSession] || null
     };
   }
@@ -251,7 +221,6 @@ importScripts("config.js", "supabase.js");
       plan: context.profile?.plan || "Veo",
       role: context.profile?.role || "user",
       tools: context.profile?.tools || [],
-      credits: context.credits,
       expiresAt: context.profile?.expiresAt || null,
       active: Boolean(context.activeSession?.active),
       activeSince: context.activeSession?.activeSince || null
@@ -272,7 +241,6 @@ importScripts("config.js", "supabase.js");
     await storageSet({
       [keys.auth]: auth,
       [keys.profile]: profile,
-      [keys.credits]: profile.credits,
       [keys.activeSession]: null
     });
 
@@ -297,8 +265,6 @@ importScripts("config.js", "supabase.js");
     if (isExpired(context.profile?.expiresAt)) {
       throw new Error("Your Farix plan has expired.");
     }
-    if (context.credits < 0) throw new Error("Your credit balance is unavailable.");
-
     const deviceId = await getDeviceId();
     const accountPayload = await supabase.rpc(
       config.RPCS.getRandomFlowAccount,
@@ -351,99 +317,11 @@ importScripts("config.js", "supabase.js");
     return { ...(await stateSnapshot()), tabId };
   }
 
-  function isInsufficientCredits(error) {
-    const haystack = `${error?.message || ""} ${error?.code || ""}`.toLowerCase();
-    return error?.status === 402 || haystack.includes("insufficient") || haystack.includes("credit");
-  }
-
-  async function rememberGeneration(generationKey) {
-    const stored = await storageGet(keys.recentGenerations);
-    const now = Date.now();
-    const recent = Object.fromEntries(
-      Object.entries(stored[keys.recentGenerations] || {}).filter(
-        ([, timestamp]) => now - Number(timestamp) < 10 * 60 * 1000
-      )
-    );
-    if (recent[generationKey]) return false;
-    recent[generationKey] = now;
-    await storageSet({ [keys.recentGenerations]: recent });
-    return true;
-  }
-
-  async function handleMediaDetected(message, sender) {
-    // Defense in depth: even a stale/compromised listing-page content script
-    // can never invoke the deduction RPC. Only concrete project URLs pass.
-    if (!isFlowProjectTab(sender.tab) || !message?.generationKey) return { ignored: true };
-    const context = await getAuthenticatedContext();
-    if (!context.auth) return { ignored: true };
-
-    const generationKey = `${sender.tab.id}:${message.generationKey}`;
-    if (!(await rememberGeneration(generationKey))) return { duplicate: true };
-
-    try {
-      const result = await supabase.rpc(
-        config.RPCS.checkAndDeductCredits,
-        config.RPC_ARGUMENTS.checkAndDeductCredits(
-          context.auth.user.id,
-          config.CREDIT_COST
-        ),
-        context.auth.access_token
-      );
-      const value = supabase.unwrapRpcValue(result);
-
-      // The RPC answers with { ok: false, reason } instead of an HTTP error.
-      if (value && typeof value === "object" && value.ok === false) {
-        const reasons = {
-          insufficient_credits: "You do not have enough credits for another Veo generation.",
-          no_access: "Your account does not have Veo 3 access.",
-          invalid_cost: "Credit configuration is invalid. Contact support."
-        };
-        const text = reasons[value.reason] || "Credits could not be deducted.";
-        if (Number.isFinite(Number(value.remaining))) {
-          await storageSet({ [keys.credits]: Math.max(0, Number(value.remaining)) });
-        }
-        await sendTabMessage(sender.tab.id, { type: "CREDIT_WARNING", message: text });
-        return { deducted: false, error: text };
-      }
-
-      const remaining = Number(
-        value?.remaining ??
-          value?.credits_remaining ??
-          value?.remaining_credits ??
-          value?.credits ??
-          (typeof value === "number" ? value : NaN)
-      );
-
-      if (Number.isFinite(remaining)) {
-        await storageSet({ [keys.credits]: Math.max(0, remaining) });
-      } else {
-        const refreshedProfile = await supabase.fetchProfile(
-          context.auth.user,
-          context.auth.access_token
-        );
-        await storageSet({
-          [keys.profile]: refreshedProfile,
-          [keys.credits]: refreshedProfile.credits
-        });
-      }
-
-      const snapshot = await stateSnapshot();
-      await sendTabMessage(sender.tab.id, {
-        type: "CREDIT_UPDATE",
-        credits: snapshot.credits,
-        cost: config.CREDIT_COST
-      });
-      return { deducted: true, credits: snapshot.credits };
-    } catch (error) {
-      const messageText = isInsufficientCredits(error)
-        ? "You do not have enough credits for another Veo generation."
-        : userFacingError(error);
-      await sendTabMessage(sender.tab.id, {
-        type: "CREDIT_WARNING",
-        message: messageText
-      });
-      return { deducted: false, error: messageText };
-    }
+  /** Drop the managed cookies + active session, keeping the user logged in. */
+  async function clearSession() {
+    await clearFlowCookies();
+    await storageRemove([keys.activeSession]);
+    return stateSnapshot();
   }
 
   async function cleanup({ clearStorage = false } = {}) {
@@ -477,11 +355,8 @@ importScripts("config.js", "supabase.js");
           case "INJECT_SESSION":
             sendResponse({ ok: true, state: await injectSession() });
             break;
-          case "MEDIA_DETECTED":
-            sendResponse({
-              ok: true,
-              result: await handleMediaDetected(message, sender)
-            });
+          case "CLEAR_SESSION":
+            sendResponse({ ok: true, state: await clearSession() });
             break;
           default:
             sendResponse({ ok: false, error: "Unknown extension message." });
