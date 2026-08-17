@@ -6,12 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader, TableShell } from "@/components/panel-layout";
 import { StatCard } from "@/components/stat-card";
-import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert, Wallet, Coins } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert, Wallet } from "lucide-react";
 import { UserFormDialog, UserRow } from "@/components/user-form-dialog";
 import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
-import { activeToolsQuery, resellerToolIdsQuery, isVeo } from "@/lib/queries";
+import { activeToolsQuery, resellerToolIdsQuery } from "@/lib/queries";
 import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
 
 
@@ -75,7 +75,6 @@ function KingResellerUsers() {
     () => new Map((allTools.data ?? []).map((t) => [t.id, t.name])),
     [allTools.data],
   );
-  const veoToolId = (allTools.data ?? []).find((t) => isVeo(t))?.id ?? null;
   const filterTools = (allTools.data ?? []).filter((t) => (assignedIds.data ?? []).includes(t.id));
 
   const users = useQuery({
