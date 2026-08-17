@@ -191,7 +191,7 @@ function ResellerUsers() {
         onOpenChange={setOpen}
         user={editing}
         ownerId={profile?.id}
-        hideTools
+        
         onSaved={() => users.refetch()}
       />
 
