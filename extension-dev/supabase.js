@@ -120,8 +120,9 @@
     await request("/auth/v1/logout", { method: "POST" }, accessToken);
   }
 
-  async function selectRows(table, filters, accessToken) {
-    const params = new URLSearchParams({ select: "*" });
+  async function selectRows(table, filters, accessToken, select = "*", limit) {
+    const params = new URLSearchParams({ select });
+    if (limit) params.set("limit", String(limit));
     for (const [column, expression] of Object.entries(filters)) {
       params.set(column, expression);
     }
@@ -208,14 +209,18 @@
         {
           [config.PROFILE_USER_COLUMN]: `eq.${user.id}`
         },
-        accessToken
+        accessToken,
+        "id,email,full_name,role,expires_at,is_active",
+        1
       ),
       selectRows(
         config.TABLES.userTools,
         {
           [config.USER_TOOLS_USER_COLUMN]: `eq.${user.id}`
         },
-        accessToken
+        accessToken,
+        "user_id,tool_id,expires_at",
+        1
       )
     ]);
 
