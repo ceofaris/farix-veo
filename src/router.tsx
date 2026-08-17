@@ -3,7 +3,21 @@ import { createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
 export const getRouter = () => {
-  const queryClient = new QueryClient();
+  // Global cache policy: no window-focus/reconnect refetch storms, and a
+  // sensible default staleTime so revisiting a page reuses the cache.
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 5 * 60 * 1000,
+        gcTime: 30 * 60 * 1000,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: false,
+        refetchOnMount: false,
+        retry: 1,
+      },
+    },
+  });
+
 
   const router = createRouter({
     routeTree,
