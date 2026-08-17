@@ -167,13 +167,6 @@
 
   function normalizeProfile(profileRow, toolRow, user) {
     const merged = { ...(profileRow || {}), ...(toolRow || {}) };
-    const creditsValue = firstDefined(
-      toolRow?.credits,
-      toolRow?.remaining_credits,
-      profileRow?.credits,
-      profileRow?.remaining_credits,
-      0
-    );
     const expiryValue = firstDefined(
       toolRow?.expiry,
       toolRow?.expires_at,
@@ -204,7 +197,6 @@
       tools: normalizeTools(
         firstDefined(toolRow?.tools, profileRow?.tools, merged.tool_access)
       ),
-      credits: Math.max(0, Number(creditsValue) || 0),
       expiresAt: expiryValue || null
     };
   }

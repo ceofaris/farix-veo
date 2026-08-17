@@ -9,7 +9,6 @@ globalThis.FARIX_CONFIG = Object.freeze({
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5peXRub2d6bGV5ZGVyaXhma2FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxODA5NDEsImV4cCI6MjEwMDc1Njk0MX0.qIFZ9AOqqeWkKQTQ7EVLehXqdWkS0_IlZHuj2rcqQng",
 
   FLOW_URL: "https://labs.google/fx/tools/flow",
-  CREDIT_COST: 30,
 
   TABLES: Object.freeze({
     profiles: "profiles",
@@ -21,8 +20,7 @@ globalThis.FARIX_CONFIG = Object.freeze({
 
   RPCS: Object.freeze({
     getRandomFlowAccount: "get_random_flow_account",
-    setActiveSession: "set_active_session",
-    checkAndDeductCredits: "check_and_deduct_credits"
+    setActiveSession: "set_active_session"
   }),
 
   /*
@@ -33,20 +31,13 @@ globalThis.FARIX_CONFIG = Object.freeze({
   RPC_ARGUMENTS: Object.freeze({
     setActiveSession: (toolAccountId) => ({
       p_tool_account_id: toolAccountId
-    }),
-    checkAndDeductCredits: (userId, amount) => ({
-      _user_id: userId,
-      _cost: amount,
-      _reason: "video_generation"
     })
   }),
 
   STORAGE_KEYS: Object.freeze({
     auth: "farix_auth",
     profile: "farix_profile",
-    credits: "farix_credits",
     activeSession: "farix_active_session",
-    deviceId: "farix_device_id",
-    recentGenerations: "farix_recent_generations"
+    deviceId: "farix_device_id"
   })
 });
