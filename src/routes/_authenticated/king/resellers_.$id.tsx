@@ -221,9 +221,12 @@ function KingResellerUsers() {
         </thead>
         <tbody>
           {filtered.flatMap((u) => {
-            const accounts = (u.user_tools ?? []).filter(
-              (a) => toolFilter === "all" || a.tool_id === toolFilter,
-            );
+            const accounts = (u.user_tools ?? [])
+              .filter((a) => toolFilter === "all" || a.tool_id === toolFilter)
+              .slice()
+              .sort((a, b) =>
+                (toolMap.get(a.tool_id) ?? "").localeCompare(toolMap.get(b.tool_id) ?? ""),
+              );
             if (accounts.length === 0) {
               return [
                 <tr key={u.id} className="border-t border-border transition-colors hover:bg-muted/40">
