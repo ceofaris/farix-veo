@@ -308,6 +308,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_random_chatgpt_account: {
+        Args: never
+        Returns: {
+          cookie_data: string
+          id: string
+          label: string
+          notes: string
+          tool_id: string
+        }[]
+      }
       get_random_flow_account: {
         Args: never
         Returns: {
