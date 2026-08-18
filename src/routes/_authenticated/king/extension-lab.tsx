@@ -45,8 +45,8 @@ function LabSection({
 }) {
   const total = files.reduce((s, f) => s + f.bytes, 0);
   return (
-    <>
-      <Card className="mt-5">
+    <div className="space-y-3">
+      <Card>
         <div className="flex flex-wrap items-start gap-4">
           <div className="h-12 w-12 rounded-2xl bg-accent text-accent-foreground flex items-center justify-center shrink-0">
             <FlaskConical className="h-5 w-5" />
