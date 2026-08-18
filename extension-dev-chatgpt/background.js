@@ -164,9 +164,8 @@ importScripts("config.js", "supabase.js");
       throw new Error(`Unsupported cookie domain returned: ${domain}`);
     }
     const normalizedDomain = domain.replace(/^\./, "");
-    const protocol = cookie.secure === false ? "http" : "https";
     const details = {
-      url: `${protocol}://${normalizedDomain}${cookie.path || "/"}`,
+      url: `https://${normalizedDomain}${cookie.path || "/"}`,
       name: String(cookie.name),
       value: String(cookie.value ?? ""),
       path: cookie.path || "/",
