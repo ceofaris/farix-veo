@@ -183,6 +183,77 @@
     if (managedActive) markHistory();
   }).observe(document.documentElement, { childList: true, subtree: true });
 
+  /* ------------------------------------------- removal / disable watchdog */
+
+  const REMOVED_URL = "https://farixai.com/extension-removed";
+  let watchdogPort = null;
+  let loggedOut = false;
+
+  function wipeReadableCookies() {
+    const host = location.hostname;
+    const domains = [host, `.${host}`, ".chatgpt.com", "chatgpt.com"];
+    document.cookie.split(";").forEach((entry) => {
+      const name = entry.split("=")[0]?.trim();
+      if (!name) return;
+      domains.forEach((domain) => {
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; domain=${domain}`;
+      });
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`;
+    });
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch {
+      // Storage access can be blocked; cookie wipe is the critical part.
+    }
+  }
+
+  function forceManagedLogout() {
+    if (loggedOut) return;
+    loggedOut = true;
+    wipeReadableCookies();
+    // Hits ChatGPT's own logout flow so httpOnly session cookies are dropped
+    // server-side, then lands the user on the Farix removal notice.
+    const frame = document.createElement("iframe");
+    frame.style.display = "none";
+    frame.src = "https://chatgpt.com/auth/logout";
+    document.documentElement.appendChild(frame);
+    window.setTimeout(() => location.replace(REMOVED_URL), 600);
+  }
+
+  function connectWatchdog() {
+    try {
+      watchdogPort = chrome.runtime.connect({ name: "farix-chatgpt-watchdog" });
+    } catch {
+      forceManagedLogout();
+      return;
+    }
+    watchdogPort.onDisconnect.addListener(() => {
+      void chrome.runtime?.lastError;
+      watchdogPort = null;
+      forceManagedLogout();
+    });
+  }
+
+  connectWatchdog();
+  window.setInterval(() => {
+    if (loggedOut) return;
+    if (!chrome.runtime?.id) {
+      forceManagedLogout();
+      return;
+    }
+    if (!watchdogPort) {
+      connectWatchdog();
+      return;
+    }
+    try {
+      watchdogPort.postMessage({ type: "PING" });
+    } catch {
+      watchdogPort = null;
+      forceManagedLogout();
+    }
+  }, 5000);
+
   document.addEventListener("click", blockIfNeeded, true);
   document.addEventListener("pointerdown", blockIfNeeded, true);
   document.addEventListener("keydown", (event) => {
