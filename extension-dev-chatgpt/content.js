@@ -185,8 +185,6 @@
 
   /* ------------------------------------------- removal / disable watchdog */
 
-  const REMOVED_URL =
-    "https://farixai.lovable.app/extension-removed";
   let watchdogPort = null;
   let loggedOut = false;
 
