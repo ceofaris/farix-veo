@@ -15,7 +15,7 @@
   const historyWords = /\b(library|projects?|gpts|explore gpts|chat history|recent)\b/i;
   const newChatWords = /\b(new chat|new conversation)\b/i;
 
-  function showToast(text = "Account is locked on managed session") {
+  function ensureUi() {
     if (!toastElement) {
       const style = document.createElement("style");
       style.id = "farix-chatgpt-lockdown-style";
