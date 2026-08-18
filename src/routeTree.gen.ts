@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ExtensionRemovedRouteImport } from './routes/extension-removed'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
@@ -26,11 +25,6 @@ import { Route as AuthenticatedKingExtensionLabRouteImport } from './routes/_aut
 import { Route as AuthenticatedKingToolsIdRouteImport } from './routes/_authenticated/king/tools_.$id'
 import { Route as AuthenticatedKingResellersIdRouteImport } from './routes/_authenticated/king/resellers_.$id'
 
-const ExtensionRemovedRoute = ExtensionRemovedRouteImport.update({
-  id: '/extension-removed',
-  path: '/extension-removed',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -117,7 +111,6 @@ const AuthenticatedKingResellersIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/extension-removed': typeof ExtensionRemovedRoute
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
@@ -134,7 +127,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/extension-removed': typeof ExtensionRemovedRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
@@ -151,7 +143,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
-  '/extension-removed': typeof ExtensionRemovedRoute
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
@@ -170,7 +161,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
-    | '/extension-removed'
     | '/king'
     | '/reseller'
     | '/dashboard'
@@ -187,7 +177,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/extension-removed'
     | '/dashboard'
     | '/king/extension-lab'
     | '/king/resellers'
@@ -203,7 +192,6 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
-    | '/extension-removed'
     | '/_authenticated/king'
     | '/_authenticated/reseller'
     | '/_authenticated/dashboard'
@@ -222,18 +210,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
-  ExtensionRemovedRoute: typeof ExtensionRemovedRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/extension-removed': {
-      id: '/extension-removed'
-      path: '/extension-removed'
-      fullPath: '/extension-removed'
-      preLoaderRoute: typeof ExtensionRemovedRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -403,7 +383,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
-  ExtensionRemovedRoute: ExtensionRemovedRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
