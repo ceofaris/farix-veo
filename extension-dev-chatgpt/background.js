@@ -293,13 +293,36 @@ importScripts("config.js", "supabase.js");
     return { ...(await snapshot()), tabId };
   }
 
-  async function cleanup({ clearStorage = false } = {}) {
+  function redirectChatTabsToRemoved() {
+    return new Promise((resolve) => {
+      chrome.tabs.query({ url: ["https://chatgpt.com/*", "https://*.chatgpt.com/*"] }, (tabs) => {
+        Promise.all(
+          (tabs || []).map(
+            (tab) =>
+              new Promise((done) => {
+                if (!tab.id) {
+                  done();
+                  return;
+                }
+                chrome.tabs.update(tab.id, { url: config.UNINSTALL_URL }, () => {
+                  void chrome.runtime.lastError;
+                  done();
+                });
+              })
+          )
+        ).finally(resolve);
+      });
+    });
+  }
+
+  async function cleanup({ clearStorage = false, redirect = false } = {}) {
     await clearChatCookies();
     if (clearStorage) {
       await remove([keys.auth, keys.profile, keys.activeSession]);
     } else {
       await remove([keys.activeSession]);
     }
+    if (redirect) await redirectChatTabsToRemoved();
   }
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
