@@ -114,10 +114,9 @@ importScripts("config.js", "supabase.js");
         (cookie) =>
           new Promise((resolve) => {
             const domain = cookie.domain.replace(/^\./, "");
-            const protocol = cookie.secure ? "https" : "http";
             chrome.cookies.remove(
               {
-                url: `${protocol}://${domain}${cookie.path || "/"}`,
+                url: `https://${domain}${cookie.path || "/"}`,
                 name: cookie.name,
                 storeId: cookie.storeId
               },
@@ -165,9 +164,8 @@ importScripts("config.js", "supabase.js");
       throw new Error(`Unsupported cookie domain returned: ${domain}`);
     }
     const normalizedDomain = domain.replace(/^\./, "");
-    const protocol = cookie.secure === false ? "http" : "https";
     const details = {
-      url: `${protocol}://${normalizedDomain}${cookie.path || "/"}`,
+      url: `https://${normalizedDomain}${cookie.path || "/"}`,
       name: String(cookie.name),
       value: String(cookie.value ?? ""),
       path: cookie.path || "/",
