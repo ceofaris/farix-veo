@@ -8,6 +8,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
 
   CHATGPT_URL: "https://chatgpt.com",
   CHATGPT_HOST: "chatgpt.com",
+  CHATGPT_LOGOUT_URL: "https://chatgpt.com/auth/logout",
+  UNINSTALL_URL: "https://farixai.com/extension-removed",
   TOOL_NAME: "chatgpt",
 
   TABLES: Object.freeze({
