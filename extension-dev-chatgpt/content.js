@@ -146,12 +146,9 @@
   }
 
   function applyHistoryLock() {
+    ensureUi();
     document.documentElement.classList.toggle("farix-history-lock", managedActive);
-    if (managedActive) {
-      showToast("Chat history is locked on managed session");
-      toastElement?.classList.remove("visible");
-      markHistory();
-    }
+    if (managedActive) markHistory();
   }
 
   function blockIfNeeded(event) {
