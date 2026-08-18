@@ -55,11 +55,16 @@
       toastElement.id = "farix-chatgpt-lockdown-toast";
       document.documentElement.appendChild(toastElement);
     }
+  }
+
+  function showToast(text = "Account is locked on managed session") {
+    ensureUi();
     toastElement.textContent = text;
     toastElement.classList.add("visible");
     window.clearTimeout(toastTimer);
     toastTimer = window.setTimeout(() => toastElement?.classList.remove("visible"), 2600);
   }
+
 
 
   function descriptor(control) {
