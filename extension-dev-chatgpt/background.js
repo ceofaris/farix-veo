@@ -267,14 +267,16 @@ importScripts("config.js", "supabase.js");
     try {
       await Promise.all(cookies.map(injectCookie));
       accountId = account?.id || account?.account_id || account?.chatgpt_account_id || null;
-      const activePayload = await supabase.rpc(
-        config.RPCS.setActiveSession,
-        config.RPC_ARGUMENTS.setActiveSession(accountId),
-        context.auth.access_token
-      );
-      const activeValue = supabase.unwrapRpcValue(activePayload);
-      if (activeValue === false || activeValue?.success === false) {
-        throw new Error("This account is already active on another device.");
+      if (accountId) {
+        const activePayload = await supabase.rpc(
+          config.RPCS.setActiveSession,
+          config.RPC_ARGUMENTS.setActiveSession(accountId),
+          context.auth.access_token
+        );
+        const activeValue = supabase.unwrapRpcValue(activePayload);
+        if (activeValue === false || activeValue?.success === false || activeValue?.ok === false) {
+          throw new Error("This account is already active on another device.");
+        }
       }
     } catch (error) {
       await clearChatCookies();

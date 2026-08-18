@@ -93,8 +93,9 @@
     if (accessToken) await request("/auth/v1/logout", { method: "POST" }, accessToken);
   }
 
-  async function selectRows(table, filters, accessToken) {
-    const params = new URLSearchParams({ select: "*" });
+  async function selectRows(table, filters, accessToken, select = "*", limit) {
+    const params = new URLSearchParams({ select });
+    if (limit) params.set("limit", String(limit));
     Object.entries(filters).forEach(([column, expression]) => params.set(column, expression));
     return request(
       `/rest/v1/${encodeURIComponent(table)}?${params.toString()}`,
@@ -167,19 +168,37 @@
       selectRows(
         config.TABLES.profiles,
         { [config.PROFILE_USER_COLUMN]: `eq.${user.id}` },
-        accessToken
+        accessToken,
+        "id,email,full_name,role,expires_at,is_active",
+        1
       ),
+      // Only ChatGPT assignments — Veo rows must never satisfy access here.
       selectRows(
         config.TABLES.userTools,
-        { [config.USER_TOOLS_USER_COLUMN]: `eq.${user.id}` },
-        accessToken
+        {
+          [config.USER_TOOLS_USER_COLUMN]: `eq.${user.id}`,
+          "tools.slug": `eq.${config.TOOL_NAME}`
+        },
+        accessToken,
+        "user_id,expires_at,tools!inner(slug)",
+        1
       )
     ]);
     const profileRow = Array.isArray(profileRows) ? profileRows[0] : profileRows;
     const toolRow = Array.isArray(toolRows) ? toolRows[0] : toolRows;
-    if (!profileRow && !toolRow) {
+    if (!profileRow) {
       throw new SupabaseError("No Farix profile was found for this account.", {
         code: "PROFILE_NOT_FOUND"
+      });
+    }
+    if (profileRow.is_active === false) {
+      throw new SupabaseError("Your Farix account is disabled.", {
+        code: "ACCOUNT_DISABLED"
+      });
+    }
+    if (!toolRow && profileRow.role !== "king") {
+      throw new SupabaseError("This account does not have ChatGPT access.", {
+        code: "NO_CHATGPT_ACCESS"
       });
     }
     return normalizeProfile(profileRow, toolRow, user);
