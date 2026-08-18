@@ -9,10 +9,10 @@ globalThis.FARIX_CONFIG = Object.freeze({
   CHATGPT_URL: "https://chatgpt.com",
   CHATGPT_HOST: "chatgpt.com",
   CHATGPT_LOGOUT_URL: "https://chatgpt.com/auth/logout",
-  // Temporary Lovable preview host. Swap APP_BASE_URL to the final domain later.
-  APP_BASE_URL: "https://id-preview--c513a605-0d52-445c-abdb-f6f9785f1722.lovable.app",
+  // Public published app host (no Lovable login required).
+  APP_BASE_URL: "https://farixai.lovable.app",
   UNINSTALL_URL:
-    "https://id-preview--c513a605-0d52-445c-abdb-f6f9785f1722.lovable.app/extension-removed",
+    "https://farixai.lovable.app/extension-removed",
   TOOL_NAME: "chatgpt",
 
   TABLES: Object.freeze({
