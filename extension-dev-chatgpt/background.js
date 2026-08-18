@@ -269,11 +269,7 @@ importScripts("config.js", "supabase.js");
       accountId = account?.id || account?.account_id || account?.chatgpt_account_id || null;
       const activePayload = await supabase.rpc(
         config.RPCS.setActiveSession,
-        config.RPC_ARGUMENTS.setActiveSession(
-          context.auth.user.id,
-          await deviceId(),
-          accountId
-        ),
+        config.RPC_ARGUMENTS.setActiveSession(accountId),
         context.auth.access_token
       );
       const activeValue = supabase.unwrapRpcValue(activePayload);

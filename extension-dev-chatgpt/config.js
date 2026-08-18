@@ -24,11 +24,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
   }),
 
   RPC_ARGUMENTS: Object.freeze({
-    setActiveSession: (userId, deviceId, accountId) => ({
-      p_user_id: userId,
-      p_device_id: deviceId,
-      p_tool: "chatgpt",
-      p_account_id: accountId
+    setActiveSession: (toolAccountId) => ({
+      p_tool_account_id: toolAccountId
     })
   }),
 
