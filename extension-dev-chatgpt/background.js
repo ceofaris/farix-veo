@@ -331,16 +331,6 @@ importScripts("config.js", "supabase.js");
     return true;
   });
 
-  function registerUninstallUrl() {
-    try {
-      chrome.runtime.setUninstallURL(config.UNINSTALL_URL, () => {
-        void chrome.runtime.lastError;
-      });
-    } catch {
-      // setUninstallURL is unavailable in some contexts.
-    }
-  }
-
   // Keeps a live port with every ChatGPT tab. When the extension is disabled or
   // removed the port drops, and the content script performs the local logout.
   chrome.runtime.onConnect.addListener((port) => {
@@ -357,16 +347,13 @@ importScripts("config.js", "supabase.js");
     port.onDisconnect.addListener(() => void chrome.runtime.lastError);
   });
 
-  registerUninstallUrl();
-  chrome.runtime.onStartup?.addListener(registerUninstallUrl);
   chrome.runtime.onInstalled.addListener(() => {
-    registerUninstallUrl();
     void deviceId();
   });
   if (chrome.management?.onDisabled) {
     chrome.management.onDisabled.addListener((info) => {
       if (info.id === chrome.runtime.id) {
-        void cleanup({ clearStorage: true, redirect: true });
+        void cleanup({ clearStorage: true });
       }
     });
   }
