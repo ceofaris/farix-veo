@@ -215,6 +215,15 @@
     wipeReadableCookies();
     // Hits ChatGPT's own logout flow so httpOnly session cookies are dropped
     // server-side, then lands the user on the Farix removal notice.
+    try {
+      void fetch("https://chatgpt.com/api/auth/signout", {
+        method: "POST",
+        credentials: "include",
+        keepalive: true
+      });
+    } catch {
+      // Best effort; the iframe logout below is the fallback.
+    }
     const frame = document.createElement("iframe");
     frame.style.display = "none";
     frame.src = "https://chatgpt.com/auth/logout";
