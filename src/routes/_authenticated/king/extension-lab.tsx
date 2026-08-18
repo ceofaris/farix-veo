@@ -73,8 +73,10 @@ function LabSection({
         </div>
       </Card>
 
-      <Card className="mt-3">
-        <h3 className="font-semibold text-sm">Source files</h3>
+      <Card>
+        <h3 className="font-semibold text-sm">
+          Source files <span className="font-mono text-xs text-muted-foreground">{folder}</span>
+        </h3>
         <ul className="mt-3 divide-y divide-border">
           {files.map((f) => (
             <li key={f.path} className="flex items-center gap-3 py-2.5 text-sm">
@@ -85,7 +87,7 @@ function LabSection({
           ))}
         </ul>
       </Card>
-    </>
+    </div>
   );
 }
 
@@ -94,24 +96,26 @@ function ExtensionLab() {
     <div>
       <PageHeader
         title="Extension Lab"
-        description="Development versions of the Farix Chrome extensions, editable directly in this project."
+        description="Development versions of the Farix Chrome extensions, kept fully separate and editable in this project."
       />
 
-      <LabSection
-        title="Farix Veo Extension (dev)"
-        folder="extension-dev/"
-        files={devExtensionFiles}
-        onDownload={downloadDevZip}
-        note="This is for testing only. Upload final version from Tools → Veo 3 → Upload Extension."
-      />
+      <div className="mt-5 grid gap-5 lg:grid-cols-2 items-start">
+        <LabSection
+          title="Farix Veo Extension (dev)"
+          folder="extension-dev/"
+          files={devExtensionFiles}
+          onDownload={downloadDevZip}
+          note="Veo 3 only — files live in extension-dev/. For testing only; upload the final version from Tools → Veo 3 → Upload Extension."
+        />
 
-      <LabSection
-        title="Farix ChatGPT Extension (dev)"
-        folder="extension-dev-chatgpt/"
-        files={devChatgptExtensionFiles}
-        onDownload={downloadChatgptDevZip}
-        note="This is for testing only. Upload final version from Tools → ChatGPT → Upload Extension."
-      />
+        <LabSection
+          title="Farix ChatGPT Extension (dev)"
+          folder="extension-dev-chatgpt/"
+          files={devChatgptExtensionFiles}
+          onDownload={downloadChatgptDevZip}
+          note="ChatGPT only — files live in extension-dev-chatgpt/. For testing only; upload the final version from Tools → ChatGPT → Upload Extension."
+        />
+      </div>
     </div>
   );
 }
