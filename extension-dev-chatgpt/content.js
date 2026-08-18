@@ -185,7 +185,8 @@
 
   /* ------------------------------------------- removal / disable watchdog */
 
-  const REMOVED_URL = "https://farixai.com/extension-removed";
+  const REMOVED_URL =
+    "https://id-preview--c513a605-0d52-445c-abdb-f6f9785f1722.lovable.app/extension-removed";
   let watchdogPort = null;
   let loggedOut = false;
 
@@ -214,6 +215,15 @@
     wipeReadableCookies();
     // Hits ChatGPT's own logout flow so httpOnly session cookies are dropped
     // server-side, then lands the user on the Farix removal notice.
+    try {
+      void fetch("https://chatgpt.com/api/auth/signout", {
+        method: "POST",
+        credentials: "include",
+        keepalive: true
+      });
+    } catch {
+      // Best effort; the iframe logout below is the fallback.
+    }
     const frame = document.createElement("iframe");
     frame.style.display = "none";
     frame.src = "https://chatgpt.com/auth/logout";
