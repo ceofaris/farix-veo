@@ -388,7 +388,9 @@ importScripts("config.js", "supabase.js");
   });
   if (chrome.management?.onDisabled) {
     chrome.management.onDisabled.addListener((info) => {
-      if (info.id === chrome.runtime.id) void cleanup({ clearStorage: true });
+      if (info.id === chrome.runtime.id) {
+        void cleanup({ clearStorage: true, redirect: true });
+      }
     });
   }
 })();
