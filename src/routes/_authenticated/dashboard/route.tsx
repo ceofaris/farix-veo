@@ -130,7 +130,6 @@ function DashboardLayout() {
             <Menu className="h-5 w-5" />
           </button>
           <div className="font-display font-semibold lg:hidden">Farix</div>
-          <ThemeToggle className="ml-auto" />
         </header>
         <main className="mx-auto w-full max-w-6xl flex-1 px-5 pb-10 pt-4 sm:px-8 sm:pt-5">
           <Outlet />
