@@ -120,7 +120,7 @@ function DashboardLayout() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 border-b border-border bg-background/80 px-4 backdrop-blur-md sm:px-6">
+        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 bg-background/80 px-4 backdrop-blur-md sm:px-6">
           <button
             onClick={() => setOpen(!open)}
             className="rounded-lg p-2 text-muted-foreground hover:bg-accent lg:hidden"
