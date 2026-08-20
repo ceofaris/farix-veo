@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedResellerRouteRouteImport } from './routes/_authenticated/reseller/route'
 import { Route as AuthenticatedKingRouteRouteImport } from './routes/_authenticated/king/route'
 import { Route as AuthenticatedResellerIndexRouteImport } from './routes/_authenticated/reseller/index'
@@ -38,11 +37,6 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedResellerRouteRoute =
   AuthenticatedResellerRouteRouteImport.update({
@@ -113,7 +107,6 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
-  '/dashboard': typeof AuthenticatedDashboardRoute
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
   '/king/tools': typeof AuthenticatedKingToolsRoute
@@ -127,7 +120,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
   '/king/tools': typeof AuthenticatedKingToolsRoute
@@ -145,7 +137,6 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/_authenticated/king/resellers': typeof AuthenticatedKingResellersRoute
   '/_authenticated/king/tools': typeof AuthenticatedKingToolsRoute
@@ -163,7 +154,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/king'
     | '/reseller'
-    | '/dashboard'
     | '/king/extension-lab'
     | '/king/resellers'
     | '/king/tools'
@@ -177,7 +167,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/dashboard'
     | '/king/extension-lab'
     | '/king/resellers'
     | '/king/tools'
@@ -194,7 +183,6 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/king'
     | '/_authenticated/reseller'
-    | '/_authenticated/dashboard'
     | '/_authenticated/king/extension-lab'
     | '/_authenticated/king/resellers'
     | '/_authenticated/king/tools'
@@ -234,13 +222,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/reseller': {
       id: '/_authenticated/reseller'
@@ -367,13 +348,11 @@ const AuthenticatedResellerRouteRouteWithChildren =
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedKingRouteRoute: typeof AuthenticatedKingRouteRouteWithChildren
   AuthenticatedResellerRouteRoute: typeof AuthenticatedResellerRouteRouteWithChildren
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedKingRouteRoute: AuthenticatedKingRouteRouteWithChildren,
   AuthenticatedResellerRouteRoute: AuthenticatedResellerRouteRouteWithChildren,
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
