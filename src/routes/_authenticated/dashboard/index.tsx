@@ -47,8 +47,8 @@ function HomePage() {
 
   return (
     <>
-      <p className="-ml-5 -mt-4 text-sm font-medium text-muted-foreground sm:-ml-8 sm:-mt-5">
-        Welcome back, {firstName} 👋
+      <p className="text-sm font-medium text-foreground">
+        Welcome back, <span className="text-brand-gradient">{firstName}</span> 👋
       </p>
       <div className="space-y-6">
         {/* Greeting + headline */}
