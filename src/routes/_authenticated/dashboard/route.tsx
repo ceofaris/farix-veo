@@ -109,6 +109,7 @@ function DashboardLayout() {
               <div className="truncate font-medium">{profile.full_name || "Account"}</div>
               <div className="truncate text-muted-foreground">{profile.email}</div>
             </div>
+            <ThemeToggle className="ml-auto h-8 w-8" />
           </div>
           <button
             onClick={logout}
@@ -129,7 +130,6 @@ function DashboardLayout() {
             <Menu className="h-5 w-5" />
           </button>
           <div className="font-display font-semibold lg:hidden">Farix</div>
-          <ThemeToggle className="ml-auto" />
         </header>
         <main className="mx-auto w-full max-w-6xl flex-1 px-5 pb-10 pt-4 sm:px-8 sm:pt-5">
           <Outlet />
