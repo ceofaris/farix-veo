@@ -63,7 +63,7 @@ export function MediaCard({
   return (
     <div
       className={cn(
-        "group card-lift relative overflow-hidden rounded-2xl border border-border bg-card",
+        "group relative overflow-hidden rounded-xl border border-border/70 bg-card transition-all duration-200 hover:border-border hover:shadow-card",
         className,
       )}
       style={{ aspectRatio: ratio }}
@@ -82,12 +82,12 @@ export function MediaCard({
         </div>
       )}
       {duration && (
-        <span className="absolute bottom-2 right-2 rounded-md bg-black/55 px-1.5 py-0.5 text-[10px] font-medium text-foreground backdrop-blur-sm">
+        <span className="absolute bottom-2 right-2 rounded-md bg-black/55 px-1.5 py-0.5 font-display text-[10px] font-medium tracking-tight text-white backdrop-blur-sm">
           {duration}
         </span>
       )}
       {label && (
-        <span className="absolute bottom-2 left-2 rounded-md bg-black/45 px-2 py-0.5 text-[11px] font-medium text-foreground backdrop-blur-sm">
+        <span className="absolute bottom-2 left-2 rounded-md bg-black/45 px-2 py-0.5 font-display text-[11px] font-medium tracking-tight text-white backdrop-blur-sm">
           {label}
         </span>
       )}
