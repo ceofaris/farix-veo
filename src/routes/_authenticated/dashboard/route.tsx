@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
-import { Download, Home, LogOut, Menu, Shield, X } from "lucide-react";
+import { Clapperboard, Home, LogOut, Menu, MessageSquare, Shield, X } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
 
