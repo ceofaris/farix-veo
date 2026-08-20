@@ -48,10 +48,10 @@ function DashboardLayout() {
 
   const navClass = (active: boolean) =>
     cn(
-      "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all",
+      "flex items-center gap-3 rounded-xl px-3 py-2.5 font-display text-sm font-medium tracking-tight transition-all",
       active
         ? "bg-brand-gradient text-white shadow-glow"
-        : "text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        : "text-muted-foreground hover:bg-[color-mix(in_oklab,#8b5cf6_12%,transparent)] hover:text-foreground",
     );
 
   return (
