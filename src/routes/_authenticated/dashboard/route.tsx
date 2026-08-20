@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
 import { Download, Home, LogOut, Menu, Shield, X } from "lucide-react";
+import { useTheme } from "@/hooks/use-theme";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardLayout,
@@ -19,6 +21,8 @@ function DashboardLayout() {
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
+  const { theme } = useTheme();
+  const shell = cn("farix-shell min-h-screen bg-background text-foreground", theme === "dark" && "dark");
 
   useEffect(() => {
     if (loading || !profile) return;
@@ -33,7 +37,7 @@ function DashboardLayout() {
 
   if (loading || !profile) {
     return (
-      <div className="farix-shell dark min-h-screen bg-background text-foreground flex items-center justify-center">
+      <div className={cn(shell, "flex items-center justify-center")}>
         Loading…
       </div>
     );
@@ -51,7 +55,7 @@ function DashboardLayout() {
     );
 
   return (
-    <div className="farix-shell dark min-h-screen bg-background text-foreground flex">
+    <div className={cn(shell, "flex")}>
       <aside
         className={cn(
           "fixed lg:sticky top-0 inset-y-0 left-0 z-40 h-screen w-[230px] shrink-0 flex flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-200",
@@ -124,9 +128,10 @@ function DashboardLayout() {
             <Menu className="h-5 w-5" />
           </button>
           <div className="font-semibold lg:hidden">Farix</div>
+          <ThemeToggle className="ml-auto" />
           <button
             onClick={() => downloadExtension()}
-            className="ml-auto inline-flex items-center gap-2 rounded-full bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
+            className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
           >
             <Download className="h-4 w-4" /> Download Extension
           </button>
