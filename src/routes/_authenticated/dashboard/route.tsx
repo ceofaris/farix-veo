@@ -79,11 +79,11 @@ function DashboardLayout() {
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto p-3">
+        <nav className="flex-1 space-y-1.5 overflow-y-auto p-3">
           <Link to="/dashboard" onClick={() => setOpen(false)} className={navClass(path === "/dashboard")}>
-            <Home className="h-4 w-4" /> Home
+            <Home className="h-[18px] w-[18px] shrink-0" /> Home
           </Link>
-          <div className="px-3 pb-2 pt-4 text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+          <div className="px-3 pb-2 pt-5 font-display text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
             Tools
           </div>
           {NAV.map((item) => (
@@ -93,8 +93,9 @@ function DashboardLayout() {
               onClick={() => setOpen(false)}
               className={navClass(path === item.to)}
             >
-              <span className="h-1.5 w-1.5 rounded-full bg-success" />
-              {item.label}
+              <item.icon className="h-[18px] w-[18px] shrink-0" />
+              <span className="flex-1">{item.label}</span>
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
             </Link>
           ))}
         </nav>
