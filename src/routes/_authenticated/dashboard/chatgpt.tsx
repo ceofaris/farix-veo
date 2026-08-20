@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/chatgpt")({
 });
 
 function ChatGptPage() {
-  const { findTool, expiryFor } = useMyTools();
+  const { findTool, expiryFor, downloadExtension } = useMyTools();
   const tool = findTool(/chat\s*-?\s*gpt/i);
   const expires = expiryFor(/chat\s*-?\s*gpt/i);
 
