@@ -42,6 +42,12 @@ function ChatGptPage() {
             Full ChatGPT access via Farix — Unlimited access
           </p>
         </div>
+        <button
+          onClick={() => downloadExtension(tool?.id)}
+          className="ml-auto inline-flex items-center gap-2 rounded-full bg-brand-gradient px-4 py-2 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
+        >
+          <Download className="h-4 w-4" /> Download ChatGPT Extension
+        </button>
       </header>
 
       <HeroBanner
