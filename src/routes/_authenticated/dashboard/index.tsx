@@ -46,43 +46,41 @@ function HomePage() {
   const veo = findTool(/veo/i);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Greeting + headline */}
-      <section>
-        <div className="text-center">
-          <p className="text-sm font-medium text-muted-foreground">Welcome back, {firstName} 👋</p>
-          <h1 className="mt-1.5 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            Create with <span className="text-brand-gradient">AI</span> Without Hassle
-          </h1>
-        </div>
+      <section className="space-y-5">
+        <p className="text-sm font-medium text-muted-foreground">Welcome back, {firstName} 👋</p>
+        <h1 className="text-center font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+          Create with <span className="text-brand-gradient">AI</span> Without Hassle
+        </h1>
 
         {/* Featured video */}
-        <div className="mx-auto mt-5 w-full max-w-[540px]">
+        <div className="mx-auto mt-6 w-full max-w-[560px]">
           <MediaCard ratio="16/9" hue={272} label="Latest generation" duration="0:16" />
         </div>
 
         {/* Prompt bar */}
-        <div className="mx-auto mt-2.5 flex w-full max-w-[540px] items-center gap-2 rounded-xl border border-border/70 bg-card p-1.5">
+        <div className="mx-auto flex w-full max-w-[560px] items-center gap-2 rounded-full border border-border/70 bg-card p-1.5 pl-5 shadow-soft">
           <input
-            className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground"
+            className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
             placeholder="Describe the video you want to create..."
             aria-label="Video prompt"
           />
-          <button className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-brand-gradient px-4 py-2.5 font-display text-sm font-semibold text-white transition-transform active:scale-95">
+          <button className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-gradient px-5 py-3 font-display text-sm font-semibold text-white shadow-glow transition-transform hover:scale-[1.02] active:scale-95">
             <Sparkles className="h-4 w-4" /> Generate
           </button>
         </div>
       </section>
 
       {/* Veo 3 showcase */}
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+      <section className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {CLIPS.map((c, i) => (
           <MediaCard key={i} ratio="9/16" hue={c.hue} duration={c.duration} />
         ))}
       </section>
 
       {/* Nano Banana showcase — mixed aspect ratios, equal height row */}
-      <section className="flex flex-wrap justify-center gap-3">
+      <section className="flex flex-wrap justify-center gap-4">
         {IMAGES.map((c, i) => (
           <MediaCard
             key={i}

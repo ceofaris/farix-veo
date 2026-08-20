@@ -63,7 +63,7 @@ export function MediaCard({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-xl border border-border/70 bg-card transition-all duration-200 hover:border-border hover:shadow-card",
+        "group relative overflow-hidden rounded-2xl border border-border/60 bg-card transition-all duration-200 hover:border-border hover:shadow-card",
         className,
       )}
       style={{ aspectRatio: ratio }}
