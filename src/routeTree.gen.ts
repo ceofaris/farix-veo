@@ -12,16 +12,19 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedResellerRouteRouteImport } from './routes/_authenticated/reseller/route'
 import { Route as AuthenticatedKingRouteRouteImport } from './routes/_authenticated/king/route'
+import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
 import { Route as AuthenticatedResellerIndexRouteImport } from './routes/_authenticated/reseller/index'
 import { Route as AuthenticatedKingIndexRouteImport } from './routes/_authenticated/king/index'
+import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
 import { Route as AuthenticatedResellerUsersRouteImport } from './routes/_authenticated/reseller/users'
 import { Route as AuthenticatedResellerToolsRouteImport } from './routes/_authenticated/reseller/tools'
 import { Route as AuthenticatedKingToolsRouteImport } from './routes/_authenticated/king/tools'
 import { Route as AuthenticatedKingResellersRouteImport } from './routes/_authenticated/king/resellers'
 import { Route as AuthenticatedKingExtensionLabRouteImport } from './routes/_authenticated/king/extension-lab'
+import { Route as AuthenticatedDashboardVeo3RouteImport } from './routes/_authenticated/dashboard/veo-3'
+import { Route as AuthenticatedDashboardChatgptRouteImport } from './routes/_authenticated/dashboard/chatgpt'
 import { Route as AuthenticatedKingToolsIdRouteImport } from './routes/_authenticated/king/tools_.$id'
 import { Route as AuthenticatedKingResellersIdRouteImport } from './routes/_authenticated/king/resellers_.$id'
 
@@ -39,11 +42,6 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => AuthenticatedRouteRoute,
-} as any)
 const AuthenticatedResellerRouteRoute =
   AuthenticatedResellerRouteRouteImport.update({
     id: '/reseller',
@@ -55,6 +53,12 @@ const AuthenticatedKingRouteRoute = AuthenticatedKingRouteRouteImport.update({
   path: '/king',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDashboardRouteRoute =
+  AuthenticatedDashboardRouteRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedResellerIndexRoute =
   AuthenticatedResellerIndexRouteImport.update({
     id: '/',
@@ -66,6 +70,12 @@ const AuthenticatedKingIndexRoute = AuthenticatedKingIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthenticatedKingRouteRoute,
 } as any)
+const AuthenticatedDashboardIndexRoute =
+  AuthenticatedDashboardIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
 const AuthenticatedResellerUsersRoute =
   AuthenticatedResellerUsersRouteImport.update({
     id: '/users',
@@ -95,6 +105,18 @@ const AuthenticatedKingExtensionLabRoute =
     path: '/extension-lab',
     getParentRoute: () => AuthenticatedKingRouteRoute,
   } as any)
+const AuthenticatedDashboardVeo3Route =
+  AuthenticatedDashboardVeo3RouteImport.update({
+    id: '/veo-3',
+    path: '/veo-3',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
+const AuthenticatedDashboardChatgptRoute =
+  AuthenticatedDashboardChatgptRouteImport.update({
+    id: '/chatgpt',
+    path: '/chatgpt',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
 const AuthenticatedKingToolsIdRoute =
   AuthenticatedKingToolsIdRouteImport.update({
     id: '/tools_/$id',
@@ -111,14 +133,17 @@ const AuthenticatedKingResellersIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
-  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
+  '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
   '/king/tools': typeof AuthenticatedKingToolsRoute
   '/reseller/tools': typeof AuthenticatedResellerToolsRoute
   '/reseller/users': typeof AuthenticatedResellerUsersRoute
+  '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/king/': typeof AuthenticatedKingIndexRoute
   '/reseller/': typeof AuthenticatedResellerIndexRoute
   '/king/resellers/$id': typeof AuthenticatedKingResellersIdRoute
@@ -127,12 +152,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
-  '/dashboard': typeof AuthenticatedDashboardRoute
+  '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
+  '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
   '/king/tools': typeof AuthenticatedKingToolsRoute
   '/reseller/tools': typeof AuthenticatedResellerToolsRoute
   '/reseller/users': typeof AuthenticatedResellerUsersRoute
+  '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/king': typeof AuthenticatedKingIndexRoute
   '/reseller': typeof AuthenticatedResellerIndexRoute
   '/king/resellers/$id': typeof AuthenticatedKingResellersIdRoute
@@ -143,14 +170,17 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
-  '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
+  '/_authenticated/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/_authenticated/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/_authenticated/king/resellers': typeof AuthenticatedKingResellersRoute
   '/_authenticated/king/tools': typeof AuthenticatedKingToolsRoute
   '/_authenticated/reseller/tools': typeof AuthenticatedResellerToolsRoute
   '/_authenticated/reseller/users': typeof AuthenticatedResellerUsersRoute
+  '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/king/': typeof AuthenticatedKingIndexRoute
   '/_authenticated/reseller/': typeof AuthenticatedResellerIndexRoute
   '/_authenticated/king/resellers_/$id': typeof AuthenticatedKingResellersIdRoute
@@ -161,14 +191,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/dashboard'
     | '/king'
     | '/reseller'
-    | '/dashboard'
+    | '/dashboard/chatgpt'
+    | '/dashboard/veo-3'
     | '/king/extension-lab'
     | '/king/resellers'
     | '/king/tools'
     | '/reseller/tools'
     | '/reseller/users'
+    | '/dashboard/'
     | '/king/'
     | '/reseller/'
     | '/king/resellers/$id'
@@ -177,12 +210,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
-    | '/dashboard'
+    | '/dashboard/chatgpt'
+    | '/dashboard/veo-3'
     | '/king/extension-lab'
     | '/king/resellers'
     | '/king/tools'
     | '/reseller/tools'
     | '/reseller/users'
+    | '/dashboard'
     | '/king'
     | '/reseller'
     | '/king/resellers/$id'
@@ -192,14 +227,17 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/dashboard'
     | '/_authenticated/king'
     | '/_authenticated/reseller'
-    | '/_authenticated/dashboard'
+    | '/_authenticated/dashboard/chatgpt'
+    | '/_authenticated/dashboard/veo-3'
     | '/_authenticated/king/extension-lab'
     | '/_authenticated/king/resellers'
     | '/_authenticated/king/tools'
     | '/_authenticated/reseller/tools'
     | '/_authenticated/reseller/users'
+    | '/_authenticated/dashboard/'
     | '/_authenticated/king/'
     | '/_authenticated/reseller/'
     | '/_authenticated/king/resellers_/$id'
@@ -235,13 +273,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_authenticated/dashboard': {
-      id: '/_authenticated/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AuthenticatedDashboardRouteImport
-      parentRoute: typeof AuthenticatedRouteRoute
-    }
     '/_authenticated/reseller': {
       id: '/_authenticated/reseller'
       path: '/reseller'
@@ -254,6 +285,13 @@ declare module '@tanstack/react-router' {
       path: '/king'
       fullPath: '/king'
       preLoaderRoute: typeof AuthenticatedKingRouteRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/dashboard': {
+      id: '/_authenticated/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AuthenticatedDashboardRouteRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/reseller/': {
@@ -269,6 +307,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/king/'
       preLoaderRoute: typeof AuthenticatedKingIndexRouteImport
       parentRoute: typeof AuthenticatedKingRouteRoute
+    }
+    '/_authenticated/dashboard/': {
+      id: '/_authenticated/dashboard/'
+      path: '/'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof AuthenticatedDashboardIndexRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
     }
     '/_authenticated/reseller/users': {
       id: '/_authenticated/reseller/users'
@@ -305,6 +350,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKingExtensionLabRouteImport
       parentRoute: typeof AuthenticatedKingRouteRoute
     }
+    '/_authenticated/dashboard/veo-3': {
+      id: '/_authenticated/dashboard/veo-3'
+      path: '/veo-3'
+      fullPath: '/dashboard/veo-3'
+      preLoaderRoute: typeof AuthenticatedDashboardVeo3RouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
+    '/_authenticated/dashboard/chatgpt': {
+      id: '/_authenticated/dashboard/chatgpt'
+      path: '/chatgpt'
+      fullPath: '/dashboard/chatgpt'
+      preLoaderRoute: typeof AuthenticatedDashboardChatgptRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
     '/_authenticated/king/tools_/$id': {
       id: '/_authenticated/king/tools_/$id'
       path: '/tools/$id'
@@ -321,6 +380,24 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface AuthenticatedDashboardRouteRouteChildren {
+  AuthenticatedDashboardChatgptRoute: typeof AuthenticatedDashboardChatgptRoute
+  AuthenticatedDashboardVeo3Route: typeof AuthenticatedDashboardVeo3Route
+  AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
+}
+
+const AuthenticatedDashboardRouteRouteChildren: AuthenticatedDashboardRouteRouteChildren =
+  {
+    AuthenticatedDashboardChatgptRoute: AuthenticatedDashboardChatgptRoute,
+    AuthenticatedDashboardVeo3Route: AuthenticatedDashboardVeo3Route,
+    AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
+  }
+
+const AuthenticatedDashboardRouteRouteWithChildren =
+  AuthenticatedDashboardRouteRoute._addFileChildren(
+    AuthenticatedDashboardRouteRouteChildren,
+  )
 
 interface AuthenticatedKingRouteRouteChildren {
   AuthenticatedKingExtensionLabRoute: typeof AuthenticatedKingExtensionLabRoute
@@ -365,15 +442,16 @@ const AuthenticatedResellerRouteRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedDashboardRouteRoute: typeof AuthenticatedDashboardRouteRouteWithChildren
   AuthenticatedKingRouteRoute: typeof AuthenticatedKingRouteRouteWithChildren
   AuthenticatedResellerRouteRoute: typeof AuthenticatedResellerRouteRouteWithChildren
-  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedDashboardRouteRoute:
+    AuthenticatedDashboardRouteRouteWithChildren,
   AuthenticatedKingRouteRoute: AuthenticatedKingRouteRouteWithChildren,
   AuthenticatedResellerRouteRoute: AuthenticatedResellerRouteRouteWithChildren,
-  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
