@@ -17,7 +17,7 @@ const NAV = [
 ] as const;
 
 function DashboardLayout() {
-  const { profile, loading, isUser, downloadExtension } = useMyTools();
+  const { profile, loading, isUser } = useMyTools();
   const navigate = useNavigate();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
