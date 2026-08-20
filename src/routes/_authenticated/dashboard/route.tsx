@@ -62,13 +62,13 @@ function DashboardLayout() {
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
-        <div className="flex items-center gap-3 border-b border-sidebar-border px-5 py-5">
+        <div className="flex h-16 items-center gap-3 px-5">
           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-white">
             <Shield className="h-4 w-4" />
           </div>
           <div className="min-w-0">
-            <div className="font-semibold leading-tight tracking-tight">Farix</div>
-            <div className="truncate text-xs text-muted-foreground">AI Workspace</div>
+            <div className="font-display font-semibold leading-tight tracking-tight">Farix</div>
+            <div className="truncate text-[11px] text-muted-foreground">AI Workspace</div>
           </div>
           <button
             className="ml-auto rounded-md p-1.5 text-muted-foreground hover:bg-sidebar-accent lg:hidden"
