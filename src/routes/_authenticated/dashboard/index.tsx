@@ -46,11 +46,13 @@ function HomePage() {
   const veo = findTool(/veo/i);
 
   return (
-    <div className="space-y-6">
-      <p className="text-sm font-medium text-muted-foreground">Welcome back, {firstName} 👋</p>
-
-      {/* Greeting + headline */}
-      <section className="space-y-5">
+    <>
+      <p className="-ml-5 -mt-4 text-sm font-medium text-muted-foreground sm:-ml-8 sm:-mt-5">
+        Welcome back, {firstName} 👋
+      </p>
+      <div className="space-y-6">
+        {/* Greeting + headline */}
+        <section className="space-y-5">
         <h1 className="text-center font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
           Create with <span className="text-brand-gradient">AI</span> Without Hassle
         </h1>
