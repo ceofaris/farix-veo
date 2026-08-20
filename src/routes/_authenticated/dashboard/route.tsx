@@ -128,16 +128,10 @@ function DashboardLayout() {
           >
             <Menu className="h-5 w-5" />
           </button>
-          <div className="font-semibold lg:hidden">Farix</div>
+          <div className="font-display font-semibold lg:hidden">Farix</div>
           <ThemeToggle className="ml-auto" />
-          <button
-            onClick={() => downloadExtension()}
-            className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-4 py-2 text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
-          >
-            <Download className="h-4 w-4" /> Download Extension
-          </button>
         </header>
-        <main className="mx-auto w-full max-w-6xl flex-1 p-5 sm:p-8">
+        <main className="mx-auto w-full max-w-6xl flex-1 px-5 pb-10 pt-4 sm:px-8 sm:pt-5">
           <Outlet />
         </main>
       </div>
