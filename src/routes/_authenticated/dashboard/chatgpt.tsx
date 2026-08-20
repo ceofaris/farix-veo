@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Brain, Search, Mic, Image as ImageIcon, Paperclip, Code2 } from "lucide-react";
+import { Brain, Search, Mic, Image as ImageIcon, Paperclip, Code2, Download } from "lucide-react";
 import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { FeatureCard, HeroBanner, LiveBadge, VideoGuide } from "@/components/dashboard/ui";
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/chatgpt")({
 });
 
 function ChatGptPage() {
-  const { findTool, expiryFor } = useMyTools();
+  const { findTool, expiryFor, downloadExtension } = useMyTools();
   const tool = findTool(/chat\s*-?\s*gpt/i);
   const expires = expiryFor(/chat\s*-?\s*gpt/i);
 
@@ -42,6 +42,12 @@ function ChatGptPage() {
             Full ChatGPT access via Farix — Unlimited access
           </p>
         </div>
+        <button
+          onClick={() => downloadExtension(tool?.id)}
+          className="ml-auto inline-flex items-center gap-2 rounded-full bg-brand-gradient px-4 py-2 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
+        >
+          <Download className="h-4 w-4" /> Download ChatGPT Extension
+        </button>
       </header>
 
       <HeroBanner

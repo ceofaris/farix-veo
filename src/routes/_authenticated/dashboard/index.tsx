@@ -46,23 +46,23 @@ function HomePage() {
   const veo = findTool(/veo/i);
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
       {/* Greeting + headline */}
       <section>
         <div className="text-center">
-          <p className="text-sm text-muted-foreground">Welcome back, {firstName} 👋</p>
-          <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
+          <p className="text-sm font-medium text-muted-foreground">Welcome back, {firstName} 👋</p>
+          <h1 className="mt-1.5 font-display text-3xl font-bold tracking-tight sm:text-4xl">
             Create with <span className="text-brand-gradient">AI</span> Without Hassle
           </h1>
         </div>
 
         {/* Featured video */}
-        <div className="mx-auto mt-8 w-full max-w-[640px]">
+        <div className="mx-auto mt-5 w-full max-w-[540px]">
           <MediaCard ratio="16/9" hue={272} label="Latest generation" duration="0:16" />
         </div>
 
         {/* Prompt bar */}
-        <div className="mx-auto mt-3 flex w-full max-w-[640px] items-center gap-2 rounded-xl border border-border/70 bg-card p-1.5">
+        <div className="mx-auto mt-2.5 flex w-full max-w-[540px] items-center gap-2 rounded-xl border border-border/70 bg-card p-1.5">
           <input
             className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground"
             placeholder="Describe the video you want to create..."
@@ -89,7 +89,7 @@ function HomePage() {
             ratio={c.ratio}
             hue={c.hue}
             withPlay={false}
-            className="h-[200px] sm:h-[240px]"
+            className="h-[180px] sm:h-[210px]"
           />
         ))}
       </section>

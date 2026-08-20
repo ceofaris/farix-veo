@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Clapperboard, AudioLines, Banana } from "lucide-react";
+import { Clapperboard, AudioLines, Banana, Download } from "lucide-react";
 import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { FeatureCard, HeroBanner, LiveBadge, VideoGuide } from "@/components/dashboard/ui";
@@ -25,7 +25,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/veo-3")({
 });
 
 function VeoPage() {
-  const { findTool, expiryFor } = useMyTools();
+  const { findTool, expiryFor, downloadExtension } = useMyTools();
   const tool = findTool(/veo/i);
   const expires = expiryFor(/veo/i);
 
@@ -42,6 +42,12 @@ function VeoPage() {
             Google Veo 3 video generation via Farix — Unlimited access
           </p>
         </div>
+        <button
+          onClick={() => downloadExtension(tool?.id)}
+          className="ml-auto inline-flex items-center gap-2 rounded-full bg-brand-gradient px-4 py-2 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
+        >
+          <Download className="h-4 w-4" /> Download Veo 3 Extension
+        </button>
       </header>
 
       <HeroBanner
