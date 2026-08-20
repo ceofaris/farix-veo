@@ -32,94 +32,66 @@ const CLIPS = [
   { hue: 245, duration: "0:09" },
 ];
 
-const IMAGES = [{ hue: 275 }, { hue: 300 }, { hue: 330 }, { hue: 350 }, { hue: 255 }];
+const IMAGES: { hue: number; ratio: "16/9" | "9/16" | "1/1" }[] = [
+  { hue: 275, ratio: "9/16" },
+  { hue: 300, ratio: "16/9" },
+  { hue: 330, ratio: "9/16" },
+  { hue: 350, ratio: "16/9" },
+  { hue: 255, ratio: "9/16" },
+];
 
 function HomePage() {
-  const { profile, tools, assignments, downloadExtension, findTool } = useMyTools();
+  const { profile, tools, assignments, findTool } = useMyTools();
   const firstName = (profile?.full_name || profile?.email || "there").split(" ")[0];
   const veo = findTool(/veo/i);
 
   return (
     <div className="space-y-12">
-      {/* Extension banner */}
-      <div className="flex flex-wrap items-center gap-5 rounded-2xl border border-border bg-card p-5">
-        <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-brand-gradient text-white">
-          <Download className="h-5 w-5" />
-        </span>
-        <div className="min-w-0">
-          <div className="font-semibold tracking-tight">Get the Farix Extension</div>
-          <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-            <span>1 Download</span>→<span>2 Log in</span>→<span>3 Start creating</span>
-          </div>
-        </div>
-        <button
-          onClick={() => downloadExtension()}
-          className="ml-auto inline-flex items-center gap-2 rounded-xl bg-brand-gradient px-4 py-2.5 text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
-        >
-          <Download className="h-4 w-4" /> Download Extension
-        </button>
-      </div>
-
       {/* Greeting + headline */}
-      <section className="relative">
-        <div className="pointer-events-none absolute -left-16 -top-24 h-64 w-64 rounded-full bg-primary/25 blur-[100px]" />
-        <div className="pointer-events-none absolute right-0 -top-16 h-56 w-56 rounded-full bg-chart-4/25 blur-[110px]" />
-        <div className="relative text-center">
+      <section>
+        <div className="text-center">
           <p className="text-sm text-muted-foreground">Welcome back, {firstName} 👋</p>
           <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
             Create with <span className="text-brand-gradient">AI</span> Without Hassle
           </h1>
-          <p className="mt-3 text-muted-foreground">
-            Pick a tool below and start creating in seconds.
-          </p>
         </div>
 
         {/* Featured video */}
-        <div className="relative mx-auto mt-8 w-full max-w-[640px]">
+        <div className="mx-auto mt-8 w-full max-w-[640px]">
           <MediaCard ratio="16/9" hue={272} label="Latest generation" duration="0:16" />
         </div>
 
         {/* Prompt bar */}
-        <div className="mx-auto mt-4 flex w-full max-w-[640px] items-center gap-2 rounded-2xl border border-border bg-card p-2">
+        <div className="mx-auto mt-3 flex w-full max-w-[640px] items-center gap-2 rounded-xl border border-border/70 bg-card p-1.5">
           <input
             className="min-w-0 flex-1 bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground"
             placeholder="Describe the video you want to create..."
             aria-label="Video prompt"
           />
-          <button className="inline-flex shrink-0 items-center gap-2 rounded-xl bg-brand-gradient px-4 py-2.5 text-sm font-semibold text-white transition-transform active:scale-95">
+          <button className="inline-flex shrink-0 items-center gap-2 rounded-lg bg-brand-gradient px-4 py-2.5 font-display text-sm font-semibold text-white transition-transform active:scale-95">
             <Sparkles className="h-4 w-4" /> Generate
           </button>
         </div>
       </section>
 
       {/* Veo 3 showcase */}
-      <section className="space-y-4">
-        <SectionHeader
-          icon={<Video className="h-4 w-4" />}
-          title="Veo 3 Showcase"
-          linkTo="/dashboard/veo-3"
-          linkLabel="Open Veo 3"
-        />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {CLIPS.map((c, i) => (
-            <MediaCard key={i} ratio="9/16" hue={c.hue} duration={c.duration} />
-          ))}
-        </div>
+      <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+        {CLIPS.map((c, i) => (
+          <MediaCard key={i} ratio="9/16" hue={c.hue} duration={c.duration} />
+        ))}
       </section>
 
-      {/* Nano Banana showcase */}
-      <section className="space-y-4">
-        <SectionHeader
-          icon={<ImageIcon className="h-4 w-4" />}
-          title="Nano Banana Showcase"
-          linkTo="/dashboard/veo-3"
-          linkLabel="Open Veo 3"
-        />
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {IMAGES.map((c, i) => (
-            <MediaCard key={i} ratio="1/1" hue={c.hue} withPlay={false} />
-          ))}
-        </div>
+      {/* Nano Banana showcase — mixed aspect ratios, equal height row */}
+      <section className="flex flex-wrap justify-center gap-3">
+        {IMAGES.map((c, i) => (
+          <MediaCard
+            key={i}
+            ratio={c.ratio}
+            hue={c.hue}
+            withPlay={false}
+            className="h-[200px] sm:h-[240px]"
+          />
+        ))}
       </section>
 
       {/* My Tools */}
