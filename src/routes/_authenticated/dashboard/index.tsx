@@ -1,8 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Download, Sparkles, Video, ImageIcon } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
-import { LiveBadge, MediaCard, SectionHeader } from "@/components/dashboard/ui";
+import { LiveBadge, MediaCard } from "@/components/dashboard/ui";
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
   component: HomePage,
