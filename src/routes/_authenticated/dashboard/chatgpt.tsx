@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Brain, Search, Mic, Image as ImageIcon, Paperclip, Code2 } from "lucide-react";
+import { Brain, Search, Mic, Image as ImageIcon, Paperclip, Code2, Download } from "lucide-react";
 import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { FeatureCard, HeroBanner, LiveBadge, VideoGuide } from "@/components/dashboard/ui";
