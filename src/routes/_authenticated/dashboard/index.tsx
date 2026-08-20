@@ -89,7 +89,7 @@ function HomePage() {
             ratio={c.ratio}
             hue={c.hue}
             withPlay={false}
-            className="h-[200px] sm:h-[240px]"
+            className="h-[180px] sm:h-[210px]"
           />
         ))}
       </section>
