@@ -47,9 +47,10 @@ function HomePage() {
 
   return (
     <div className="space-y-6">
+      <p className="text-sm font-medium text-muted-foreground">Welcome back, {firstName} 👋</p>
+
       {/* Greeting + headline */}
       <section className="space-y-5">
-        <p className="text-sm font-medium text-muted-foreground">Welcome back, {firstName} 👋</p>
         <h1 className="text-center font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
           Create with <span className="text-brand-gradient">AI</span> Without Hassle
         </h1>
