@@ -46,21 +46,21 @@ function HomePage() {
   const veo = findTool(/veo/i);
 
   return (
-    <div className="space-y-5">
-      {/* Greeting */}
-      <p className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-        Welcome back, {firstName}
-      </p>
+    <div className="space-y-6">
+      {/* Greeting + headline */}
+      <section className="space-y-5">
+        <p className="text-sm font-medium text-muted-foreground">Welcome back, {firstName} 👋</p>
+        <h1 className="text-center font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+          Create with <span className="text-brand-gradient">AI</span> Without Hassle
+        </h1>
 
-      {/* Main heading */}
-      <h1 className="text-center font-display text-4xl font-black leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-        Create with <span className="text-brand-gradient">AI</span> Without Hassle
-      </h1>
+        {/* Featured video */}
+        <div className="mx-auto mt-6 w-full max-w-[560px]">
+          <MediaCard ratio="16/9" hue={272} label="Latest generation" duration="0:16" />
+        </div>
 
-      {/* Featured video + prompt */}
-      <section className="mx-auto w-full max-w-[560px] space-y-4">
-        <MediaCard ratio="16/9" hue={272} label="Latest generation" duration="0:16" />
-        <div className="flex w-full items-center gap-2 rounded-full border border-border/70 bg-card p-1.5 pl-5 shadow-soft">
+        {/* Prompt bar */}
+        <div className="mx-auto flex w-full max-w-[560px] items-center gap-2 rounded-full border border-border/70 bg-card p-1.5 pl-5 shadow-soft">
           <input
             className="min-w-0 flex-1 bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground"
             placeholder="Describe the video you want to create..."
@@ -73,21 +73,23 @@ function HomePage() {
       </section>
 
       {/* Veo 3 showcase */}
-      <section className="mx-auto w-full max-w-[560px]">
-        <div className="grid grid-cols-5 gap-2 sm:gap-3">
-          {CLIPS.map((c, i) => (
-            <MediaCard key={i} ratio="9/16" hue={c.hue} duration={c.duration} />
-          ))}
-        </div>
+      <section className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        {CLIPS.map((c, i) => (
+          <MediaCard key={i} ratio="9/16" hue={c.hue} duration={c.duration} />
+        ))}
       </section>
 
-      {/* Nano Banana showcase */}
-      <section className="mx-auto w-full max-w-[560px]">
-        <div className="grid grid-cols-5 gap-2 sm:gap-3">
-          {IMAGES.map((c, i) => (
-            <MediaCard key={i} ratio={c.ratio} hue={c.hue} withPlay={false} />
-          ))}
-        </div>
+      {/* Nano Banana showcase — mixed aspect ratios, equal height row */}
+      <section className="flex flex-wrap justify-center gap-4">
+        {IMAGES.map((c, i) => (
+          <MediaCard
+            key={i}
+            ratio={c.ratio}
+            hue={c.hue}
+            withPlay={false}
+            className="h-[180px] sm:h-[210px]"
+          />
+        ))}
       </section>
 
       {/* My Tools */}
