@@ -12,8 +12,8 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 const NAV = [
-  { to: "/dashboard/veo-3", label: "Veo 3" },
-  { to: "/dashboard/chatgpt", label: "ChatGPT" },
+  { to: "/dashboard/veo-3", label: "Veo 3", icon: Clapperboard },
+  { to: "/dashboard/chatgpt", label: "ChatGPT", icon: MessageSquare },
 ] as const;
 
 function DashboardLayout() {
