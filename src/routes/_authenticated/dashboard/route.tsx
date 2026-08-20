@@ -109,6 +109,7 @@ function DashboardLayout() {
               <div className="truncate font-medium">{profile.full_name || "Account"}</div>
               <div className="truncate text-muted-foreground">{profile.email}</div>
             </div>
+            <ThemeToggle className="ml-auto h-8 w-8" />
           </div>
           <button
             onClick={logout}
