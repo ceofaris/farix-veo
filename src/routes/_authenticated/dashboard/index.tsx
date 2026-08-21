@@ -47,7 +47,7 @@ function HomePage() {
 
   return (
     <>
-      <p className="-mt-4 -ml-5 mb-6 text-sm font-medium text-foreground sm:-mt-5 sm:-ml-8">
+      <p className="-mt-4 -ml-5 mb-3 text-sm font-medium text-foreground sm:-mt-5 sm:-ml-8">
         Welcome back, <span className="text-brand-gradient">{firstName}</span> 👋
       </p>
       <div className="space-y-6">
