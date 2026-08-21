@@ -30,6 +30,13 @@ const CLIPS = [
   { hue: 315, duration: "0:06" },
   { hue: 340, duration: "0:10" },
   { hue: 245, duration: "0:09" },
+  { hue: 275, duration: "0:07" },
+  { hue: 300, duration: "0:11" },
+  { hue: 325, duration: "0:05" },
+  { hue: 350, duration: "0:13" },
+  { hue: 230, duration: "0:08" },
+  { hue: 285, duration: "0:10" },
+  { hue: 310, duration: "0:06" },
 ];
 
 const IMAGES: { hue: number; ratio: "16/9" | "9/16" | "1/1" }[] = [
