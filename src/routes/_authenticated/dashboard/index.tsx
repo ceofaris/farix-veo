@@ -78,7 +78,7 @@ function HomePage() {
       </section>
 
       {/* Veo 3 showcase */}
-      <section className="grid w-full grid-cols-7 gap-2">
+      <section className="grid w-full grid-cols-7 gap-1 -mx-5 sm:-mx-8">
         {CLIPS.map((c, i) => (
           <MediaCard key={i} ratio="9/16" hue={c.hue} duration={c.duration} />
         ))}
