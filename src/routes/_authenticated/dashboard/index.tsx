@@ -58,7 +58,7 @@ function HomePage() {
         </h1>
 
         {/* Featured video */}
-        <div className="mx-auto mt-6 w-full max-w-[560px]">
+        <div className="mx-auto mt-6 w-full max-w-[620px]">
           <MediaCard ratio="16/9" hue={272} label="Latest generation" duration="0:16" />
         </div>
 
