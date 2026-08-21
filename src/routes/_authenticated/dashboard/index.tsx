@@ -30,13 +30,6 @@ const CLIPS = [
   { hue: 315, duration: "0:06" },
   { hue: 340, duration: "0:10" },
   { hue: 245, duration: "0:09" },
-  { hue: 275, duration: "0:07" },
-  { hue: 300, duration: "0:11" },
-  { hue: 325, duration: "0:05" },
-  { hue: 350, duration: "0:13" },
-  { hue: 230, duration: "0:08" },
-  { hue: 285, duration: "0:10" },
-  { hue: 310, duration: "0:06" },
 ];
 
 const IMAGES: { hue: number; ratio: "16/9" | "9/16" | "1/1" }[] = [
@@ -54,18 +47,18 @@ function HomePage() {
 
   return (
     <>
-      <p className="-mt-2 text-sm font-medium text-foreground">
+      <p className="text-sm font-medium text-foreground">
         Welcome back, <span className="text-brand-gradient">{firstName}</span> 👋
       </p>
       <div className="space-y-6">
         {/* Greeting + headline */}
         <section className="space-y-5">
-        <h1 className="text-center font-display text-[2.75rem] font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+        <h1 className="text-center font-display text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
           Create with <span className="text-brand-gradient">AI</span> Without Hassle
         </h1>
 
         {/* Featured video */}
-        <div className="mx-auto mt-6 w-full max-w-[620px]">
+        <div className="mx-auto mt-6 w-full max-w-[560px]">
           <MediaCard ratio="16/9" hue={272} label="Latest generation" duration="0:16" />
         </div>
 
@@ -83,7 +76,7 @@ function HomePage() {
       </section>
 
       {/* Veo 3 showcase */}
-      <section className="grid grid-cols-4 gap-2 sm:grid-cols-5 lg:grid-cols-6">
+      <section className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {CLIPS.map((c, i) => (
           <MediaCard key={i} ratio="9/16" hue={c.hue} duration={c.duration} />
         ))}
