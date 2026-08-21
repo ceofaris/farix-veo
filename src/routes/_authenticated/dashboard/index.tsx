@@ -53,7 +53,7 @@ function HomePage() {
       <div className="space-y-6">
         {/* Greeting + headline */}
         <section className="space-y-5">
-        <h1 className="text-center font-[family-name:var(--font-heading)] text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
+        <h1 className="text-center font-sans text-4xl font-semibold tracking-tight sm:text-5xl lg:text-6xl">
           Create with <span className="text-brand-gradient">AI</span> Without Hassle
         </h1>
 
