@@ -97,7 +97,13 @@ function HomePage() {
       {/* Veo 3 showcase */}
       <section className="-mx-5 grid w-[calc(100%+2.5rem)] grid-cols-7 gap-1.5 sm:-mx-8 sm:w-[calc(100%+4rem)]">
         {CLIPS.map((c, i) => (
-          <MediaCard key={i} ratio="9/16" hue={c.hue} duration={c.duration} />
+          <MediaCard
+            key={i}
+            ratio="9/16"
+            hue={c.hue}
+            duration={c.duration}
+            videoSrc={i === 0 ? clip1.url : undefined}
+          />
         ))}
       </section>
 
