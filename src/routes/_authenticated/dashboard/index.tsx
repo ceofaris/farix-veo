@@ -3,6 +3,7 @@ import { Sparkles } from "lucide-react";
 import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { LiveBadge, MediaCard } from "@/components/dashboard/ui";
+import featuredVideo from "@/assets/farix-featured-video.mp4.asset.json";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
@@ -62,18 +63,20 @@ function HomePage() {
           Create with <span className="text-brand-gradient">AI</span> Without Hassle
         </h1>
 
-        {/* Featured video - Streamable embed (clean, no badge) */}
+        {/* Featured video */}
         <div className="mx-auto mt-6 w-full max-w-[620px]">
           <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card">
-            <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-              <iframe
-                allow="fullscreen;autoplay"
-                allowFullScreen
-                className="absolute left-0 top-0 h-full w-full border-none"
-                src="https://streamable.com/e/txlrq8?autoplay=1&muted=1&nocontrols=1&nologo=1&loop=1"
-                title="Featured video"
-              />
-            </div>
+            <video
+              autoPlay
+              className="block aspect-video w-full object-cover"
+              controls={false}
+              disablePictureInPicture
+              loop
+              muted
+              playsInline
+              preload="auto"
+              src={featuredVideo.url}
+            />
           </div>
         </div>
 
