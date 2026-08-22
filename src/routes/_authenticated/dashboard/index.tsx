@@ -4,6 +4,7 @@ import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { LiveBadge, MediaCard } from "@/components/dashboard/ui";
 import featuredVideo from "@/assets/farix-featured-video.mp4.asset.json";
+import clip1 from "@/assets/farix-clip-1.mp4.asset.json";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
@@ -97,7 +98,13 @@ function HomePage() {
       {/* Veo 3 showcase */}
       <section className="-mx-5 grid w-[calc(100%+2.5rem)] grid-cols-7 gap-1.5 sm:-mx-8 sm:w-[calc(100%+4rem)]">
         {CLIPS.map((c, i) => (
-          <MediaCard key={i} ratio="9/16" hue={c.hue} duration={c.duration} />
+          <MediaCard
+            key={i}
+            ratio="9/16"
+            hue={c.hue}
+            duration={c.duration}
+            videoSrc={i === 0 ? clip1.url : undefined}
+          />
         ))}
       </section>
 
