@@ -27,11 +27,8 @@ export const Route = createFileRoute("/_authenticated/dashboard/")({
 });
 
 const VIDEO_PLAYLIST = [
-  "https://flow-content.google/video/35dab49d-10e0-4485-8ceb-dd0d56663c08?Expires=1787417422&KeyName=labs-flow-prod-cdn-key&Signature=tEOLWD_tfNR_7U3PkVzwt9fNB8o",
-  "https://flow-content.google/video/PLACEHOLDER_2",
-  "https://flow-content.google/video/PLACEHOLDER_3",
-  "https://flow-content.google/video/PLACEHOLDER_4",
-  "https://flow-content.google/video/PLACEHOLDER_5",
+  "https://flow-content.google/video/35dab49d-10e0-4485-8ceb-dd0d56663c08?Expires=1787443315&KeyName=labs-flow-prod-cdn-key&Signature=g9Qx7o4zE0jAoF2JnBoJ3X6e3mg",
+  "https://flow-content.google/video/9d7a0b5e-6317-44c3-b5c1-cf5cc9900ae2?Expires=1787443840&KeyName=labs-flow-prod-cdn-key&Signature=6axjlBmkwTGDrc5K3MyX-i28ABU",
 ];
 
 const CLIPS = [
