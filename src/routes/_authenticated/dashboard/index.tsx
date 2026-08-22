@@ -50,12 +50,6 @@ function HomePage() {
   const { profile, tools, assignments, findTool } = useMyTools();
   const firstName = (profile?.full_name || profile?.email || "there").split(" ")[0];
   const veo = findTool(/veo/i);
-  const [videoIndex, setVideoIndex] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const handleVideoEnded = useCallback(() => {
-    setVideoIndex((prev) => (prev + 1) % VIDEO_PLAYLIST.length);
-  }, []);
 
   return (
     <>
