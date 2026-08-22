@@ -52,6 +52,7 @@ export function MediaCard({
   label,
   withPlay = true,
   className,
+  videoSrc,
 }: {
   ratio: "16/9" | "9/16" | "1/1";
   hue: number;
@@ -59,6 +60,7 @@ export function MediaCard({
   label?: string;
   withPlay?: boolean;
   className?: string;
+  videoSrc?: string;
 }) {
   return (
     <div
@@ -74,13 +76,27 @@ export function MediaCard({
           background: `radial-gradient(120% 90% at 30% 15%, hsl(${hue} 70% 30% / 0.85), transparent 70%), linear-gradient(160deg, hsl(${hue} 55% 16%), hsl(${(hue + 40) % 360} 45% 8%))`,
         }}
       />
-      {withPlay && (
+      {videoSrc && (
+        <video
+          autoPlay
+          className="absolute inset-0 h-full w-full object-cover"
+          controls={false}
+          disablePictureInPicture
+          loop
+          muted
+          playsInline
+          preload="auto"
+          src={videoSrc}
+        />
+      )}
+      {withPlay && !videoSrc && (
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/35 backdrop-blur-sm transition-transform group-hover:scale-110">
             <Play className="h-4 w-4 translate-x-[1px] fill-current text-foreground" />
           </span>
         </div>
       )}
+
       {duration && (
         <span className="absolute bottom-2 right-2 rounded-md bg-black/55 px-1.5 py-0.5 font-display text-[10px] font-medium tracking-tight text-white backdrop-blur-sm">
           {duration}
