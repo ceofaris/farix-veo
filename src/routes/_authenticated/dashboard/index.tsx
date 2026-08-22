@@ -6,6 +6,7 @@ import { LiveBadge, MediaCard } from "@/components/dashboard/ui";
 import featuredVideo from "@/assets/farix-featured-video.mp4.asset.json";
 import clip1 from "@/assets/farix-clip-1.mp4.asset.json";
 import clip2 from "@/assets/farix-clip-2.mp4.asset.json";
+import clip3 from "@/assets/farix-clip-3.mp4.asset.json";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
@@ -104,7 +105,7 @@ function HomePage() {
             ratio="9/16"
             hue={c.hue}
             duration={c.duration}
-            videoSrc={i === 0 ? clip1.url : i === 1 ? clip2.url : undefined}
+            videoSrc={i === 0 ? clip1.url : i === 1 ? clip2.url : i === 2 ? clip3.url : undefined}
           />
         ))}
       </section>
