@@ -26,8 +26,9 @@ function DashboardLayout() {
 
   useEffect(() => {
     if (loading || !profile) return;
-    if (profile.role === "king") navigate({ to: "/king" });
-    else if (profile.role === "reseller") navigate({ to: "/reseller" });
+    // Temporarily disabled for layout verification
+    // if (profile.role === "king") navigate({ to: "/king" });
+    // else if (profile.role === "reseller") navigate({ to: "/reseller" });
   }, [profile, loading, navigate]);
 
   async function logout() {
