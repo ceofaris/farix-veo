@@ -121,13 +121,16 @@ function DashboardLayout() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <button
-          onClick={() => setOpen(!open)}
-          className="fixed left-4 top-4 z-50 rounded-lg border border-border bg-card/90 p-2 text-muted-foreground shadow-soft backdrop-blur-md hover:bg-accent lg:hidden"
-          aria-label="Open menu"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
+        <header className="sticky top-0 z-20 flex h-16 items-center gap-3 bg-background/80 px-4 backdrop-blur-md sm:px-6">
+          <button
+            onClick={() => setOpen(!open)}
+            className="rounded-lg p-2 text-muted-foreground hover:bg-accent lg:hidden"
+            aria-label="Open menu"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+          <div className="font-display font-semibold lg:hidden">Farix</div>
+        </header>
         <main className="mx-auto w-full max-w-6xl flex-1 px-5 pb-10 pt-4 sm:px-8 sm:pt-5">
           <Outlet />
         </main>
