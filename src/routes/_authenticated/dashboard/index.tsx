@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
-import { useState, useRef, useCallback } from "react";
 import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { LiveBadge, MediaCard } from "@/components/dashboard/ui";
@@ -26,10 +25,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/")({
   }),
 });
 
-const VIDEO_PLAYLIST = [
-  "https://flow-content.google/video/35dab49d-10e0-4485-8ceb-dd0d56663c08?Expires=1787443315&KeyName=labs-flow-prod-cdn-key&Signature=g9Qx7o4zE0jAoF2JnBoJ3X6e3mg",
-  "https://flow-content.google/video/9d7a0b5e-6317-44c3-b5c1-cf5cc9900ae2?Expires=1787443840&KeyName=labs-flow-prod-cdn-key&Signature=6axjlBmkwTGDrc5K3MyX-i28ABU",
-];
+const STREAMABLE_EMBED_URL = "https://streamable.com/e/tp7euh";
 
 const CLIPS = [
   { hue: 230, duration: "0:07" },
@@ -54,12 +50,6 @@ function HomePage() {
   const { profile, tools, assignments, findTool } = useMyTools();
   const firstName = (profile?.full_name || profile?.email || "there").split(" ")[0];
   const veo = findTool(/veo/i);
-  const [videoIndex, setVideoIndex] = useState(0);
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const handleVideoEnded = useCallback(() => {
-    setVideoIndex((prev) => (prev + 1) % VIDEO_PLAYLIST.length);
-  }, []);
 
   return (
     <>
