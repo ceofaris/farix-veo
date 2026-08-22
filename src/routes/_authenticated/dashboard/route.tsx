@@ -26,9 +26,8 @@ function DashboardLayout() {
 
   useEffect(() => {
     if (loading || !profile) return;
-    // Temporarily disabled for layout verification
-    // if (profile.role === "king") navigate({ to: "/king" });
-    // else if (profile.role === "reseller") navigate({ to: "/reseller" });
+    if (profile.role === "king") navigate({ to: "/king" });
+    else if (profile.role === "reseller") navigate({ to: "/reseller" });
   }, [profile, loading, navigate]);
 
   async function logout() {
@@ -43,29 +42,7 @@ function DashboardLayout() {
       </div>
     );
   }
-  if (!isUser) {
-    // Temporarily allow layout rendering for verification
-    return (
-      <div className={cn(shell, "flex")}>
-        <aside className="fixed lg:sticky top-0 inset-y-0 left-0 z-40 h-screen w-[230px] shrink-0 flex flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-200 -translate-x-full lg:translate-x-0">
-          <div className="flex h-16 items-center gap-3 px-5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-white">
-              <Shield className="h-4 w-4" />
-            </div>
-            <div className="min-w-0">
-              <div className="font-display font-semibold leading-tight tracking-tight">Farix</div>
-              <div className="truncate text-[11px] text-muted-foreground">AI Workspace</div>
-            </div>
-          </div>
-        </aside>
-        <div className="flex min-w-0 flex-1 flex-col">
-          <main className="mx-auto w-full max-w-6xl flex-1 px-5 pb-10 pt-4 sm:px-8 sm:pt-5">
-            <Outlet />
-          </main>
-        </div>
-      </div>
-    );
-  }
+  if (!isUser) return null;
 
   const initials = (profile.full_name || profile.email || "?").slice(0, 2).toUpperCase();
 
