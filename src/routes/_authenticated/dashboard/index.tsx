@@ -31,6 +31,7 @@ const CLIPS = [
   { hue: 315, duration: "0:06" },
   { hue: 340, duration: "0:10" },
   { hue: 245, duration: "0:09" },
+  { hue: 200, duration: "0:11" },
 ];
 
 const IMAGES: { hue: number; ratio: "16/9" | "9/16" | "1/1" }[] = [
@@ -77,7 +78,7 @@ function HomePage() {
       </section>
 
       {/* Veo 3 showcase */}
-      <section className="mx-auto grid w-full max-w-[620px] grid-cols-6 gap-2">
+      <section className="-mx-5 grid w-[calc(100%+2.5rem)] grid-cols-7 gap-1.5 sm:-mx-8 sm:w-[calc(100%+4rem)]">
         {CLIPS.map((c, i) => (
           <MediaCard key={i} ratio="9/16" hue={c.hue} duration={c.duration} />
         ))}
