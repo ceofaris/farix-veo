@@ -4,6 +4,7 @@ import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { LiveBadge, MediaCard } from "@/components/dashboard/ui";
 import featuredVideo from "@/assets/farix-featured-video.mp4.asset.json";
+import clip1 from "@/assets/farix-clip-1.mp4.asset.json";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
