@@ -63,38 +63,24 @@ function HomePage() {
           Create with <span className="text-brand-gradient">AI</span> Without Hassle
         </h1>
 
-        {/* Featured video - chromeless sequential playlist */}
+        {/* Featured video - Streamable embed */}
         <div className="mx-auto mt-6 w-full max-w-[620px]">
-          <div
-            className="relative overflow-hidden rounded-2xl border border-border/60 bg-card aspect-video"
-            onContextMenu={(e) => e.preventDefault()}
-          >
-            <video
-              ref={videoRef}
-              key={videoIndex}
-              className="h-full w-full object-cover"
-              src={VIDEO_PLAYLIST[videoIndex]}
-              autoPlay
-              muted
-              playsInline
-              controls={false}
-              disablePictureInPicture
-              controlsList="nodownload nofullscreen noremoteplayback"
-              onEnded={handleVideoEnded}
-            />
+          <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card">
+            <div
+              className="relative w-full"
+              style={{ paddingBottom: "56.25%" }}
+            >
+              <iframe
+                allow="fullscreen;autoplay"
+                allowFullScreen
+                src="https://streamable.com/e/tp7euh?autoplay=1&muted=1&nocontrols=1"
+                title="Latest generation"
+                className="absolute left-0 top-0 h-full w-full border-none"
+              />
+            </div>
             <span className="absolute left-3 top-3 rounded-lg bg-black/60 px-3 py-1.5 font-display text-xs font-semibold tracking-tight text-white backdrop-blur-sm sm:text-sm">
               Latest generation
             </span>
-            <div className="absolute bottom-3 left-3 flex gap-1.5">
-              {VIDEO_PLAYLIST.map((_, i) => (
-                <span
-                  key={i}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === videoIndex ? "w-5 bg-white" : "w-1.5 bg-white/40"
-                  }`}
-                />
-              ))}
-            </div>
           </div>
         </div>
 
