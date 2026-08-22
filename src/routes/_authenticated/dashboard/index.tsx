@@ -72,7 +72,7 @@ function HomePage() {
               <iframe
                 allow="fullscreen;autoplay"
                 allowFullScreen
-                src="https://streamable.com/e/tp7euh?autoplay=1&muted=1&nocontrols=1"
+                src="https://streamable.com/e/tp7euh?autoplay=1&muted=1&nocontrols=1&nologo=1"
                 title="Latest generation"
                 className="absolute left-0 top-0 h-full w-full border-none"
               />
