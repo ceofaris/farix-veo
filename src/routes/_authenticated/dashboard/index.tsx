@@ -25,7 +25,6 @@ export const Route = createFileRoute("/_authenticated/dashboard/")({
   }),
 });
 
-const STREAMABLE_EMBED_URL = "https://streamable.com/e/tp7euh";
 
 const CLIPS = [
   { hue: 230, duration: "0:07" },
