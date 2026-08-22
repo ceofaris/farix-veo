@@ -70,7 +70,7 @@ function HomePage() {
                 allow="fullscreen;autoplay"
                 allowFullScreen
                 className="absolute left-0 top-0 h-full w-full border-none"
-                src="https://streamable.com/e/jo1san?autoplay=1&muted=1&nocontrols=1&nologo=1&loop=1"
+                src="https://streamable.com/e/txlrq8?autoplay=1&muted=1&nocontrols=1&nologo=1&loop=1"
                 title="Featured video"
               />
             </div>
