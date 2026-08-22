@@ -61,7 +61,23 @@ function HomePage() {
 
         {/* Featured video */}
         <div className="mx-auto mt-6 w-full max-w-[620px]">
-          <MediaCard ratio="16/9" hue={272} label="Latest generation" duration="0:16" />
+          <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card aspect-video">
+            <video
+              className="h-full w-full object-cover"
+              src="https://flow-content.google/video/35dab49d-10e0-4485-8ceb-dd0d56663c08?Expires=1787417422&KeyName=labs-flow-prod-cdn-key&Signature=tEOLWD_tfNR_7U3PkVzwt9fNB8o"
+              autoPlay
+              muted
+              loop
+              playsInline
+              controls
+            />
+            <span className="absolute bottom-2 left-2 rounded-md bg-black/45 px-2 py-0.5 font-display text-[11px] font-medium tracking-tight text-white backdrop-blur-sm">
+              Latest generation
+            </span>
+            <span className="absolute bottom-2 right-2 rounded-md bg-black/55 px-1.5 py-0.5 font-display text-[10px] font-medium tracking-tight text-white backdrop-blur-sm">
+              0:16
+            </span>
+          </div>
         </div>
 
         {/* Prompt bar */}
