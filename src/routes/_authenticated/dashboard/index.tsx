@@ -57,6 +57,12 @@ function HomePage() {
   const { profile, tools, assignments, findTool } = useMyTools();
   const firstName = (profile?.full_name || profile?.email || "there").split(" ")[0];
   const veo = findTool(/veo/i);
+  const [videoIndex, setVideoIndex] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleVideoEnded = useCallback(() => {
+    setVideoIndex((prev) => (prev + 1) % VIDEO_PLAYLIST.length);
+  }, []);
 
   return (
     <>
@@ -70,24 +76,38 @@ function HomePage() {
           Create with <span className="text-brand-gradient">AI</span> Without Hassle
         </h1>
 
-        {/* Featured video */}
+        {/* Featured video - chromeless sequential playlist */}
         <div className="mx-auto mt-6 w-full max-w-[620px]">
-          <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card aspect-video">
+          <div
+            className="relative overflow-hidden rounded-2xl border border-border/60 bg-card aspect-video"
+            onContextMenu={(e) => e.preventDefault()}
+          >
             <video
+              ref={videoRef}
+              key={videoIndex}
               className="h-full w-full object-cover"
-              src="https://flow-content.google/video/35dab49d-10e0-4485-8ceb-dd0d56663c08?Expires=1787417422&KeyName=labs-flow-prod-cdn-key&Signature=tEOLWD_tfNR_7U3PkVzwt9fNB8o"
+              src={VIDEO_PLAYLIST[videoIndex]}
               autoPlay
               muted
-              loop
               playsInline
-              controls
+              controls={false}
+              disablePictureInPicture
+              controlsList="nodownload nofullscreen noremoteplayback"
+              onEnded={handleVideoEnded}
             />
-            <span className="absolute bottom-2 left-2 rounded-md bg-black/45 px-2 py-0.5 font-display text-[11px] font-medium tracking-tight text-white backdrop-blur-sm">
+            <span className="absolute left-3 top-3 rounded-lg bg-black/60 px-3 py-1.5 font-display text-xs font-semibold tracking-tight text-white backdrop-blur-sm sm:text-sm">
               Latest generation
             </span>
-            <span className="absolute bottom-2 right-2 rounded-md bg-black/55 px-1.5 py-0.5 font-display text-[10px] font-medium tracking-tight text-white backdrop-blur-sm">
-              0:16
-            </span>
+            <div className="absolute bottom-3 left-3 flex gap-1.5">
+              {VIDEO_PLAYLIST.map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${
+                    i === videoIndex ? "w-5 bg-white" : "w-1.5 bg-white/40"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </div>
 
@@ -103,6 +123,7 @@ function HomePage() {
           </button>
         </div>
       </section>
+
 
       {/* Veo 3 showcase */}
       <section className="-mx-5 grid w-[calc(100%+2.5rem)] grid-cols-7 gap-1.5 sm:-mx-8 sm:w-[calc(100%+4rem)]">
