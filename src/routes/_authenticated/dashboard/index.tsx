@@ -62,25 +62,18 @@ function HomePage() {
           Create with <span className="text-brand-gradient">AI</span> Without Hassle
         </h1>
 
-        {/* Featured video - direct Streamable source (no embed branding) */}
+        {/* Featured video - Streamable embed (clean, no badge) */}
         <div className="mx-auto mt-6 w-full max-w-[620px]">
           <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card">
             <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
-              <video
-                className="absolute left-0 top-0 h-full w-full object-cover"
-                src="https://cdn-cf-east.streamable.com/video/mp4/tp7euh.mp4?Expires=1787687280&Signature=Shas53xlVQkxIShxNZ3bHxBnSC2cX3qfQDf5RcSW4i89-F3T4mhZG9XiiL~0At2fXsE33BKQHckernfKSiJJjLUwjTh~lULLVFFG69xvrBluHibBFEjY7gt28nlIsFPf0ICE282nb-wuZXOdn069jhfdzN2oSFvbe8Zpy-6ZGvZNVpPKX1-xgJ6ShTbczdOnrEstCzPlHI2jj2YY5tduFoHvD0AR-aOGT-HjQUEwom2fkgzC3ExM2P37NEX~om~M1KNgbDWx5o66TylCQb5smv1ihOAMmyfSBQ8eHC9GqY6UAUFw0Mu~U1lMndvmLm7~sqYETceaAbTMw6FcXxq9SA__&Key-Pair-Id=APKAIEYUVEN4EVB2OKEQ"
-                autoPlay
-                muted
-                playsInline
-                loop
-                controls={false}
-                disablePictureInPicture
-                controlsList="nodownload nofullscreen noremoteplayback"
+              <iframe
+                allow="fullscreen;autoplay"
+                allowFullScreen
+                className="absolute left-0 top-0 h-full w-full border-none"
+                src="https://streamable.com/e/jo1san?autoplay=1&muted=1&nocontrols=1&nologo=1&loop=1"
+                title="Featured video"
               />
             </div>
-            <span className="absolute left-3 top-3 rounded-lg bg-black/60 px-3 py-1.5 font-display text-xs font-semibold tracking-tight text-white backdrop-blur-sm sm:text-sm">
-              Latest generation
-            </span>
           </div>
         </div>
 
