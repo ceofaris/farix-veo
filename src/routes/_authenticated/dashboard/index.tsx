@@ -7,6 +7,7 @@ import featuredVideo from "@/assets/farix-featured-video.mp4.asset.json";
 import clip1 from "@/assets/farix-clip-1.mp4.asset.json";
 import clip2 from "@/assets/farix-clip-2.mp4.asset.json";
 import clip3 from "@/assets/farix-clip-3.mp4.asset.json";
+import clip4 from "@/assets/farix-clip-4.mp4.asset.json";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
@@ -31,14 +32,16 @@ export const Route = createFileRoute("/_authenticated/dashboard/")({
 
 
 const CLIPS = [
-  { hue: 230, duration: "0:07" },
-  { hue: 265, duration: "0:08" },
-  { hue: 290, duration: "0:12" },
-  { hue: 315, duration: "0:06" },
-  { hue: 340, duration: "0:10" },
-  { hue: 245, duration: "0:09" },
-  { hue: 200, duration: "0:11" },
+  { hue: 230 },
+  { hue: 265 },
+  { hue: 290 },
+  { hue: 315 },
+  { hue: 340 },
+  { hue: 245 },
+  { hue: 200 },
 ];
+
+const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url];
 
 
 const IMAGES: { hue: number; ratio: "16/9" | "9/16" | "1/1" }[] = [
@@ -100,13 +103,7 @@ function HomePage() {
       {/* Veo 3 showcase */}
       <section className="-mx-5 grid w-[calc(100%+2.5rem)] grid-cols-7 gap-1.5 sm:-mx-8 sm:w-[calc(100%+4rem)]">
         {CLIPS.map((c, i) => (
-          <MediaCard
-            key={i}
-            ratio="9/16"
-            hue={c.hue}
-            duration={c.duration}
-            videoSrc={i === 0 ? clip1.url : i === 1 ? clip2.url : i === 2 ? clip3.url : undefined}
-          />
+          <MediaCard key={i} ratio="9/16" hue={c.hue} videoSrc={CLIP_SRCS[i]} />
         ))}
       </section>
 
