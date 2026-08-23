@@ -8,6 +8,7 @@ import clip1 from "@/assets/farix-clip-1.mp4.asset.json";
 import clip2 from "@/assets/farix-clip-2.mp4.asset.json";
 import clip3 from "@/assets/farix-clip-3.mp4.asset.json";
 import clip4 from "@/assets/farix-clip-4.mp4.asset.json";
+import clip5 from "@/assets/farix-clip-5.mp4.asset.json";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
@@ -41,7 +42,7 @@ const CLIPS = [
   { hue: 200 },
 ];
 
-const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url];
+const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url, clip5.url];
 
 
 const IMAGES: { hue: number; ratio: "16/9" | "9/16" | "1/1" }[] = [
