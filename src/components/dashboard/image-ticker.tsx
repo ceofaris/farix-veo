@@ -1,30 +1,31 @@
 const IMAGES = [
-  "https://i.ibb.co/JjbfrMFG/1.jpg",
-  "https://i.ibb.co/xQkxqvv/2.jpg",
-  "https://i.ibb.co/nqn6gHV6/3.webp",
-  "https://i.ibb.co/vxBmvRjr/4.webp",
-  "https://i.ibb.co/Kpk92GXm/5.jpg",
-  "https://i.ibb.co/tTdtnwsS/6.jpg",
-  "https://i.ibb.co/WWK8c94m/7.jpg",
-  "https://i.ibb.co/nN4qfJrw/8.jpg",
-  "https://i.ibb.co/gMxVs5Zc/9.jpg",
-  "https://i.ibb.co/rGxvj2dB/10.jpg",
-  "https://i.ibb.co/cczQRy7P/11.webp",
-  "https://i.ibb.co/3m36xkm6/12.png",
-  "https://i.ibb.co/YCTYsWV/13.jpg",
-  "https://i.ibb.co/zWPnTVPQ/14.jpg",
-  "https://i.ibb.co/2YysTcg8/15.jpg",
-  "https://i.ibb.co/KMykS3b/16.jpg",
-  "https://i.ibb.co/67z575S1/17.jpg",
-  "https://i.ibb.co/XZ18gFQk/18.jpg",
-  "https://i.ibb.co/67kDzsTR/19.jpg",
-  "https://i.ibb.co/gbg5pG6t/20.jpg",
-  "https://i.ibb.co/Myy25Zy4/21.jpg",
-  "https://i.ibb.co/GQJJqx0x/22.jpg",
-  "https://i.ibb.co/3519DJ7s/23.jpg",
-  "https://i.ibb.co/gbnMkSN8/24.jpg",
-  "https://i.ibb.co/5XS7CjZN/25.jpg",
+  "https://i.ibb.co/bj1byZhn/1.jpg",
+  "https://i.ibb.co/zWzcRqGR/2.jpg",
+  "https://i.ibb.co/qM3f5GHC/3.webp",
+  "https://i.ibb.co/QFrhvr0m/4.webp",
+  "https://i.ibb.co/svnTNZLK/5.jpg",
+  "https://i.ibb.co/k2hrrSBw/6.jpg",
+  "https://i.ibb.co/TBn6Q0gd/7.jpg",
+  "https://i.ibb.co/W4cjCzSz/8.jpg",
+  "https://i.ibb.co/mrW4JZXF/9.jpg",
+  "https://i.ibb.co/Wp2CDjcM/10.jpg",
+  "https://i.ibb.co/3mXQTYsf/11.webp",
+  "https://i.ibb.co/spP3zqQ5/12.png",
+  "https://i.ibb.co/67hnxrQH/13.jpg",
+  "https://i.ibb.co/9S3j9SY/14.jpg",
+  "https://i.ibb.co/cccspTJV/15.jpg",
+  "https://i.ibb.co/Kjs64L4D/16.jpg",
+  "https://i.ibb.co/jkqky1yc/17.jpg",
+  "https://i.ibb.co/mFq7fFWT/18.jpg",
+  "https://i.ibb.co/sJFkXxwk/19.jpg",
+  "https://i.ibb.co/cSM2ZBcN/20.jpg",
+  "https://i.ibb.co/DB4kmJM/21.jpg",
+  "https://i.ibb.co/SXJJmsgb/22.jpg",
+  "https://i.ibb.co/MyGbN3t2/23.jpg",
+  "https://i.ibb.co/Y7zZPsxk/24.jpg",
+  "https://i.ibb.co/VW5ckczL/25.jpg",
 ];
+
 
 const ROW_ONE = IMAGES.slice(0, 13);
 const ROW_TWO = IMAGES.slice(13);
@@ -34,7 +35,7 @@ function Row({ items, duration, height }: { items: string[]; duration: number; h
   return (
     <div className="relative overflow-hidden">
       <div
-        className="flex w-max gap-3 animate-ticker"
+        className="flex w-max gap-1.5 animate-ticker"
         style={{ animationDuration: `${duration}s` }}
       >
         {loop.map((src, i) => (
@@ -55,6 +56,7 @@ function Row({ items, duration, height }: { items: string[]; duration: number; h
     </div>
   );
 }
+
 
 export function ImageTicker() {
   return (

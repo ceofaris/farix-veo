@@ -289,15 +289,16 @@
   animation: farix-marquee 30s linear infinite;
 }
 
-/* Infinite image ticker (duplicated track, accounts for the 0.75rem gap) */
+/* Infinite image ticker (duplicated track, accounts for the 0.375rem gap) */
 @keyframes farix-ticker {
   from {
     transform: translateX(0);
   }
   to {
-    transform: translateX(calc(-50% - 0.375rem));
+    transform: translateX(calc(-50% - 0.1875rem));
   }
 }
+
 
 @utility animate-ticker {
   animation: farix-ticker 70s linear infinite;
