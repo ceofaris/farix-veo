@@ -286,3 +286,31 @@ export const setAccountPaid = createServerFn({ method: "POST" })
 
 
 
+
+/**
+ * King-only: change a member's role. This is the ONLY role-assignment path in
+ * the app. The caller's king status is verified server-side against the
+ * database (never from the request body), the target role is whitelisted, and
+ * a king may not demote themselves.
+ */
+export const setUserRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z
+      .object({
+        id: z.string().uuid(),
+        role: z.enum(["user", "reseller", "king"]),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await (await import("@/lib/admin.server")).assertRole(context.userId, ["king"]);
+    if (data.id === context.userId) throw new Error("You cannot change your own role.");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({ role: data.role })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
