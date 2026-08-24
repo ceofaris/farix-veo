@@ -349,32 +349,20 @@ function Landing() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="dark pricing-section">
+      <section id="pricing" className="pricing-section">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           <div className="absolute -left-32 top-0 h-[500px] w-[500px] rounded-full bg-brand-violet/15 blur-[120px]" />
           <div className="absolute -right-32 bottom-0 h-[500px] w-[500px] rounded-full bg-brand-pink/15 blur-[120px]" />
         </div>
 
-        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-          <span className="font-display pricing-watermark">Pricing</span>
-        </div>
-
-        <div className="relative mx-auto max-w-6xl px-5 py-28">
+        <div className="relative mx-auto max-w-6xl px-5 py-24">
           <Reveal>
-            <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-brand-pink">
-              Pricing
-            </p>
-            <h2 className="mt-4 text-center font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-              Choose your plan
-            </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
-              Access is invite-only. Payments are handled directly through your reseller via WhatsApp,
-              Telegram, Bank Transfer, Binance, EasyPaisa, JazzCash, or crypto.
-            </p>
+            <h2 className="pricing-title font-display">Pricing</h2>
           </Reveal>
 
           <Reveal delay={140}>
-            <div className="mx-auto mt-16 grid max-w-5xl items-start gap-6 md:grid-cols-3">
+            <div className="mx-auto -mt-[6%] grid max-w-5xl items-start gap-6 md:grid-cols-3">
+
               {pricingPlans.map((plan) => {
                 const isPopular = plan.popular;
                 return (
