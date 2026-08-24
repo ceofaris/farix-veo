@@ -11,20 +11,22 @@ import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/use-profile";
-import { isVeo } from "@/lib/queries";
+import { planExpired } from "@/lib/queries";
 import { StatCard } from "@/components/stat-card";
-import { Users as UsersIcon, Activity, Video } from "lucide-react";
+import { Users as UsersIcon, Activity, Crown } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/reseller/users")({
   component: ResellerUsers,
 });
 
-type ResellerUserRow = UserRow & {
-  user_tools: {
-    is_paid: boolean;
-    tools: { slug: string; name: string } | null;
-  }[];
-};
+type PlanRow = { is_paid: boolean; expires_at: string };
+type ResellerUserRow = UserRow & { user_plans: PlanRow | PlanRow[] | null };
+
+function planOf(u: ResellerUserRow): PlanRow | null {
+  const p = u.user_plans;
+  if (!p) return null;
+  return Array.isArray(p) ? (p[0] ?? null) : p;
+}
 
 function ResellerUsers() {
   const { profile } = useProfile();
@@ -39,7 +41,7 @@ function ResellerUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, full_name, is_active, expires_at, user_tools(is_paid, tools(slug, name))")
+        .select("id, email, full_name, is_active, expires_at, user_plans(is_paid, expires_at)")
         .eq("role", "user")
         .eq("created_by", profile!.id)
         .order("created_at", { ascending: false });
@@ -50,8 +52,11 @@ function ResellerUsers() {
 
 
   const rows = users.data ?? [];
-  const veoRows = rows.flatMap((u) => (u.user_tools ?? []).filter((a) => isVeo(a.tools)));
-  const activeUsers = rows.filter((u) => u.is_active).length;
+  const activeUsers = rows.filter((u) => {
+    const p = planOf(u);
+    return u.is_active && !planExpired(p?.expires_at ?? u.expires_at);
+  }).length;
+  const paidUsers = rows.filter((u) => planOf(u)?.is_paid).length;
 
   async function handleDelete(id: string) {
     if (!confirm("Delete this user?")) return;
@@ -68,7 +73,7 @@ function ResellerUsers() {
     <div>
       <PageHeader
         title="My Users"
-        description="Users you have created. Payment status is set by the admin."
+        description="Users you have created — all on the Master plan. Payment status is set by the admin."
         action={
           <Button
             size="lg"
@@ -99,10 +104,10 @@ function ResellerUsers() {
           tone="chart-2"
         />
         <StatCard
-          icon={Video}
-          label="Users with Veo 3"
-          value={veoRows.length}
-          hint="Unlimited generations"
+          icon={Crown}
+          label="Paid Master Plans"
+          value={paidUsers}
+          hint="Confirmed by the admin"
           tone="chart-3"
         />
       </div>
@@ -112,7 +117,7 @@ function ResellerUsers() {
           <tr>
             <th className="px-5 py-3.5 font-semibold">Name</th>
             <th className="px-5 py-3.5 font-semibold">Email</th>
-            <th className="px-5 py-3.5 font-semibold">Tools</th>
+            <th className="px-5 py-3.5 font-semibold">Plan</th>
             <th className="px-5 py-3.5 font-semibold">Status</th>
             <th className="px-5 py-3.5 font-semibold">Expiry</th>
             <th className="px-5 py-3.5 font-semibold">Payment</th>
@@ -125,17 +130,7 @@ function ResellerUsers() {
               <td className="px-5 py-4">{u.full_name || <span className="text-muted-foreground">—</span>}</td>
               <td className="px-5 py-4 text-foreground/80">{u.email}</td>
               <td className="px-5 py-4">
-                {(u.user_tools ?? []).length === 0 ? (
-                  <span className="text-xs text-muted-foreground">None</span>
-                ) : (
-                  <div className="flex flex-wrap gap-1">
-                    {(u.user_tools ?? []).map((a, i) => (
-                      <Badge key={i} variant="outline">
-                        {a.tools?.name ?? "—"}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
+                <Badge variant="outline">Master</Badge>
               </td>
               <td className="px-5 py-4">
                 <Badge variant={u.is_active ? "default" : "secondary"}>
@@ -146,17 +141,9 @@ function ResellerUsers() {
                 {u.expires_at ? new Date(u.expires_at).toLocaleDateString() : "—"}
               </td>
               <td className="px-5 py-4">
-                {(() => {
-                  const accounts = u.user_tools ?? [];
-                  const paid = accounts.filter((a) => a.is_paid).length;
-                  if (accounts.length === 0)
-                    return <span className="text-xs text-muted-foreground">No tools</span>;
-                  return (
-                    <Badge variant={paid === accounts.length ? "default" : "secondary"}>
-                      {paid}/{accounts.length} paid
-                    </Badge>
-                  );
-                })()}
+                <Badge variant={planOf(u)?.is_paid ? "default" : "secondary"}>
+                  {planOf(u)?.is_paid ? "Paid" : "Unpaid"}
+                </Badge>
               </td>
 
               <td className="px-5 py-4 text-right space-x-1">
