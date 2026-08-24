@@ -10,6 +10,7 @@ import clip3 from "@/assets/farix-clip-3.mp4.asset.json";
 import clip4 from "@/assets/farix-clip-4.mp4.asset.json";
 import clip5 from "@/assets/farix-clip-5.mp4.asset.json";
 import clip6 from "@/assets/farix-clip-6.mp4.asset.json";
+import clip7 from "@/assets/farix-clip-7.mp4.asset.json";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
