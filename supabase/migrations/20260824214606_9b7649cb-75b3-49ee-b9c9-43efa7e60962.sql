@@ -1,0 +1,17 @@
+REVOKE EXECUTE ON FUNCTION public.guard_profile_privileges() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.handle_new_user() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.update_updated_at_column() FROM PUBLIC, anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.is_king(uuid) FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.is_reseller(uuid) FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.has_feature(uuid, text) FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.has_active_master(uuid) FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.get_random_chatgpt_account() FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.get_random_flow_account() FROM PUBLIC, anon;
+REVOKE EXECUTE ON FUNCTION public.set_active_session(uuid) FROM PUBLIC, anon;
+GRANT EXECUTE ON FUNCTION public.get_random_chatgpt_account() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.get_random_flow_account() TO authenticated;
+GRANT EXECUTE ON FUNCTION public.set_active_session(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.is_king(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.is_reseller(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.has_feature(uuid, text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.has_active_master(uuid) TO authenticated;

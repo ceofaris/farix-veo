@@ -7,44 +7,10 @@ const planSchema = z.enum(PLAN_IDS as [PlanId, ...PlanId[]]);
 
 const emailSchema = z.string().email();
 
-// Bootstrap: creates the first king if no king exists yet.
-// Anyone can call it, but it's a no-op once a king exists.
-export const bootstrapKing = createServerFn({ method: "POST" })
-  .inputValidator((d: unknown) =>
-    z
-      .object({
-        email: emailSchema,
-        password: z.string().min(6),
-        full_name: z.string().min(1),
-      })
-      .parse(d),
-  )
-  .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { count, error: cErr } = await supabaseAdmin
-      .from("profiles")
-      .select("id", { count: "exact", head: true })
-      .eq("role", "king");
-    if (cErr) throw new Error(cErr.message);
-    if ((count ?? 0) > 0) throw new Error("A king already exists. Bootstrap is disabled.");
+// NOTE: This platform is invite-only. There is NO public signup and NO
+// self-service king bootstrap endpoint. Kings are provisioned exclusively by
+// an existing king (below) or by trusted server-side/database operations.
 
-    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
-      email: data.email,
-      password: data.password,
-      email_confirm: true,
-      user_metadata: { full_name: data.full_name, role: "king" },
-    });
-    if (error) throw new Error(error.message);
-    // Upsert profile as king
-    await supabaseAdmin.from("profiles").upsert({
-      id: created.user!.id,
-      email: data.email,
-      full_name: data.full_name,
-      role: "king",
-      is_active: true,
-    });
-    return { ok: true };
-  });
 
 
 export const createReseller = createServerFn({ method: "POST" })
@@ -320,3 +286,31 @@ export const setAccountPaid = createServerFn({ method: "POST" })
 
 
 
+
+/**
+ * King-only: change a member's role. This is the ONLY role-assignment path in
+ * the app. The caller's king status is verified server-side against the
+ * database (never from the request body), the target role is whitelisted, and
+ * a king may not demote themselves.
+ */
+export const setUserRole = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((d: unknown) =>
+    z
+      .object({
+        id: z.string().uuid(),
+        role: z.enum(["user", "reseller", "king"]),
+      })
+      .parse(d),
+  )
+  .handler(async ({ data, context }) => {
+    await (await import("@/lib/admin.server")).assertRole(context.userId, ["king"]);
+    if (data.id === context.userId) throw new Error("You cannot change your own role.");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { error } = await supabaseAdmin
+      .from("profiles")
+      .update({ role: data.role })
+      .eq("id", data.id);
+    if (error) throw new Error(error.message);
+    return { ok: true };
+  });
