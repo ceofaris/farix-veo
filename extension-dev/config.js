@@ -12,11 +12,11 @@ globalThis.FARIX_CONFIG = Object.freeze({
 
   TABLES: Object.freeze({
     profiles: "profiles",
-    userTools: "user_tools"
+    userPlans: "user_plans"
   }),
 
   PROFILE_USER_COLUMN: "id",
-  USER_TOOLS_USER_COLUMN: "user_id",
+  USER_PLANS_USER_COLUMN: "user_id",
 
   RPCS: Object.freeze({
     getRandomFlowAccount: "get_random_flow_account",

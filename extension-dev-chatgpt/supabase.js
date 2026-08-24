@@ -154,7 +154,7 @@
         toolRow?.plan_name,
         profileRow?.plan,
         profileRow?.plan_name,
-        "ChatGPT"
+        "Master"
       ),
       tools: normalizeTools(
         firstDefined(toolRow?.tools, profileRow?.tools, profileRow?.tool_access)
@@ -172,15 +172,11 @@
         "id,email,full_name,role,expires_at,is_active",
         1
       ),
-      // Only ChatGPT assignments — Veo rows must never satisfy access here.
       selectRows(
-        config.TABLES.userTools,
-        {
-          [config.USER_TOOLS_USER_COLUMN]: `eq.${user.id}`,
-          "tools.slug": `eq.${config.TOOL_NAME}`
-        },
+        config.TABLES.userPlans,
+        { [config.USER_PLANS_USER_COLUMN]: `eq.${user.id}` },
         accessToken,
-        "user_id,expires_at,tools!inner(slug)",
+        "user_id,plan,expires_at",
         1
       )
     ]);
@@ -196,9 +192,12 @@
         code: "ACCOUNT_DISABLED"
       });
     }
-    if (!toolRow && profileRow.role !== "king") {
-      throw new SupabaseError("This account does not have ChatGPT access.", {
-        code: "NO_CHATGPT_ACCESS"
+    const planActive =
+      !!toolRow &&
+      (!toolRow.expires_at || new Date(toolRow.expires_at).getTime() > Date.now());
+    if (!planActive && profileRow.role !== "king") {
+      throw new SupabaseError("Your Master plan is not active.", {
+        code: "NO_MASTER_PLAN"
       });
     }
     return normalizeProfile(profileRow, toolRow, user);
