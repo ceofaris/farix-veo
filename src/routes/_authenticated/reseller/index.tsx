@@ -13,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/reseller/")({
 
 function ResellerDashboard() {
   const { profile } = useProfile();
+  const allowed = useAllowedPlans();
   const stats = useQuery({
     queryKey: ["reseller-stats", profile?.id],
     enabled: !!profile,
