@@ -10,11 +10,16 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import { MediaCard } from "@/components/dashboard/ui";
 import { cn } from "@/lib/utils";
-import logoFlow from "@/assets/logo-flow.png.asset.json";
-import logoVeo from "@/assets/logo-veo.png.asset.json";
-import logoChatgpt from "@/assets/logo-chatgpt.png.asset.json";
-import logoVeo31 from "@/assets/logo-veo31.png.asset.json";
+import clip1 from "@/assets/farix-clip-1.mp4.asset.json";
+import clip2 from "@/assets/farix-clip-2.mp4.asset.json";
+import clip3 from "@/assets/farix-clip-3.mp4.asset.json";
+import clip4 from "@/assets/farix-clip-4.mp4.asset.json";
+import clip5 from "@/assets/farix-clip-5.mp4.asset.json";
+import clip6 from "@/assets/farix-clip-6.mp4.asset.json";
+import clip7 from "@/assets/farix-clip-7.mp4.asset.json";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -39,12 +44,18 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const marqueeLogos = [
-  { src: logoFlow.url, alt: "Google Flow", h: "h-[88px]" },
-  { src: logoVeo.url, alt: "Google Veo", h: "h-[88px]" },
-  { src: logoChatgpt.url, alt: "ChatGPT", h: "h-[88px]" },
-  { src: logoVeo31.url, alt: "Google Veo 3.1", h: "h-[88px]" },
+const CLIPS = [
+  { hue: 230 },
+  { hue: 265 },
+  { hue: 290 },
+  { hue: 315 },
+  { hue: 340 },
+  { hue: 245 },
+  { hue: 200 },
 ];
+
+const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url, clip5.url, clip6.url, clip7.url];
+
 
 
 
@@ -223,27 +234,6 @@ function Navbar() {
   );
 }
 
-function LogoMarquee() {
-  const half = [...marqueeLogos, ...marqueeLogos, ...marqueeLogos];
-  const row = [...half, ...half];
-  return (
-    <div className="relative mt-20 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
-      <div className="flex w-max animate-marquee items-center gap-24 sm:gap-32">
-        {row.map((logo, i) => (
-          <img
-            key={`${logo.alt}-${i}`}
-            src={logo.src}
-            alt={`${logo.alt} logo`}
-            loading="lazy"
-            className={`${logo.h} w-auto shrink-0 select-none object-contain opacity-80 transition-opacity duration-300 hover:opacity-100`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-
 function Landing() {
   // Landing page is light-theme only.
   useEffect(() => {
@@ -284,7 +274,11 @@ function Landing() {
             </div>
           </Reveal>
           <Reveal delay={240}>
-            <LogoMarquee />
+            <section className="-mx-5 mt-20 grid w-[calc(100%+2.5rem)] grid-cols-7 gap-1.5 sm:-mx-8 sm:w-[calc(100%+4rem)]">
+              {CLIPS.map((c, i) => (
+                <MediaCard key={i} ratio="9/16" hue={c.hue} videoSrc={CLIP_SRCS[i]} />
+              ))}
+            </section>
           </Reveal>
         </div>
       </section>
