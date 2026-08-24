@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
-import { Clapperboard, Home, LogOut, Menu, MessageSquare, Shield, X } from "lucide-react";
+import { Clapperboard, Home, LogOut, Menu, MessageSquare, Shield, Sparkles, X } from "lucide-react";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -14,6 +14,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 const NAV = [
   { to: "/dashboard/veo-3", label: "Veo 3", icon: Clapperboard },
   { to: "/dashboard/chatgpt", label: "ChatGPT", icon: MessageSquare },
+  { to: "/dashboard/prompts", label: "Niche Prompts", icon: Sparkles },
 ] as const;
 
 function DashboardLayout() {
