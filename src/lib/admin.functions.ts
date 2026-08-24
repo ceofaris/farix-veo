@@ -1,6 +1,9 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { PLAN_IDS, type PlanId } from "@/lib/plans";
+
+const planSchema = z.enum(PLAN_IDS as [PlanId, ...PlanId[]]);
 
 const emailSchema = z.string().email();
 
@@ -54,11 +57,13 @@ export const createReseller = createServerFn({ method: "POST" })
         full_name: z.string().min(1),
         days: z.number().int().min(0).default(30),
         is_active: z.boolean().default(true),
+        plans: z.array(planSchema).min(1),
       })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    await (await import("@/lib/admin.server")).assertRole(context.userId, ["king"]);
+    const admin = await import("@/lib/admin.server");
+    await admin.assertRole(context.userId, ["king"]);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email,
@@ -78,6 +83,7 @@ export const createReseller = createServerFn({ method: "POST" })
       expires_at,
       created_by: context.userId,
     });
+    await admin.setResellerPlans(uid, data.plans);
     return { ok: true, id: uid };
   });
 
@@ -90,11 +96,13 @@ export const updateReseller = createServerFn({ method: "POST" })
         full_name: z.string().min(1),
         days: z.number().int().min(0).optional(),
         is_active: z.boolean(),
+        plans: z.array(planSchema).min(1).optional(),
       })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    await (await import("@/lib/admin.server")).assertRole(context.userId, ["king"]);
+    const admin = await import("@/lib/admin.server");
+    await admin.assertRole(context.userId, ["king"]);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const patch: { full_name: string; is_active: boolean; expires_at?: string } = {
       full_name: data.full_name,
@@ -105,6 +113,7 @@ export const updateReseller = createServerFn({ method: "POST" })
     }
     const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
+    if (data.plans) await admin.setResellerPlans(data.id, data.plans);
     return { ok: true };
   });
 
@@ -146,17 +155,21 @@ export const createEndUser = createServerFn({ method: "POST" })
         full_name: z.string().min(1),
         days: z.number().int().min(0).default(30),
         is_active: z.boolean().default(true),
+        plan: planSchema,
         owner_id: z.string().uuid().optional(),
       })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
-    await (await import("@/lib/admin.server")).assertRole(context.userId, ["king", "reseller"]);
+    const admin = await import("@/lib/admin.server");
+    await admin.assertRole(context.userId, ["king", "reseller"]);
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const allowed = await admin.allowedPlansFor(context.userId);
+    if (!allowed.includes(data.plan)) throw new Error("You are not allowed to sell this plan.");
     // Only a king may create a user on behalf of a reseller.
     let owner = context.userId;
     if (data.owner_id && data.owner_id !== context.userId) {
-      await (await import("@/lib/admin.server")).assertRole(context.userId, ["king"]);
+      await admin.assertRole(context.userId, ["king"]);
       const { data: target } = await supabaseAdmin
         .from("profiles")
         .select("role")
@@ -183,9 +196,8 @@ export const createEndUser = createServerFn({ method: "POST" })
       expires_at,
       created_by: owner,
     });
-    // Every end user gets the single Master plan.
     await supabaseAdmin.from("user_plans").upsert(
-      { user_id: uid, plan: "master", expires_at },
+      { user_id: uid, plan: data.plan, expires_at },
       { onConflict: "user_id" },
     );
     return { ok: true, id: uid };
@@ -201,10 +213,12 @@ export const updateEndUser = createServerFn({ method: "POST" })
         full_name: z.string().min(1),
         days: z.number().int().min(0).optional(),
         is_active: z.boolean(),
+        plan: planSchema.optional(),
       })
       .parse(d),
   )
   .handler(async ({ data, context }) => {
+    const admin = await import("@/lib/admin.server");
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: me } = await supabaseAdmin
       .from("profiles")
@@ -230,13 +244,24 @@ export const updateEndUser = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
 
-    if (typeof data.days === "number") {
-      await supabaseAdmin
+    if (data.plan) {
+      const allowed = await admin.allowedPlansFor(context.userId);
+      if (!allowed.includes(data.plan)) throw new Error("You are not allowed to sell this plan.");
+    }
+    if (typeof data.days === "number" || data.plan) {
+      const { data: existing } = await supabaseAdmin
         .from("user_plans")
-        .upsert(
-          { user_id: data.id, plan: "master", expires_at: patch.expires_at! },
-          { onConflict: "user_id" },
-        );
+        .select("plan, expires_at")
+        .eq("user_id", data.id)
+        .maybeSingle();
+      await supabaseAdmin.from("user_plans").upsert(
+        {
+          user_id: data.id,
+          plan: data.plan ?? (existing?.plan ?? "master"),
+          expires_at: patch.expires_at ?? existing?.expires_at ?? new Date().toISOString(),
+        },
+        { onConflict: "user_id" },
+      );
     }
     return { ok: true };
   });
