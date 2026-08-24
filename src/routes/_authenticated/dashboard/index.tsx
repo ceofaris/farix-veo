@@ -44,7 +44,7 @@ const CLIPS = [
   { hue: 200 },
 ];
 
-const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url, clip5.url, clip6.url];
+const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url, clip5.url, clip6.url, clip7.url];
 
 
 const IMAGES: { hue: number; ratio: "16/9" | "9/16" | "1/1" }[] = [
