@@ -393,12 +393,7 @@ function Landing() {
                     <ul className="mt-5 space-y-2.5">
                       {plan.features.map((feature) => (
                         <li key={feature} className="flex items-start gap-3 text-sm">
-                          <span
-                            className={cn(
-                              "mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full text-primary-foreground",
-                              isPopular ? "bg-gradient-cta" : "bg-gradient-cta",
-                            )}
-                          >
+                          <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-primary-foreground">
                             <Check className="h-3 w-3" strokeWidth={3} />
                           </span>
                           <span className="text-foreground/85">{feature}</span>
@@ -407,12 +402,7 @@ function Landing() {
                     </ul>
                     <Link
                       to="/auth"
-                      className={cn(
-                        "mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 font-display font-semibold transition hover:opacity-90 active:scale-[0.98]",
-                        isPopular
-                          ? "bg-gradient-cta text-primary-foreground"
-                          : "bg-gradient-cta text-primary-foreground",
-                      )}
+                      className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-cta px-6 py-3 font-display font-semibold text-primary-foreground transition hover:opacity-90 active:scale-[0.98]"
                     >
                       Contact your Reseller <ArrowRight className="h-4 w-4" />
                     </Link>
