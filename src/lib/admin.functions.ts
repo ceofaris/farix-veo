@@ -53,7 +53,6 @@ export const createReseller = createServerFn({ method: "POST" })
         password: z.string().min(6),
         full_name: z.string().min(1),
         days: z.number().int().min(0).default(30),
-        tool_ids: z.array(z.string().uuid()).default([]),
         is_active: z.boolean().default(true),
       })
       .parse(d),
@@ -90,7 +89,6 @@ export const updateReseller = createServerFn({ method: "POST" })
         id: z.string().uuid(),
         full_name: z.string().min(1),
         days: z.number().int().min(0).optional(),
-        tool_ids: z.array(z.string().uuid()).default([]),
         is_active: z.boolean(),
       })
       .parse(d),
@@ -107,12 +105,6 @@ export const updateReseller = createServerFn({ method: "POST" })
     }
     const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
-    await supabaseAdmin.from("reseller_tools").delete().eq("reseller_id", data.id);
-    if (data.tool_ids.length) {
-      await supabaseAdmin
-        .from("reseller_tools")
-        .insert(data.tool_ids.map((tid) => ({ reseller_id: data.id, tool_id: tid })));
-    }
     return { ok: true };
   });
 
@@ -155,7 +147,6 @@ export const createEndUser = createServerFn({ method: "POST" })
         days: z.number().int().min(0).default(30),
         is_active: z.boolean().default(true),
         owner_id: z.string().uuid().optional(),
-        tool_ids: z.array(z.string().uuid()).default([]),
       })
       .parse(d),
   )
@@ -174,7 +165,6 @@ export const createEndUser = createServerFn({ method: "POST" })
       if (!target || target.role !== "reseller") throw new Error("Invalid owner");
       owner = data.owner_id;
     }
-    const tool_ids = await (await import("@/lib/admin.server")).allowedToolIds(context.userId, owner, data.tool_ids);
     const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
       email: data.email,
       password: data.password,
@@ -193,11 +183,11 @@ export const createEndUser = createServerFn({ method: "POST" })
       expires_at,
       created_by: owner,
     });
-    if (tool_ids.length) {
-      await supabaseAdmin
-        .from("user_tools")
-        .insert(tool_ids.map((tid) => ({ user_id: uid, tool_id: tid })));
-    }
+    // Every end user gets the single Master plan.
+    await supabaseAdmin.from("user_plans").upsert(
+      { user_id: uid, plan: "master", expires_at },
+      { onConflict: "user_id" },
+    );
     return { ok: true, id: uid };
   });
 
@@ -211,7 +201,6 @@ export const updateEndUser = createServerFn({ method: "POST" })
         full_name: z.string().min(1),
         days: z.number().int().min(0).optional(),
         is_active: z.boolean(),
-        tool_ids: z.array(z.string().uuid()).optional(),
       })
       .parse(d),
   )
@@ -241,28 +230,13 @@ export const updateEndUser = createServerFn({ method: "POST" })
     const { error } = await supabaseAdmin.from("profiles").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
 
-    if (data.tool_ids) {
-      const tool_ids = await (await import("@/lib/admin.server")).allowedToolIds(
-        context.userId,
-        target.created_by ?? context.userId,
-        data.tool_ids,
-      );
-      const { data: existing } = await supabaseAdmin
-        .from("user_tools")
-        .select("id, tool_id")
-        .eq("user_id", data.id);
-      const current = new Map((existing ?? []).map((r) => [r.tool_id as string, r.id as string]));
-
-      // Remove only the de-selected tools so kept assignments survive.
-      const removed = [...current.entries()].filter(([tid]) => !tool_ids.includes(tid)).map(([, id]) => id);
-      if (removed.length) await supabaseAdmin.from("user_tools").delete().in("id", removed);
-
-      const added = tool_ids.filter((tid) => !current.has(tid));
-      if (added.length) {
-        await supabaseAdmin
-          .from("user_tools")
-          .insert(added.map((tid) => ({ user_id: data.id, tool_id: tid })));
-      }
+    if (typeof data.days === "number") {
+      await supabaseAdmin
+        .from("user_plans")
+        .upsert(
+          { user_id: data.id, plan: "master", expires_at: patch.expires_at! },
+          { onConflict: "user_id" },
+        );
     }
     return { ok: true };
   });
@@ -299,7 +273,7 @@ export const setAccountPaid = createServerFn({ method: "POST" })
   .inputValidator((d: unknown) =>
     z
       .object({
-        id: z.string().uuid(), // user_tools.id
+        id: z.string().uuid(), // user_plans.id
         is_paid: z.boolean(),
         amount: z.number().positive().optional(),
       })
@@ -314,7 +288,7 @@ export const setAccountPaid = createServerFn({ method: "POST" })
     const patch = data.is_paid
       ? { is_paid: true, paid_amount: data.amount!, paid_at: new Date().toISOString() }
       : { is_paid: false, paid_amount: null, paid_at: null };
-    const { error } = await supabaseAdmin.from("user_tools").update(patch).eq("id", data.id);
+    const { error } = await supabaseAdmin.from("user_plans").update(patch).eq("id", data.id);
     if (error) throw new Error(error.message);
     return { ok: true };
   });
