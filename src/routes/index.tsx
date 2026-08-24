@@ -253,7 +253,7 @@ function Landing() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-background">
-        <div className="relative mx-auto max-w-5xl px-5 pb-28 pt-28 text-center sm:pt-36">
+        <div className="relative mx-auto max-w-5xl px-5 pb-28 pt-24 text-center sm:pt-32">
           <Reveal>
             <h1 className="font-sans text-[3rem] font-bold leading-[1.05] tracking-[-0.04em] sm:text-[5.25rem]">
               <span className="text-gradient-metallic">Create with AI</span>
