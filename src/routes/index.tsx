@@ -168,7 +168,7 @@ function FaqAccordion() {
                 onClick={() => setOpenIndex(isOpen ? null : i)}
                 className="flex w-full items-center justify-between gap-4 p-6 text-left"
               >
-                <span className="font-display text-base font-semibold text-foreground">
+                <span className="font-sans text-base font-semibold tracking-tight text-foreground">
                   {item.question}
                 </span>
                 <span
