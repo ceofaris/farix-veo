@@ -59,9 +59,10 @@ export function isVeo(tool: { slug?: string | null; name?: string | null } | nul
   return /veo/i.test(key);
 }
 
-/** Single source of truth for Master plan earnings (shared by Dashboard and Resellers). */
+/** Single source of truth for plan earnings (shared by Dashboard and Resellers). */
 export type MasterPlan = {
   id: string;
+  plan: string;
   created_at: string;
   expires_at: string;
   is_paid: boolean;
@@ -84,7 +85,7 @@ export const masterPlansQuery = queryOptions({
     const { data, error } = await supabase
       .from("user_plans")
       .select(
-        "id, created_at, expires_at, is_paid, paid_amount, paid_at, user_id, profiles!inner(id, email, full_name, created_by, is_active, role)",
+        "id, plan, created_at, expires_at, is_paid, paid_amount, paid_at, user_id, profiles!inner(id, email, full_name, created_by, is_active, role)",
       )
       .eq("profiles.role", "user")
       .order("created_at", { ascending: false });
