@@ -12,6 +12,7 @@ import { deleteAuthUser } from "@/lib/admin.functions";
 import { toast } from "sonner";
 import { useProfile } from "@/hooks/use-profile";
 import { planExpired } from "@/lib/queries";
+import { planName, type PlanId } from "@/lib/plans";
 import { StatCard } from "@/components/stat-card";
 import { Users as UsersIcon, Activity, Crown } from "lucide-react";
 
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/_authenticated/reseller/users")({
   component: ResellerUsers,
 });
 
-type PlanRow = { is_paid: boolean; expires_at: string };
+type PlanRow = { is_paid: boolean; expires_at: string; plan: PlanId };
 type ResellerUserRow = UserRow & { user_plans: PlanRow | PlanRow[] | null };
 
 function planOf(u: ResellerUserRow): PlanRow | null {
@@ -41,7 +42,7 @@ function ResellerUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, full_name, is_active, expires_at, user_plans(is_paid, expires_at)")
+        .select("id, email, full_name, is_active, expires_at, user_plans(plan, is_paid, expires_at)")
         .eq("role", "user")
         .eq("created_by", profile!.id)
         .order("created_at", { ascending: false });
@@ -73,7 +74,7 @@ function ResellerUsers() {
     <div>
       <PageHeader
         title="My Users"
-        description="Users you have created — all on the Master plan. Payment status is set by the admin."
+        description="Users you have created. Payment status is set by the admin."
         action={
           <Button
             size="lg"
@@ -105,7 +106,7 @@ function ResellerUsers() {
         />
         <StatCard
           icon={Crown}
-          label="Paid Master Plans"
+          label="Paid Plans"
           value={paidUsers}
           hint="Confirmed by the admin"
           tone="chart-3"
@@ -130,7 +131,7 @@ function ResellerUsers() {
               <td className="px-5 py-4">{u.full_name || <span className="text-muted-foreground">—</span>}</td>
               <td className="px-5 py-4 text-foreground/80">{u.email}</td>
               <td className="px-5 py-4">
-                <Badge variant="outline">Master</Badge>
+                <Badge variant="outline">{planName(planOf(u)?.plan)}</Badge>
               </td>
               <td className="px-5 py-4">
                 <Badge variant={u.is_active ? "default" : "secondary"}>
@@ -151,7 +152,7 @@ function ResellerUsers() {
                   size="sm"
                   variant="ghost"
                   onClick={() => {
-                    setEditing(u);
+                    setEditing({ ...u, plan: planOf(u)?.plan ?? null });
                     setOpen(true);
                   }}
                 >
