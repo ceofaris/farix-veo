@@ -1,8 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
-import { useMyTools, formatDate } from "@/hooks/use-my-tools";
-import { ToolLogo } from "@/components/tool-logo";
-import { LiveBadge, MediaCard } from "@/components/dashboard/ui";
+import { useMyTools } from "@/hooks/use-my-tools";
+import { MediaCard } from "@/components/dashboard/ui";
+import { ImageTicker } from "@/components/dashboard/image-ticker";
 import featuredVideo from "@/assets/farix-featured-video.mp4.asset.json";
 import clip1 from "@/assets/farix-clip-1.mp4.asset.json";
 import clip2 from "@/assets/farix-clip-2.mp4.asset.json";
@@ -47,18 +47,9 @@ const CLIPS = [
 const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url, clip5.url, clip6.url, clip7.url];
 
 
-const IMAGES: { hue: number; ratio: "16/9" | "9/16" | "1/1" }[] = [
-  { hue: 275, ratio: "9/16" },
-  { hue: 300, ratio: "16/9" },
-  { hue: 330, ratio: "9/16" },
-  { hue: 350, ratio: "16/9" },
-  { hue: 255, ratio: "9/16" },
-];
-
 function HomePage() {
-  const { profile, tools, expiresAt, findTool } = useMyTools();
+  const { profile } = useMyTools();
   const firstName = (profile?.full_name || profile?.email || "there").split(" ")[0];
-  const veo = findTool(/veo/i);
 
   return (
     <>
