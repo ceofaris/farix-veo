@@ -75,22 +75,6 @@ function AuthPage() {
     navigate({ to, replace: true });
   }
 
-  async function handleBootstrap(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      await bootstrap({ data: { email, password, full_name: fullName } });
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
-      toast.success("Admin account created");
-      navigate({ to: "/king", replace: true });
-    } catch (err) {
-      toast.error((err as Error).message);
-    } finally {
-      setLoading(false);
-    }
-  }
-
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4 relative">
       <ThemeToggle className="absolute top-6 right-6" />
@@ -100,30 +84,11 @@ function AuthPage() {
           <span className="text-xl font-semibold tracking-tight text-foreground">Farix</span>
         </Link>
         <div className="bg-card border border-border rounded-2xl p-8 shadow-card">
-          <h1 className="text-2xl font-semibold text-center">
-            {mode === "signin" ? "Sign in to your account" : "Create first admin"}
-          </h1>
+          <h1 className="text-2xl font-semibold text-center">Sign in to your account</h1>
           <p className="text-sm text-muted-foreground text-center mt-2">
-            {mode === "signin"
-              ? "Enter your credentials to continue."
-              : "This is only available before any admin exists."}
+            Enter your credentials to continue.
           </p>
-          <form
-            onSubmit={mode === "signin" ? handleSignIn : handleBootstrap}
-            className="mt-6 space-y-4"
-          >
-            {mode === "bootstrap" && (
-              <div>
-                <Label htmlFor="fullName">Full name</Label>
-                <Input
-                  id="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                  className="bg-background border-border"
-                />
-              </div>
-            )}
+          <form onSubmit={handleSignIn} className="mt-6 space-y-4">
             <div>
               <Label htmlFor="email">Email</Label>
               <Input
