@@ -4,13 +4,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
 import { createEndUser, updateEndUser } from "@/lib/admin.functions";
-import { supabase } from "@/integrations/supabase/client";
-import { activeToolsQuery, resellerToolIdsQuery } from "@/lib/queries";
+import { MASTER_PLAN } from "@/lib/queries";
 
 export type UserRow = {
   id: string;
@@ -25,15 +22,12 @@ export function UserFormDialog({
   onOpenChange,
   user,
   ownerId,
-  hideTools = false,
   onSaved,
 }: {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   user: UserRow | null;
   ownerId?: string;
-  /** Hide tool selection (reseller view) — the owner's tools are assigned automatically. */
-  hideTools?: boolean;
   onSaved: () => void;
 }) {
   const [email, setEmail] = useState("");
@@ -41,17 +35,9 @@ export function UserFormDialog({
   const [fullName, setFullName] = useState("");
   const [days, setDays] = useState(30);
   const [isActive, setIsActive] = useState(true);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const create = useServerFn(createEndUser);
   const update = useServerFn(updateEndUser);
-
-  const allTools = useQuery({ ...activeToolsQuery, enabled: open });
-  const ownerToolIds = useQuery({ ...resellerToolIdsQuery(ownerId), enabled: open && !!ownerId });
-
-  const tools = ownerId
-    ? (allTools.data ?? []).filter((t) => (ownerToolIds.data ?? []).includes(t.id))
-    : (allTools.data ?? []);
 
   useEffect(() => {
     if (!open) return;
@@ -60,43 +46,16 @@ export function UserFormDialog({
     setFullName(user?.full_name ?? "");
     setDays(30);
     setIsActive(user?.is_active ?? true);
-    setSelected(new Set());
-    if (user) {
-      let cancelled = false;
-      (async () => {
-        const { data } = await supabase
-          .from("user_tools")
-          .select("tool_id")
-          .eq("user_id", user.id);
-        if (cancelled) return;
-        setSelected(new Set((data ?? []).map((r) => r.tool_id as string)));
-      })();
-      return () => {
-        cancelled = true;
-      };
-    }
   }, [open, user]);
 
-  function toggleTool(id: string) {
-    const next = new Set(selected);
-    if (next.has(id)) next.delete(id);
-    else next.add(id);
-    setSelected(next);
-  }
-
   async function save() {
-    const tool_ids = hideTools ? (ownerToolIds.data ?? []) : Array.from(selected);
-    if (!hideTools && tool_ids.length === 0) {
-      toast.error("Select at least one tool");
-      return;
-    }
     setSaving(true);
     try {
       if (user) {
-        await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive, tool_ids } });
+        await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive } });
       } else {
         await create({
-          data: { email, password, full_name: fullName, days, is_active: isActive, owner_id: ownerId, tool_ids },
+          data: { email, password, full_name: fullName, days, is_active: isActive, owner_id: ownerId },
         });
       }
       toast.success(user ? "User updated" : "User created");
@@ -135,25 +94,16 @@ export function UserFormDialog({
           <div>
             <Label>Custom Days</Label>
             <Input type="number" min={0} value={days} onChange={(e) => setDays(Number(e.target.value))} className="bg-background border-border" />
-            {user && <p className="text-xs text-muted-foreground mt-1">Sets a new expiry from today.</p>}
+            {user && <p className="text-xs text-muted-foreground mt-1">Sets a new Master plan expiry from today.</p>}
           </div>
-          {!hideTools && (
-            <div>
-              <Label>Tools Access</Label>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                The user only sees extensions for the tools selected here.
-              </p>
-              <div className="mt-2 space-y-2 border border-border rounded-lg p-3 bg-background">
-                {tools.length === 0 && <p className="text-xs text-muted-foreground">No tools available.</p>}
-                {tools.map((t) => (
-                  <label key={t.id} className="flex items-center gap-3 cursor-pointer">
-                    <Checkbox checked={selected.has(t.id)} onCheckedChange={() => toggleTool(t.id)} />
-                    <span className="text-sm">{t.name}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-          )}
+          <div className="rounded-xl border border-border bg-muted/40 p-4">
+            <div className="text-sm font-medium">{MASTER_PLAN.name}</div>
+            <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
+              {MASTER_PLAN.features.map((f) => (
+                <li key={f}>• {f}</li>
+              ))}
+            </ul>
+          </div>
           <div className="flex items-center gap-3">
             <Switch checked={isActive} onCheckedChange={setIsActive} />
             <Label>Active</Label>
