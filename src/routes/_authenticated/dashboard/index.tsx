@@ -110,49 +110,10 @@ function HomePage() {
         ))}
       </section>
 
-      {/* Nano Banana showcase — mixed aspect ratios, equal height row */}
-      <section className="flex flex-wrap justify-center gap-4">
-        {IMAGES.map((c, i) => (
-          <MediaCard
-            key={i}
-            ratio={c.ratio}
-            hue={c.hue}
-            withPlay={false}
-            className="h-[180px] sm:h-[210px]"
-          />
-        ))}
-      </section>
-
-      {/* My Tools */}
-      <section className="space-y-4">
-        <h2 className="text-lg font-semibold tracking-tight">My Tools</h2>
-        <div className="grid gap-5 sm:grid-cols-2">
-          {tools.map((tool) => {
-            const expires = expiresAt;
-            const to = /veo/i.test(`${tool.slug} ${tool.name}`)
-              ? "/dashboard/veo-3"
-              : "/dashboard/chatgpt";
-            return (
-              <Link
-                key={tool.id}
-                to={to}
-                className="card-lift flex items-center gap-4 rounded-2xl border border-border bg-card p-5"
-              >
-                <ToolLogo tool={tool} className="h-12 w-12" />
-                <div className="min-w-0">
-                  <div className="font-semibold tracking-tight">{tool.name}</div>
-                  <div className="text-xs text-muted-foreground">
-                    Valid until {formatDate(expires, "—")}
-                  </div>
-                </div>
-                <LiveBadge className="ml-auto" />
-              </Link>
-            );
-          })}
-          {tools.length === 0 && veo === null && null}
-        </div>
-      </section>
+      {/* Image showcase — 2-row infinite ticker */}
+      <ImageTicker />
     </div>
     </>
   );
 }
+
