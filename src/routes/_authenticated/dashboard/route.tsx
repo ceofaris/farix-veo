@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
-import { Clapperboard, Home, LogOut, Menu, MessageSquare, Shield, Sparkles, X } from "lucide-react";
+import { Clapperboard, Home, LogOut, Menu, MessageSquare, Sparkles, X } from "lucide-react";
+import { FarixMark } from "@/components/farix-logo";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
 
@@ -64,9 +65,7 @@ function DashboardLayout() {
         )}
       >
         <div className="flex h-16 items-center gap-3 px-5">
-          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-gradient text-white">
-            <Shield className="h-4 w-4" />
-          </div>
+          <FarixMark className="h-9" />
           <div className="min-w-0">
             <div className="font-display font-semibold leading-tight tracking-tight">Farix</div>
             <div className="truncate text-[11px] text-muted-foreground">AI Workspace</div>

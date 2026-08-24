@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  Shield,
   ArrowRight,
   UserPlus,
   Puzzle,
@@ -9,6 +8,7 @@ import {
   Check,
   ChevronDown,
 } from "lucide-react";
+import { FarixMark } from "@/components/farix-logo";
 import { Reveal } from "@/components/reveal";
 import { MediaCard } from "@/components/dashboard/ui";
 import { cn } from "@/lib/utils";
@@ -408,9 +408,7 @@ function Landing() {
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-xs text-muted-foreground sm:flex-row">
           <span className="flex items-center gap-2">
-            <span className="grid h-6 w-6 place-items-center rounded-lg bg-gradient-cta text-primary-foreground">
-              <Shield className="h-3 w-3" />
-            </span>
+            <FarixMark className="h-6" />
             <span className="font-display font-semibold text-foreground">Farix AI</span>
             <span>© {new Date().getFullYear()} · All rights reserved</span>
           </span>
