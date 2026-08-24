@@ -82,21 +82,35 @@ const steps = [
 
 const pricingPlans = [
   {
-    title: "Veo 3",
+    title: "Veo Ultra",
     features: [
-      "Unlimited AI Video",
-      "Veo 3 Lite LP Model",
+      "Veo 3 Lite (Unlimited)",
+      "Prompts Base",
       "Nano Banana",
       "Nano Banana 2",
       "Imagen 4 Ultra",
     ],
   },
   {
-    title: "ChatGPT",
+    title: "Master Plan",
+    popular: true,
+    features: [
+      "Veo 3 Lite (Unlimited)",
+      "ChatGPT Premium",
+      "Prompts Base (Latest Niches)",
+      "Nano Banana",
+      "Nano Banana 2",
+      "Imagen 4 Ultra",
+      "Early Access To Latest Features",
+    ],
+  },
+  {
+    title: "ChatGPT Premium",
     features: [
       "Unlimited Chats",
       "Image Generation (Limited)",
       "Image Attachment Support",
+      "Prompts Base",
     ],
   },
 ];
@@ -347,36 +361,55 @@ function Landing() {
         </Reveal>
 
         <Reveal delay={140}>
-          <div className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2">
-            {pricingPlans.map((plan) => (
-              <div
-                key={plan.title}
-                className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-pop"
-              >
-                <span aria-hidden className="block h-1 bg-gradient-cta" />
-                <div className="flex flex-1 flex-col p-7 sm:p-8">
-                  <h3 className="font-display text-2xl font-bold tracking-[-0.02em]">
-                    {plan.title}
-                  </h3>
-                  <ul className="mt-6 space-y-3">
-                    {plan.features.map((feature) => (
-                      <li key={feature} className="flex items-start gap-3 text-sm">
-                        <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-primary-foreground">
-                          <Check className="h-3 w-3" strokeWidth={3} />
-                        </span>
-                        <span className="text-foreground/85">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link
-                    to="/auth"
-                    className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-cta px-6 py-3 font-display font-semibold text-primary-foreground transition hover:opacity-90 active:scale-[0.98]"
-                  >
-                    Contact your Reseller <ArrowRight className="h-4 w-4" />
-                  </Link>
+          <div className="mx-auto mt-12 grid max-w-5xl gap-5 md:grid-cols-3 items-start">
+            {pricingPlans.map((plan) => {
+              const isPopular = plan.popular;
+              return (
+                <div
+                  key={plan.title}
+                  className={cn(
+                    "relative flex h-full flex-col overflow-hidden rounded-3xl border bg-card shadow-card transition-all duration-300 hover:-translate-y-1",
+                    isPopular
+                      ? "border-primary/40 shadow-glow hover:shadow-pop hover:border-primary/60"
+                      : "border-border hover:border-primary/40 hover:shadow-pop",
+                  )}
+                >
+                  {isPopular && (
+                    <span className="absolute -top-px left-1/2 z-10 -translate-x-1/2 rounded-b-full bg-gradient-cta px-4 py-1 text-[11px] font-display font-semibold uppercase tracking-wider text-primary-foreground shadow-sm">
+                      Popular
+                    </span>
+                  )}
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "block w-full",
+                      isPopular ? "h-1.5 bg-gradient-cta" : "h-1 bg-gradient-cta",
+                    )}
+                  />
+                  <div className="flex flex-1 flex-col p-6 sm:p-7">
+                    <h3 className="font-display text-xl font-bold tracking-[-0.02em] sm:text-2xl">
+                      {plan.title}
+                    </h3>
+                    <ul className="mt-5 space-y-2.5">
+                      {plan.features.map((feature) => (
+                        <li key={feature} className="flex items-start gap-3 text-sm">
+                          <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-primary-foreground">
+                            <Check className="h-3 w-3" strokeWidth={3} />
+                          </span>
+                          <span className="text-foreground/85">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <Link
+                      to="/auth"
+                      className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-cta px-6 py-3 font-display font-semibold text-primary-foreground transition hover:opacity-90 active:scale-[0.98]"
+                    >
+                      Contact your Reseller <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </Reveal>
 
