@@ -404,7 +404,7 @@
 
 
 @utility pricing-card-popular {
-  background: color-mix(in oklab, var(--foreground) 12%, transparent);
+  background: color-mix(in oklab, var(--card) 85%, transparent);
   backdrop-filter: blur(28px) saturate(160%);
   border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent);
   box-shadow:
