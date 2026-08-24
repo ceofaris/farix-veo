@@ -44,12 +44,18 @@ export const Route = createFileRoute("/")({
   component: Landing,
 });
 
-const marqueeLogos = [
-  { src: logoFlow.url, alt: "Google Flow", h: "h-[88px]" },
-  { src: logoVeo.url, alt: "Google Veo", h: "h-[88px]" },
-  { src: logoChatgpt.url, alt: "ChatGPT", h: "h-[88px]" },
-  { src: logoVeo31.url, alt: "Google Veo 3.1", h: "h-[88px]" },
+const CLIPS = [
+  { hue: 230 },
+  { hue: 265 },
+  { hue: 290 },
+  { hue: 315 },
+  { hue: 340 },
+  { hue: 245 },
+  { hue: 200 },
 ];
+
+const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url, clip5.url, clip6.url, clip7.url];
+
 
 
 
