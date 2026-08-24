@@ -3,6 +3,19 @@ import { supabase } from "@/integrations/supabase/client";
 
 export type ToolLite = { id: string; name: string; slug: string };
 
+/** The single plan the platform sells. */
+export const MASTER_PLAN = {
+  id: "master",
+  name: "Master Plan",
+  tagline: "One plan unlocks everything on Farix.",
+  features: [
+    "Veo 3 (Lite) — Unlimited",
+    "ChatGPT Premium",
+    "Niche Prompts",
+    "Freebies",
+  ],
+} as const;
+
 /** Shared, long-cached tools list — the platform has exactly two fixed tools. */
 export const activeToolsQuery = queryOptions({
   queryKey: ["tools", "active"],
@@ -18,21 +31,6 @@ export const activeToolsQuery = queryOptions({
     return (data ?? []) as ToolLite[];
   },
 });
-
-export const resellerToolIdsQuery = (resellerId: string | undefined) =>
-  queryOptions({
-    queryKey: ["reseller-tool-ids", resellerId],
-    enabled: !!resellerId,
-    staleTime: 10 * 60 * 1000,
-    queryFn: async (): Promise<string[]> => {
-      const { data, error } = await supabase
-        .from("reseller_tools")
-        .select("tool_id")
-        .eq("reseller_id", resellerId!);
-      if (error) throw error;
-      return (data ?? []).map((r) => r.tool_id as string);
-    },
-  });
 
 /** Hard-coded marketing copy for the two fixed tools. */
 const DESCRIPTIONS: Array<{ match: RegExp; text: string }> = [
@@ -61,36 +59,45 @@ export function isVeo(tool: { slug?: string | null; name?: string | null } | nul
   return /veo/i.test(key);
 }
 
-/** Single source of truth for earnings + account stats (shared by Dashboard and Resellers). */
-export type EarningsAccount = {
+/** Single source of truth for Master plan earnings (shared by Dashboard and Resellers). */
+export type MasterPlan = {
   id: string;
   created_at: string;
-  expires_at: string | null;
+  expires_at: string;
   is_paid: boolean;
   paid_amount: number | null;
   paid_at: string | null;
-  tool_id: string;
-  tools: { name: string; slug: string } | null;
-  profiles: { id: string; email: string; full_name: string | null; created_by: string | null } | null;
+  user_id: string;
+  profiles: {
+    id: string;
+    email: string;
+    full_name: string | null;
+    created_by: string | null;
+    is_active: boolean;
+  } | null;
 };
 
-export const earningsAccountsQuery = queryOptions({
-  queryKey: ["reseller-accounts"],
+export const masterPlansQuery = queryOptions({
+  queryKey: ["master-plans"],
   staleTime: 60 * 1000,
-  queryFn: async (): Promise<EarningsAccount[]> => {
+  queryFn: async (): Promise<MasterPlan[]> => {
     const { data, error } = await supabase
-      .from("user_tools")
+      .from("user_plans")
       .select(
-        "id, created_at, expires_at, is_paid, paid_amount, paid_at, tool_id, tools(name, slug), profiles!inner(id, email, full_name, created_by, role)",
+        "id, created_at, expires_at, is_paid, paid_amount, paid_at, user_id, profiles!inner(id, email, full_name, created_by, is_active, role)",
       )
       .eq("profiles.role", "user")
       .order("created_at", { ascending: false });
     if (error) throw error;
-    return (data ?? []) as unknown as EarningsAccount[];
+    return (data ?? []) as unknown as MasterPlan[];
   },
 });
 
-export function summarizeEarnings(rows: EarningsAccount[]) {
+export function planExpired(expires_at: string | null | undefined) {
+  return !!expires_at && new Date(expires_at).getTime() < Date.now();
+}
+
+export function summarizeEarnings(rows: MasterPlan[]) {
   const cutoff = Date.now() - 30 * 24 * 60 * 60 * 1000;
   let all = 0;
   let last30 = 0;
