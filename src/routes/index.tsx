@@ -234,27 +234,6 @@ function Navbar() {
   );
 }
 
-function LogoMarquee() {
-  const half = [...marqueeLogos, ...marqueeLogos, ...marqueeLogos];
-  const row = [...half, ...half];
-  return (
-    <div className="relative mt-20 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
-      <div className="flex w-max animate-marquee items-center gap-24 sm:gap-32">
-        {row.map((logo, i) => (
-          <img
-            key={`${logo.alt}-${i}`}
-            src={logo.src}
-            alt={`${logo.alt} logo`}
-            loading="lazy"
-            className={`${logo.h} w-auto shrink-0 select-none object-contain opacity-80 transition-opacity duration-300 hover:opacity-100`}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-
 function Landing() {
   // Landing page is light-theme only.
   useEffect(() => {
