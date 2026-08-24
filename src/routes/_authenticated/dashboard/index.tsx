@@ -56,7 +56,7 @@ const IMAGES: { hue: number; ratio: "16/9" | "9/16" | "1/1" }[] = [
 ];
 
 function HomePage() {
-  const { profile, tools, assignments, findTool } = useMyTools();
+  const { profile, tools, expiresAt, findTool } = useMyTools();
   const firstName = (profile?.full_name || profile?.email || "there").split(" ")[0];
   const veo = findTool(/veo/i);
 
@@ -128,7 +128,7 @@ function HomePage() {
         <h2 className="text-lg font-semibold tracking-tight">My Tools</h2>
         <div className="grid gap-5 sm:grid-cols-2">
           {tools.map((tool) => {
-            const expires = assignments.get(tool.id)?.expires_at ?? profile?.expires_at ?? null;
+            const expires = expiresAt;
             const to = /veo/i.test(`${tool.slug} ${tool.name}`)
               ? "/dashboard/veo-3"
               : "/dashboard/chatgpt";

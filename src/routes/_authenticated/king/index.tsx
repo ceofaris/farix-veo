@@ -6,11 +6,7 @@ import { StatCard } from "@/components/stat-card";
 import { Card } from "@/components/panel-layout";
 import { ToolLogo } from "@/components/tool-logo";
 import { formatRs } from "@/components/mark-paid-dialog";
-import {
-  activeToolsQuery,
-  earningsAccountsQuery,
-  summarizeEarnings,
-} from "@/lib/queries";
+import { activeToolsQuery, masterPlansQuery, summarizeEarnings } from "@/lib/queries";
 import {
   Users,
   KeyRound,
@@ -26,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/king/")({
 
 function KingDashboard() {
   /** Same query (and cache key) the Resellers page uses — one shared earnings source. */
-  const accounts = useQuery(earningsAccountsQuery);
+  const accounts = useQuery(masterPlansQuery);
   const tools = useQuery(activeToolsQuery);
 
   const counts = useQuery({
@@ -60,14 +56,13 @@ function KingDashboard() {
 
   const byTool = useMemo(() => {
     const cookies = counts.data?.cookieAccounts ?? [];
+    // Every Master plan unlocks every tool, so per-tool numbers mirror the plan totals.
     return (tools.data ?? []).map((t) => ({
       ...t,
-      users: new Set(rows.filter((r) => r.tool_id === t.id).map((r) => r.profiles?.id)).size,
-      assignments: rows.filter((r) => r.tool_id === t.id).length,
-      paid: rows.filter((r) => r.tool_id === t.id && r.is_paid).length,
-      earned: rows
-        .filter((r) => r.tool_id === t.id && r.is_paid)
-        .reduce((s, r) => s + Number(r.paid_amount ?? 0), 0),
+      users: rows.length,
+      assignments: rows.length,
+      paid: rows.filter((r) => r.is_paid).length,
+      earned: rows.filter((r) => r.is_paid).reduce((s, r) => s + Number(r.paid_amount ?? 0), 0),
       accounts: cookies.filter((c) => c.tool_id === t.id).length,
     }));
   }, [tools.data, rows, counts.data]);
@@ -80,7 +75,7 @@ function KingDashboard() {
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">King Panel</h1>
         <p className="text-muted-foreground mt-2">
-          Live overview of earnings, users and the two platform tools.
+          Live overview of Master plan earnings, users and cookie accounts.
         </p>
       </div>
 
@@ -108,14 +103,14 @@ function KingDashboard() {
         />
         <StatCard
           icon={BadgeCheck}
-          label="Paid Accounts"
+          label="Paid Master Plans"
           value={loaded ? totals.paidCount : "—"}
-          hint={loaded ? `of ${totals.total} tool accounts` : undefined}
+          hint={loaded ? `of ${totals.total} Master plans` : undefined}
           tone="chart-2"
         />
         <StatCard
           icon={BadgeAlert}
-          label="Unpaid Accounts"
+          label="Unpaid Master Plans"
           value={loaded ? totals.pendingCount : "—"}
           hint={loaded ? `${totals.pendingResellers} reseller(s) with pending dues` : undefined}
           tone="chart-5"
@@ -132,7 +127,7 @@ function KingDashboard() {
       <Card className="p-6 sm:p-8">
         <div className="font-medium">Tool usage</div>
         <p className="text-sm text-muted-foreground mt-1">
-          Users with access to each tool, payments collected and live cookie accounts.
+          Master plan users, payments collected and live cookie accounts.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">

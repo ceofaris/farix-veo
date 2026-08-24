@@ -15,7 +15,7 @@ import { Switch } from "@/components/ui/switch";
 
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import { earningsAccountsQuery, summarizeEarnings, EarningsAccount } from "@/lib/queries";
+import { masterPlansQuery, summarizeEarnings, MasterPlan } from "@/lib/queries";
 
 export const Route = createFileRoute("/_authenticated/king/resellers")({
   component: KingResellers,
@@ -31,11 +31,7 @@ export const Route = createFileRoute("/_authenticated/king/resellers")({
   }),
 });
 
-type ResellerWithTools = ResellerRow & {
-  reseller_tools: { tool_id: string; tools: { name: string } | null }[];
-};
-
-type AccountRow = EarningsAccount;
+type AccountRow = MasterPlan;
 
 
 function initials(name: string) {
@@ -136,15 +132,15 @@ function KingResellers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, full_name, is_active, expires_at, reseller_tools(tool_id, tools(name))")
+        .select("id, email, full_name, is_active, expires_at")
         .eq("role", "reseller")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as unknown as ResellerWithTools[];
+      return data as unknown as ResellerRow[];
     },
   });
 
-  const accounts = useQuery(earningsAccountsQuery);
+  const accounts = useQuery(masterPlansQuery);
 
   const rows = accounts.data ?? [];
 
@@ -265,7 +261,7 @@ function KingResellers() {
         <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
           <tr>
             <th className="px-5 py-3.5 font-semibold">Reseller</th>
-            <th className="px-5 py-3.5 font-semibold">Accounts</th>
+            <th className="px-5 py-3.5 font-semibold">Master Plans</th>
             <th className="px-5 py-3.5 font-semibold">Paid</th>
             <th className="px-5 py-3.5 font-semibold">Pending</th>
             <th className="px-5 py-3.5 font-semibold">Total Earned</th>

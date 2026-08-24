@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,40 +11,39 @@ import { UserFormDialog, UserRow } from "@/components/user-form-dialog";
 import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
-import { activeToolsQuery, resellerToolIdsQuery } from "@/lib/queries";
+import { MASTER_PLAN, planExpired } from "@/lib/queries";
 import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
-
 
 export const Route = createFileRoute("/_authenticated/king/resellers_/$id")({
   component: KingResellerUsers,
   head: () => ({
     meta: [
       { title: "Reseller Detail | Farix King Panel" },
-      { name: "description", content: "View a reseller's users, payment status and tool access." },
+      { name: "description", content: "View a reseller's Master plan users, expiry and payment status." },
       { property: "og:title", content: "Reseller Detail | Farix King Panel" },
-      { property: "og:description", content: "View a reseller's users, payment status and tool access." },
+      { property: "og:description", content: "View a reseller's Master plan users, expiry and payment status." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
   }),
 });
 
-type DetailUser = UserRow & {
-  user_tools: {
-    id: string;
-    tool_id: string;
-    is_paid: boolean;
-    paid_amount: number | null;
-    expires_at: string | null;
-  }[];
-};
+type PlanRow = { id: string; is_paid: boolean; paid_amount: number | null; expires_at: string };
+type DetailUser = UserRow & { user_plans: PlanRow | PlanRow[] | null };
 
+type Filter = "all" | "paid" | "unpaid" | "expired";
+
+function planOf(u: DetailUser): PlanRow | null {
+  const p = u.user_plans;
+  if (!p) return null;
+  return Array.isArray(p) ? (p[0] ?? null) : p;
+}
 
 function KingResellerUsers() {
   const { id } = Route.useParams();
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<UserRow | null>(null);
-  const [toolFilter, setToolFilter] = useState<string>("all");
+  const [filter, setFilter] = useState<Filter>("all");
   const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
   const del = useServerFn(deleteAuthUser);
   const markPaid = useServerFn(setAccountPaid);
@@ -52,9 +51,8 @@ function KingResellerUsers() {
 
   function refreshEarnings() {
     users.refetch();
-    qc.invalidateQueries({ queryKey: ["reseller-accounts"] });
+    qc.invalidateQueries({ queryKey: ["master-plans"] });
   }
-
 
   const reseller = useQuery({
     queryKey: ["reseller", id],
@@ -69,23 +67,13 @@ function KingResellerUsers() {
     },
   });
 
-  const allTools = useQuery(activeToolsQuery);
-  const assignedIds = useQuery(resellerToolIdsQuery(id));
-  const toolMap = useMemo(
-    () => new Map((allTools.data ?? []).map((t) => [t.id, t.name])),
-    [allTools.data],
-  );
-  const filterTools = (allTools.data ?? []).filter((t) => (assignedIds.data ?? []).includes(t.id));
-
   const users = useQuery({
     queryKey: ["reseller-users", id],
     staleTime: 60 * 1000,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select(
-          "id, email, full_name, is_active, expires_at, user_tools(id, tool_id, is_paid, paid_amount, expires_at)",
-        )
+        .select("id, email, full_name, is_active, expires_at, user_plans(id, is_paid, paid_amount, expires_at)")
         .eq("role", "user")
         .eq("created_by", id)
         .order("created_at", { ascending: false });
@@ -95,36 +83,34 @@ function KingResellerUsers() {
   });
 
   const rows = users.data ?? [];
-  const filtered =
-    toolFilter === "all" ? rows : rows.filter((u) => u.user_tools?.some((t) => t.tool_id === toolFilter));
-  const allAccounts = rows.flatMap((u) => u.user_tools ?? []);
-  const countsByTool = useMemo(() => {
-    const m = new Map<string, number>();
-    for (const a of allAccounts) m.set(a.tool_id, (m.get(a.tool_id) ?? 0) + 1);
-    return m;
-  }, [allAccounts]);
+  const filtered = rows.filter((u) => {
+    const p = planOf(u);
+    if (filter === "paid") return !!p?.is_paid;
+    if (filter === "unpaid") return !p?.is_paid;
+    if (filter === "expired") return planExpired(p?.expires_at);
+    return true;
+  });
 
-
-  const paidCount = allAccounts.filter((a) => a.is_paid).length;
-  const totalEarned = allAccounts.reduce(
-    (s, a) => s + (a.is_paid ? Number(a.paid_amount ?? 0) : 0),
-    0,
-  );
+  const paidCount = rows.filter((u) => planOf(u)?.is_paid).length;
+  const totalEarned = rows.reduce((s, u) => {
+    const p = planOf(u);
+    return s + (p?.is_paid ? Number(p.paid_amount ?? 0) : 0);
+  }, 0);
 
   async function handleDelete(uid: string) {
     if (!confirm("Delete this user?")) return;
     try {
       await del({ data: { id: uid } });
       toast.success("Deleted");
-      users.refetch();
+      refreshEarnings();
     } catch (e) {
       toast.error((e as Error).message);
     }
   }
 
-  async function unmarkPaid(accountId: string) {
+  async function unmarkPaid(planId: string) {
     try {
-      await markPaid({ data: { id: accountId, is_paid: false } });
+      await markPaid({ data: { id: planId, is_paid: false } });
       toast.success("Marked as unpaid");
       refreshEarnings();
     } catch (e) {
@@ -132,7 +118,12 @@ function KingResellerUsers() {
     }
   }
 
-
+  const FILTERS: { key: Filter; label: string }[] = [
+    { key: "all", label: "All" },
+    { key: "paid", label: "Paid" },
+    { key: "unpaid", label: "Unpaid" },
+    { key: "expired", label: "Expired" },
+  ];
 
   return (
     <div>
@@ -145,7 +136,7 @@ function KingResellerUsers() {
 
       <PageHeader
         title={reseller.data?.full_name || reseller.data?.email || "Reseller"}
-        description="Users belonging to this reseller."
+        description={`Master plan users belonging to this reseller — ${MASTER_PLAN.features.join(", ")}.`}
         action={
           <Button
             size="lg"
@@ -161,51 +152,22 @@ function KingResellerUsers() {
       />
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="Total Accounts" value={allAccounts.length} icon={UsersIcon} tone="primary" />
-        <StatCard label="Paid Accounts" value={paidCount} icon={BadgeCheck} tone="chart-2" />
-        <StatCard
-          label="Unpaid Accounts"
-          value={allAccounts.length - paidCount}
-          icon={BadgeAlert}
-          tone="chart-5"
-        />
+        <StatCard label="Total Users" value={rows.length} icon={UsersIcon} tone="primary" />
+        <StatCard label="Paid" value={paidCount} icon={BadgeCheck} tone="chart-2" />
+        <StatCard label="Unpaid" value={rows.length - paidCount} icon={BadgeAlert} tone="chart-5" />
         <StatCard label="Total Earned" value={formatRs(totalEarned)} icon={Wallet} tone="chart-3" />
       </div>
 
-      <div className="mt-4 flex flex-wrap items-center gap-2 rounded-2xl border border-border bg-card px-5 py-4 shadow-card">
-        <span className="text-xs uppercase tracking-[0.08em] text-muted-foreground mr-1">
-          Accounts by tool
-        </span>
-        {(allTools.data ?? []).map((t) => (
-          <Badge key={t.id} variant="secondary" className="rounded-full px-3 py-1 text-sm">
-            {t.name}: <span className="ml-1 font-semibold">{countsByTool.get(t.id) ?? 0}</span>
-          </Badge>
-        ))}
-        {(allTools.data ?? []).length === 0 && (
-          <span className="text-sm text-muted-foreground">No tools available.</span>
-        )}
-      </div>
-
-
-
-
       <div className="mt-6 flex flex-wrap items-center gap-2">
         <span className="text-xs uppercase tracking-[0.08em] text-muted-foreground mr-1">Filter</span>
-        <Button
-          size="sm"
-          variant={toolFilter === "all" ? "default" : "outline"}
-          onClick={() => setToolFilter("all")}
-        >
-          All Tools
-        </Button>
-        {filterTools.map((t) => (
+        {FILTERS.map((f) => (
           <Button
-            key={t.id}
+            key={f.key}
             size="sm"
-            variant={toolFilter === t.id ? "default" : "outline"}
-            onClick={() => setToolFilter(t.id)}
+            variant={filter === f.key ? "default" : "outline"}
+            onClick={() => setFilter(f.key)}
           >
-            {t.name}
+            {f.label}
           </Button>
         ))}
       </div>
@@ -213,138 +175,102 @@ function KingResellerUsers() {
       <TableShell>
         <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
           <tr>
-            <th className="px-5 py-3.5 font-semibold">Account</th>
+            <th className="px-5 py-3.5 font-semibold">User</th>
+            <th className="px-5 py-3.5 font-semibold">Plan</th>
             <th className="px-5 py-3.5 font-semibold">Expiry</th>
             <th className="px-5 py-3.5 font-semibold">Payment</th>
             <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {filtered.flatMap((u) => {
-            const accounts = (u.user_tools ?? [])
-              .filter((a) => toolFilter === "all" || a.tool_id === toolFilter)
-              .slice()
-              .sort((a, b) =>
-                (toolMap.get(a.tool_id) ?? "").localeCompare(toolMap.get(b.tool_id) ?? ""),
-              );
-            if (accounts.length === 0) {
-              return [
-                <tr key={u.id} className="border-t border-border transition-colors hover:bg-muted/40">
-                  <td className="px-5 py-4">
-                    <div className="font-medium">{u.full_name || u.email}</div>
-                    <div className="text-xs text-muted-foreground">{u.email}</div>
-                  </td>
-                  <td className="px-5 py-4 text-muted-foreground">—</td>
-                  <td className="px-5 py-4 text-xs text-muted-foreground">No tools assigned</td>
-                  <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      onClick={() => {
-                        setEditing(u);
-                        setOpen(true);
-                      }}
-                    >
-                      <Pencil className="w-4 h-4" />
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => handleDelete(u.id)}>
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </td>
-                </tr>,
-              ];
-            }
-            return accounts.map((a) => {
-              const toolName = toolMap.get(a.tool_id) ?? "—";
-              const expired = !!a.expires_at && new Date(a.expires_at).getTime() < Date.now();
-              return (
-                <tr key={a.id} className="border-t border-border transition-colors hover:bg-muted/40">
-                  <td className="px-5 py-4">
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">
-                        {u.full_name || u.email} – {toolName}
-                      </span>
-                      <Badge variant="outline" className="rounded-full text-[10px] px-2 py-0">
-                        {toolName}
-                      </Badge>
-                    </div>
-                    <div className="text-xs text-muted-foreground">{u.email}</div>
-                  </td>
-                  <td className="px-5 py-4 text-sm text-muted-foreground">
-                    {a.expires_at ? (
-                      <span className={expired ? "font-medium text-rose-600" : undefined}>
-                        {expired ? "Expired " : ""}
-                        {new Date(a.expires_at).toLocaleDateString()}
-                      </span>
-                    ) : (
-                      "—"
-                    )}
-                  </td>
-                  <td className="px-5 py-4">
-                    {a.is_paid ? (
-                      <span className="font-semibold text-emerald-600">
-                        {formatRs(Number(a.paid_amount ?? 0))}
-                      </span>
-                    ) : (
-                      <Badge variant="secondary">Unpaid</Badge>
-                    )}
-                  </td>
-                  <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
-                    {a.is_paid ? (
-                      <>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() =>
-                            setPayTarget({
-                              id: a.id,
-                              name: `${u.full_name || u.email} - ${toolName}`,
-                              amount: a.paid_amount == null ? null : Number(a.paid_amount),
-                              editing: true,
-                            })
-                          }
-                        >
-                          Edit Amount
-                        </Button>
-                        <Button size="sm" variant="ghost" onClick={() => unmarkPaid(a.id)}>
-                          Mark Unpaid
-                        </Button>
-                      </>
-                    ) : (
+          {filtered.map((u) => {
+            const p = planOf(u);
+            const expiry = p?.expires_at ?? u.expires_at;
+            const expired = planExpired(expiry);
+            return (
+              <tr key={u.id} className="border-t border-border transition-colors hover:bg-muted/40">
+                <td className="px-5 py-4">
+                  <div className="font-medium">{u.full_name || u.email}</div>
+                  <div className="text-xs text-muted-foreground">{u.email}</div>
+                </td>
+                <td className="px-5 py-4">
+                  <Badge variant={u.is_active && !expired ? "default" : "secondary"}>
+                    {u.is_active && !expired ? "Master · Active" : "Master · Locked"}
+                  </Badge>
+                </td>
+                <td className="px-5 py-4 text-sm text-muted-foreground">
+                  {expiry ? (
+                    <span className={expired ? "font-medium text-rose-600" : undefined}>
+                      {expired ? "Expired " : ""}
+                      {new Date(expiry).toLocaleDateString()}
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                </td>
+                <td className="px-5 py-4">
+                  {p?.is_paid ? (
+                    <span className="font-semibold text-emerald-600">
+                      {formatRs(Number(p.paid_amount ?? 0))}
+                    </span>
+                  ) : (
+                    <Badge variant="secondary">Unpaid</Badge>
+                  )}
+                </td>
+                <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
+                  {p && p.is_paid && (
+                    <>
                       <Button
                         size="sm"
                         variant="outline"
-                        className="border-amber-400 text-amber-700 hover:bg-amber-50"
                         onClick={() =>
-                          setPayTarget({ id: a.id, name: `${u.full_name || u.email} - ${toolName}` })
+                          setPayTarget({
+                            id: p.id,
+                            name: u.full_name || u.email,
+                            amount: p.paid_amount == null ? null : Number(p.paid_amount),
+                            editing: true,
+                          })
                         }
                       >
-                        Mark as Paid
+                        Edit Amount
                       </Button>
-                    )}
+                      <Button size="sm" variant="ghost" onClick={() => unmarkPaid(p.id)}>
+                        Mark Unpaid
+                      </Button>
+                    </>
+                  )}
+                  {p && !p.is_paid && (
                     <Button
                       size="sm"
-                      variant="ghost"
-                      onClick={() => {
-                        setEditing(u);
-                        setOpen(true);
-                      }}
+                      variant="outline"
+                      className="border-amber-400 text-amber-700 hover:bg-amber-50"
+                      onClick={() => setPayTarget({ id: p.id, name: u.full_name || u.email })}
                     >
-                      <Pencil className="w-4 h-4" />
+                      Mark as Paid
                     </Button>
-                    <Button size="sm" variant="ghost" onClick={() => handleDelete(u.id)}>
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </td>
-                </tr>
-              );
-            });
+                  )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => {
+                      setEditing(u);
+                      setOpen(true);
+                    }}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={() => handleDelete(u.id)}>
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </td>
+              </tr>
+            );
           })}
 
           {filtered.length === 0 && (
             <tr>
-              <td colSpan={4} className="px-5 py-14 text-center text-muted-foreground">
-                No accounts match this filter.
+              <td colSpan={5} className="px-5 py-14 text-center text-muted-foreground">
+                No users match this filter.
               </td>
             </tr>
           )}
@@ -352,12 +278,10 @@ function KingResellerUsers() {
       </TableShell>
 
       <MarkPaidDialog
-        
         target={payTarget}
         onOpenChange={(v) => !v && setPayTarget(null)}
         onSaved={refreshEarnings}
       />
-
 
       <UserFormDialog
         open={open}
@@ -367,6 +291,5 @@ function KingResellerUsers() {
         onSaved={refreshEarnings}
       />
     </div>
-
   );
 }

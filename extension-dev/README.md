@@ -20,7 +20,7 @@ Manifest V3 Chrome extension for the Farix AI managed-account workflow:
 The default data contract expects:
 
 - `profiles`: one row keyed by `id`
-- `user_tools`: one row keyed by `user_id`, with `plan`, `tools`, and `expiry`/`expires_at`
+- `user_plans`: one row keyed by `user_id`, with `plan` and `expires_at` (Master plan)
 - `get_random_flow_account()`: returns an account containing `cookie_data`
 - `set_active_session(p_user_id, p_device_id)`: rejects an account already active elsewhere
 

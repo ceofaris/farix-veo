@@ -193,7 +193,7 @@
         toolRow?.plan_name,
         profileRow?.plan,
         profileRow?.plan_name,
-        "Veo"
+        "Master"
       ),
       tools: normalizeTools(
         firstDefined(toolRow?.tools, profileRow?.tools, merged.tool_access)
@@ -214,12 +214,12 @@
         1
       ),
       selectRows(
-        config.TABLES.userTools,
+        config.TABLES.userPlans,
         {
-          [config.USER_TOOLS_USER_COLUMN]: `eq.${user.id}`
+          [config.USER_PLANS_USER_COLUMN]: `eq.${user.id}`
         },
         accessToken,
-        "user_id,tool_id,expires_at",
+        "user_id,plan,expires_at",
         1
       )
     ]);
@@ -227,11 +227,27 @@
     const profileRow = Array.isArray(profileRows) ? profileRows[0] : profileRows;
     const toolRow = Array.isArray(toolRows) ? toolRows[0] : toolRows;
 
-    if (!profileRow && !toolRow) {
+    if (!profileRow) {
       throw new SupabaseError(
         "Your account is authenticated, but no Farix profile was found.",
         { code: "PROFILE_NOT_FOUND" }
       );
+    }
+
+    if (profileRow.is_active === false) {
+      throw new SupabaseError("Your Farix account is disabled.", {
+        code: "ACCOUNT_DISABLED"
+      });
+    }
+
+    const planActive =
+      !!toolRow &&
+      (!toolRow.expires_at || new Date(toolRow.expires_at).getTime() > Date.now());
+
+    if (!planActive && profileRow.role !== "king") {
+      throw new SupabaseError("Your Master plan is not active.", {
+        code: "NO_MASTER_PLAN"
+      });
     }
 
     return normalizeProfile(profileRow, toolRow, user);
