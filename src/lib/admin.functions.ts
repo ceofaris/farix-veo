@@ -79,11 +79,6 @@ export const createReseller = createServerFn({ method: "POST" })
       expires_at,
       created_by: context.userId,
     });
-    if (data.tool_ids.length) {
-      await supabaseAdmin
-        .from("reseller_tools")
-        .insert(data.tool_ids.map((tid) => ({ reseller_id: uid, tool_id: tid })));
-    }
     return { ok: true, id: uid };
   });
 
