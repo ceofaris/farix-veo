@@ -142,42 +142,6 @@ export type Database = {
         }
         Relationships: []
       }
-      reseller_tools: {
-        Row: {
-          created_at: string
-          id: string
-          reseller_id: string
-          tool_id: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          reseller_id: string
-          tool_id: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          reseller_id?: string
-          tool_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "reseller_tools_reseller_id_fkey"
-            columns: ["reseller_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "reseller_tools_tool_id_fkey"
-            columns: ["tool_id"]
-            isOneToOne: false
-            referencedRelation: "tools"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       tool_accounts: {
         Row: {
           cookie_data: string
@@ -252,7 +216,7 @@ export type Database = {
         }
         Relationships: []
       }
-      user_tools: {
+      user_plans: {
         Row: {
           created_at: string
           expires_at: string
@@ -260,7 +224,7 @@ export type Database = {
           is_paid: boolean
           paid_amount: number | null
           paid_at: string | null
-          tool_id: string
+          plan: string
           updated_at: string
           user_id: string
         }
@@ -271,7 +235,7 @@ export type Database = {
           is_paid?: boolean
           paid_amount?: number | null
           paid_at?: string | null
-          tool_id: string
+          plan?: string
           updated_at?: string
           user_id: string
         }
@@ -282,22 +246,15 @@ export type Database = {
           is_paid?: boolean
           paid_amount?: number | null
           paid_at?: string | null
-          tool_id?: string
+          plan?: string
           updated_at?: string
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "user_tools_tool_id_fkey"
-            columns: ["tool_id"]
-            isOneToOne: false
-            referencedRelation: "tools"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_tools_user_id_fkey"
+            foreignKeyName: "user_plans_user_id_fkey"
             columns: ["user_id"]
-            isOneToOne: false
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -328,6 +285,7 @@ export type Database = {
           tool_id: string
         }[]
       }
+      has_active_master: { Args: { _user_id: string }; Returns: boolean }
       is_king: { Args: { _user_id: string }; Returns: boolean }
       is_reseller: { Args: { _user_id: string }; Returns: boolean }
       set_active_session: { Args: { p_tool_account_id: string }; Returns: Json }
