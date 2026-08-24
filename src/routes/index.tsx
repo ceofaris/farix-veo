@@ -349,78 +349,84 @@ function Landing() {
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="mx-auto max-w-6xl px-5 py-24">
-        <Reveal>
-          <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
-            Pricing
-          </p>
-          <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
-            Access is invite-only. Payments are handled directly through your reseller via WhatsApp,
-            Telegram, Bank Transfer, Binance, EasyPaisa, JazzCash, or crypto.
-          </p>
-        </Reveal>
+      <section id="pricing" className="dark pricing-section">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
+          <div className="absolute -left-32 top-0 h-[500px] w-[500px] rounded-full bg-brand-violet/20 blur-[120px]" />
+          <div className="absolute -right-32 bottom-0 h-[500px] w-[500px] rounded-full bg-brand-pink/20 blur-[120px]" />
+        </div>
 
-        <Reveal delay={140}>
-          <div className="mx-auto mt-12 grid max-w-5xl gap-5 md:grid-cols-3 items-start">
-            {pricingPlans.map((plan) => {
-              const isPopular = plan.popular;
-              return (
-                <div
-                  key={plan.title}
-                  className={cn(
-                    "relative flex h-full flex-col overflow-hidden rounded-3xl border bg-card shadow-card transition-all duration-300 hover:-translate-y-1",
-                    isPopular
-                      ? "border-primary/40 shadow-glow hover:shadow-pop hover:border-primary/60"
-                      : "border-border hover:border-primary/40 hover:shadow-pop",
-                  )}
-                >
-                  {isPopular && (
-                    <span className="absolute -top-px left-1/2 z-10 -translate-x-1/2 rounded-b-full bg-gradient-cta px-4 py-1 text-[11px] font-display font-semibold uppercase tracking-wider text-primary-foreground shadow-sm">
-                      Popular
-                    </span>
-                  )}
-                  <span
-                    aria-hidden
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+          <span className="font-display pricing-watermark">Pricing</span>
+        </div>
+
+        <div className="relative mx-auto max-w-6xl px-5 py-28">
+          <Reveal>
+            <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-brand-pink">
+              Pricing
+            </p>
+            <h2 className="mt-4 text-center font-display text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+              Choose your plan
+            </h2>
+            <p className="mx-auto mt-5 max-w-2xl text-center text-sm leading-relaxed text-muted-foreground">
+              Access is invite-only. Payments are handled directly through your reseller via WhatsApp,
+              Telegram, Bank Transfer, Binance, EasyPaisa, JazzCash, or crypto.
+            </p>
+          </Reveal>
+
+          <Reveal delay={140}>
+            <div className="mx-auto mt-16 grid max-w-5xl items-start gap-6 md:grid-cols-3">
+              {pricingPlans.map((plan) => {
+                const isPopular = plan.popular;
+                return (
+                  <div
+                    key={plan.title}
                     className={cn(
-                      "block w-full",
-                      isPopular ? "h-1.5 bg-gradient-cta" : "h-1 bg-gradient-cta",
+                      "relative flex h-full flex-col overflow-hidden rounded-3xl",
+                      isPopular ? "pricing-card-popular" : "pricing-card",
                     )}
-                  />
-                  <div className="flex flex-1 flex-col p-6 sm:p-7">
-                    <h3 className="font-display text-xl font-bold tracking-[-0.02em] sm:text-2xl">
-                      {plan.title}
-                    </h3>
-                    <ul className="mt-5 space-y-2.5">
-                      {plan.features.map((feature) => (
-                        <li key={feature} className="flex items-start gap-3 text-sm">
-                          <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-primary-foreground">
-                            <Check className="h-3 w-3" strokeWidth={3} />
-                          </span>
-                          <span className="text-foreground/85">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Link
-                      to="/auth"
-                      className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-cta px-6 py-3 font-display font-semibold text-primary-foreground transition hover:opacity-90 active:scale-[0.98]"
-                    >
-                      Contact your Reseller <ArrowRight className="h-4 w-4" />
-                    </Link>
+                  >
+                    {isPopular && <span className="pricing-popular-badge">Popular</span>}
+                    <div className="flex flex-1 flex-col p-7 sm:p-8">
+                      <h3 className="font-display text-xl font-bold text-foreground sm:text-2xl">
+                        {plan.title}
+                      </h3>
+                      <ul className="mt-6 space-y-3">
+                        {plan.features.map((feature) => (
+                          <li key={feature} className="flex items-start gap-3 text-sm text-muted-foreground">
+                            <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-cta">
+                              <Check className="h-3 w-3" strokeWidth={3} />
+                            </span>
+                            <span className="text-foreground/85">{feature}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <Link
+                        to="/auth"
+                        className={cn(
+                          "mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display font-semibold transition hover:opacity-90 active:scale-[0.98]",
+                          isPopular
+                            ? "bg-gradient-cta text-cta shadow-cta-glow"
+                            : "pricing-btn-secondary",
+                        )}
+                      >
+                        Contact your Reseller <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </Reveal>
+                );
+              })}
+            </div>
+          </Reveal>
 
-        <Reveal delay={200}>
-          <p className="mt-10 text-center text-sm text-muted-foreground">
-            Already have credentials?{" "}
-            <Link to="/auth" className="font-medium text-primary hover:underline">
-              Sign in here →
-            </Link>
-          </p>
-        </Reveal>
+          <Reveal delay={200}>
+            <p className="mt-12 text-center text-sm text-muted-foreground">
+              Already have credentials?{" "}
+              <Link to="/auth" className="font-medium text-brand-pink hover:underline">
+                Sign in here →
+              </Link>
+            </p>
+          </Reveal>
+        </div>
       </section>
 
       {/* FAQ */}
