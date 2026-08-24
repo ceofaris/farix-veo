@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  Shield,
   ArrowRight,
   UserPlus,
   Puzzle,
@@ -9,6 +8,7 @@ import {
   Check,
   ChevronDown,
 } from "lucide-react";
+import { FarixMark } from "@/components/farix-logo";
 import { Reveal } from "@/components/reveal";
 import { MediaCard } from "@/components/dashboard/ui";
 import { cn } from "@/lib/utils";
@@ -192,11 +192,9 @@ function Navbar() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-5">
-        <Link to="/" className="flex min-w-0 items-center gap-2.5">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-cta text-primary-foreground shadow-soft">
-            <Shield className="h-4.5 w-4.5" />
-          </span>
-          <span className="truncate font-display text-lg font-bold tracking-tight">Farix AI</span>
+        <Link to="/" className="flex min-w-0 items-center gap-2">
+          <FarixMark className="h-8" />
+          <span className="truncate font-display text-lg font-bold tracking-tight text-foreground">Farix AI</span>
         </Link>
         <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
           {[
@@ -410,9 +408,7 @@ function Landing() {
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-xs text-muted-foreground sm:flex-row">
           <span className="flex items-center gap-2">
-            <span className="grid h-6 w-6 place-items-center rounded-lg bg-gradient-cta text-primary-foreground">
-              <Shield className="h-3 w-3" />
-            </span>
+            <FarixMark className="h-6" />
             <span className="font-display font-semibold text-foreground">Farix AI</span>
             <span>© {new Date().getFullYear()} · All rights reserved</span>
           </span>
