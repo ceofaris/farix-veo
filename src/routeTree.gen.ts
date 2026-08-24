@@ -22,6 +22,7 @@ import { Route as AuthenticatedResellerUsersRouteImport } from './routes/_authen
 import { Route as AuthenticatedResellerToolsRouteImport } from './routes/_authenticated/reseller/tools'
 import { Route as AuthenticatedKingToolsRouteImport } from './routes/_authenticated/king/tools'
 import { Route as AuthenticatedKingResellersRouteImport } from './routes/_authenticated/king/resellers'
+import { Route as AuthenticatedKingNichesRouteImport } from './routes/_authenticated/king/niches'
 import { Route as AuthenticatedKingExtensionLabRouteImport } from './routes/_authenticated/king/extension-lab'
 import { Route as AuthenticatedDashboardVeo3RouteImport } from './routes/_authenticated/dashboard/veo-3'
 import { Route as AuthenticatedDashboardChatgptRouteImport } from './routes/_authenticated/dashboard/chatgpt'
@@ -99,6 +100,11 @@ const AuthenticatedKingResellersRoute =
     path: '/resellers',
     getParentRoute: () => AuthenticatedKingRouteRoute,
   } as any)
+const AuthenticatedKingNichesRoute = AuthenticatedKingNichesRouteImport.update({
+  id: '/niches',
+  path: '/niches',
+  getParentRoute: () => AuthenticatedKingRouteRoute,
+} as any)
 const AuthenticatedKingExtensionLabRoute =
   AuthenticatedKingExtensionLabRouteImport.update({
     id: '/extension-lab',
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
+  '/king/niches': typeof AuthenticatedKingNichesRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
   '/king/tools': typeof AuthenticatedKingToolsRoute
   '/reseller/tools': typeof AuthenticatedResellerToolsRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
+  '/king/niches': typeof AuthenticatedKingNichesRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
   '/king/tools': typeof AuthenticatedKingToolsRoute
   '/reseller/tools': typeof AuthenticatedResellerToolsRoute
@@ -176,6 +184,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/_authenticated/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/_authenticated/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
+  '/_authenticated/king/niches': typeof AuthenticatedKingNichesRoute
   '/_authenticated/king/resellers': typeof AuthenticatedKingResellersRoute
   '/_authenticated/king/tools': typeof AuthenticatedKingToolsRoute
   '/_authenticated/reseller/tools': typeof AuthenticatedResellerToolsRoute
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/dashboard/chatgpt'
     | '/dashboard/veo-3'
     | '/king/extension-lab'
+    | '/king/niches'
     | '/king/resellers'
     | '/king/tools'
     | '/reseller/tools'
@@ -213,6 +223,7 @@ export interface FileRouteTypes {
     | '/dashboard/chatgpt'
     | '/dashboard/veo-3'
     | '/king/extension-lab'
+    | '/king/niches'
     | '/king/resellers'
     | '/king/tools'
     | '/reseller/tools'
@@ -233,6 +244,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/chatgpt'
     | '/_authenticated/dashboard/veo-3'
     | '/_authenticated/king/extension-lab'
+    | '/_authenticated/king/niches'
     | '/_authenticated/king/resellers'
     | '/_authenticated/king/tools'
     | '/_authenticated/reseller/tools'
@@ -343,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKingResellersRouteImport
       parentRoute: typeof AuthenticatedKingRouteRoute
     }
+    '/_authenticated/king/niches': {
+      id: '/_authenticated/king/niches'
+      path: '/niches'
+      fullPath: '/king/niches'
+      preLoaderRoute: typeof AuthenticatedKingNichesRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
     '/_authenticated/king/extension-lab': {
       id: '/_authenticated/king/extension-lab'
       path: '/extension-lab'
@@ -401,6 +420,7 @@ const AuthenticatedDashboardRouteRouteWithChildren =
 
 interface AuthenticatedKingRouteRouteChildren {
   AuthenticatedKingExtensionLabRoute: typeof AuthenticatedKingExtensionLabRoute
+  AuthenticatedKingNichesRoute: typeof AuthenticatedKingNichesRoute
   AuthenticatedKingResellersRoute: typeof AuthenticatedKingResellersRoute
   AuthenticatedKingToolsRoute: typeof AuthenticatedKingToolsRoute
   AuthenticatedKingIndexRoute: typeof AuthenticatedKingIndexRoute
@@ -411,6 +431,7 @@ interface AuthenticatedKingRouteRouteChildren {
 const AuthenticatedKingRouteRouteChildren: AuthenticatedKingRouteRouteChildren =
   {
     AuthenticatedKingExtensionLabRoute: AuthenticatedKingExtensionLabRoute,
+    AuthenticatedKingNichesRoute: AuthenticatedKingNichesRoute,
     AuthenticatedKingResellersRoute: AuthenticatedKingResellersRoute,
     AuthenticatedKingToolsRoute: AuthenticatedKingToolsRoute,
     AuthenticatedKingIndexRoute: AuthenticatedKingIndexRoute,
