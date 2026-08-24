@@ -375,27 +375,33 @@
     radial-gradient(circle at 82% 80%, color-mix(in oklab, var(--brand-pink) 18%, transparent) 0%, transparent 42%);
 }
 
-@utility pricing-watermark {
-  font-size: clamp(7rem, 20vw, 16rem);
+@utility pricing-title {
+  position: relative;
+  text-align: center;
+  font-size: clamp(4.5rem, 15vw, 12rem);
+  line-height: 0.9;
   font-weight: 700;
-  letter-spacing: -0.04em;
-  color: color-mix(in oklab, var(--foreground) 3%, transparent);
+  letter-spacing: -0.05em;
+  background: linear-gradient(100deg, var(--brand-violet), var(--brand-pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   user-select: none;
-  pointer-events: none;
 }
 
 @utility pricing-card {
-  background: color-mix(in oklab, var(--foreground) 8%, transparent);
+  background: color-mix(in oklab, var(--card) 75%, transparent);
   backdrop-filter: blur(24px) saturate(140%);
-  border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
-  box-shadow: 0 24px 60px -20px oklch(0 0 0 / 55%);
+  border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+  box-shadow: 0 24px 60px -24px color-mix(in oklab, var(--foreground) 35%, transparent);
   transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
   &:hover {
     transform: translateY(-6px);
-    border-color: color-mix(in oklab, var(--foreground) 16%, transparent);
-    box-shadow: 0 30px 70px -24px oklch(0 0 0 / 65%);
+    border-color: color-mix(in oklab, var(--primary) 35%, transparent);
+    box-shadow: 0 30px 70px -26px color-mix(in oklab, var(--foreground) 45%, transparent);
   }
 }
+
 
 @utility pricing-card-popular {
   background: color-mix(in oklab, var(--foreground) 12%, transparent);
