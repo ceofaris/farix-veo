@@ -379,13 +379,13 @@
   font-size: clamp(7rem, 20vw, 16rem);
   font-weight: 700;
   letter-spacing: -0.04em;
-  color: color-mix(in oklab, var(--foreground) 5%, transparent);
+  color: color-mix(in oklab, var(--foreground) 3%, transparent);
   user-select: none;
   pointer-events: none;
 }
 
 @utility pricing-card {
-  background: color-mix(in oklab, var(--foreground) 6%, transparent);
+  background: color-mix(in oklab, var(--foreground) 8%, transparent);
   backdrop-filter: blur(24px) saturate(140%);
   border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
   box-shadow: 0 24px 60px -20px oklch(0 0 0 / 55%);
@@ -398,7 +398,7 @@
 }
 
 @utility pricing-card-popular {
-  background: color-mix(in oklab, var(--foreground) 9%, transparent);
+  background: color-mix(in oklab, var(--foreground) 12%, transparent);
   backdrop-filter: blur(28px) saturate(160%);
   border: 1px solid color-mix(in oklab, var(--primary) 30%, transparent);
   box-shadow:

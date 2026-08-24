@@ -351,8 +351,8 @@ function Landing() {
       {/* Pricing */}
       <section id="pricing" className="dark pricing-section">
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          <div className="absolute -left-32 top-0 h-[500px] w-[500px] rounded-full bg-brand-violet/20 blur-[120px]" />
-          <div className="absolute -right-32 bottom-0 h-[500px] w-[500px] rounded-full bg-brand-pink/20 blur-[120px]" />
+          <div className="absolute -left-32 top-0 h-[500px] w-[500px] rounded-full bg-brand-violet/15 blur-[120px]" />
+          <div className="absolute -right-32 bottom-0 h-[500px] w-[500px] rounded-full bg-brand-pink/15 blur-[120px]" />
         </div>
 
         <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
