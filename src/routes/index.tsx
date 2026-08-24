@@ -274,7 +274,7 @@ function Landing() {
             </div>
           </Reveal>
           <Reveal delay={240}>
-            <section className="-mx-6 mt-20 grid w-[calc(100%+3rem)] grid-cols-7 gap-1 sm:-mx-10 sm:w-[calc(100%+5rem)]">
+            <section className="-mx-5 mt-20 grid w-[calc(100%+2.5rem)] grid-cols-7 gap-1.5 sm:-mx-8 sm:w-[calc(100%+4rem)]">
               {CLIPS.map((c, i) => (
                 <MediaCard key={i} ratio="9/16" hue={c.hue} videoSrc={CLIP_SRCS[i]} />
               ))}
