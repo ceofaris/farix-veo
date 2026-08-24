@@ -195,10 +195,19 @@
     const planActive =
       !!toolRow &&
       (!toolRow.expires_at || new Date(toolRow.expires_at).getTime() > Date.now());
-    if (!planActive && profileRow.role !== "king") {
-      throw new SupabaseError("Your Master plan is not active.", {
-        code: "NO_MASTER_PLAN"
-      });
+    const allowedPlans = ["chatgpt_premium", "master"];
+    const planIncludes = !!toolRow && allowedPlans.indexOf(toolRow.plan) !== -1;
+
+    if (profileRow.role !== "king") {
+      if (!planActive) {
+        throw new SupabaseError("Your plan is not active.", { code: "NO_ACTIVE_PLAN" });
+      }
+      if (!planIncludes) {
+        throw new SupabaseError(
+          "Your plan does not include ChatGPT Premium. Upgrade to the Master plan.",
+          { code: "PLAN_FEATURE_LOCKED" }
+        );
+      }
     }
     return normalizeProfile(profileRow, toolRow, user);
   }
