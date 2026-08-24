@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { PageHeader } from "@/components/panel-layout";
+import { useAllowedPlans } from "@/hooks/use-allowed-plans";
 import { StatCard } from "@/components/stat-card";
 import { Users, Crown } from "lucide-react";
 import { useProfile } from "@/hooks/use-profile";
@@ -12,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/reseller/")({
 
 function ResellerDashboard() {
   const { profile } = useProfile();
+  const allowed = useAllowedPlans();
   const stats = useQuery({
     queryKey: ["reseller-stats", profile?.id],
     enabled: !!profile,
@@ -26,10 +28,10 @@ function ResellerDashboard() {
 
   return (
     <div>
-      <PageHeader title="Dashboard" description="Overview of your Master plan users." />
+      <PageHeader title="Dashboard" description="Overview of your plan users." />
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mt-6">
         <StatCard icon={Users} label="My Users" value={stats.data?.users ?? "—"} tone="primary" />
-        <StatCard icon={Crown} label="Plan You Sell" value="Master" tone="chart-2" />
+        <StatCard icon={Crown} label="Plans You Sell" value={allowed.plans.map((p) => p.name).join(", ") || "—"} tone="chart-2" />
       </div>
     </div>
   );

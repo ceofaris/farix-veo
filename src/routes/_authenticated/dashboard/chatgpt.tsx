@@ -3,6 +3,7 @@ import { Brain, Search, Mic, Image as ImageIcon, Paperclip, Code2, Download } fr
 import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { FeatureCard, HeroBanner, LiveBadge, VideoGuide } from "@/components/dashboard/ui";
+import { PlanLock } from "@/components/plan-lock";
 
 export const Route = createFileRoute("/_authenticated/dashboard/chatgpt")({
   component: ChatGptPage,
@@ -25,9 +26,12 @@ export const Route = createFileRoute("/_authenticated/dashboard/chatgpt")({
 });
 
 function ChatGptPage() {
-  const { findTool, expiryFor, downloadExtension } = useMyTools();
+  const { findTool, expiryFor, downloadExtension, hasChatgpt, loading } = useMyTools();
   const tool = findTool(/chat\s*-?\s*gpt/i);
   const expires = expiryFor(/chat\s*-?\s*gpt/i);
+
+  if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading…</div>;
+  if (!hasChatgpt) return <PlanLock feature="chatgpt" title="ChatGPT Premium" />;
 
   return (
     <div className="space-y-10">

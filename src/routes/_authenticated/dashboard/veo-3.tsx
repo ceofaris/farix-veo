@@ -3,6 +3,7 @@ import { Clapperboard, AudioLines, Banana, Download } from "lucide-react";
 import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { FeatureCard, HeroBanner, LiveBadge, VideoGuide } from "@/components/dashboard/ui";
+import { PlanLock } from "@/components/plan-lock";
 
 export const Route = createFileRoute("/_authenticated/dashboard/veo-3")({
   component: VeoPage,
@@ -25,9 +26,12 @@ export const Route = createFileRoute("/_authenticated/dashboard/veo-3")({
 });
 
 function VeoPage() {
-  const { findTool, expiryFor, downloadExtension } = useMyTools();
+  const { findTool, expiryFor, downloadExtension, hasVeo, loading } = useMyTools();
   const tool = findTool(/veo/i);
   const expires = expiryFor(/veo/i);
+
+  if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading…</div>;
+  if (!hasVeo) return <PlanLock feature="veo" title="Veo 3" />;
 
   return (
     <div className="space-y-10">

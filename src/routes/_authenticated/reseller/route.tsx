@@ -38,7 +38,7 @@ function ResellerLayout() {
       title="Reseller Panel"
       items={[
         { to: "/reseller", label: "Dashboard", icon: LayoutDashboard },
-        { to: "/reseller/tools", label: "Master Plan", icon: Crown },
+        { to: "/reseller/tools", label: "My Plans", icon: Crown },
         { to: "/reseller/users", label: "My Users", icon: Users },
       ]}
     >

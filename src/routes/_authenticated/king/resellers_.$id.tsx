@@ -11,7 +11,8 @@ import { UserFormDialog, UserRow } from "@/components/user-form-dialog";
 import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
 import { toast } from "sonner";
-import { MASTER_PLAN, planExpired } from "@/lib/queries";
+import { planExpired } from "@/lib/queries";
+import { planName, type PlanId } from "@/lib/plans";
 import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
 
 export const Route = createFileRoute("/_authenticated/king/resellers_/$id")({
@@ -19,16 +20,16 @@ export const Route = createFileRoute("/_authenticated/king/resellers_/$id")({
   head: () => ({
     meta: [
       { title: "Reseller Detail | Farix King Panel" },
-      { name: "description", content: "View a reseller's Master plan users, expiry and payment status." },
+      { name: "description", content: "View a reseller's users, expiry and payment status." },
       { property: "og:title", content: "Reseller Detail | Farix King Panel" },
-      { property: "og:description", content: "View a reseller's Master plan users, expiry and payment status." },
+      { property: "og:description", content: "View a reseller's users, expiry and payment status." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
   }),
 });
 
-type PlanRow = { id: string; is_paid: boolean; paid_amount: number | null; expires_at: string };
+type PlanRow = { id: string; is_paid: boolean; paid_amount: number | null; expires_at: string; plan: PlanId };
 type DetailUser = UserRow & { user_plans: PlanRow | PlanRow[] | null };
 
 type Filter = "all" | "paid" | "unpaid" | "expired";
@@ -73,7 +74,7 @@ function KingResellerUsers() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, email, full_name, is_active, expires_at, user_plans(id, is_paid, paid_amount, expires_at)")
+        .select("id, email, full_name, is_active, expires_at, user_plans(id, plan, is_paid, paid_amount, expires_at)")
         .eq("role", "user")
         .eq("created_by", id)
         .order("created_at", { ascending: false });
@@ -136,7 +137,7 @@ function KingResellerUsers() {
 
       <PageHeader
         title={reseller.data?.full_name || reseller.data?.email || "Reseller"}
-        description={`Master plan users belonging to this reseller — ${MASTER_PLAN.features.join(", ")}.`}
+        description="Users belonging to this reseller — plan, expiry and payment status."
         action={
           <Button
             size="lg"
@@ -195,7 +196,7 @@ function KingResellerUsers() {
                 </td>
                 <td className="px-5 py-4">
                   <Badge variant={u.is_active && !expired ? "default" : "secondary"}>
-                    {u.is_active && !expired ? "Master · Active" : "Master · Locked"}
+                    {planName(p?.plan)} · {u.is_active && !expired ? "Active" : "Locked"}
                   </Badge>
                 </td>
                 <td className="px-5 py-4 text-sm text-muted-foreground">
@@ -253,7 +254,7 @@ function KingResellerUsers() {
                     size="sm"
                     variant="ghost"
                     onClick={() => {
-                      setEditing(u);
+                      setEditing({ ...u, plan: p?.plan ?? null });
                       setOpen(true);
                     }}
                   >
