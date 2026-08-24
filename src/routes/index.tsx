@@ -82,21 +82,35 @@ const steps = [
 
 const pricingPlans = [
   {
-    title: "Veo 3",
+    title: "Veo Ultra",
     features: [
-      "Unlimited AI Video",
-      "Veo 3 Lite LP Model",
+      "Veo 3 Lite (Unlimited)",
+      "Prompts Base",
       "Nano Banana",
       "Nano Banana 2",
       "Imagen 4 Ultra",
     ],
   },
   {
-    title: "ChatGPT",
+    title: "Master Plan",
+    popular: true,
+    features: [
+      "Veo 3 Lite (Unlimited)",
+      "ChatGPT Premium",
+      "Prompts Base (Latest Niches)",
+      "Nano Banana",
+      "Nano Banana 2",
+      "Imagen 4 Ultra",
+      "Early Access To Latest Features",
+    ],
+  },
+  {
+    title: "ChatGPT Premium",
     features: [
       "Unlimited Chats",
       "Image Generation (Limited)",
       "Image Attachment Support",
+      "Prompts Base",
     ],
   },
 ];
