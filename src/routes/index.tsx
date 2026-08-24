@@ -10,11 +10,16 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { Reveal } from "@/components/reveal";
+import { MediaCard } from "@/components/dashboard/ui";
 import { cn } from "@/lib/utils";
-import logoFlow from "@/assets/logo-flow.png.asset.json";
-import logoVeo from "@/assets/logo-veo.png.asset.json";
-import logoChatgpt from "@/assets/logo-chatgpt.png.asset.json";
-import logoVeo31 from "@/assets/logo-veo31.png.asset.json";
+import clip1 from "@/assets/farix-clip-1.mp4.asset.json";
+import clip2 from "@/assets/farix-clip-2.mp4.asset.json";
+import clip3 from "@/assets/farix-clip-3.mp4.asset.json";
+import clip4 from "@/assets/farix-clip-4.mp4.asset.json";
+import clip5 from "@/assets/farix-clip-5.mp4.asset.json";
+import clip6 from "@/assets/farix-clip-6.mp4.asset.json";
+import clip7 from "@/assets/farix-clip-7.mp4.asset.json";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
