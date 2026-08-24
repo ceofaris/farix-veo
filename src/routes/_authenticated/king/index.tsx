@@ -56,7 +56,7 @@ function KingDashboard() {
 
   const byTool = useMemo(() => {
     const cookies = counts.data?.cookieAccounts ?? [];
-    // Every Master plan unlocks every tool, so per-tool numbers mirror the plan totals.
+    // Plan totals across all three plans.
     return (tools.data ?? []).map((t) => ({
       ...t,
       users: rows.length,
@@ -75,7 +75,7 @@ function KingDashboard() {
       <div>
         <h1 className="text-3xl font-semibold tracking-tight">King Panel</h1>
         <p className="text-muted-foreground mt-2">
-          Live overview of Master plan earnings, users and cookie accounts.
+          Live overview of plan earnings, users and cookie accounts.
         </p>
       </div>
 
@@ -103,14 +103,14 @@ function KingDashboard() {
         />
         <StatCard
           icon={BadgeCheck}
-          label="Paid Master Plans"
+          label="Paid Plans"
           value={loaded ? totals.paidCount : "—"}
-          hint={loaded ? `of ${totals.total} Master plans` : undefined}
+          hint={loaded ? `of ${totals.total} plans` : undefined}
           tone="chart-2"
         />
         <StatCard
           icon={BadgeAlert}
-          label="Unpaid Master Plans"
+          label="Unpaid Plans"
           value={loaded ? totals.pendingCount : "—"}
           hint={loaded ? `${totals.pendingResellers} reseller(s) with pending dues` : undefined}
           tone="chart-5"
@@ -127,7 +127,7 @@ function KingDashboard() {
       <Card className="p-6 sm:p-8">
         <div className="font-medium">Tool usage</div>
         <p className="text-sm text-muted-foreground mt-1">
-          Master plan users, payments collected and live cookie accounts.
+          Plan users, payments collected and live cookie accounts.
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">

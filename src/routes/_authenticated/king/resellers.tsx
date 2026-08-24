@@ -261,7 +261,7 @@ function KingResellers() {
         <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
           <tr>
             <th className="px-5 py-3.5 font-semibold">Reseller</th>
-            <th className="px-5 py-3.5 font-semibold">Master Plans</th>
+            <th className="px-5 py-3.5 font-semibold">Plans Sold</th>
             <th className="px-5 py-3.5 font-semibold">Paid</th>
             <th className="px-5 py-3.5 font-semibold">Pending</th>
             <th className="px-5 py-3.5 font-semibold">Total Earned</th>
