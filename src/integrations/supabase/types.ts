@@ -106,6 +106,42 @@ export type Database = {
           },
         ]
       }
+      niches: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          image_path: string | null
+          is_active: boolean
+          name: string
+          prompt_text: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_path?: string | null
+          is_active?: boolean
+          name: string
+          prompt_text: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          image_path?: string | null
+          is_active?: boolean
+          name?: string
+          prompt_text?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -141,6 +177,35 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      reseller_plans: {
+        Row: {
+          created_at: string
+          id: string
+          plan: string
+          reseller_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          plan: string
+          reseller_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          plan?: string
+          reseller_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reseller_plans_reseller_id_fkey"
+            columns: ["reseller_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tool_accounts: {
         Row: {
@@ -286,6 +351,10 @@ export type Database = {
         }[]
       }
       has_active_master: { Args: { _user_id: string }; Returns: boolean }
+      has_feature: {
+        Args: { _feature: string; _user_id: string }
+        Returns: boolean
+      }
       is_king: { Args: { _user_id: string }; Returns: boolean }
       is_reseller: { Args: { _user_id: string }; Returns: boolean }
       set_active_session: { Args: { p_tool_account_id: string }; Returns: Json }
