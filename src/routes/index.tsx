@@ -357,7 +357,7 @@ function Landing() {
 
         <div className="relative mx-auto max-w-6xl px-5 py-24">
           <Reveal>
-            <h2 className="pricing-title font-display">Pricing</h2>
+            <h2 className="pricing-title -mt-8 font-display">Pricing</h2>
           </Reveal>
 
           <Reveal delay={140}>
