@@ -125,7 +125,7 @@ function AuthPage() {
               </div>
             </div>
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "Please wait…" : mode === "signin" ? "Sign In" : "Create Admin"}
+              {loading ? "Please wait…" : "Sign In"}
             </Button>
           </form>
           <p className="text-xs text-muted-foreground text-center mt-6">
