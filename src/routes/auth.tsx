@@ -8,8 +8,6 @@ import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { FarixMark } from "@/components/farix-logo";
-import { useServerFn } from "@tanstack/react-start";
-import { bootstrapKing } from "@/lib/admin.functions";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
