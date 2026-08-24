@@ -21,7 +21,7 @@ The extension uses the configured Supabase project and public anon key. Never re
 The default contract expects:
 
 - `profiles`: one row keyed by `id`
-- `user_tools`: one row keyed by `user_id`
+- `user_plans`: one row keyed by `user_id` (Master plan + `expires_at`)
 - `get_random_chatgpt_account()`: returns an account containing `cookie_data`
 - `set_active_session(p_user_id, p_device_id, p_tool, p_account_id)`: rejects an account already active elsewhere
 

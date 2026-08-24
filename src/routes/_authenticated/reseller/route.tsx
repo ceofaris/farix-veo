@@ -4,7 +4,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { PanelLayout } from "@/components/panel-layout";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LayoutDashboard, Wrench, Users } from "lucide-react";
+import { LayoutDashboard, Crown, Users } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/reseller")({
   component: ResellerLayout,
@@ -38,7 +38,7 @@ function ResellerLayout() {
       title="Reseller Panel"
       items={[
         { to: "/reseller", label: "Dashboard", icon: LayoutDashboard },
-        { to: "/reseller/tools", label: "My Tools", icon: Wrench },
+        { to: "/reseller/tools", label: "Master Plan", icon: Crown },
         { to: "/reseller/users", label: "My Users", icon: Users },
       ]}
     >
