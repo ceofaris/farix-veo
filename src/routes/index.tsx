@@ -21,25 +21,55 @@ import clip6 from "@/assets/farix-clip-6.mp4.asset.json";
 import clip7 from "@/assets/farix-clip-7.mp4.asset.json";
 
 
+const SITE_URL = "https://farixai.com";
+const BRAND_IMAGE = `${SITE_URL}${markAsset.url}`;
+const HOME_TITLE = "Farix AI — Create with AI Without Hassle";
+const HOME_DESCRIPTION =
+  "Farix AI gives you managed access to premium AI tools like Veo 3 and ChatGPT through one secure, invite-only platform — no accounts or setup needed.";
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Farix AI — Premium AI Tools Behind One Secure Login" },
-      {
-        name: "description",
-        content:
-          "Farix AI gives teams and resellers managed access to premium AI tools — video, chat, image and voice — from one secure, invite-only platform.",
-      },
-      { property: "og:title", content: "Farix AI — Premium AI Tools Behind One Secure Login" },
-      {
-        property: "og:description",
-        content:
-          "Managed access to premium AI tools — video, chat, image and voice — from one secure platform.",
-      },
+      { title: HOME_TITLE },
+      { name: "description", content: HOME_DESCRIPTION },
+      { property: "og:title", content: HOME_TITLE },
+      { property: "og:description", content: HOME_DESCRIPTION },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: `${SITE_URL}/` },
+      { property: "og:image", content: BRAND_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: HOME_TITLE },
+      { name: "twitter:description", content: HOME_DESCRIPTION },
+      { name: "twitter:image", content: BRAND_IMAGE },
     ],
-    links: [{ rel: "canonical", href: "https://farixai.com/" }],
+    links: [{ rel: "canonical", href: `${SITE_URL}/` }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Farix AI",
+          url: SITE_URL,
+          logo: BRAND_IMAGE,
+          description:
+            "Farix AI provides managed, invite-only access to premium AI tools through a secure Chrome extension.",
+          sameAs: [],
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqItems.map((item) => ({
+            "@type": "Question",
+            name: item.question,
+            acceptedAnswer: { "@type": "Answer", text: item.answer },
+          })),
+        }),
+      },
+    ],
   }),
   component: Landing,
 });
