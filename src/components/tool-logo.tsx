@@ -1,4 +1,4 @@
-import { builtInToolLogo } from "@/lib/tool-logos";
+import { builtInToolLogoInfo } from "@/lib/tool-logos";
 
 export function ToolLogo({
   tool,
@@ -7,9 +7,9 @@ export function ToolLogo({
   tool: { name: string; slug?: string | null };
   className?: string;
 }) {
-  const url = builtInToolLogo(tool);
+  const logo = builtInToolLogoInfo(tool);
 
-  if (!url)
+  if (!logo)
     return (
       <div
         className={`${className} rounded-xl bg-accent text-accent-foreground border border-border flex items-center justify-center text-sm font-semibold`}
@@ -20,10 +20,14 @@ export function ToolLogo({
 
   return (
     <img
-      src={url}
+      src={logo.url}
       alt={`${tool.name} logo`}
       loading="lazy"
-      className={`${className} rounded-xl object-contain p-1.5 bg-background border border-border`}
+      className={
+        logo.bleed
+          ? `${className} rounded-xl object-cover border border-border`
+          : `${className} rounded-xl object-contain p-1.5 bg-background border border-border`
+      }
     />
   );
 }

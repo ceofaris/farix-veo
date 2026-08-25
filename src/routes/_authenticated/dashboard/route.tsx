@@ -3,7 +3,8 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
-import { Clapperboard, Home, LogOut, Menu, MessageSquare, Sparkles, X } from "lucide-react";
+import { Home, LogOut, Menu, MessageSquare, Sparkles, X } from "lucide-react";
+import { flowLogoUrl } from "@/lib/tool-logos";
 import { FarixMark } from "@/components/farix-logo";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -12,8 +13,17 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardLayout,
 });
 
+const FlowIcon = ({ className }: { className?: string }) => (
+  <img
+    src={flowLogoUrl}
+    alt=""
+    aria-hidden
+    className={cn(className, "rounded-[5px] object-cover")}
+  />
+);
+
 const NAV = [
-  { to: "/dashboard/veo-3", label: "Veo 3", icon: Clapperboard },
+  { to: "/dashboard/veo-3", label: "Veo 3", icon: FlowIcon },
   { to: "/dashboard/chatgpt", label: "ChatGPT", icon: MessageSquare },
   { to: "/dashboard/prompts", label: "Niche Prompts", icon: Sparkles },
 ] as const;
