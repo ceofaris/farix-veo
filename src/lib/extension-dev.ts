@@ -13,6 +13,13 @@ const chatgptModules = import.meta.glob("/extension-dev-chatgpt/**/*", {
   eager: true,
 }) as Record<string, string>;
 
+const multiModules = import.meta.glob("/extension-dev-multi/**/*", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+
+
 export type DevFile = { path: string; content: string; bytes: number };
 
 function toFiles(modules: Record<string, string>, prefix: string): DevFile[] {
