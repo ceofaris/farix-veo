@@ -6,7 +6,7 @@ export function FarixMark({ className }: { className?: string }) {
     <img
       src={markAsset.url}
       alt="Farix logo"
-      className={cn("h-8 w-auto shrink-0 object-contain select-none", className)}
+      className={cn("h-6 w-auto shrink-0 object-contain select-none", className)}
       draggable={false}
     />
   );

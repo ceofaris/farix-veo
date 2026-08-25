@@ -207,7 +207,7 @@ function Navbar() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-5">
         <Link to="/" className="flex min-w-0 items-center gap-2">
-          <FarixMark className="h-8" />
+          <FarixMark className="h-6" />
           <span className="truncate font-display text-lg font-bold tracking-tight text-foreground">Farix AI</span>
         </Link>
         <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
@@ -435,7 +435,7 @@ function Landing() {
       <footer className="border-t border-border">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-xs text-muted-foreground sm:flex-row">
           <span className="flex items-center gap-2">
-            <FarixMark className="h-6" />
+            <FarixMark className="h-5" />
             <span className="font-display font-semibold text-foreground">Farix AI</span>
             <span>© {new Date().getFullYear()} · All rights reserved</span>
           </span>

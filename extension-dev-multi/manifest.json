@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Farix AI — Multi Session (Veo 3 + ChatGPT)",
+  "name": "Farix AI",
   "version": "1.0.0",
   "description": "One managed Farix AI extension for Veo 3 and ChatGPT sessions.",
   "permissions": [

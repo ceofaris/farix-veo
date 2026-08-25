@@ -80,7 +80,7 @@ function AuthPage() {
       <ThemeToggle className="absolute top-6 right-6" />
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center gap-2 justify-center mb-8">
-          <FarixMark className="h-9" />
+          <FarixMark className="h-7" />
           <span className="text-xl font-semibold tracking-tight text-foreground">Farix</span>
         </Link>
         <div className="bg-card border border-border rounded-2xl p-8 shadow-card">
