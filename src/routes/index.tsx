@@ -2,9 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ArrowRight,
-  UserPlus,
+  UserRound,
   Puzzle,
-  Play,
+  PlayCircle,
   Check,
   ChevronDown,
 } from "lucide-react";
