@@ -330,7 +330,7 @@ function Landing() {
       </section>
 
       {/* About */}
-      <section id="about" className="mx-auto max-w-6xl px-5 py-24">
+      <section id="about" className="mx-auto max-w-6xl px-5 py-20">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-foreground sm:text-[2.5rem]">
