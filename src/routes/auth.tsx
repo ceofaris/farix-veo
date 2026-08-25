@@ -11,14 +11,28 @@ import { FarixMark } from "@/components/farix-logo";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
-  head: () => ({
-    meta: [
-      { title: "Sign in — Farix" },
-      { name: "description", content: "Sign in to the Farix cookie management platform." },
-      { property: "og:title", content: "Sign in — Farix" },
-      { property: "og:description", content: "Sign in to the Farix cookie management platform." },
-    ],
-  }),
+  head: () => {
+    const title = "Sign In | Farix AI";
+    const description =
+      "Sign in to your Farix AI account to access your assigned premium AI tools. Access is invite-only and provided by an authorized Farix AI reseller.";
+    const image = "https://farixai.com/__l5e/assets-v1/5f13d1dc-09a1-42c1-855d-4edb89b406e9/farix-mark.png";
+    return {
+      meta: [
+        { title },
+        { name: "description", content: description },
+        { property: "og:title", content: title },
+        { property: "og:description", content: description },
+        { property: "og:type", content: "website" },
+        { property: "og:url", content: "https://farixai.com/auth" },
+        { property: "og:image", content: image },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: description },
+        { name: "twitter:image", content: image },
+      ],
+      links: [{ rel: "canonical", href: "https://farixai.com/auth" }],
+    };
+  },
   component: AuthPage,
 });
 

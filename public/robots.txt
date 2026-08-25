@@ -1,8 +1,14 @@
 User-agent: Googlebot
 Allow: /
+Disallow: /king
+Disallow: /reseller
+Disallow: /dashboard
 
 User-agent: Bingbot
 Allow: /
+Disallow: /king
+Disallow: /reseller
+Disallow: /dashboard
 
 User-agent: Twitterbot
 Allow: /
@@ -10,5 +16,49 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+User-agent: GPTBot
+Allow: /
+Disallow: /king
+Disallow: /reseller
+Disallow: /dashboard
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /king
+Disallow: /reseller
+Disallow: /dashboard
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /king
+Disallow: /reseller
+Disallow: /dashboard
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /king
+Disallow: /reseller
+Disallow: /dashboard
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /king
+Disallow: /reseller
+Disallow: /dashboard
+
+User-agent: Applebot
+Allow: /
+
 User-agent: *
 Allow: /
+Disallow: /king
+Disallow: /reseller
+Disallow: /dashboard
+
+Sitemap: https://farixai.com/sitemap.xml
