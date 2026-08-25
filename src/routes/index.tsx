@@ -297,32 +297,30 @@ function Landing() {
 
 
       {/* How it works */}
-      <section id="how" className="border-y border-border bg-secondary/40">
-        <div className="mx-auto max-w-6xl px-5 py-28">
+      <section id="how" className="bg-background">
+        <div className="mx-auto max-w-6xl px-5 py-20">
           <Reveal>
-            <p className="text-center font-display text-xs font-semibold uppercase tracking-[0.28em] text-primary">
-              How it works
-            </p>
-            <h2 className="mt-4 text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
+            <h2 className="text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
               Live in three steps.
             </h2>
           </Reveal>
-          <div className="mt-14 grid gap-6 md:grid-cols-3">
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
             {steps.map((s, i) => {
               const Icon = s.icon;
               return (
                 <Reveal key={s.n} delay={i * 100}>
-                  <div className="h-full rounded-2xl border border-border bg-card p-7 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-pop">
+                  <div className="group relative h-full overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-pop">
+                    <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-brand-violet/60 via-brand-pink/60 to-brand-cyan/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     <div className="flex items-start justify-between">
-                      <span className="grid h-11 w-11 place-items-center rounded-xl bg-primary/10 text-primary">
+                      <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary shadow-sm">
                         <Icon className="h-5 w-5" />
                       </span>
-                      <span className="font-display text-3xl font-extrabold text-muted-foreground/25">
+                      <span className="font-display text-3xl font-extrabold tabular-nums tracking-tight text-muted-foreground/20">
                         {s.n}
                       </span>
                     </div>
-                    <h3 className="mt-5 font-display text-lg font-semibold">{s.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
+                    <h3 className="mt-6 font-display text-lg font-semibold tracking-tight">{s.title}</h3>
+                    <p className="mt-2.5 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
                   </div>
                 </Reveal>
               );
@@ -332,7 +330,7 @@ function Landing() {
       </section>
 
       {/* About */}
-      <section id="about" className="mx-auto max-w-6xl px-5 py-24">
+      <section id="about" className="mx-auto max-w-6xl px-5 py-20">
         <Reveal>
           <div className="mx-auto max-w-3xl text-center">
             <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-foreground sm:text-[2.5rem]">
