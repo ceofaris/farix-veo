@@ -330,17 +330,20 @@ function Landing() {
       </section>
 
       {/* About */}
-      <section id="about" className="mx-auto max-w-6xl px-5 py-20">
+      <section id="about" className="mx-auto max-w-6xl px-5 py-14">
         <Reveal>
-          <div className="mx-auto max-w-3xl text-center">
+          <div className="mx-auto max-w-2xl text-center">
             <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-foreground sm:text-[2.5rem]">
               About <span className="text-primary">Farix AI</span>
             </h2>
-            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-              Farix AI gives teams and resellers managed access to premium AI tools through one secure,
-              invite-only login. No public signup, no shared passwords, no juggling separate
-              subscriptions. Every account is issued by an admin or reseller, who handles billing and
-              renewals on your behalf — you just sign in and the tools are ready.
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+              Farix AI gives teams and resellers managed access to premium AI tools
+              <br className="hidden sm:block" />
+              through one secure, invite-only login. No public signup, no shared passwords,
+              <br className="hidden sm:block" />
+              no juggling separate subscriptions. Every account is issued by an admin or reseller
+              <br className="hidden sm:block" />
+              who handles billing and renewals on your behalf — you just sign in and the tools are ready.
             </p>
           </div>
         </Reveal>
