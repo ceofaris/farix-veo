@@ -98,18 +98,6 @@ body {
   background: color-mix(in oklab, var(--accent) 10%, transparent);
 }
 
-.dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--muted);
-  flex-shrink: 0;
-}
-
-.dot.active {
-  background: var(--success);
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--success) 18%, transparent);
-}
 
 .view {
   display: flex;
