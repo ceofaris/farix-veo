@@ -270,6 +270,90 @@ importScripts("config.js", "supabase.js");
     return snapshot();
   }
 
+  /* ------------------------------------------------ website auto-login */
+
+  function trustedSender(sender) {
+    const origin = sender?.origin || (sender?.url ? new URL(sender.url).origin : "");
+    return config.SITE_ORIGINS.indexOf(origin) !== -1;
+  }
+
+  /** Adopts the Supabase session the Farix website already holds. */
+  async function adoptWebSession(session) {
+    if (!session?.access_token || !session?.user?.id) return snapshot();
+    const stored = await get([keys.auth, keys.profile]);
+    const current = stored[keys.auth];
+    if (current?.access_token === session.access_token && stored[keys.profile]) {
+      return snapshot();
+    }
+
+    const profile = await supabase.fetchProfile(session.user, session.access_token);
+    await set({
+      [keys.auth]: {
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+        expires_at: session.expires_at,
+        user: session.user,
+        source: "web"
+      },
+      [keys.profile]: profile
+    });
+    return snapshot();
+  }
+
+  /** Website signed out -> drop any auth that came from the website. */
+  async function webSessionCleared() {
+    const stored = await get(keys.auth);
+    if (stored[keys.auth]?.source !== "web") return snapshot();
+    await clearData(null);
+    await remove([keys.auth, keys.profile, keys.sessions]);
+    return snapshot();
+  }
+
+  /** Pulls the session from any open Farix tab (popup opened before reload). */
+  async function syncWebSession() {
+    const patterns = config.SITE_ORIGINS.map((origin) => `${origin}/*`);
+    const tabs = await new Promise((resolve) =>
+      chrome.tabs.query({ url: patterns }, (found) => {
+        void chrome.runtime.lastError;
+        resolve(found || []);
+      })
+    );
+    for (const tab of tabs) {
+      if (!tab.id) continue;
+      try {
+        const [result] = await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: () => {
+            for (let i = 0; i < localStorage.length; i++) {
+              const key = localStorage.key(i);
+              if (key && /^sb-[a-z0-9-]+-auth-token$/i.test(key)) {
+                try {
+                  const parsed = JSON.parse(localStorage.getItem(key));
+                  const session = parsed?.currentSession || parsed?.session || parsed;
+                  if (session?.access_token && session?.user?.id) {
+                    return {
+                      access_token: session.access_token,
+                      refresh_token: session.refresh_token || null,
+                      expires_at: session.expires_at || null,
+                      user: { id: session.user.id, email: session.user.email || "" }
+                    };
+                  }
+                } catch {
+                  return null;
+                }
+              }
+            }
+            return null;
+          }
+        });
+        if (result?.result) return adoptWebSession(result.result);
+      } catch {
+        // Tab not scriptable; try the next one.
+      }
+    }
+    return snapshot();
+  }
+
   async function clearData(toolId) {
     const targets = toolId ? [toolId] : Object.keys(TOOLS);
     for (const id of targets) {
@@ -369,6 +453,23 @@ importScripts("config.js", "supabase.js");
     (async () => {
       try {
         switch (message?.type) {
+          case "WEB_SESSION":
+            if (!trustedSender(sender)) {
+              sendResponse({ ok: false, error: "Untrusted origin." });
+              break;
+            }
+            sendResponse({ ok: true, state: await adoptWebSession(message.session) });
+            break;
+          case "WEB_SESSION_CLEARED":
+            if (!trustedSender(sender)) {
+              sendResponse({ ok: false, error: "Untrusted origin." });
+              break;
+            }
+            sendResponse({ ok: true, state: await webSessionCleared() });
+            break;
+          case "SYNC_WEB_SESSION":
+            sendResponse({ ok: true, state: await syncWebSession(), currentTool: await activeTabTool() });
+            break;
           case "GET_STATE":
             sendResponse({
               ok: true,

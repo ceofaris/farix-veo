@@ -132,9 +132,9 @@
     clearButton.disabled = !state.tools?.some((item) => item.active);
   }
 
-  async function loadState() {
+  async function loadState(sync = false) {
     try {
-      const response = await send({ type: "GET_STATE" });
+      const response = await send({ type: sync ? "SYNC_WEB_SESSION" : "GET_STATE" });
       render(response.state, response.currentTool);
     } catch (error) {
       setError($("login-error"), error.message);
