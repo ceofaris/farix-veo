@@ -37,6 +37,10 @@ export const devChatgptExtensionFiles: DevFile[] = toFiles(
   chatgptModules,
   "/extension-dev-chatgpt/",
 );
+export const devMultiExtensionFiles: DevFile[] = toFiles(
+  multiModules,
+  "/extension-dev-multi/",
+);
 
 export function buildZipBlob(files: DevFile[]): Blob {
   const entries: Record<string, Uint8Array> = {};
@@ -64,4 +68,8 @@ export function downloadDevZip() {
 
 export function downloadChatgptDevZip() {
   downloadZip(devChatgptExtensionFiles, "farix-chatgpt-extension-dev.zip");
+}
+
+export function downloadMultiDevZip() {
+  downloadZip(devMultiExtensionFiles, "farix-multi-extension-dev.zip");
 }

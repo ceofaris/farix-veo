@@ -8,6 +8,8 @@ import {
   devChatgptExtensionFiles,
   downloadDevZip,
   downloadChatgptDevZip,
+  devMultiExtensionFiles,
+  downloadMultiDevZip,
   type DevFile,
 } from "@/lib/extension-dev";
 
@@ -114,6 +116,14 @@ function ExtensionLab() {
           files={devChatgptExtensionFiles}
           onDownload={downloadChatgptDevZip}
           note="ChatGPT only — files live in extension-dev-chatgpt/. For testing only; upload the final version from Tools → ChatGPT → Upload Extension."
+        />
+
+        <LabSection
+          title="Farix Multi Extension (dev)"
+          folder="extension-dev-multi/"
+          files={devMultiExtensionFiles}
+          onDownload={downloadMultiDevZip}
+          note="Veo 3 + ChatGPT in one — files live in extension-dev-multi/. Cookies stay isolated per site and tool access follows the user plan (Master unlocks both)."
         />
       </div>
     </div>
