@@ -1,7 +1,7 @@
 import chatgptAsset from "@/assets/logo-chatgpt.png.asset.json";
 import flowAsset from "@/assets/logo-flow-wordmark.png.asset.json";
 
-export type BuiltInLogo = { url: string; bleed?: boolean };
+export type BuiltInLogo = { url: string; bleed?: boolean; container?: string };
 
 /**
  * Built-in, hard-coded logos for the platform's fixed tools.
@@ -9,7 +9,7 @@ export type BuiltInLogo = { url: string; bleed?: boolean };
  */
 const BUILT_IN: Array<{ match: RegExp; logo: BuiltInLogo }> = [
   { match: /chat\s*-?\s*gpt/i, logo: { url: chatgptAsset.url } },
-  { match: /veo|flow/i, logo: { url: flowAsset.url, bleed: true } },
+  { match: /veo|flow/i, logo: { url: flowAsset.url, bleed: false, container: "bg-black" } },
 ];
 
 export function builtInToolLogoInfo(tool: { name?: string | null; slug?: string | null }): BuiltInLogo | null {
