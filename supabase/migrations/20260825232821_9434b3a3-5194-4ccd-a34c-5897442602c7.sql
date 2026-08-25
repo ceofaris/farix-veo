@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS public.extension_versions_one_latest;
