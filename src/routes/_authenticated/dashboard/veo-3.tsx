@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Clapperboard, AudioLines, Banana, Download } from "lucide-react";
+import { ExternalLink, Download, Clapperboard, AudioLines, Banana } from "lucide-react";
 import { useMyTools, formatDate } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
-import { FeatureCard, HeroBanner, LiveBadge, VideoGuide } from "@/components/dashboard/ui";
+import { FeatureCard, VideoGuide } from "@/components/dashboard/ui";
 import { PlanLock } from "@/components/plan-lock";
 
 export const Route = createFileRoute("/_authenticated/dashboard/veo-3")({
@@ -35,36 +35,41 @@ function VeoPage() {
 
   return (
     <div className="space-y-10">
-      <header className="flex flex-wrap items-center gap-4">
-        <ToolLogo tool={tool ?? { name: "Veo 3", slug: "veo-3" }} className="h-12 w-12" />
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-semibold tracking-tight">Veo 3</h1>
-            <LiveBadge />
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex items-start gap-4">
+          <ToolLogo tool={tool ?? { name: "Veo 3", slug: "veo-3" }} className="h-12 w-12" />
+          <div>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-2xl font-semibold tracking-tight">Veo 3</h1>
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-success/20 bg-success/10 px-2 py-0.5 text-[11px] font-medium text-success">
+                <span className="h-1.5 w-1.5 rounded-full bg-success" /> Active
+              </span>
+            </div>
+            <p className="mt-1 max-w-xl text-sm text-muted-foreground">
+              Google Veo 3 video generation via Farix — cinematic AI video with native audio.
+            </p>
           </div>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Google Veo 3 video generation via Farix — Unlimited access
-          </p>
         </div>
-        <button
-          onClick={() => downloadExtension(tool?.id)}
-          className="ml-auto inline-flex items-center gap-2 rounded-full bg-brand-gradient px-4 py-2 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
-        >
-          <Download className="h-4 w-4" /> Download Veo 3 Extension
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <a
+            href="https://labs.google/fx/tools/flow"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-4 py-2 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
+          >
+            <ExternalLink className="h-4 w-4" /> Open Veo Flow
+          </a>
+          <button
+            onClick={() => downloadExtension()}
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 font-display text-sm font-semibold text-foreground transition-colors hover:bg-accent"
+          >
+            <Download className="h-4 w-4" /> Download Extension
+          </button>
+        </div>
       </header>
 
-      <HeroBanner
-        category="Video Generation"
-        headline="Direct cinematic video from a single prompt"
-        description="Write one prompt and get a fully rendered scene with sound, ready to share."
-        cta="Try Now on Veo 3 →"
-        href="https://labs.google/fx/tools/flow"
-        hue={268}
-      />
-
       <section className="space-y-4">
-        <h2 className="text-lg font-semibold tracking-tight">What's Included</h2>
+        <h2 className="text-lg font-semibold tracking-tight">What’s Included</h2>
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <FeatureCard
             icon={<Clapperboard className="h-4 w-4" />}
