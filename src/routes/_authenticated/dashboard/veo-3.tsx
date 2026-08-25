@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { ExternalLink, Download, Clapperboard, AudioLines, Banana } from "lucide-react";
-import { useMyTools, formatDate } from "@/hooks/use-my-tools";
+import { useMyTools } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { FeatureCard, VideoGuide } from "@/components/dashboard/ui";
 import { PlanLock } from "@/components/plan-lock";
@@ -26,9 +26,8 @@ export const Route = createFileRoute("/_authenticated/dashboard/veo-3")({
 });
 
 function VeoPage() {
-  const { findTool, expiryFor, downloadExtension, hasVeo, loading } = useMyTools();
+  const { findTool, downloadExtension, hasVeo, loading } = useMyTools();
   const tool = findTool(/veo/i);
-  const expires = expiryFor(/veo/i);
 
   if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading…</div>;
   if (!hasVeo) return <PlanLock feature="veo" title="Veo 3" />;
@@ -45,9 +44,6 @@ function VeoPage() {
                 <span className="h-1.5 w-1.5 rounded-full bg-success" /> Active
               </span>
             </div>
-            <p className="mt-1 max-w-xl text-sm text-muted-foreground">
-              Google Veo 3 video generation via Farix — cinematic AI video with native audio.
-            </p>
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-2">
@@ -55,13 +51,13 @@ function VeoPage() {
             href="https://labs.google/fx/tools/flow"
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-4 py-2 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
+            className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-5 py-2.5 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
           >
             <ExternalLink className="h-4 w-4" /> Open Veo Flow
           </a>
           <button
             onClick={() => downloadExtension()}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-4 py-2 font-display text-sm font-semibold text-foreground transition-colors hover:bg-accent"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 font-display text-sm font-semibold text-foreground transition-colors hover:bg-accent"
           >
             <Download className="h-4 w-4" /> Download Extension
           </button>
@@ -90,10 +86,6 @@ function VeoPage() {
       </section>
 
       <VideoGuide />
-
-      <p className="text-sm text-muted-foreground">
-        Access valid until {formatDate(expires, "29/08/2026")}
-      </p>
     </div>
   );
 }

@@ -3,19 +3,6 @@ import { Link } from "@tanstack/react-router";
 import { Play, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function LiveBadge({ className }: { className?: string }) {
-  return (
-    <span
-      className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border border-success/25 bg-success/10 px-2.5 py-0.5 text-[11px] font-medium text-success",
-        className,
-      )}
-    >
-      <span className="h-1.5 w-1.5 rounded-full bg-success" /> Live
-    </span>
-  );
-}
-
 export function SectionHeader({
   icon,
   title,
@@ -127,7 +114,6 @@ export function FeatureCard({
           {icon}
         </span>
         <div className="font-semibold tracking-tight">{title}</div>
-        <LiveBadge className="ml-auto" />
       </div>
       <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{description}</p>
     </div>
@@ -183,9 +169,6 @@ export function VideoGuide() {
     <section className="space-y-4">
       <div>
         <h2 className="text-lg font-semibold tracking-tight">Video Guide</h2>
-        <p className="text-sm text-muted-foreground">
-          Watch how to set up and use this tool on your device.
-        </p>
       </div>
       <div className="grid gap-5 sm:grid-cols-2">
         {/* Replace each MediaCard with a real YouTube embed, e.g.
