@@ -16,6 +16,9 @@
     "https://*.chatgpt.com/*",
     "https://labs.google/*",
     "https://*.labs.google/*",
+    "https://farixai.com/*",
+    "https://www.farixai.com/*",
+    "https://farixai.lovable.app/*",
     "https://*.supabase.co/*"
   ],
   "background": {
@@ -39,6 +42,15 @@
     {
       "matches": ["https://labs.google/*", "https://*.labs.google/*"],
       "js": ["veo-lockdown.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://farixai.com/*",
+        "https://www.farixai.com/*",
+        "https://farixai.lovable.app/*"
+      ],
+      "js": ["farix-site-bridge.js"],
       "run_at": "document_idle"
     }
   ],
