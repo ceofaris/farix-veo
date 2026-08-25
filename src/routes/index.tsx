@@ -2,9 +2,9 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ArrowRight,
-  UserPlus,
+  UserRound,
   Puzzle,
-  Play,
+  PlayCircle,
   Check,
   ChevronDown,
 } from "lucide-react";
@@ -62,7 +62,7 @@ const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url, clip5.url, clip6.
 const steps = [
   {
     n: "01",
-    icon: UserPlus,
+    icon: UserRound,
     title: "Get your account",
     body: "Your reseller or admin issues your Farix AI credentials. No public signup.",
   },
@@ -74,7 +74,7 @@ const steps = [
   },
   {
     n: "03",
-    icon: Play,
+    icon: PlayCircle,
     title: "Start creating",
     body: "Open any assigned tool and start working — sessions are injected instantly.",
   },
@@ -298,22 +298,22 @@ function Landing() {
 
       {/* How it works */}
       <section id="how" className="bg-background">
-        <div className="mx-auto max-w-6xl px-5 py-20">
+        <div className="mx-auto max-w-6xl px-5 py-14">
           <Reveal>
             <h2 className="text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
               Live in three steps.
             </h2>
           </Reveal>
-          <div className="mt-12 grid gap-5 md:grid-cols-3">
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
             {steps.map((s, i) => {
               const Icon = s.icon;
               return (
-                <Reveal key={s.n} delay={i * 100}>
-                  <div className="group relative h-full overflow-hidden rounded-3xl border border-border bg-card p-8 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-pop">
+                <Reveal key={s.n} delay={i * 100} className="h-full">
+                  <div className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border/70 bg-card p-7 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/25 hover:shadow-md">
                     <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-brand-violet/60 via-brand-pink/60 to-brand-cyan/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     <div className="flex items-start justify-between">
-                      <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary shadow-sm">
-                        <Icon className="h-5 w-5" />
+                      <span className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-primary/15 to-primary/5 text-primary shadow-md ring-1 ring-primary/10 transition-transform duration-300 group-hover:scale-105">
+                        <Icon className="h-5 w-5" strokeWidth={2} />
                       </span>
                       <span className="font-display text-3xl font-extrabold tabular-nums tracking-tight text-muted-foreground/20">
                         {s.n}
@@ -330,17 +330,20 @@ function Landing() {
       </section>
 
       {/* About */}
-      <section id="about" className="mx-auto max-w-6xl px-5 py-20">
+      <section id="about" className="mx-auto max-w-6xl px-5 py-14">
         <Reveal>
-          <div className="mx-auto max-w-3xl text-center">
+          <div className="mx-auto max-w-2xl text-center">
             <h2 className="font-display text-3xl font-bold tracking-[-0.03em] text-foreground sm:text-[2.5rem]">
               About <span className="text-primary">Farix AI</span>
             </h2>
-            <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-              Farix AI gives teams and resellers managed access to premium AI tools through one secure,
-              invite-only login. No public signup, no shared passwords, no juggling separate
-              subscriptions. Every account is issued by an admin or reseller, who handles billing and
-              renewals on your behalf — you just sign in and the tools are ready.
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground">
+              Farix AI gives teams and resellers managed access to premium AI tools
+              <br className="hidden sm:block" />
+              through one secure, invite-only login. No public signup, no shared passwords,
+              <br className="hidden sm:block" />
+              no juggling separate subscriptions. Every account is issued by an admin or reseller
+              <br className="hidden sm:block" />
+              who handles billing and renewals on your behalf — you just sign in and the tools are ready.
             </p>
           </div>
         </Reveal>
