@@ -18,16 +18,26 @@ export function ToolLogo({
       </div>
     );
 
+  const base = "rounded-xl border border-border";
+  const container = logo.container ?? "bg-background";
+
+  if (logo.bleed) {
+    return (
+      <img
+        src={logo.url}
+        alt={`${tool.name} logo`}
+        loading="lazy"
+        className={`${className} ${base} ${container} object-cover p-0`}
+      />
+    );
+  }
+
   return (
     <img
       src={logo.url}
       alt={`${tool.name} logo`}
       loading="lazy"
-      className={
-        logo.bleed
-          ? `${className} rounded-xl object-cover border border-border`
-          : `${className} rounded-xl object-contain p-1.5 bg-background border border-border`
-      }
+      className={`${className} ${base} ${container} object-contain p-1.5`}
     />
   );
 }

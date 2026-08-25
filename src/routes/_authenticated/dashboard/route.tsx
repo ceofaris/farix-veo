@@ -14,12 +14,19 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 });
 
 const FlowIcon = ({ className }: { className?: string }) => (
-  <img
-    src={flowLogoUrl}
-    alt=""
+  <span
+    className={cn(
+      className,
+      "inline-flex items-center justify-center overflow-hidden rounded-md bg-black ring-1 ring-border/40",
+    )}
     aria-hidden
-    className={cn(className, "rounded-[5px] object-cover")}
-  />
+  >
+    <img
+      src={flowLogoUrl}
+      alt=""
+      className="h-[70%] w-[70%] object-contain"
+    />
+  </span>
 );
 
 const NAV = [
