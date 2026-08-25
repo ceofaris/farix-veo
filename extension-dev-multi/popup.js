@@ -225,5 +225,5 @@
     if (message?.type === "STATE_UPDATED" && message.state) render(message.state, null);
   });
 
-  void loadState();
+  void boot();
 })();
