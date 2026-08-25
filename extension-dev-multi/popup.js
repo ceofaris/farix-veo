@@ -105,7 +105,6 @@
     const authenticated = Boolean(state?.authenticated);
     loginView.classList.toggle("hidden", authenticated);
     appView.classList.toggle("hidden", !authenticated);
-    $("header-dot").className = `dot ${authenticated && state.active ? "active" : "idle"}`;
     if (!authenticated) return;
 
     $("user-email").textContent = state.email || "—";
