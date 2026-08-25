@@ -1,0 +1,41 @@
+{
+  "manifest_version": 3,
+  "name": "Farix AI — Multi Session (Veo 3 + ChatGPT)",
+  "version": "1.0.0",
+  "description": "One managed Farix AI extension for Veo 3 and ChatGPT sessions.",
+  "permissions": [
+    "storage",
+    "cookies",
+    "tabs",
+    "scripting",
+    "browsingData",
+    "management"
+  ],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://*.chatgpt.com/*",
+    "https://labs.google/*",
+    "https://*.labs.google/*",
+    "https://*.supabase.co/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Farix AI",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chatgpt.com/*", "https://*.chatgpt.com/*"],
+      "js": ["chatgpt-lockdown.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://labs.google/*", "https://*.labs.google/*"],
+      "js": ["veo-lockdown.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "minimum_chrome_version": "100"
+}
