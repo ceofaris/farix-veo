@@ -132,13 +132,21 @@
     clearButton.disabled = !state.tools?.some((item) => item.active);
   }
 
-  async function loadState() {
+  async function loadState(sync = false) {
     try {
-      const response = await send({ type: "GET_STATE" });
+      const response = await send({ type: sync ? "SYNC_WEB_SESSION" : "GET_STATE" });
       render(response.state, response.currentTool);
+      return response.state;
     } catch (error) {
       setError($("login-error"), error.message);
+      return null;
     }
+  }
+
+  /** Auto-login: adopt the farixai.com session when the popup opens. */
+  async function boot() {
+    const state = await loadState(false);
+    if (!state?.authenticated) await loadState(true);
   }
 
   /* ---------------------------------------------------------------- events */
@@ -217,5 +225,5 @@
     if (message?.type === "STATE_UPDATED" && message.state) render(message.state, null);
   });
 
-  void loadState();
+  void boot();
 })();

@@ -10,7 +10,7 @@ globalThis.FARIX_CONFIG = Object.freeze({
   CHATGPT_HOST: "chatgpt.com",
   CHATGPT_LOGOUT_URL: "https://chatgpt.com/auth/logout",
   // Public published app host (no Lovable login required).
-  APP_BASE_URL: "https://farixai.lovable.app",
+  APP_BASE_URL: "https://farixai.com",
   TOOL_NAME: "chatgpt",
 
   TABLES: Object.freeze({
