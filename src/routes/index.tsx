@@ -213,8 +213,7 @@ function Navbar() {
         <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
           {[
             { label: "Home", href: "#" },
-            { label: "How it works", href: "#how" },
-            { label: "About", href: "#about" },
+            { label: "About", href: "#how" },
             { label: "Pricing", href: "#pricing" },
             { label: "FAQ", href: "#faq" },
           ].map((l) => (
