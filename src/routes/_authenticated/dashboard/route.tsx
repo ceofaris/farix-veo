@@ -12,8 +12,17 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardLayout,
 });
 
+const FlowIcon = ({ className }: { className?: string }) => (
+  <img
+    src={flowLogoUrl}
+    alt=""
+    aria-hidden
+    className={cn(className, "rounded-[5px] object-cover")}
+  />
+);
+
 const NAV = [
-  { to: "/dashboard/veo-3", label: "Veo 3", icon: Clapperboard },
+  { to: "/dashboard/veo-3", label: "Veo 3", icon: FlowIcon },
   { to: "/dashboard/chatgpt", label: "ChatGPT", icon: MessageSquare },
   { to: "/dashboard/prompts", label: "Niche Prompts", icon: Sparkles },
 ] as const;
