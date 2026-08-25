@@ -62,7 +62,7 @@ const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url, clip5.url, clip6.
 const steps = [
   {
     n: "01",
-    icon: UserPlus,
+    icon: UserRound,
     title: "Get your account",
     body: "Your reseller or admin issues your Farix AI credentials. No public signup.",
   },
@@ -74,7 +74,7 @@ const steps = [
   },
   {
     n: "03",
-    icon: Play,
+    icon: PlayCircle,
     title: "Start creating",
     body: "Open any assigned tool and start working — sessions are injected instantly.",
   },
