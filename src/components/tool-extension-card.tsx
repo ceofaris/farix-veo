@@ -52,8 +52,10 @@ export function ToolExtensionCard({ toolId, toolName }: { toolId: string; toolNa
     if (!version.trim()) return toast.error("Enter a version name");
     if (!file) return toast.error("Choose a ZIP file");
     setBusy(true);
+    let uploadedPath: string | null = null;
     try {
       const path = await uploadExtensionZip(file, version.trim());
+      uploadedPath = path;
       const previous = current.data;
       const { error } = await supabase.from("extension_versions").upsert(
         {
@@ -67,6 +69,7 @@ export function ToolExtensionCard({ toolId, toolName }: { toolId: string; toolNa
         { onConflict: "tool_id" },
       );
       if (error) throw new Error(error.message);
+      uploadedPath = null;
       // Only the newest build is kept — remove the replaced file from storage.
       if (previous && previous.file_path !== path) {
         await supabase.storage.from("extensions").remove([previous.file_path]);
@@ -75,8 +78,11 @@ export function ToolExtensionCard({ toolId, toolName }: { toolId: string; toolNa
       setVersion("");
       setNotes("");
       setFile(null);
-      current.refetch();
+      await current.refetch();
     } catch (e) {
+      if (uploadedPath) {
+        await supabase.storage.from("extensions").remove([uploadedPath]);
+      }
       toast.error((e as Error).message);
     } finally {
       setBusy(false);
