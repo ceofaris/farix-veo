@@ -18,7 +18,7 @@ export function ToolLogo({
       </div>
     );
 
-  const base = "rounded-2xl border border-border";
+  const base = "rounded-xl border border-border";
   const container = logo.container ?? "bg-background";
 
   if (logo.bleed) {
@@ -37,7 +37,7 @@ export function ToolLogo({
       src={logo.url}
       alt={`${tool.name} logo`}
       loading="lazy"
-      className={`${className} ${base} ${container} object-contain p-2`}
+      className={`${className} ${base} ${container} object-contain p-1.5`}
     />
   );
 }
