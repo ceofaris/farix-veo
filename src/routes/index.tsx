@@ -313,7 +313,7 @@ function Landing() {
                     <div className="absolute inset-x-0 top-0 h-0.5 bg-gradient-to-r from-brand-violet/60 via-brand-pink/60 to-brand-cyan/60 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                     <div className="flex items-start justify-between">
                       <span className="grid h-12 w-12 place-items-center rounded-2xl bg-gradient-to-br from-primary/10 to-primary/5 text-primary shadow-sm">
-                        <Icon className="h-5.5 w-5.5" />
+                        <Icon className="h-5 w-5" />
                       </span>
                       <span className="font-display text-3xl font-extrabold tabular-nums tracking-tight text-muted-foreground/20">
                         {s.n}
