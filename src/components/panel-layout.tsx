@@ -40,7 +40,7 @@ export function PanelLayout({
         )}
       >
         <div className="px-5 py-5 flex items-center gap-3 border-b border-sidebar-border">
-          <FarixMark className="h-9" />
+          <FarixMark className="h-7" />
           <div className="min-w-0">
             <div className="font-semibold leading-tight tracking-tight">Farix</div>
             <div className="text-xs text-muted-foreground truncate">{title}</div>
