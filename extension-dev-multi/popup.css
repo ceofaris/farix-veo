@@ -1,23 +1,30 @@
 :root {
-  --bg: #0c0b14;
-  --card: #17162a;
-  --border: #2a2740;
-  --text: #f3f1fb;
-  --muted: #9a95b8;
+  --bg: #0a0a0f;
+  --surface: #101017;
+  --card: #15151e;
+  --border: #23232e;
+  --text: #f6f6f9;
+  --muted: #8b87a6;
   --accent: #7c5cff;
   --accent-2: #e05cff;
-  --accent-hover: #8f74ff;
-  --danger: #ff6b81;
-  --success: #4ade80;
+  --accent-hover: #9673ff;
+  --danger: #ff5c7c;
+  --success: #3ee082;
   --glow: rgba(124, 92, 255, 0.18);
 }
 
 body.light {
-  --bg: #f7f6fb;
+  --bg: #ffffff;
+  --surface: #f7f7fa;
   --card: #ffffff;
-  --border: #e6e3f2;
-  --text: #14122a;
-  --muted: #6b6787;
+  --border: #ebebef;
+  --text: #11111a;
+  --muted: #6b678a;
+  --accent: #7c5cff;
+  --accent-2: #e05cff;
+  --accent-hover: #8f74ff;
+  --danger: #ff3659;
+  --success: #22c55e;
   --glow: rgba(124, 92, 255, 0.12);
 }
 
@@ -30,17 +37,18 @@ body {
   margin: 0;
   color: var(--text);
   background:
-    radial-gradient(120% 80% at 100% 0%, var(--glow), transparent 60%),
+    radial-gradient(120% 90% at 100% 0%, var(--glow), transparent 60%),
     var(--bg);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
   font-size: 14px;
+  -webkit-font-smoothing: antialiased;
 }
 
 .shell {
   display: flex;
   flex-direction: column;
-  gap: 13px;
-  padding: 18px;
+  gap: 14px;
+  padding: 20px;
 }
 
 .brand {
@@ -50,14 +58,11 @@ body {
 }
 
 .brand-mark {
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border-radius: 11px;
-  background: linear-gradient(140deg, var(--accent), var(--accent-2));
-  font-weight: 800;
-  color: #fff;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .brand-text {
@@ -67,43 +72,49 @@ body {
 
 .brand-name {
   margin: 0;
+  font-family: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 
-.brand-sub {
-  margin: 0;
-  font-size: 11.5px;
-  color: var(--muted);
-}
-
 .icon-btn {
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--muted);
-  border-radius: 9px;
+  display: grid;
+  place-items: center;
   width: 26px;
   height: 26px;
-  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--muted);
   font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background 0.15s ease;
+}
+
+.icon-btn:hover {
+  border-color: var(--accent);
+  color: var(--text);
+  background: color-mix(in oklab, var(--accent) 10%, transparent);
 }
 
 .dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 999px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
   background: var(--muted);
+  flex-shrink: 0;
 }
 
 .dot.active {
   background: var(--success);
-  box-shadow: 0 0 0 4px color-mix(in oklab, var(--success) 22%, transparent);
+  box-shadow: 0 0 0 4px color-mix(in oklab, var(--success) 18%, transparent);
 }
 
 .view {
   display: flex;
   flex-direction: column;
-  gap: 11px;
+  gap: 12px;
 }
 
 .hidden {
@@ -111,15 +122,11 @@ body {
 }
 
 .intro h1 {
-  margin: 0 0 3px;
-  font-size: 19px;
+  margin: 0 0 4px;
+  font-family: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
   letter-spacing: -0.02em;
-}
-
-.intro p {
-  margin: 0;
-  font-size: 12.5px;
-  color: var(--muted);
 }
 
 .form {
@@ -131,32 +138,36 @@ body {
 label {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  font-size: 11.5px;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--muted);
 }
 
 input {
-  padding: 10px 12px;
-  border-radius: 11px;
+  padding: 11px 13px;
   border: 1px solid var(--border);
+  border-radius: 12px;
   background: var(--card);
   color: var(--text);
-  font-size: 13.5px;
+  font: inherit;
+  font-size: 13px;
   outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 input:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 18%, transparent);
 }
 
 .card {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 13px 14px;
+  gap: 9px;
+  padding: 14px;
   border: 1px solid var(--border);
-  border-radius: 15px;
+  border-radius: 16px;
   background: var(--card);
 }
 
@@ -168,7 +179,8 @@ input:focus {
 }
 
 .label {
-  font-size: 10.5px;
+  font-size: 10px;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--muted);
@@ -176,8 +188,8 @@ input:focus {
 
 .value {
   margin: 3px 0 0;
-  font-weight: 600;
   font-size: 13px;
+  font-weight: 600;
   word-break: break-all;
 }
 
@@ -196,7 +208,7 @@ input:focus {
 
 .pill.active {
   color: var(--success);
-  background: color-mix(in oklab, var(--success) 16%, transparent);
+  background: color-mix(in oklab, var(--success) 14%, transparent);
 }
 
 .pill.idle {
@@ -206,7 +218,7 @@ input:focus {
 
 .pill.locked {
   color: var(--danger);
-  background: color-mix(in oklab, var(--danger) 14%, transparent);
+  background: color-mix(in oklab, var(--danger) 12%, transparent);
 }
 
 .tools {
@@ -228,7 +240,7 @@ input:focus {
 }
 
 .muted {
-  margin: 2px 0 0;
+  margin: 0;
   font-size: 11.5px;
   color: var(--muted);
 }
@@ -236,22 +248,24 @@ input:focus {
 .selector {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
+  gap: 5px;
   padding: 5px;
   border: 1px solid var(--border);
-  border-radius: 13px;
-  background: var(--card);
+  border-radius: 14px;
+  background: var(--surface);
 }
 
 .seg {
-  padding: 8px 10px;
+  padding: 9px 10px;
   border: none;
-  border-radius: 9px;
+  border-radius: 10px;
   background: transparent;
   color: var(--muted);
-  font-weight: 600;
+  font-family: inherit;
   font-size: 12.5px;
+  font-weight: 600;
   cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
 }
 
 .seg.selected {
@@ -260,33 +274,45 @@ input:focus {
 }
 
 .seg:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
 .btn {
-  padding: 11px 14px;
+  padding: 12px 16px;
   border: 1px solid transparent;
-  border-radius: 13px;
-  font-weight: 700;
+  border-radius: 999px;
+  font-family: inherit;
   font-size: 13.5px;
+  font-weight: 700;
   cursor: pointer;
+  transition: transform 0.1s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.btn:active:not(:disabled) {
+  transform: scale(0.985);
 }
 
 .btn.primary {
   color: #fff;
   background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  box-shadow: 0 10px 24px -12px var(--accent);
+  box-shadow: 0 10px 24px -12px color-mix(in oklab, var(--accent) 60%, transparent);
 }
 
 .btn.primary:hover:not(:disabled) {
   background: linear-gradient(135deg, var(--accent-hover), var(--accent-2));
+  box-shadow: 0 12px 28px -12px color-mix(in oklab, var(--accent) 70%, transparent);
 }
 
 .btn.ghost {
   color: var(--text);
   background: transparent;
   border-color: var(--border);
+}
+
+.btn.ghost:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 6%, transparent);
 }
 
 .btn:disabled {
@@ -296,21 +322,29 @@ input:focus {
 
 .error {
   margin: 0;
-  font-size: 12px;
+  padding: 9px 11px;
+  border: 1px solid color-mix(in oklab, var(--danger) 30%, transparent);
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--danger) 8%, transparent);
   color: var(--danger);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .link {
+  margin: 0 auto;
+  padding: 4px;
   border: none;
   background: none;
   color: var(--muted);
+  font-family: inherit;
   font-size: 12px;
-  cursor: pointer;
+  font-weight: 500;
   text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.15s ease;
 }
 
-footer {
-  font-size: 10.5px;
-  text-align: center;
-  color: var(--muted);
+.link:hover {
+  color: var(--text);
 }

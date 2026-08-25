@@ -4,15 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Farix · Multi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
     <main class="shell">
       <header class="brand">
-        <div class="brand-mark" aria-hidden="true">F</div>
+        <img src="icon.png" alt="Farix" class="brand-mark" draggable="false" />
         <div class="brand-text">
           <p class="brand-name">Farix</p>
-          <p class="brand-sub">Veo 3 + ChatGPT</p>
         </div>
         <button id="theme-button" class="icon-btn" type="button" title="Toggle theme">◐</button>
         <span id="header-dot" class="dot idle" title="Session status"></span>
@@ -21,8 +23,7 @@
       <!-- Logged out -->
       <section id="login-view" class="view">
         <div class="intro">
-          <h1>Welcome back</h1>
-          <p>Sign in to launch your managed Farix session.</p>
+          <h1>Sign in to Farix</h1>
         </div>
         <form id="login-form" class="form">
           <label>
@@ -65,8 +66,6 @@
         <p id="error-message" class="error hidden" role="alert"></p>
         <button id="logout-button" class="link" type="button">Log out</button>
       </section>
-
-      <footer>Unlimited access until your plan expires</footer>
     </main>
     <script src="config.js"></script>
     <script src="supabase.js"></script>
