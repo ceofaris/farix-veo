@@ -220,7 +220,7 @@ function Navbar() {
             <a
               key={l.label}
               href={l.href}
-              className="rounded-full px-4 py-2 font-display text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+              className="rounded-full px-4 py-2 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
             >
               {l.label}
             </a>
