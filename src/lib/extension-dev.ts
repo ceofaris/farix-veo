@@ -42,9 +42,25 @@ export const devMultiExtensionFiles: DevFile[] = toFiles(
   "/extension-dev-multi/",
 );
 
+function base64ToBytes(base64: string): Uint8Array {
+  const binary = atob(base64.replace(/\s+/g, ""));
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
+}
+
 export function buildZipBlob(files: DevFile[]): Blob {
   const entries: Record<string, Uint8Array> = {};
-  for (const f of files) entries[f.path] = strToU8(f.content);
+  for (const f of files) {
+    if (f.path.endsWith(".base64")) {
+      const path = f.path.slice(0, -".base64".length);
+      entries[path] = base64ToBytes(f.content);
+    } else {
+      entries[f.path] = strToU8(f.content);
+    }
+  }
   const zipped = zipSync(entries, { level: 6 });
   return new Blob([zipped as unknown as BlobPart], { type: "application/zip" });
 }
