@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Farix AI — Configuration</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="page">
+      <div class="brand"><span class="mark">F</span><span>Farix AI <small>Gemini Pro</small></span></div>
+      <section class="card">
+        <span class="eyebrow">CONNECTION</span>
+        <h1>Connect your Supabase project</h1>
+        <p class="intro">Use the public project URL and anon key from Supabase. Farix never accepts or needs a service-role key.</p>
+        <form id="config-form">
+          <label>Supabase URL<input id="supabase-url" type="url" placeholder="https://your-project.supabase.co" required /></label>
+          <label>Supabase anon key<input id="supabase-key" type="password" placeholder="eyJhbGciOi..." required /></label>
+          <div class="rpc-heading"><span class="eyebrow">RPC NAMES</span><span>Change only if your project uses different names.</span></div>
+          <label>Get random account<input id="rpc-random" type="text" required /></label>
+          <label>Set active session<input id="rpc-set" type="text" required /></label>
+          <label>Clear active session<input id="rpc-clear" type="text" required /></label>
+          <button type="submit">Save connection</button>
+          <p class="message" id="message" role="status"></p>
+        </form>
+      </section>
+    </main>
+    <script src="options.js" type="module"></script>
+  </body>
+</html>
