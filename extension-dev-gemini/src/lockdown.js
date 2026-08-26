@@ -108,6 +108,7 @@
     let depth = 0;
     while (el && depth < 8) {
       if (el.dataset?.farixBlock === "1") return true;
+      if (el.dataset?.farixHide === "1") return true;
       if (isAllowed(el)) return false;
       if (isBlockedElement(el)) return true;
       el = el.parentElement;
