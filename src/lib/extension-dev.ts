@@ -20,6 +20,12 @@ const multiModules = import.meta.glob("/extension-dev-multi/**/*", {
 }) as Record<string, string>;
 
 
+const geminiModules = import.meta.glob("/extension-dev-gemini/**/*", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+
 export type DevFile = { path: string; content: string; bytes: number };
 
 function toFiles(modules: Record<string, string>, prefix: string): DevFile[] {
@@ -40,6 +46,11 @@ export const devChatgptExtensionFiles: DevFile[] = toFiles(
 export const devMultiExtensionFiles: DevFile[] = toFiles(
   multiModules,
   "/extension-dev-multi/",
+);
+
+export const devGeminiExtensionFiles: DevFile[] = toFiles(
+  geminiModules,
+  "/extension-dev-gemini/",
 );
 
 function base64ToBytes(base64: string): Uint8Array {
@@ -88,4 +99,8 @@ export function downloadChatgptDevZip() {
 
 export function downloadMultiDevZip() {
   downloadZip(devMultiExtensionFiles, "farix-multi-extension-dev.zip");
+}
+
+export function downloadGeminiDevZip() {
+  downloadZip(devGeminiExtensionFiles, "farix-gemini-extension-dev.zip");
 }

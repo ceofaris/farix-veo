@@ -10,6 +10,8 @@ import {
   downloadChatgptDevZip,
   devMultiExtensionFiles,
   downloadMultiDevZip,
+  devGeminiExtensionFiles,
+  downloadGeminiDevZip,
   type DevFile,
 } from "@/lib/extension-dev";
 
@@ -124,6 +126,13 @@ function ExtensionLab() {
           files={devMultiExtensionFiles}
           onDownload={downloadMultiDevZip}
           note="Veo 3 + ChatGPT in one — files live in extension-dev-multi/. Cookies stay isolated per site and tool access follows the user plan (Master unlocks both)."
+        />
+        <LabSection
+          title="Farix Gemini Extension (dev)"
+          folder="extension-dev-gemini/"
+          files={devGeminiExtensionFiles}
+          onDownload={downloadGeminiDevZip}
+          note="Gemini Pro only — files live in extension-dev-gemini/. For testing only; upload the final version from Tools → Gemini Pro → Upload Extension."
         />
       </div>
     </div>

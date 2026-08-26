@@ -52,6 +52,7 @@ export function useMyTools() {
 
   const hasVeo = planActive && planIncludes(planId, "veo");
   const hasChatgpt = planActive && planIncludes(planId, "chatgpt");
+  const hasGemini = planActive && planIncludes(planId, "gemini");
   const hasPrompts = planActive && planIncludes(planId, "prompts");
 
   function findTool(re: RegExp) {
@@ -66,7 +67,7 @@ export function useMyTools() {
   async function downloadExtension(toolId?: string) {
     if (!planActive) return toast.error("Your plan is inactive — contact your reseller");
     const list = versions.data ?? [];
-    const v = (toolId && list.find((x) => x.tool_id === toolId)) || list[0];
+    const v = toolId ? list.find((x) => x.tool_id === toolId) : list[0];
     if (!v) return toast.error("No extension build available yet");
     const url = await signedExtensionUrl(v.file_path);
     if (!url) return toast.error("Could not create download link");
@@ -86,6 +87,7 @@ export function useMyTools() {
     hasMaster: planId === "master" && planActive,
     hasVeo,
     hasChatgpt,
+    hasGemini,
     hasPrompts,
     expiresAt,
     versions: versions.data ?? [],

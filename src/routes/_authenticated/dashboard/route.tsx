@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
 import { Home, LogOut, Menu, MessageSquare, Sparkles, X } from "lucide-react";
-import { flowLogoUrl } from "@/lib/tool-logos";
+import { flowLogoUrl, geminiLogoUrl } from "@/lib/tool-logos";
 import { FarixMark } from "@/components/farix-logo";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -29,9 +29,19 @@ const FlowIcon = ({ className }: { className?: string }) => (
   </span>
 );
 
+const GeminiIcon = ({ className }: { className?: string }) => (
+  <span
+    className={cn(className, "inline-flex items-center justify-center overflow-hidden")}
+    aria-hidden
+  >
+    <img src={geminiLogoUrl} alt="" className="h-full w-full object-contain" />
+  </span>
+);
+
 const NAV = [
   { to: "/dashboard/veo-3", label: "Veo 3", icon: FlowIcon },
   { to: "/dashboard/chatgpt", label: "ChatGPT", icon: MessageSquare },
+  { to: "/dashboard/gemini", label: "Gemini Pro", icon: GeminiIcon },
   { to: "/dashboard/prompts", label: "Niche Prompts", icon: Sparkles },
 ] as const;
 
