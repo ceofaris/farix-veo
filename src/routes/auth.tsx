@@ -38,22 +38,28 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   async function landingRouteFor(userId: string) {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("profiles")
-      .select("role, is_active")
+      .select("*")
       .eq("id", userId)
       .maybeSingle();
+    if (error) throw error;
     const profile = data as { role?: string; is_active?: boolean } | null;
     if (profile && profile.is_active === false) {
       await supabase.auth.signOut();
+      qc.setQueryData(["current-profile"], null);
       return null;
     }
+    // Prime the shared profile cache so protected layouts render immediately
+    // instead of waiting on their own fetch (which caused the stuck "Loading…").
+    qc.setQueryData(["current-profile"], profile ?? null);
     const role = profile?.role;
     if (role === "king") return "/king" as const;
     if (role === "reseller") return "/reseller" as const;
@@ -61,33 +67,43 @@ function AuthPage() {
   }
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data }) => {
-      const user = data.session?.user;
-      if (!user) return;
-      const to = await landingRouteFor(user.id);
-      if (to) navigate({ to, replace: true });
-    });
+    let cancelled = false;
+    supabase.auth
+      .getSession()
+      .then(async ({ data }) => {
+        const user = data.session?.user;
+        if (!user) return;
+        const to = await landingRouteFor(user.id);
+        if (to && !cancelled) navigate({ to, replace: true });
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   async function handleSignIn(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) {
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        return toast.error(error.message);
+      }
+      const to = await landingRouteFor(data.user!.id);
+      if (!to) {
+        return toast.error("Your account has been disabled. Contact the administrator.");
+      }
+      toast.success("Signed in");
+      navigate({ to, replace: true });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Sign in failed. Please try again.");
+    } finally {
       setLoading(false);
-      return toast.error(error.message);
     }
-    const to = await landingRouteFor(data.user!.id);
-    if (!to) {
-      setLoading(false);
-      return toast.error("Your account has been disabled. Contact the administrator.");
-    }
-
-    setLoading(false);
-    toast.success("Signed in");
-    navigate({ to, replace: true });
   }
+
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4 relative">
