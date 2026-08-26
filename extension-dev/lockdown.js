@@ -44,47 +44,15 @@
         opacity: .55;
         user-select: none !important;
       }
-      #flow-lockdown-toast {
-        position: fixed;
-        z-index: 2147483647;
-        top: 24px;
-        left: 50%;
-        transform: translate(-50%, -8px);
-        padding: 10px 16px;
-        color: #f4f2ff;
-        border: 1px solid rgba(160, 140, 255, .35);
-        border-radius: 999px;
-        background: rgba(24, 20, 48, .94);
-        box-shadow: 0 16px 40px rgba(4, 10, 28, .32);
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-        font-size: 13px;
-        opacity: 0;
-        pointer-events: none !important;
-        transition: opacity .18s ease, transform .18s ease;
-      }
-      #flow-lockdown-toast.visible {
-        opacity: 1;
-        transform: translate(-50%, 0);
+      [data-farix-hide="1"] {
+        display: none !important;
       }
     `;
     (document.head || html).appendChild(style);
   }
 
-  let toastElement = null;
-  let toastTimer = 0;
-
-  function toast(message = "Account is locked on managed session") {
-    ensureStyles();
-    if (!toastElement || !toastElement.isConnected) {
-      toastElement = document.createElement("div");
-      toastElement.id = "flow-lockdown-toast";
-      html.appendChild(toastElement);
-    }
-    toastElement.textContent = message;
-    requestAnimationFrame(() => toastElement?.classList.add("visible"));
-    window.clearTimeout(toastTimer);
-    toastTimer = window.setTimeout(() => toastElement?.classList.remove("visible"), 2200);
-  }
+  // Silent lockdown: no toasts, no banners.
+  function toast() {}
 
   /* -------------------------------------------------------- detection */
 
@@ -207,7 +175,76 @@
     return false;
   }
 
+
+  /* ------------------------------------------- listing project cards */
+
+  const PROJECT_LINK_SELECTOR = 'a[href*="/fx/tools/flow/project/"]';
+
+  function hideNode(el) {
+    if (!(el instanceof Element)) return;
+    if (el.dataset.farixHide === "1") return;
+    if (el.closest?.('[data-flow-allow="1"]')) return;
+    el.dataset.farixHide = "1";
+  }
+
+  function cardRootFor(link) {
+    let el = link;
+    let hops = 0;
+    while (el?.parentElement && hops < 6) {
+      const parent = el.parentElement;
+      if (parent === document.body || parent.childElementCount > 1) return el;
+      el = parent;
+      hops += 1;
+    }
+    return el || link;
+  }
+
+  function hideProjectCards() {
+    if (!isListingPage()) return;
+    document.querySelectorAll(PROJECT_LINK_SELECTOR).forEach((link) => {
+      if (link.closest?.('[data-flow-allow="1"]')) return;
+      hideNode(cardRootFor(link));
+    });
+    // Media thumbnails rendered without a project link (previous generations).
+    document.querySelectorAll("main video, main img").forEach((media) => {
+      if (media.closest?.('[data-flow-allow="1"]')) return;
+      if (media.closest?.('[data-farix-hide="1"]')) return;
+      if (looksLikeAvatar(media)) return;
+      const rect = media.getBoundingClientRect();
+      if (rect.width < 120 || rect.height < 80) return;
+      const card = cardRootFor(media);
+      hideNode(card);
+    });
+  }
+
+  /* ------------------------------------------------ model dropdown */
+
+  const BLOCKED_MODEL_RE =
+    /(omni\s*flash|veo\s*3(\.\d)?\s*[-–]\s*(lite|fast|quality|pro|standard))/i;
+  const ALLOWED_MODEL_RE = /lower\s*priority/i;
+
+  function filterModelOptions() {
+    if (!isFlowPage()) return;
+    const nodes = document.querySelectorAll(
+      "[role='menuitem'], [role='option'], [role='menuitemradio'], li[role], li"
+    );
+    nodes.forEach((el) => {
+      if (el.dataset.farixHide === "1") return;
+      if (el.querySelector?.("[role='menuitem'], [role='option']")) return;
+      const text = (el.textContent || "").trim();
+      if (!text || text.length > 60) return;
+      if (ALLOWED_MODEL_RE.test(text)) return;
+      if (!BLOCKED_MODEL_RE.test(text)) return;
+      el.dataset.farixHide = "1";
+    });
+  }
+
   /* ------------------------------------------------------- mode switch */
+
+  function sweep() {
+    hideProjectCards();
+    filterModelOptions();
+  }
 
   function applyMode() {
     if (!isFlowPage()) {
@@ -225,6 +262,7 @@
       allowedTile = null;
     }
     markProfileRoots(document.body || html);
+    sweep();
   }
 
   /* ---------------------------------------------------- event blocking */
@@ -298,6 +336,7 @@
       });
     }
     if (isListingPage()) refreshAllowedTile();
+    sweep();
   });
 
   const startObserving = () => {
