@@ -29,8 +29,8 @@ export const PLANS: PlanDef[] = [
   {
     id: "master",
     name: "Master",
-    tagline: "Everything on Farix — Veo 3, ChatGPT Premium and Niche Prompts.",
-    features: ["Veo 3 (Lite) — Unlimited", "ChatGPT Premium", "Niche Prompts"],
+    tagline: "Everything on Farix — Veo 3, ChatGPT Premium, Gemini Pro and Niche Prompts.",
+    features: ["Veo 3 (Lite) — Unlimited", "ChatGPT Premium", "Gemini Pro", "Niche Prompts"],
     includes: { veo: true, chatgpt: true, gemini: true, prompts: true },
   },
 ];

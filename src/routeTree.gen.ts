@@ -26,6 +26,7 @@ import { Route as AuthenticatedKingNichesRouteImport } from './routes/_authentic
 import { Route as AuthenticatedKingExtensionLabRouteImport } from './routes/_authenticated/king/extension-lab'
 import { Route as AuthenticatedDashboardVeo3RouteImport } from './routes/_authenticated/dashboard/veo-3'
 import { Route as AuthenticatedDashboardPromptsRouteImport } from './routes/_authenticated/dashboard/prompts'
+import { Route as AuthenticatedDashboardGeminiRouteImport } from './routes/_authenticated/dashboard/gemini'
 import { Route as AuthenticatedDashboardChatgptRouteImport } from './routes/_authenticated/dashboard/chatgpt'
 import { Route as AuthenticatedKingToolsIdRouteImport } from './routes/_authenticated/king/tools_.$id'
 import { Route as AuthenticatedKingResellersIdRouteImport } from './routes/_authenticated/king/resellers_.$id'
@@ -124,6 +125,12 @@ const AuthenticatedDashboardPromptsRoute =
     path: '/prompts',
     getParentRoute: () => AuthenticatedDashboardRouteRoute,
   } as any)
+const AuthenticatedDashboardGeminiRoute =
+  AuthenticatedDashboardGeminiRouteImport.update({
+    id: '/gemini',
+    path: '/gemini',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
 const AuthenticatedDashboardChatgptRoute =
   AuthenticatedDashboardChatgptRouteImport.update({
     id: '/chatgpt',
@@ -150,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
   '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
+  '/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
@@ -168,6 +176,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
+  '/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
@@ -191,6 +200,7 @@ export interface FileRoutesById {
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
   '/_authenticated/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
+  '/_authenticated/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/_authenticated/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/_authenticated/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/_authenticated/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
@@ -214,6 +224,7 @@ export interface FileRouteTypes {
     | '/king'
     | '/reseller'
     | '/dashboard/chatgpt'
+    | '/dashboard/gemini'
     | '/dashboard/prompts'
     | '/dashboard/veo-3'
     | '/king/extension-lab'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/dashboard/chatgpt'
+    | '/dashboard/gemini'
     | '/dashboard/prompts'
     | '/dashboard/veo-3'
     | '/king/extension-lab'
@@ -254,6 +266,7 @@ export interface FileRouteTypes {
     | '/_authenticated/king'
     | '/_authenticated/reseller'
     | '/_authenticated/dashboard/chatgpt'
+    | '/_authenticated/dashboard/gemini'
     | '/_authenticated/dashboard/prompts'
     | '/_authenticated/dashboard/veo-3'
     | '/_authenticated/king/extension-lab'
@@ -396,6 +409,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardPromptsRouteImport
       parentRoute: typeof AuthenticatedDashboardRouteRoute
     }
+    '/_authenticated/dashboard/gemini': {
+      id: '/_authenticated/dashboard/gemini'
+      path: '/gemini'
+      fullPath: '/dashboard/gemini'
+      preLoaderRoute: typeof AuthenticatedDashboardGeminiRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
     '/_authenticated/dashboard/chatgpt': {
       id: '/_authenticated/dashboard/chatgpt'
       path: '/chatgpt'
@@ -422,6 +442,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedDashboardRouteRouteChildren {
   AuthenticatedDashboardChatgptRoute: typeof AuthenticatedDashboardChatgptRoute
+  AuthenticatedDashboardGeminiRoute: typeof AuthenticatedDashboardGeminiRoute
   AuthenticatedDashboardPromptsRoute: typeof AuthenticatedDashboardPromptsRoute
   AuthenticatedDashboardVeo3Route: typeof AuthenticatedDashboardVeo3Route
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
@@ -430,6 +451,7 @@ interface AuthenticatedDashboardRouteRouteChildren {
 const AuthenticatedDashboardRouteRouteChildren: AuthenticatedDashboardRouteRouteChildren =
   {
     AuthenticatedDashboardChatgptRoute: AuthenticatedDashboardChatgptRoute,
+    AuthenticatedDashboardGeminiRoute: AuthenticatedDashboardGeminiRoute,
     AuthenticatedDashboardPromptsRoute: AuthenticatedDashboardPromptsRoute,
     AuthenticatedDashboardVeo3Route: AuthenticatedDashboardVeo3Route,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
