@@ -342,6 +342,7 @@
         if (!(node instanceof Element)) return;
         markBlocked(node);
         hideSidebarSections(node);
+        maskAccountIdentity(node);
         removeAccountDialogs(node);
       });
     }
@@ -351,12 +352,14 @@
     ensureStyles();
     markBlocked(document);
     hideSidebarSections(document);
+    maskAccountIdentity(document);
     removeAccountDialogs(document);
     observer.observe(html, { childList: true, subtree: true });
     guardLocation();
     window.setInterval(() => {
       markBlocked(document);
       hideSidebarSections(document);
+      maskAccountIdentity(document);
       removeAccountDialogs(document);
     }, 1500);
   }
