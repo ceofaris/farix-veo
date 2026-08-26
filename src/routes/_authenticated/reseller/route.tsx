@@ -11,11 +11,15 @@ export const Route = createFileRoute("/_authenticated/reseller")({
 });
 
 function ResellerLayout() {
-  const { profile, loading } = useProfile();
+  const { profile, loading, error } = useProfile();
   const navigate = useNavigate();
   const disabled = !!profile && profile.role === "reseller" && !profile.is_active;
   useEffect(() => {
-    if (loading || !profile) return;
+    if (loading) return;
+    if (!profile) {
+      navigate({ to: "/auth", replace: true });
+      return;
+    }
     if (profile.role !== "reseller") {
       navigate({ to: "/dashboard" });
       return;
@@ -28,10 +32,18 @@ function ResellerLayout() {
       })();
     }
   }, [profile, loading, navigate]);
-  if (loading || !profile) {
+  if (loading) {
     return <div className="min-h-screen bg-background text-foreground flex items-center justify-center">Loading…</div>;
   }
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-6 text-center text-sm text-muted-foreground">
+        {error ? "Could not load your account. Please sign in again." : "Redirecting…"}
+      </div>
+    );
+  }
   if (profile.role !== "reseller" || disabled) return null;
+
 
   return (
     <PanelLayout

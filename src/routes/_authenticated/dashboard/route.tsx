@@ -44,7 +44,11 @@ function DashboardLayout() {
   const shell = cn("farix-shell min-h-screen bg-background text-foreground", theme === "dark" && "dark");
 
   useEffect(() => {
-    if (loading || !profile) return;
+    if (loading) return;
+    if (!profile) {
+      navigate({ to: "/auth", replace: true });
+      return;
+    }
     if (profile.role === "king") navigate({ to: "/king" });
     else if (profile.role === "reseller") navigate({ to: "/reseller" });
   }, [profile, loading, navigate]);
@@ -54,14 +58,22 @@ function DashboardLayout() {
     navigate({ to: "/auth" });
   }
 
-  if (loading || !profile) {
+  if (loading) {
     return (
       <div className={cn(shell, "flex items-center justify-center")}>
         Loading…
       </div>
     );
   }
+  if (!profile) {
+    return (
+      <div className={cn(shell, "flex items-center justify-center px-6 text-center text-sm text-muted-foreground")}>
+        Redirecting…
+      </div>
+    );
+  }
   if (!isUser) return null;
+
 
   const initials = (profile.full_name || profile.email || "?").slice(0, 2).toUpperCase();
 
