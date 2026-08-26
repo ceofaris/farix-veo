@@ -126,6 +126,9 @@
         pointer-events: none !important;
         user-select: none !important;
       }
+      [data-farix-hide="1"] {
+        display: none !important;
+      }
     `;
     (document.head || html).appendChild(style);
   }
