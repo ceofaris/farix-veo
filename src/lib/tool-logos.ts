@@ -1,5 +1,6 @@
 import chatgptAsset from "@/assets/logo-chatgpt.png.asset.json";
 import flowAsset from "@/assets/logo-flow-wordmark.png.asset.json";
+import { assetUrl } from "@/lib/asset-url";
 
 export type BuiltInLogo = { url: string; bleed?: boolean; container?: string };
 
@@ -8,8 +9,8 @@ export type BuiltInLogo = { url: string; bleed?: boolean; container?: string };
  * Matching is done on slug/name so it never depends on DB logo_url.
  */
 const BUILT_IN: Array<{ match: RegExp; logo: BuiltInLogo }> = [
-  { match: /chat\s*-?\s*gpt/i, logo: { url: chatgptAsset.url } },
-  { match: /veo|flow/i, logo: { url: flowAsset.url, bleed: false, container: "bg-black" } },
+  { match: /chat\s*-?\s*gpt/i, logo: { url: assetUrl(chatgptAsset) } },
+  { match: /veo|flow/i, logo: { url: assetUrl(flowAsset), bleed: false, container: "bg-black" } },
 ];
 
 export function builtInToolLogoInfo(tool: { name?: string | null; slug?: string | null }): BuiltInLogo | null {
@@ -21,4 +22,4 @@ export function builtInToolLogo(tool: { name?: string | null; slug?: string | nu
   return builtInToolLogoInfo(tool)?.url ?? null;
 }
 
-export const flowLogoUrl = flowAsset.url;
+export const flowLogoUrl = assetUrl(flowAsset);

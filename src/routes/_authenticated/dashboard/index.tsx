@@ -11,6 +11,7 @@ import clip4 from "@/assets/farix-clip-4.mp4.asset.json";
 import clip5 from "@/assets/farix-clip-5.mp4.asset.json";
 import clip6 from "@/assets/farix-clip-6.mp4.asset.json";
 import clip7 from "@/assets/farix-clip-7.mp4.asset.json";
+import { assetUrl } from "@/lib/asset-url";
 
 
 export const Route = createFileRoute("/_authenticated/dashboard/")({
@@ -44,7 +45,7 @@ const CLIPS = [
   { hue: 200 },
 ];
 
-const CLIP_SRCS = [clip1.url, clip2.url, clip3.url, clip4.url, clip5.url, clip6.url, clip7.url];
+const CLIP_SRCS = [clip1, clip2, clip3, clip4, clip5, clip6, clip7].map(assetUrl);
 
 
 function HomePage() {
@@ -75,7 +76,7 @@ function HomePage() {
               muted
               playsInline
               preload="auto"
-              src={featuredVideo.url}
+              src={assetUrl(featuredVideo)}
             />
           </div>
         </div>

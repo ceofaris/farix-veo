@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils";
 import markAsset from "@/assets/farix-mark.png.asset.json";
+import { assetUrl } from "@/lib/asset-url";
 
 export function FarixMark({ className }: { className?: string }) {
   return (
     <img
-      src={markAsset.url}
+      src={assetUrl(markAsset)}
       alt="Farix logo"
       className={cn("h-6 w-auto shrink-0 object-contain select-none", className)}
       draggable={false}

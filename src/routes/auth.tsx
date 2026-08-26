@@ -15,7 +15,7 @@ export const Route = createFileRoute("/auth")({
     const title = "Sign In | Farix AI";
     const description =
       "Sign in to your Farix AI account to access your assigned premium AI tools. Access is invite-only and provided by an authorized Farix AI reseller.";
-    const image = "https://farixai.com/__l5e/assets-v1/5f13d1dc-09a1-42c1-855d-4edb89b406e9/farix-mark.png";
+    const image = "https://farixai.lovable.app/__l5e/assets-v1/5f13d1dc-09a1-42c1-855d-4edb89b406e9/farix-mark.png";
     return {
       meta: [
         { title },
