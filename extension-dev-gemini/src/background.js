@@ -75,16 +75,12 @@ async function getState() {
 
 async function injectSession() {
   const config = await getConfig();
-  const response = await callRpc(config.rpc.getRandomAccount, {
-    tool_slug: "gemini"
-  });
+  const response = await callRpc(config.rpc.getRandomAccount, {});
   const account = normalizeAccount(response);
   await clearGeminiCookies();
   await setCookies(account.cookies);
   await callRpc(config.rpc.setActiveSession, {
-    tool_slug: "gemini",
-    account_id: account.id,
-    session_id: account.id
+    p_tool_account_id: account.id
   });
   await chrome.storage.local.set({
     [ACCOUNT_KEY]: {
@@ -102,11 +98,7 @@ async function clearRemoteActiveSession() {
     const config = await getConfig();
     const stored = await chrome.storage.local.get(ACCOUNT_KEY);
     if (stored[ACCOUNT_KEY]?.id) {
-      await callRpc(config.rpc.clearActiveSession, {
-        tool_slug: "gemini",
-        account_id: stored[ACCOUNT_KEY].id,
-        session_id: stored[ACCOUNT_KEY].id
-      });
+      await callRpc(config.rpc.clearActiveSession, {});
     }
   } catch {
     // Local cookie/session cleanup must still complete if the remote RPC is unavailable.

@@ -8,11 +8,11 @@
  * from the extension's small settings page and are stored locally in Chrome.
  */
 export const DEFAULT_CONFIG = Object.freeze({
-  supabaseUrl: "https://YOUR_PROJECT.supabase.co",
-  supabaseAnonKey: "YOUR_SUPABASE_ANON_KEY",
+  supabaseUrl: "https://niytnogzleyderixfkaf.supabase.co",
+  supabaseAnonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5peXRub2d6bGV5ZGVyaXhma2FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxODA5NDEsImV4cCI6MjEwMDc1Njk0MX0.qIFZ9AOqqeWkKQTQ7EVLehXqdWkS0_IlZHuj2rcqQng",
   toolSlug: "gemini",
   rpc: Object.freeze({
-    getRandomAccount: "get_random_active_account",
+    getRandomAccount: "get_random_gemini_account",
     setActiveSession: "set_active_session",
     clearActiveSession: "clear_active_session"
   })
