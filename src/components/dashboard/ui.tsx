@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 import { Link } from "@tanstack/react-router";
 import { Play, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { AutoVideo } from "@/components/auto-video";
+
 
 export function SectionHeader({
   icon,
@@ -64,18 +66,12 @@ export function MediaCard({
         }}
       />
       {videoSrc && (
-        <video
-          autoPlay
+        <AutoVideo
           className="absolute inset-0 h-full w-full object-cover"
-          controls={false}
-          disablePictureInPicture
-          loop
-          muted
-          playsInline
-          preload="auto"
           src={videoSrc}
         />
       )}
+
       {withPlay && !videoSrc && (
         <div className="absolute inset-0 flex items-center justify-center">
           <span className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/25 bg-black/35 backdrop-blur-sm transition-transform group-hover:scale-110">

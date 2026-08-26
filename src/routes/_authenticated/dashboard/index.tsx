@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Sparkles } from "lucide-react";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { MediaCard } from "@/components/dashboard/ui";
+import { AutoVideo } from "@/components/auto-video";
+
 import { ImageTicker } from "@/components/dashboard/image-ticker";
 import featuredVideo from "@/assets/farix-featured-video.mp4.asset.json";
 import clip1 from "@/assets/farix-clip-1.mp4.asset.json";
@@ -67,17 +69,12 @@ function HomePage() {
         {/* Featured video */}
         <div className="mx-auto mt-6 w-full max-w-[620px]">
           <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card">
-            <video
-              autoPlay
+            <AutoVideo
               className="block aspect-video w-full object-cover"
-              controls={false}
-              disablePictureInPicture
-              loop
-              muted
-              playsInline
-              preload="auto"
+              lazy={false}
               src={assetUrl(featuredVideo)}
             />
+
           </div>
         </div>
 
