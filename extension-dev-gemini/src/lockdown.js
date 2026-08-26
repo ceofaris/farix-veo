@@ -266,11 +266,13 @@
   function start() {
     ensureStyles();
     markBlocked(document);
+    hideSidebarSections(document);
     removeAccountDialogs(document);
     observer.observe(html, { childList: true, subtree: true });
     guardLocation();
     window.setInterval(() => {
       markBlocked(document);
+      hideSidebarSections(document);
       removeAccountDialogs(document);
     }, 1500);
   }
