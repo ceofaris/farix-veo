@@ -46,7 +46,7 @@ export function useProfile() {
 
   return {
     profile: query.data ?? null,
-    loading: query.isPending || query.isFetching,
+    loading: query.isPending || (query.isFetching && query.data === undefined),
     error: query.error as Error | null,
     refetch: query.refetch,
   };
