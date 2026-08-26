@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Farix AI — Gemini Pro</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <header class="topbar">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">F</span>
+          <div>
+            <div class="brand-name">Farix AI</div>
+            <div class="brand-product">Gemini Pro</div>
+          </div>
+        </div>
+        <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle color theme" title="Toggle color theme">
+          <span id="theme-icon" aria-hidden="true">◐</span>
+        </button>
+      </header>
+
+      <section class="status-panel" aria-live="polite">
+        <div class="status-orb" id="status-orb"></div>
+        <div class="status-copy">
+          <span class="eyebrow">SESSION STATUS</span>
+          <strong id="status-title">Checking connection</strong>
+          <span id="status-detail">Please wait a moment</span>
+        </div>
+        <span class="status-pill" id="status-pill">—</span>
+      </section>
+
+      <section class="content">
+        <div class="setup-callout" id="setup-callout" hidden>
+          <div>
+            <strong>Connect Supabase</strong>
+            <p>Add your project URL and anon key to get started.</p>
+          </div>
+          <button class="text-button" id="open-options" type="button">Configure</button>
+        </div>
+
+        <form class="login-form" id="login-form" autocomplete="on">
+          <div class="section-heading">
+            <span class="eyebrow">YOUR ACCESS</span>
+            <span class="muted" id="signed-in-email"></span>
+          </div>
+          <label class="field">
+            <span>Email</span>
+            <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="username" required />
+          </label>
+          <label class="field">
+            <span>Password</span>
+            <input id="password" name="password" type="password" placeholder="••••••••" autocomplete="current-password" required />
+          </label>
+          <button class="primary-button" id="login-button" type="submit">
+            <span>Sign in to Farix</span>
+            <span aria-hidden="true">↗</span>
+          </button>
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+        </form>
+
+        <section class="session-controls" id="session-controls" hidden>
+          <div class="section-heading">
+            <span class="eyebrow">GEMINI SESSION</span>
+            <span class="secure-label"><span class="secure-dot"></span> Isolated</span>
+          </div>
+          <div class="action-grid">
+            <button class="action-button inject" id="inject-button" type="button">
+              <span class="action-icon">↗</span>
+              <span>
+                <strong>Inject</strong>
+                <small>Switch Gemini session</small>
+              </span>
+            </button>
+            <button class="action-button clear" id="clear-button" type="button">
+              <span class="action-icon">×</span>
+              <span>
+                <strong>Clear</strong>
+                <small>Remove active session</small>
+              </span>
+            </button>
+          </div>
+          <div class="active-account" id="active-account" hidden>
+            <span class="account-check">✓</span>
+            <span>Active Gemini session</span>
+            <strong id="account-label"></strong>
+          </div>
+        </section>
+      </section>
+
+      <footer class="footer">
+        <span>Farix AI keeps Gemini focused.</span>
+        <button class="footer-button" id="logout-button" type="button" hidden>Log out</button>
+      </footer>
+    </main>
+    <script src="popup.js" type="module"></script>
+  </body>
+</html>

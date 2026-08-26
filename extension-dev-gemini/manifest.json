@@ -1,0 +1,40 @@
+{
+  "manifest_version": 3,
+  "name": "Farix AI — Gemini Pro",
+  "short_name": "Farix AI",
+  "version": "1.0.0",
+  "description": "Private Gemini session switching with silent account-area lockdown.",
+  "permissions": [
+    "cookies",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://gemini.google.com/*",
+    "https://accounts.google.com/*",
+    "https://myaccount.google.com/*",
+    "https://*.google.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_title": "Farix AI — Gemini Pro",
+    "default_popup": "src/popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://gemini.google.com/*",
+        "https://accounts.google.com/*",
+        "https://myaccount.google.com/*"
+      ],
+      "js": [
+        "src/lockdown.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "options_page": "src/options.html"
+}
