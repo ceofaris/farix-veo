@@ -330,6 +330,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      clear_active_session: { Args: never; Returns: Json }
       get_random_chatgpt_account: {
         Args: never
         Returns: {
@@ -341,6 +342,16 @@ export type Database = {
         }[]
       }
       get_random_flow_account: {
+        Args: never
+        Returns: {
+          cookie_data: string
+          id: string
+          label: string
+          notes: string
+          tool_id: string
+        }[]
+      }
+      get_random_gemini_account: {
         Args: never
         Returns: {
           cookie_data: string
