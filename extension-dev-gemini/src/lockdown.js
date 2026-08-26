@@ -96,8 +96,10 @@
     if (href && ACCOUNT_URL_RE.test(href)) return true;
     const label = attrText(el);
     if (label && BLOCK_TEXT_RE.test(label)) return true;
+    if (label && SIDEBAR_BLOCK_TEXT_RE.test(label)) return true;
     const text = shortText(el);
     if (text && BLOCK_TEXT_RE.test(text)) return true;
+    if (text && SIDEBAR_BLOCK_TEXT_RE.test(text)) return true;
     return looksLikeAvatarChip(el);
   }
 
