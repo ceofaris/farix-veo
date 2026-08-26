@@ -154,6 +154,56 @@
     }
   }
 
+  function hideSidebarSections(root) {
+    if (!(root instanceof Element || root instanceof Document)) return;
+    const nodes = [];
+    if (root instanceof Element && root.matches(SIDEBAR_ITEM_SELECTOR)) nodes.push(root);
+    root.querySelectorAll?.(SIDEBAR_ITEM_SELECTOR).forEach((el) => nodes.push(el));
+
+    for (const el of nodes) {
+      if (el.dataset.farixHide === "1" || el.dataset.farixAllow === "1") continue;
+      const text = (el.textContent || "").trim();
+      const label = attrText(el);
+      if (isAllowed(el) || ALLOW_TEXT_RE.test(text) || ALLOW_TEXT_RE.test(label)) {
+        el.dataset.farixAllow = "1";
+        continue;
+      }
+      if (!HIDE_TEXT_RE.test(text) && !HIDE_LABEL_RE.test(label)) continue;
+      const target =
+        el.closest("bard-sidenav a, bard-sidenav button, bard-sidenav [role='button'], bard-sidenav [role='listitem'], nav a, nav button, li") ||
+        el;
+      target.dataset.farixHide = "1";
+      target.setAttribute("aria-hidden", "true");
+    }
+
+    // Hide the Recents / chat-history list containers as a whole.
+    const historyContainers =
+      ".conversation-items-container, [data-test-id='conversation-items-container'], " +
+      "[data-test-id='chat-history-list'], [data-test-id='recent-chats'], " +
+      "bard-sidenav [role='list'], .chat-history-list, .recents-container";
+    root.querySelectorAll?.(historyContainers).forEach((el) => {
+      if (el.querySelector("rich-textarea, textarea, [contenteditable='true']")) return;
+      el.dataset.farixHide = "1";
+      el.setAttribute("aria-hidden", "true");
+    });
+
+    // Hide standalone "Recents" section headings and their parent section.
+    root
+      .querySelectorAll?.("bard-sidenav h2, bard-sidenav h3, bard-sidenav span, nav h2, nav h3, nav span")
+      .forEach((el) => {
+        const text = (el.textContent || "").trim();
+        if (!HIDE_TEXT_RE.test(text)) return;
+        let section = el.parentElement;
+        let depth = 0;
+        while (section && depth < 4 && section.childElementCount < 2) {
+          section = section.parentElement;
+          depth += 1;
+        }
+        (section || el).dataset.farixHide = "1";
+        (section || el).setAttribute("aria-hidden", "true");
+      });
+  }
+
   function removeAccountDialogs(root) {
     if (!(root instanceof Element || root instanceof Document)) return;
     root
