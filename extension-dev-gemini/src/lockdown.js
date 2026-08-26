@@ -1,150 +1,209 @@
 (() => {
   "use strict";
 
-  const BLOCKED_WORDS = [
-    "profile",
-    "account",
-    "settings",
-    "billing",
-    "upgrade",
-    "plan",
-    "subscription",
-    "manage your google account",
-    "google account",
-    "sign out",
-    "signout",
-    "log out",
-    "logout"
-  ];
-  const ALLOWED_WORDS = [
-    "new chat",
-    "send message",
-    "prompt",
-    "conversation",
-    "collapse sidebar",
-    "expand sidebar"
-  ];
-  const BLOCKED_ROUTES = /(?:^|\/)(settings|billing|upgrade|plans?|subscriptions?)(?:\/|$)/i;
-  const ACCOUNT_ROUTE = /accounts\.google\.com|myaccount\.google\.com/i;
-  let lastUrl = location.href;
-  let applyingRoute = false;
+  /**
+   * Farix AI — Gemini managed-session lockdown.
+   * Silent block only: no toast, no banner, no alert.
+   * Chat, composer, new chat, sidebar and conversation switching stay usable.
+   */
 
-  function textOf(element) {
-    if (!(element instanceof Element)) return "";
-    const attributes = [
-      element.getAttribute("aria-label"),
-      element.getAttribute("data-tooltip"),
-      element.getAttribute("title")
-    ];
-    const ownText = element.children.length === 0 ? element.textContent : "";
-    return attributes.concat(ownText)
+  const GEMINI_APP = "https://gemini.google.com/app";
+
+  const ACCOUNT_URL_RE =
+    /(accounts\.google\.com|myaccount\.google\.com|SignOutOptions|ServiceLogin|AccountChooser|\/logout|\/signout|one\.google\.com|payments\.google\.com|play\.google\.com\/store\/paymentmethods)/i;
+
+  const BLOCK_TEXT_RE =
+    /(google account|manage your google account|account settings|switch account|add another account|add account|sign out|signed out|log out|logout|signout|settings|settings & help|help & settings|billing|subscription|upgrade|manage plan|your plan|google one|gemini advanced|pricing|payment)/i;
+
+  const ALLOW_TEXT_RE =
+    /(new chat|ask gemini|send message|submit|prompt|open sidebar|close sidebar|expand sidebar|collapse sidebar|main menu|search chats|recent|conversation|microphone|voice|upload|add files|deep research|canvas|share|copy|edit)/i;
+
+  const ALLOW_SELECTOR =
+    "rich-textarea, textarea, input[type='text'], [contenteditable='true'], " +
+    "[data-test-id='send-button'], [data-test-id='new-chat-button'], " +
+    "[data-test-id='side-nav-menu-button'], [data-test-id='expanded-button'], " +
+    "[data-test-id='collapsed-button'], .conversation, .conversation-items-container, " +
+    "[data-test-id='conversation'], [data-test-id='chat-history-list']";
+
+  const BLOCK_SELECTOR =
+    "a[href*='accounts.google.com'], a[href*='myaccount.google.com'], " +
+    "a[href*='one.google.com'], a[href*='SignOutOptions'], " +
+    "#gb, .gb_A, .gb_z, [aria-label*='Google Account' i], " +
+    "[data-test-id='settings-and-help-button'], [data-test-id='settings-button'], " +
+    "[data-test-id='bard-mode-menu-button'][data-upgrade], " +
+    "[data-test-id='upgrade-button'], [data-test-id='user-info'], " +
+    "[data-test-id='account-chip'], .gb_d[aria-label], " +
+    "settings-and-help-menu, .user-info, .account-chip";
+
+  const html = document.documentElement;
+
+  function attrText(el) {
+    if (!(el instanceof Element)) return "";
+    return [
+      el.getAttribute("aria-label"),
+      el.getAttribute("title"),
+      el.getAttribute("data-tooltip"),
+      el.getAttribute("data-test-id"),
+      el.getAttribute("alt"),
+      el.getAttribute("href"),
+    ]
       .filter(Boolean)
       .join(" ")
-      .replace(/\s+/g, " ")
-      .trim()
       .toLowerCase();
   }
 
-  function isChatControl(element) {
-    const text = textOf(element);
-    if (ALLOWED_WORDS.some((word) => text.includes(word))) return true;
-    return Boolean(element.closest(
-      "textarea, [contenteditable='true'], [data-message-id]"
-    ));
+  function shortText(el) {
+    const text = (el.textContent || "").trim();
+    return text.length > 90 ? "" : text.toLowerCase();
   }
 
-  function isBlockedControl(element) {
-    if (!(element instanceof Element) || isChatControl(element)) return false;
-    const chain = [];
-    let current = element;
-    for (let index = 0; current && index < 5; index += 1, current = current.parentElement) {
-      chain.push(current);
+  function isAllowed(el) {
+    if (!(el instanceof Element)) return false;
+    if (el.closest(ALLOW_SELECTOR)) return true;
+    const label = attrText(el);
+    return Boolean(label && ALLOW_TEXT_RE.test(label) && !ACCOUNT_URL_RE.test(label));
+  }
+
+  function looksLikeAvatarChip(el) {
+    if (!(el instanceof Element)) return false;
+    const img = el.matches("img") ? el : el.querySelector("img");
+    if (!img) return false;
+    const src = img.getAttribute("src") || "";
+    if (!/googleusercontent\.com|\/a\/|avatar|photo/i.test(src)) return false;
+    const rect = el.getBoundingClientRect();
+    return rect.width > 0 && rect.width <= 80 && rect.height <= 80;
+  }
+
+  function isBlockedElement(el) {
+    if (!(el instanceof Element)) return false;
+    if (isAllowed(el)) return false;
+    if (el.matches(BLOCK_SELECTOR)) return true;
+    const href = el.getAttribute?.("href") || "";
+    if (href && ACCOUNT_URL_RE.test(href)) return true;
+    const label = attrText(el);
+    if (label && BLOCK_TEXT_RE.test(label)) return true;
+    const text = shortText(el);
+    if (text && BLOCK_TEXT_RE.test(text)) return true;
+    return looksLikeAvatarChip(el);
+  }
+
+  function isBlockedTarget(node) {
+    let el = node instanceof Element ? node : node?.parentElement;
+    let depth = 0;
+    while (el && depth < 8) {
+      if (el.dataset?.farixBlock === "1") return true;
+      if (isAllowed(el)) return false;
+      if (isBlockedElement(el)) return true;
+      el = el.parentElement;
+      depth += 1;
     }
-    return chain.some((item) => {
-      const text = textOf(item);
-      return BLOCKED_WORDS.some((word) => text.includes(word));
-    });
+    return false;
   }
 
-  function silentlyBlock(event) {
-    if (!isBlockedControl(event.target)) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  }
-
-  function silentlyBlockKeyboard(event) {
-    if ((event.key !== "Enter" && event.key !== " ") || !isBlockedControl(event.target)) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-  }
-
-  function removeAccountSurfaces(root) {
-    if (!(root instanceof Element || root instanceof Document)) return;
-    const candidates = root.querySelectorAll(
-      "[role='dialog'], [role='menu'], [aria-modal='true'], [data-popup], [class*='overlay'], [class*='dialog']"
-    );
-    candidates.forEach((element) => {
-      if (isBlockedControl(element) && !element.querySelector("textarea, [contenteditable='true']")) {
-        element.remove();
+  function ensureStyles() {
+    if (document.getElementById("farix-gemini-lock-style")) return;
+    const style = document.createElement("style");
+    style.id = "farix-gemini-lock-style";
+    style.textContent = `
+      [data-farix-block="1"], [data-farix-block="1"] * {
+        pointer-events: none !important;
+        user-select: none !important;
       }
-    });
+    `;
+    (document.head || html).appendChild(style);
   }
 
-  function routeIsBlocked(url) {
-    return ACCOUNT_ROUTE.test(url) || BLOCKED_ROUTES.test(new URL(url).pathname);
-  }
+  function markBlocked(root) {
+    if (!(root instanceof Element || root instanceof Document)) return;
+    const nodes = [];
+    if (root instanceof Element && root.matches("a[href], button, [role='button'], [role='menuitem'], img, [data-test-id]")) {
+      nodes.push(root);
+    }
+    root
+      .querySelectorAll?.("a[href], button, [role='button'], [role='menuitem'], img, [data-test-id]")
+      .forEach((el) => nodes.push(el));
 
-  function keepOnGeminiChat() {
-    if (applyingRoute || !routeIsBlocked(location.href)) return;
-    applyingRoute = true;
-    if (ACCOUNT_ROUTE.test(location.href)) {
-      location.replace("https://gemini.google.com/app");
-    } else {
-      history.replaceState(null, "", "https://gemini.google.com/app");
-      window.dispatchEvent(new PopStateEvent("popstate"));
-      applyingRoute = false;
+    for (const el of nodes) {
+      if (el.dataset.farixBlock === "1") continue;
+      if (!isBlockedElement(el)) continue;
+      const target = el.matches("img") ? el.closest("a, button, [role='button']") || el : el;
+      target.dataset.farixBlock = "1";
+      target.setAttribute("aria-hidden", "true");
+      target.setAttribute("tabindex", "-1");
+      target.removeAttribute("target");
     }
   }
 
-  const originalPushState = history.pushState.bind(history);
-  history.pushState = (...args) => {
-    originalPushState(...args);
-    keepOnGeminiChat();
-  };
-  const originalReplaceState = history.replaceState.bind(history);
-  history.replaceState = (...args) => {
-    originalReplaceState(...args);
-    keepOnGeminiChat();
+  function removeAccountDialogs(root) {
+    if (!(root instanceof Element || root instanceof Document)) return;
+    root
+      .querySelectorAll?.("[role='dialog'], [role='menu'], [aria-modal='true'], iframe[src*='accounts.google.com']")
+      .forEach((el) => {
+        if (el.querySelector("textarea, rich-textarea, [contenteditable='true']")) return;
+        const text = `${attrText(el)} ${shortText(el)}`;
+        const src = el.getAttribute?.("src") || "";
+        if (BLOCK_TEXT_RE.test(text) || ACCOUNT_URL_RE.test(src) || ACCOUNT_URL_RE.test(text)) {
+          el.remove();
+        }
+      });
+  }
+
+  function silentBlock(event) {
+    if (!isBlockedTarget(event.target)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    event.stopImmediatePropagation();
+  }
+
+  ["pointerdown", "mousedown", "mouseup", "click", "auxclick", "contextmenu", "touchstart"].forEach(
+    (type) => document.addEventListener(type, silentBlock, true),
+  );
+
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (event.key !== "Enter" && event.key !== " " && event.key !== "Spacebar") return;
+      silentBlock(event);
+    },
+    true,
+  );
+
+  const nativeOpen = window.open;
+  window.open = function farixGuardedOpen(url, ...rest) {
+    if (typeof url === "string" && ACCOUNT_URL_RE.test(url)) return null;
+    return nativeOpen.call(window, url, ...rest);
   };
 
-  document.addEventListener("click", silentlyBlock, true);
-  document.addEventListener("pointerdown", silentlyBlock, true);
-  document.addEventListener("keydown", silentlyBlockKeyboard, true);
-  document.addEventListener("submit", (event) => {
-    if (isBlockedControl(event.target)) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
+  function guardLocation() {
+    if (ACCOUNT_URL_RE.test(location.href)) {
+      location.replace(GEMINI_APP);
     }
-  }, true);
+  }
+
+  ["popstate", "hashchange"].forEach((type) => window.addEventListener(type, guardLocation));
 
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
       mutation.addedNodes.forEach((node) => {
-        if (node instanceof Element) removeAccountSurfaces(node);
+        if (!(node instanceof Element)) return;
+        markBlocked(node);
+        removeAccountDialogs(node);
       });
-    }
-    if (location.href !== lastUrl) {
-      lastUrl = location.href;
-      keepOnGeminiChat();
     }
   });
 
   function start() {
-    removeAccountSurfaces(document);
-    observer.observe(document.documentElement || document, { childList: true, subtree: true });
-    keepOnGeminiChat();
+    ensureStyles();
+    markBlocked(document);
+    removeAccountDialogs(document);
+    observer.observe(html, { childList: true, subtree: true });
+    guardLocation();
+    window.setInterval(() => {
+      markBlocked(document);
+      removeAccountDialogs(document);
+    }, 1500);
   }
 
-  if (document.documentElement) start();
+  if (document.body) start();
   else document.addEventListener("DOMContentLoaded", start, { once: true });
 })();
