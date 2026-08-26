@@ -274,7 +274,6 @@
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
-      if (event.type === "click" || event.type === "pointerdown" || event.type === "keydown") toast();
       return;
     }
 
@@ -282,7 +281,6 @@
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
-      if (event.type === "click") toast("Only creating a new project is allowed here");
     }
   }
 
@@ -303,7 +301,6 @@
   const nativeOpen = window.open;
   window.open = function flowGuardedOpen(url, ...rest) {
     if (typeof url === "string" && ACCOUNT_HREF_PATTERN.test(url)) {
-      toast();
       return null;
     }
     return nativeOpen.call(window, url, ...rest);
@@ -417,4 +414,8 @@
   }, 5000);
 
   connectWatchdog();
+
+  window.setInterval(() => {
+    if (isFlowPage()) sweep();
+  }, 800);
 })();
