@@ -16,14 +16,28 @@
     /(google account|manage your google account|account settings|switch account|add another account|add account|sign out|signed out|log out|logout|signout|settings|settings & help|help & settings|billing|subscription|upgrade|manage plan|your plan|google one|gemini advanced|pricing|payment)/i;
 
   const ALLOW_TEXT_RE =
-    /(new chat|ask gemini|send message|submit|prompt|open sidebar|close sidebar|expand sidebar|collapse sidebar|main menu|search chats|recent|conversation|microphone|voice|upload|add files|deep research|canvas|share|copy|edit)/i;
+    /(new chat|ask gemini|send message|submit|prompt|open sidebar|close sidebar|expand sidebar|collapse sidebar|main menu|students|images|microphone|voice|upload|add files|deep research|canvas|share|copy|edit)/i;
+
+  // Visible but dead (silent block on click).
+  const SIDEBAR_BLOCK_TEXT_RE = /(search chats)/i;
+
+  // Completely hidden from the sidebar.
+  const HIDE_TEXT_RE =
+    /^(recents?|notebooks?|new notebook|library|videos)$/i;
+  const HIDE_LABEL_RE =
+    /(recents?|notebooks?|new notebook|library|videos)/i;
 
   const ALLOW_SELECTOR =
     "rich-textarea, textarea, input[type='text'], [contenteditable='true'], " +
     "[data-test-id='send-button'], [data-test-id='new-chat-button'], " +
     "[data-test-id='side-nav-menu-button'], [data-test-id='expanded-button'], " +
-    "[data-test-id='collapsed-button'], .conversation, .conversation-items-container, " +
-    "[data-test-id='conversation'], [data-test-id='chat-history-list']";
+    "[data-test-id='collapsed-button'], [data-test-id='students-button'], " +
+    "[data-test-id='images-button']";
+
+  const SIDEBAR_ITEM_SELECTOR =
+    "bard-sidenav a, bard-sidenav button, bard-sidenav [role='button'], " +
+    "bard-sidenav [role='link'], bard-sidenav [data-test-id], " +
+    "nav a, nav button, nav [role='button'], nav [data-test-id]";
 
   const BLOCK_SELECTOR =
     "a[href*='accounts.google.com'], a[href*='myaccount.google.com'], " +
@@ -82,8 +96,10 @@
     if (href && ACCOUNT_URL_RE.test(href)) return true;
     const label = attrText(el);
     if (label && BLOCK_TEXT_RE.test(label)) return true;
+    if (label && SIDEBAR_BLOCK_TEXT_RE.test(label)) return true;
     const text = shortText(el);
     if (text && BLOCK_TEXT_RE.test(text)) return true;
+    if (text && SIDEBAR_BLOCK_TEXT_RE.test(text)) return true;
     return looksLikeAvatarChip(el);
   }
 
@@ -92,6 +108,7 @@
     let depth = 0;
     while (el && depth < 8) {
       if (el.dataset?.farixBlock === "1") return true;
+      if (el.dataset?.farixHide === "1") return true;
       if (isAllowed(el)) return false;
       if (isBlockedElement(el)) return true;
       el = el.parentElement;
@@ -108,6 +125,9 @@
       [data-farix-block="1"], [data-farix-block="1"] * {
         pointer-events: none !important;
         user-select: none !important;
+      }
+      [data-farix-hide="1"] {
+        display: none !important;
       }
     `;
     (document.head || html).appendChild(style);
@@ -132,6 +152,56 @@
       target.setAttribute("tabindex", "-1");
       target.removeAttribute("target");
     }
+  }
+
+  function hideSidebarSections(root) {
+    if (!(root instanceof Element || root instanceof Document)) return;
+    const nodes = [];
+    if (root instanceof Element && root.matches(SIDEBAR_ITEM_SELECTOR)) nodes.push(root);
+    root.querySelectorAll?.(SIDEBAR_ITEM_SELECTOR).forEach((el) => nodes.push(el));
+
+    for (const el of nodes) {
+      if (el.dataset.farixHide === "1" || el.dataset.farixAllow === "1") continue;
+      const text = (el.textContent || "").trim();
+      const label = attrText(el);
+      if (isAllowed(el) || ALLOW_TEXT_RE.test(text) || ALLOW_TEXT_RE.test(label)) {
+        el.dataset.farixAllow = "1";
+        continue;
+      }
+      if (!HIDE_TEXT_RE.test(text) && !HIDE_LABEL_RE.test(label)) continue;
+      const target =
+        el.closest("bard-sidenav a, bard-sidenav button, bard-sidenav [role='button'], bard-sidenav [role='listitem'], nav a, nav button, li") ||
+        el;
+      target.dataset.farixHide = "1";
+      target.setAttribute("aria-hidden", "true");
+    }
+
+    // Hide the Recents / chat-history list containers as a whole.
+    const historyContainers =
+      ".conversation-items-container, [data-test-id='conversation-items-container'], " +
+      "[data-test-id='chat-history-list'], [data-test-id='recent-chats'], " +
+      "bard-sidenav [role='list'], .chat-history-list, .recents-container";
+    root.querySelectorAll?.(historyContainers).forEach((el) => {
+      if (el.querySelector("rich-textarea, textarea, [contenteditable='true']")) return;
+      el.dataset.farixHide = "1";
+      el.setAttribute("aria-hidden", "true");
+    });
+
+    // Hide standalone "Recents" section headings and their parent section.
+    root
+      .querySelectorAll?.("bard-sidenav h2, bard-sidenav h3, bard-sidenav span, nav h2, nav h3, nav span")
+      .forEach((el) => {
+        const text = (el.textContent || "").trim();
+        if (!HIDE_TEXT_RE.test(text)) return;
+        let section = el.parentElement;
+        let depth = 0;
+        while (section && depth < 4 && section.childElementCount < 2) {
+          section = section.parentElement;
+          depth += 1;
+        }
+        (section || el).dataset.farixHide = "1";
+        (section || el).setAttribute("aria-hidden", "true");
+      });
   }
 
   function removeAccountDialogs(root) {
@@ -187,6 +257,7 @@
       mutation.addedNodes.forEach((node) => {
         if (!(node instanceof Element)) return;
         markBlocked(node);
+        hideSidebarSections(node);
         removeAccountDialogs(node);
       });
     }
@@ -195,11 +266,13 @@
   function start() {
     ensureStyles();
     markBlocked(document);
+    hideSidebarSections(document);
     removeAccountDialogs(document);
     observer.observe(html, { childList: true, subtree: true });
     guardLocation();
     window.setInterval(() => {
       markBlocked(document);
+      hideSidebarSections(document);
       removeAccountDialogs(document);
     }, 1500);
   }
