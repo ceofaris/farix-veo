@@ -257,6 +257,7 @@
       mutation.addedNodes.forEach((node) => {
         if (!(node instanceof Element)) return;
         markBlocked(node);
+        hideSidebarSections(node);
         removeAccountDialogs(node);
       });
     }
