@@ -16,14 +16,28 @@
     /(google account|manage your google account|account settings|switch account|add another account|add account|sign out|signed out|log out|logout|signout|settings|settings & help|help & settings|billing|subscription|upgrade|manage plan|your plan|google one|gemini advanced|pricing|payment)/i;
 
   const ALLOW_TEXT_RE =
-    /(new chat|ask gemini|send message|submit|prompt|open sidebar|close sidebar|expand sidebar|collapse sidebar|main menu|search chats|recent|conversation|microphone|voice|upload|add files|deep research|canvas|share|copy|edit)/i;
+    /(new chat|ask gemini|send message|submit|prompt|open sidebar|close sidebar|expand sidebar|collapse sidebar|main menu|students|images|microphone|voice|upload|add files|deep research|canvas|share|copy|edit)/i;
+
+  // Visible but dead (silent block on click).
+  const SIDEBAR_BLOCK_TEXT_RE = /(search chats)/i;
+
+  // Completely hidden from the sidebar.
+  const HIDE_TEXT_RE =
+    /^(recents?|notebooks?|new notebook|library|videos)$/i;
+  const HIDE_LABEL_RE =
+    /(recents?|notebooks?|new notebook|library|videos)/i;
 
   const ALLOW_SELECTOR =
     "rich-textarea, textarea, input[type='text'], [contenteditable='true'], " +
     "[data-test-id='send-button'], [data-test-id='new-chat-button'], " +
     "[data-test-id='side-nav-menu-button'], [data-test-id='expanded-button'], " +
-    "[data-test-id='collapsed-button'], .conversation, .conversation-items-container, " +
-    "[data-test-id='conversation'], [data-test-id='chat-history-list']";
+    "[data-test-id='collapsed-button'], [data-test-id='students-button'], " +
+    "[data-test-id='images-button']";
+
+  const SIDEBAR_ITEM_SELECTOR =
+    "bard-sidenav a, bard-sidenav button, bard-sidenav [role='button'], " +
+    "bard-sidenav [role='link'], bard-sidenav [data-test-id], " +
+    "nav a, nav button, nav [role='button'], nav [data-test-id]";
 
   const BLOCK_SELECTOR =
     "a[href*='accounts.google.com'], a[href*='myaccount.google.com'], " +
