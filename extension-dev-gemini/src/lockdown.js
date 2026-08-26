@@ -204,6 +204,90 @@
       });
   }
 
+  const BRAND_NAME = "Farix";
+
+  const EMAIL_RE = /@[\w.-]+\.\w{2,}/;
+  const PLAN_RE = /^(ultra|pro|advanced|google one|gemini advanced|free)$/i;
+
+  function chipContainerFor(el) {
+    let node = el;
+    let depth = 0;
+    while (node && depth < 6) {
+      const text = (node.textContent || "").trim();
+      if (text && text.length <= 90 && node.childElementCount > 0) return node;
+      node = node.parentElement;
+      depth += 1;
+    }
+    return el.parentElement || el;
+  }
+
+  function maskAccountIdentity(root) {
+    if (!(root instanceof Element || root instanceof Document)) return;
+
+    const avatars = [];
+    root.querySelectorAll?.("img").forEach((img) => {
+      const src = img.getAttribute("src") || "";
+      if (!/googleusercontent\.com|\/a\/|avatar|photo/i.test(src)) return;
+      avatars.push(img);
+    });
+
+    const containers = new Set();
+    avatars.forEach((img) => containers.add(chipContainerFor(img)));
+    root
+      .querySelectorAll?.("[data-test-id='user-info'], [data-test-id='account-chip'], .user-info, .account-chip")
+      .forEach((el) => containers.add(el));
+
+    for (const container of containers) {
+      if (!(container instanceof Element)) continue;
+      if (container.querySelector("rich-textarea, textarea, [contenteditable='true']")) continue;
+
+      const leaves = [];
+      container.querySelectorAll("*").forEach((el) => {
+        if (el.childElementCount > 0) return;
+        const text = (el.textContent || "").trim();
+        if (!text || text.length > 90) return;
+        leaves.push({ el, text });
+      });
+
+      // Direct text nodes on the container itself.
+      container.childNodes.forEach((node) => {
+        if (node.nodeType !== Node.TEXT_NODE) return;
+        const text = (node.textContent || "").trim();
+        if (!text) return;
+        if (node.__farixMasked) return;
+        node.textContent = "";
+      });
+
+      let named = container.dataset.farixName === "1";
+      for (const { el, text } of leaves) {
+        if (el.dataset.farixName === "1") {
+          if (el.textContent !== BRAND_NAME) el.textContent = BRAND_NAME;
+          named = true;
+          continue;
+        }
+        if (el.dataset.farixHide === "1") continue;
+        if (EMAIL_RE.test(text) || PLAN_RE.test(text)) {
+          el.dataset.farixHide = "1";
+          el.setAttribute("aria-hidden", "true");
+          continue;
+        }
+        if (!named) {
+          el.dataset.farixName = "1";
+          el.textContent = BRAND_NAME;
+          container.dataset.farixName = "1";
+          named = true;
+        }
+      }
+
+      ["aria-label", "title", "data-tooltip", "alt"].forEach((attr) => {
+        if (container.hasAttribute(attr)) container.setAttribute(attr, BRAND_NAME);
+      });
+      container.querySelectorAll("img").forEach((img) => {
+        if (img.hasAttribute("alt")) img.setAttribute("alt", BRAND_NAME);
+      });
+    }
+  }
+
   function removeAccountDialogs(root) {
     if (!(root instanceof Element || root instanceof Document)) return;
     root
