@@ -17,7 +17,7 @@ const FlowIcon = ({ className }: { className?: string }) => (
   <span
     className={cn(
       className,
-      "inline-flex items-center justify-center overflow-hidden rounded-md bg-black ring-1 ring-border/40",
+      "inline-flex items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-border/40",
     )}
     aria-hidden
   >
