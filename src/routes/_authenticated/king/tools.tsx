@@ -28,7 +28,14 @@ function KingTools() {
     queryFn: async () => {
       const { data, error } = await supabase.from("tools").select("*").order("created_at", { ascending: false });
       if (error) throw error;
-      return data as ToolRow[];
+      const order = (t: ToolRow) => {
+        const k = `${t.slug} ${t.name}`;
+        if (/veo|flow/i.test(k)) return 0;
+        if (/chat\s*-?\s*gpt/i.test(k)) return 1;
+        if (/gemini/i.test(k)) return 2;
+        return 3;
+      };
+      return (data as ToolRow[]).sort((a, b) => order(a) - order(b));
     },
   });
 
