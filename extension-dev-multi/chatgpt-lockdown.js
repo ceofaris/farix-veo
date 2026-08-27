@@ -2,78 +2,42 @@
   "use strict";
 
   let managedActive = false;
-  let toastTimer = null;
-  let toastElement = null;
 
   const accountWords =
-    /\b(account|profile|settings|sign[\s-]?out|log[\s-]?out|switch account|manage plan|subscription)\b/i;
+    /\b(account|profile|settings|sign[\s-]?out|log[\s-]?out|switch account|manage plan|subscription|upgrade|billing)\b/i;
   const accountAttributes =
     /(account|profile|settings|signout|sign-out|logout|log-out|switch-account|user-menu)/i;
   const interactive = "button, a, [role='button'], [role='menuitem'], [tabindex='0']";
 
-  const historyHrefPattern = /^\/(c|g|gpts|codex|library|project|projects|share)\b/i;
-  const historyWords = /\b(library|projects?|gpts|explore gpts|chat history|recent)\b/i;
   const newChatWords = /\b(new chat|new conversation)\b/i;
+  const composerSafe = "textarea, input, [contenteditable='true'], form";
 
-  function ensureUi() {
-    if (!toastElement) {
-      const style = document.createElement("style");
-      style.id = "farix-chatgpt-lockdown-style";
-      style.textContent = `
-        #farix-chatgpt-lockdown-toast {
-          position: fixed;
-          z-index: 2147483647;
-          left: 50%;
-          bottom: 28px;
-          max-width: 320px;
-          padding: 12px 16px;
-          color: #f7f5ff;
-          border: 1px solid rgba(203, 178, 255, .28);
-          border-radius: 12px;
-          background: linear-gradient(135deg, #211a45, #31265d);
-          box-shadow: 0 16px 40px rgba(9, 6, 27, .3);
-          font: 600 13px/1.4 Inter, ui-sans-serif, system-ui, sans-serif;
-          text-align: center;
-          opacity: 0;
-          pointer-events: none;
-          transform: translate(-50%, 8px);
-          transition: opacity .2s ease, transform .2s ease;
-        }
-        #farix-chatgpt-lockdown-toast.visible {
-          opacity: 1;
-          transform: translate(-50%, 0);
-        }
-        html.farix-history-lock [data-farix-history-lock="1"] {
-          pointer-events: none !important;
-          user-select: none !important;
-          filter: grayscale(1) blur(2px);
-          opacity: .45;
-        }
-      `;
-      document.documentElement.appendChild(style);
-      toastElement = document.createElement("div");
-      toastElement.id = "farix-chatgpt-lockdown-toast";
-      document.documentElement.appendChild(toastElement);
-    }
+  /* ---------------------------------------------------------- styles */
+
+  function ensureStyle() {
+    if (document.getElementById("farix-chatgpt-lockdown-style")) return;
+    const style = document.createElement("style");
+    style.id = "farix-chatgpt-lockdown-style";
+    style.textContent = `
+      html.farix-cgpt-lock [data-farix-hide="1"] {
+        display: none !important;
+      }
+      html.farix-cgpt-lock [data-farix-dead="1"] {
+        pointer-events: none !important;
+        user-select: none !important;
+      }
+    `;
+    document.documentElement.appendChild(style);
   }
 
-  function showToast(text = "Account is locked on managed session") {
-    ensureUi();
-    toastElement.textContent = text;
-    toastElement.classList.add("visible");
-    window.clearTimeout(toastTimer);
-    toastTimer = window.setTimeout(() => toastElement?.classList.remove("visible"), 2600);
-  }
-
-
+  /* ------------------------------------------------------- helpers */
 
   function descriptor(control) {
     return [
-      control.getAttribute("aria-label"),
-      control.getAttribute("title"),
-      control.getAttribute("data-testid"),
-      control.getAttribute("data-state"),
-      control.getAttribute("href"),
+      control.getAttribute?.("aria-label"),
+      control.getAttribute?.("title"),
+      control.getAttribute?.("data-testid"),
+      control.getAttribute?.("href"),
       control.textContent
     ]
       .filter(Boolean)
@@ -82,73 +46,118 @@
       .trim();
   }
 
-  function isAccountControl(target) {
-    if (!(target instanceof Element)) return false;
-    const control = target.closest(interactive);
-    if (!control || control.closest("textarea, [contenteditable='true']")) return false;
-    const values = descriptor(control);
-    if (accountAttributes.test(values)) return true;
-
-    const safeSurface = control.closest(
-      "header, nav, [role='menu'], [role='dialog'], [data-radix-menu-content]"
-    );
-    return Boolean(safeSurface && accountWords.test(values));
+  function isNewChatControl(control) {
+    if (!control) return false;
+    const values = descriptor(control).toLowerCase();
+    if (newChatWords.test(values)) return true;
+    const href = control.getAttribute?.("href") || "";
+    return href === "/" || href.startsWith("/?");
   }
-
-  /* ------------------------------------------------ chat history lock */
 
   function sidebarRoot() {
     return (
       document.querySelector("#stage-slideover-sidebar") ||
       document.querySelector("#sidebar") ||
-      document.querySelector("nav[aria-label], nav")
+      document.querySelector("nav[aria-label]") ||
+      document.querySelector("nav")
     );
   }
 
-  function isNewChatControl(control) {
-    const values = descriptor(control).toLowerCase();
-    if (newChatWords.test(values)) return true;
-    const href = control.getAttribute("href") || "";
-    return href === "/" || href === "/?model=auto";
-  }
-
-  function isHistoryControl(target) {
+  function isAccountControl(target) {
     if (!(target instanceof Element)) return false;
     const control = target.closest(interactive);
-    if (!control || control.closest("textarea, [contenteditable='true']")) return false;
+    if (!control || control.closest(composerSafe)) return false;
     if (isNewChatControl(control)) return false;
-
-    const sidebar = sidebarRoot();
-    const inSidebar = Boolean(sidebar && sidebar.contains(control));
-    const href = control.getAttribute("href") || "";
     const values = descriptor(control);
-
-    if (href && historyHrefPattern.test(href)) return true;
-    if (inSidebar && historyWords.test(values)) return true;
-    // Any other sidebar row that is not new-chat / search / settings-free
-    if (inSidebar && control.closest("a[href]")) return true;
-    return false;
+    if (accountAttributes.test(values)) return true;
+    const safeSurface = control.closest(
+      "header, nav, aside, [role='menu'], [role='dialog'], [data-radix-menu-content]"
+    );
+    return Boolean(safeSurface && accountWords.test(values));
   }
 
-  function markHistory() {
+  /* --------------------------------------------- sidebar cleanup */
+
+  function accountChip(sidebar) {
+    const candidates = sidebar.querySelectorAll(interactive);
+    for (const el of candidates) {
+      const values = descriptor(el);
+      if (accountAttributes.test(values)) return el;
+    }
+    return null;
+  }
+
+  function maskAccountName(chip) {
+    if (!chip) return;
+    chip.setAttribute("data-farix-dead", "1");
+    chip.setAttribute("aria-label", "Farix");
+    chip.setAttribute("title", "Farix");
+
+    const walker = document.createTreeWalker(chip, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+
+    let renamed = false;
+    for (const node of nodes) {
+      const text = (node.nodeValue || "").trim();
+      if (!text) continue;
+      if (text === "Farix") {
+        renamed = true;
+        continue;
+      }
+      if (!renamed) {
+        node.nodeValue = "Farix";
+        renamed = true;
+      } else if (/@|plus|pro|free|go\b/i.test(text) || text.length > 1) {
+        node.nodeValue = "";
+      }
+    }
+
+    // Avatar initials should not leak the real name either.
+    chip.querySelectorAll("img[alt]").forEach((img) => img.setAttribute("alt", "Farix"));
+  }
+
+  function cleanSidebar() {
     if (!managedActive) return;
     const sidebar = sidebarRoot();
     if (!sidebar) return;
-    sidebar.querySelectorAll("a[href], li, [role='menuitem']").forEach((el) => {
+
+    const chip = accountChip(sidebar);
+    maskAccountName(chip);
+
+    // Hide every sidebar row / section except the New chat entry.
+    const rows = sidebar.querySelectorAll("a[href], li, [role='menuitem'], h2, h3");
+    rows.forEach((el) => {
       if (isNewChatControl(el)) return;
-      const href = el.getAttribute?.("href") || "";
-      const values = descriptor(el);
-      if ((href && historyHrefPattern.test(href)) || historyWords.test(values)) {
-        el.setAttribute("data-farix-history-lock", "1");
-        el.setAttribute("aria-disabled", "true");
+      if (el.querySelector && el.querySelector("a[href='/'], a[href^='/?']")) {
+        const inner = el.querySelector("a[href='/'], a[href^='/?']");
+        if (inner && isNewChatControl(inner)) return;
+      }
+      if (chip && (el.contains(chip) || chip.contains(el))) return;
+      if (el.closest(composerSafe)) return;
+      el.setAttribute("data-farix-hide", "1");
+    });
+
+    // Named nav buttons that are not links (Library, Codex, More, etc.).
+    sidebar.querySelectorAll("button, [role='button']").forEach((el) => {
+      if (isNewChatControl(el)) return;
+      if (chip && (el.contains(chip) || chip.contains(el))) return;
+      if (el.closest(composerSafe)) return;
+      const values = descriptor(el).toLowerCase();
+      if (
+        /\b(library|projects?|scheduled|plugins?|codex|more|gpts|explore|sora|recents?|history|upgrade)\b/.test(
+          values
+        )
+      ) {
+        el.setAttribute("data-farix-hide", "1");
       }
     });
   }
 
-  function applyHistoryLock() {
-    ensureUi();
-    document.documentElement.classList.toggle("farix-history-lock", managedActive);
-    if (managedActive) markHistory();
+  function applyLock() {
+    ensureStyle();
+    document.documentElement.classList.toggle("farix-cgpt-lock", managedActive);
+    if (managedActive) cleanSidebar();
   }
 
   function blockIfNeeded(event) {
@@ -156,32 +165,29 @@
     if (isAccountControl(event.target)) {
       event.preventDefault();
       event.stopImmediatePropagation();
-      showToast();
-      return;
-    }
-    if (isHistoryControl(event.target)) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      showToast("Chat history is locked on managed session");
     }
   }
 
   chrome.runtime.onMessage.addListener((message) => {
     if (message?.type === "SESSION_STATE") {
       managedActive = Boolean(message.active);
-      applyHistoryLock();
+      applyLock();
     }
   });
 
   chrome.runtime.sendMessage({ type: "GET_STATE" }, (response) => {
     void chrome.runtime.lastError;
     managedActive = Boolean(response?.ok && response.state?.active);
-    applyHistoryLock();
+    applyLock();
   });
 
   new MutationObserver(() => {
-    if (managedActive) markHistory();
+    if (managedActive) cleanSidebar();
   }).observe(document.documentElement, { childList: true, subtree: true });
+
+  window.setInterval(() => {
+    if (managedActive) cleanSidebar();
+  }, 900);
 
   /* ------------------------------------------- removal / disable watchdog */
 
@@ -211,8 +217,6 @@
     if (loggedOut) return;
     loggedOut = true;
     wipeReadableCookies();
-    // Hits ChatGPT's own logout flow so httpOnly session cookies are dropped
-    // server-side. No page navigation happens on removal.
     try {
       void fetch("https://chatgpt.com/api/auth/signout", {
         method: "POST",
@@ -263,17 +267,16 @@
 
   document.addEventListener("click", blockIfNeeded, true);
   document.addEventListener("pointerdown", blockIfNeeded, true);
-  document.addEventListener("keydown", (event) => {
-    if (!managedActive) return;
-    if (event.key !== "Enter" && event.key !== " ") return;
-    if (isAccountControl(event.target)) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      showToast();
-    } else if (isHistoryControl(event.target)) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      showToast("Chat history is locked on managed session");
-    }
-  }, true);
+  document.addEventListener(
+    "keydown",
+    (event) => {
+      if (!managedActive) return;
+      if (event.key !== "Enter" && event.key !== " ") return;
+      if (isAccountControl(event.target)) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    },
+    true
+  );
 })();
