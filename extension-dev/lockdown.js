@@ -227,33 +227,82 @@
     });
   }
 
+  /* ------------------------------------------------ timestamps */
+
+  // e.g. "27 Aug, 05:14", "05:14", "Aug 27, 2026", "2 hours ago"
+  const DATE_TEXT_RE =
+    /^(\d{1,2}\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s*\d{0,4}\s*,?\s*\d{0,2}:?\d{0,2}\s*(am|pm)?|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*\d{1,2},?\s*\d{0,4}(\s*,?\s*\d{1,2}:\d{2}\s*(am|pm)?)?|\d{1,2}:\d{2}\s*(am|pm)?|\d{1,2}\/\d{1,2}\/\d{2,4}|(a|an|\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago|yesterday|today)$/i;
+
+  function maskTimestamps() {
+    if (!isListingPage()) return;
+    const nodes = document.querySelectorAll(
+      "main span, main p, main time, main div, header time"
+    );
+    nodes.forEach((el) => {
+      if (el.dataset.farixMask === "1") return;
+      if (el.childElementCount > 0) return;
+      if (el.closest?.('[data-flow-allow="1"]')) return;
+      const text = (el.textContent || "").trim();
+      if (!text || text.length > 30) return;
+      if (!DATE_TEXT_RE.test(text)) return;
+      el.dataset.farixMask = "1";
+    });
+  }
+
   /* ------------------------------------------------ model dropdown */
 
-  const BLOCKED_MODEL_RE =
-    /(omni\s*flash|veo\s*3(\.\d)?\s*[-–]\s*(lite|fast|quality|pro|standard))/i;
+  const MODEL_TEXT_RE = /(veo\s*\d|omni\s*flash|imagen|nano\s*banana|flash)/i;
   const ALLOWED_MODEL_RE = /lower\s*priority/i;
+  // Never touch controls unrelated to model choice.
+  const SAFE_CONTROL_RE = /^(\d+s|x\s*\d|\d+\s*(outputs?|videos?)|16:9|9:16|1:1|generate|send|add|upload)$/i;
+
+  function modelOptionNodes() {
+    return document.querySelectorAll(
+      "[role='menuitem'], [role='option'], [role='menuitemradio'], [role='radio']"
+    );
+  }
 
   function filterModelOptions() {
     if (!isFlowPage()) return;
-    const nodes = document.querySelectorAll(
-      "[role='menuitem'], [role='option'], [role='menuitemradio'], li[role], li"
-    );
-    nodes.forEach((el) => {
-      if (el.dataset.farixHide === "1") return;
+    modelOptionNodes().forEach((el) => {
+      if (el.dataset.farixDead === "1" || el.dataset.farixHide === "1") return;
       if (el.querySelector?.("[role='menuitem'], [role='option']")) return;
       const text = (el.textContent || "").trim();
       if (!text || text.length > 60) return;
+      if (SAFE_CONTROL_RE.test(text)) return;
       if (ALLOWED_MODEL_RE.test(text)) return;
-      if (!BLOCKED_MODEL_RE.test(text)) return;
+      if (!MODEL_TEXT_RE.test(text)) return;
+      // Hide model options only; other panel controls stay untouched.
       el.dataset.farixHide = "1";
     });
+  }
+
+  // Selected-model label (button/trigger) must never read "Omni Flash".
+  function fixSelectedModelLabel() {
+    if (!isFlowPage()) return;
+    document
+      .querySelectorAll("button, [role='combobox'], [aria-haspopup]")
+      .forEach((el) => {
+        const text = (el.textContent || "").trim();
+        if (!text || text.length > 60) return;
+        if (!/omni\s*flash/i.test(text)) return;
+        const leaf = Array.from(el.querySelectorAll("*")).find(
+          (n) => n.childElementCount === 0 && /omni\s*flash/i.test(n.textContent || "")
+        );
+        const target = leaf || el;
+        if (target.dataset.farixLabel === "1") return;
+        target.dataset.farixLabel = "1";
+        target.textContent = "Veo 3.1 - Lite [Lower Priority]";
+      });
   }
 
   /* ------------------------------------------------------- mode switch */
 
   function sweep() {
     hideProjectCards();
+    maskTimestamps();
     filterModelOptions();
+    fixSelectedModelLabel();
   }
 
   function applyMode() {
