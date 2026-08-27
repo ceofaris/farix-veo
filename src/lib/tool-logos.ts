@@ -1,6 +1,6 @@
 import chatgptAsset from "@/assets/logo-chatgpt.png.asset.json";
 import flowAsset from "@/assets/logo-flow-wordmark.png.asset.json";
-import geminiAsset from "@/assets/logo-gemini.png.asset.json";
+import geminiAsset from "@/assets/logo-gemini-2025.png.asset.json";
 import { assetUrl } from "@/lib/asset-url";
 
 export type BuiltInLogo = { url: string; bleed?: boolean; container?: string };
