@@ -485,7 +485,8 @@ importScripts("config.js", "supabase.js");
     if (!context.profile?.access?.[toolId]) {
       throw new Error(`Your plan does not include ${entry.label}. Upgrade to the Master plan.`);
     }
-    if (detected && detected !== toolId) {
+    // Veo 3 never requires the user to already be on Flow — it opens the tab itself.
+    if (toolId !== "veo" && detected && detected !== toolId) {
       throw new Error(
         `The current tab is not ${entry.label}. Farix will open ${entry.label} for you.`
       );
