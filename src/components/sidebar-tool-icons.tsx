@@ -20,7 +20,7 @@ export function SidebarFlowIcon({ className }: IconProps) {
       src={assetUrl(flowMark)}
       alt=""
       aria-hidden
-      className={cn(base, "object-contain dark:invert", className)}
+      className={cn(base, "object-contain dark:invert", className, "w-[22px]")}
     />
   );
 }
