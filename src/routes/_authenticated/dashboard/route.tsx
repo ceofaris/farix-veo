@@ -3,8 +3,13 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
-import { Home, LogOut, Menu, MessageSquare, Sparkles, X } from "lucide-react";
-import { flowLogoUrl, geminiLogoUrl } from "@/lib/tool-logos";
+import { Home, LogOut, Menu, X } from "lucide-react";
+import {
+  SidebarChatGptIcon,
+  SidebarFlowIcon,
+  SidebarGeminiIcon,
+  SidebarPromptsIcon,
+} from "@/components/sidebar-tool-icons";
 import { FarixMark } from "@/components/farix-logo";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -13,39 +18,11 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardLayout,
 });
 
-const FlowIcon = ({ className }: { className?: string }) => (
-  <span
-    className={cn(
-      className,
-      "inline-flex items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-border/40",
-    )}
-    aria-hidden
-  >
-    <img
-      src={flowLogoUrl}
-      alt=""
-      className="h-[70%] w-[70%] object-contain"
-    />
-  </span>
-);
-
-const GeminiIcon = ({ className }: { className?: string }) => (
-  <span
-    className={cn(
-      className,
-      "inline-flex items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-border/40",
-    )}
-    aria-hidden
-  >
-    <img src={geminiLogoUrl} alt="" className="h-[78%] w-[78%] object-contain" />
-  </span>
-);
-
 const NAV = [
-  { to: "/dashboard/veo-3", label: "Veo 3", icon: FlowIcon },
-  { to: "/dashboard/chatgpt", label: "ChatGPT", icon: MessageSquare },
-  { to: "/dashboard/gemini", label: "Gemini Pro", icon: GeminiIcon },
-  { to: "/dashboard/prompts", label: "Niche Prompts", icon: Sparkles },
+  { to: "/dashboard/veo-3", label: "Veo 3", icon: SidebarFlowIcon },
+  { to: "/dashboard/chatgpt", label: "ChatGPT", icon: SidebarChatGptIcon },
+  { to: "/dashboard/gemini", label: "Gemini Pro", icon: SidebarGeminiIcon },
+  { to: "/dashboard/prompts", label: "Niche Prompts", icon: SidebarPromptsIcon },
 ] as const;
 
 function DashboardLayout() {
