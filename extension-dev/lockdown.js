@@ -229,22 +229,31 @@
 
   /* ------------------------------------------------ timestamps */
 
-  // e.g. "27 Aug, 05:14", "05:14", "Aug 27, 2026", "2 hours ago"
-  const DATE_TEXT_RE =
-    /^(\d{1,2}\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s*\d{0,4}\s*,?\s*\d{0,2}:?\d{0,2}\s*(am|pm)?|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*\d{1,2},?\s*\d{0,4}(\s*,?\s*\d{1,2}:\d{2}\s*(am|pm)?)?|\d{1,2}:\d{2}\s*(am|pm)?|\d{1,2}\/\d{1,2}\/\d{2,4}|(a|an|\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago|yesterday|today)$/i;
+  // Matches "27 Aug, 13:20", "Aug 27, 09:49 AM", "05:14", "2 hours ago" etc.
+  // Contains-style (no anchors) so dates with prefixes/suffixes are still caught.
+  const DATE_CONTAINS_RE =
+    /(\d{1,2}\s*(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?,?\s*\d{1,4}|(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*\d{1,2},?\s*(\d{4})?|\d{1,2}:\d{2}\s*(am|pm)?|\d{1,2}\/\d{1,2}\/\d{2,4}|(a|an|\d+)\s+(second|minute|hour|day|week|month|year)s?\s+ago|yesterday|today)/i;
 
   function maskTimestamps() {
     if (!isListingPage()) return;
-    // Walk every element; hide leaf nodes whose whole text is a date/time.
-    const all = document.querySelectorAll("body *");
-    for (const el of all) {
-      if (el.dataset.farixHide === "1") continue;
+    // Walk every text node; black out any date/time label so it is unreadable.
+    const walker = document.createTreeWalker(
+      document.body || document.documentElement,
+      NodeFilter.SHOW_TEXT
+    );
+    const nodes = [];
+    let node;
+    while ((node = walker.nextNode())) nodes.push(node);
+    for (const textNode of nodes) {
+      const text = (textNode.textContent || "").trim();
+      if (!text || text.length > 40) continue;
+      if (!DATE_CONTAINS_RE.test(text)) continue;
+      const el = textNode.parentElement;
+      if (!(el instanceof Element)) continue;
+      if (el.dataset.farixMask === "1") continue;
       if (el.closest?.('[data-flow-allow="1"]')) continue;
-      if (el.childElementCount > 0) continue;
-      const text = (el.textContent || "").trim();
-      if (!text || text.length > 30) continue;
-      if (!DATE_TEXT_RE.test(text)) continue;
-      el.dataset.farixHide = "1";
+      if (el.closest?.('[data-farix-mask="1"]')) continue;
+      el.dataset.farixMask = "1";
     }
   }
 
