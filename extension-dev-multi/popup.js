@@ -92,8 +92,7 @@
 
   function renderSelector(tools) {
     const unlocked = tools.filter((item) => item.unlocked);
-    const showSelector = unlocked.length > 1;
-    selectorWrap.classList.toggle("hidden", !showSelector);
+    selectorWrap.classList.toggle("hidden", tools.length === 0);
 
     if (!unlocked.some((item) => item.id === selectedTool)) {
       selectedTool = unlocked[0]?.id || null;
@@ -103,7 +102,7 @@
       const id = button.dataset.tool;
       const tool = tools.find((item) => item.id === id);
       button.disabled = !tool?.unlocked;
-      button.classList.toggle("selected", showSelector && id === selectedTool);
+      button.classList.toggle("selected", id === selectedTool);
     });
   }
 
@@ -129,7 +128,7 @@
     injectButton.textContent = target
       ? `${target.active ? "Restart" : "Inject"} ${target.label} Session`
       : "No tool unlocked";
-    clearButton.disabled = !state.tools?.some((item) => item.active);
+    clearButton.disabled = !target?.active;
   }
 
   async function loadState(sync = false) {

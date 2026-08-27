@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Farix AI",
   "version": "1.0.0",
-  "description": "One managed Farix AI extension for Veo 3 and ChatGPT sessions.",
+  "description": "One managed Farix AI extension for Veo 3, Gemini Pro and ChatGPT sessions.",
   "permissions": [
     "storage",
     "cookies",
@@ -16,6 +16,10 @@
     "https://*.chatgpt.com/*",
     "https://labs.google/*",
     "https://*.labs.google/*",
+    "https://*.google.com/*",
+    "https://myaccount.google.com/*",
+    "https://accounts.google.com/*",
+    "https://gemini.google.com/*",
     "https://farixai.com/*",
     "https://www.farixai.com/*",
     "https://farixai.lovable.app/*",
@@ -35,13 +39,35 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://chatgpt.com/*", "https://*.chatgpt.com/*"],
-      "js": ["chatgpt-lockdown.js"],
+      "matches": [
+        "https://chatgpt.com/*",
+        "https://*.chatgpt.com/*"
+      ],
+      "js": [
+        "chatgpt-lockdown.js"
+      ],
       "run_at": "document_idle"
     },
     {
-      "matches": ["https://labs.google/*", "https://*.labs.google/*"],
-      "js": ["veo-lockdown.js"],
+      "matches": [
+        "https://gemini.google.com/*",
+        "https://accounts.google.com/*",
+        "https://myaccount.google.com/*"
+      ],
+      "js": [
+        "gemini-lockdown.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://labs.google/*",
+        "https://*.labs.google/*"
+      ],
+      "js": [
+        "veo-lockdown.js"
+      ],
       "run_at": "document_idle"
     },
     {
@@ -50,7 +76,9 @@
         "https://www.farixai.com/*",
         "https://farixai.lovable.app/*"
       ],
-      "js": ["farix-site-bridge.js"],
+      "js": [
+        "farix-site-bridge.js"
+      ],
       "run_at": "document_idle"
     }
   ],

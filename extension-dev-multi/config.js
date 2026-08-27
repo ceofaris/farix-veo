@@ -22,16 +22,34 @@ globalThis.FARIX_CONFIG = Object.freeze({
       id: "veo",
       label: "Veo 3",
       host: "labs.google",
+      hosts: Object.freeze(["labs.google"]),
       url: "https://labs.google/fx/tools/flow",
       tabMatches: ["https://labs.google/fx/tools/flow*"],
       urlPattern: /^https:\/\/([a-z0-9-]+\.)*labs\.google\//i,
       accountRpc: "get_random_flow_account",
       plans: ["veo3_ultra", "master"]
     }),
+    gemini: Object.freeze({
+      id: "gemini",
+      label: "Gemini Pro",
+      host: "gemini.google.com",
+      hosts: Object.freeze([
+        "gemini.google.com",
+        "accounts.google.com",
+        "myaccount.google.com",
+        "google.com"
+      ]),
+      url: "https://gemini.google.com/app",
+      tabMatches: ["https://gemini.google.com/*"],
+      urlPattern: /^https:\/\/gemini\.google\.com\//i,
+      accountRpc: "get_random_gemini_account",
+      plans: ["master"]
+    }),
     chatgpt: Object.freeze({
       id: "chatgpt",
       label: "ChatGPT",
       host: "chatgpt.com",
+      hosts: Object.freeze(["chatgpt.com"]),
       url: "https://chatgpt.com",
       tabMatches: ["https://chatgpt.com/*", "https://*.chatgpt.com/*"],
       urlPattern: /^https:\/\/([a-z0-9-]+\.)*chatgpt\.com\//i,

@@ -249,16 +249,17 @@ input:focus {
 
 .selector {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 5px;
-  padding: 5px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 4px;
   border: 1px solid var(--border);
   border-radius: 14px;
   background: var(--surface);
 }
 
 .seg {
-  padding: 9px 10px;
+  padding: 9px 6px;
+  white-space: nowrap;
   border: none;
   border-radius: 10px;
   background: transparent;
