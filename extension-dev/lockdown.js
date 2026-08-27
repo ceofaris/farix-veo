@@ -235,23 +235,23 @@
 
   function maskTimestamps() {
     if (!isListingPage()) return;
-    const nodes = document.querySelectorAll(
-      "main span, main p, main time, main div, header time"
-    );
-    nodes.forEach((el) => {
-      if (el.dataset.farixMask === "1") return;
-      if (el.childElementCount > 0) return;
-      if (el.closest?.('[data-flow-allow="1"]')) return;
+    // Walk every element; hide leaf nodes whose whole text is a date/time.
+    const all = document.querySelectorAll("body *");
+    for (const el of all) {
+      if (el.dataset.farixHide === "1") continue;
+      if (el.closest?.('[data-flow-allow="1"]')) continue;
+      if (el.childElementCount > 0) continue;
       const text = (el.textContent || "").trim();
-      if (!text || text.length > 30) return;
-      if (!DATE_TEXT_RE.test(text)) return;
-      el.dataset.farixMask = "1";
-    });
+      if (!text || text.length > 30) continue;
+      if (!DATE_TEXT_RE.test(text)) continue;
+      el.dataset.farixHide = "1";
+    }
   }
 
   /* ------------------------------------------------ model dropdown */
 
-  const MODEL_TEXT_RE = /(veo\s*\d|omni\s*flash|imagen|nano\s*banana|flash)/i;
+  // Video models only — image models (Imagen, Nano Banana) stay fully open.
+  const MODEL_TEXT_RE = /(veo\s*\d|omni\s*flash|flash)/i;
   const ALLOWED_MODEL_RE = /lower\s*priority/i;
   // Never touch controls unrelated to model choice.
   const SAFE_CONTROL_RE = /^(\d+s|x\s*\d|\d+\s*(outputs?|videos?)|16:9|9:16|1:1|generate|send|add|upload)$/i;
