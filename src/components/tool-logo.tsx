@@ -1,6 +1,6 @@
 import { builtInToolLogoInfo } from "@/lib/tool-logos";
 import { assetUrl } from "@/lib/asset-url";
-import flowMark from "@/assets/flow-mark.png.asset.json";
+import flowMark from "@/assets/flow-mark-v2.png.asset.json";
 import chatgptMark from "@/assets/chatgpt-mark.png.asset.json";
 import geminiMark from "@/assets/gemini-mark.png.asset.json";
 
