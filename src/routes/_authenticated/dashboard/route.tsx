@@ -3,8 +3,13 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
-import { Home, LogOut, Menu, MessageSquare, Sparkles, X } from "lucide-react";
-import { flowLogoUrl, geminiLogoUrl } from "@/lib/tool-logos";
+import { Home, LogOut, Menu, X } from "lucide-react";
+import {
+  SidebarChatGptIcon,
+  SidebarFlowIcon,
+  SidebarGeminiIcon,
+  SidebarPromptsIcon,
+} from "@/components/sidebar-tool-icons";
 import { FarixMark } from "@/components/farix-logo";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
