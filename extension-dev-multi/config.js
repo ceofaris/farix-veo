@@ -27,6 +27,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
       tabMatches: ["https://labs.google/fx/tools/flow*"],
       urlPattern: /^https:\/\/([a-z0-9-]+\.)*labs\.google\//i,
       accountRpc: "get_random_flow_account",
+      probeUrl: "https://labs.google/fx/api/auth/session",
+      probeKind: "next-auth",
       plans: ["veo3_ultra", "master"]
     }),
     gemini: Object.freeze({
@@ -43,6 +45,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
       tabMatches: ["https://gemini.google.com/*"],
       urlPattern: /^https:\/\/gemini\.google\.com\//i,
       accountRpc: "get_random_gemini_account",
+      probeUrl: "https://gemini.google.com/app",
+      probeKind: "google",
       plans: ["master"]
     }),
     chatgpt: Object.freeze({
@@ -54,6 +58,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
       tabMatches: ["https://chatgpt.com/*", "https://*.chatgpt.com/*"],
       urlPattern: /^https:\/\/([a-z0-9-]+\.)*chatgpt\.com\//i,
       accountRpc: "get_random_chatgpt_account",
+      probeUrl: "https://chatgpt.com/api/auth/session",
+      probeKind: "next-auth",
       plans: ["chatgpt_premium", "master"]
     })
   }),
@@ -67,7 +73,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
   USER_PLANS_USER_COLUMN: "user_id",
 
   RPCS: Object.freeze({
-    setActiveSession: "set_active_session"
+    setActiveSession: "set_active_session",
+    markExpired: "mark_tool_account_expired"
   }),
 
   RPC_ARGUMENTS: Object.freeze({
