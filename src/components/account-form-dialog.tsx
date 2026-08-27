@@ -14,6 +14,7 @@ export type ToolAccountRow = {
   label: string | null;
   cookie_data: string;
   is_active: boolean;
+  status?: string | null;
   notes: string | null;
 };
 
