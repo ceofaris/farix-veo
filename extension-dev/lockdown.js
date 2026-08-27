@@ -47,6 +47,16 @@
       [data-farix-hide="1"] {
         display: none !important;
       }
+      [data-farix-mask="1"] {
+        color: transparent !important;
+        text-shadow: none !important;
+        background-color: #000 !important;
+        border-radius: 4px !important;
+      }
+      [data-farix-dead="1"], [data-farix-dead="1"] * {
+        pointer-events: none !important;
+        opacity: .35 !important;
+      }
     `;
     (document.head || html).appendChild(style);
   }
