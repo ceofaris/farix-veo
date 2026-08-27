@@ -20,7 +20,7 @@ export function SidebarFlowIcon({ className }: IconProps) {
       src={assetUrl(flowMark)}
       alt=""
       aria-hidden
-      className={cn(base, "h-[18px] w-[18px] object-contain dark:invert", className)}
+      className={cn(base, "object-contain dark:invert", className, "w-[22px]")}
     />
   );
 }
@@ -32,7 +32,7 @@ export function SidebarChatGptIcon({ className }: IconProps) {
       src={assetUrl(chatgptMark)}
       alt=""
       aria-hidden
-      className={cn(base, "h-[18px] w-[18px] object-contain dark:invert", className)}
+      className={cn(base, "object-contain dark:invert", className)}
     />
   );
 }
@@ -46,7 +46,7 @@ export function SidebarGeminiIcon({ className }: IconProps) {
   );
 }
 
-/** Prompt library — three prompt lines with a spark star (Niche Prompts) */
+/** Prompt library — document sheet with spark overlay (Niche Prompts) */
 export function SidebarPromptsIcon({ className }: IconProps) {
   return (
     <svg
@@ -59,11 +59,12 @@ export function SidebarPromptsIcon({ className }: IconProps) {
       className={cn(base, className)}
       aria-hidden
     >
-      <path d="M4 6.5h11" />
-      <path d="M4 10.5h9" />
-      <path d="M4 14.5h7" />
+      <path d="M6 3.5h6l5 5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z" />
+      <path d="M12 3.5V9h5" />
+      <path d="M8.4 12.8h4.2" />
+      <path d="M8.4 16h3" />
       <path
-        d="M18.6 7.8c.14 1 1.07 1.93 2.07 2.07-1 .14-1.93 1.07-2.07 2.07-.14-1-1.07-1.93-2.07-2.07 1-.14 1.93-1.07 2.07-2.07z"
+        d="M17.6 13.2c.2 1.4 1.5 2.7 2.9 2.9-1.4.2-2.7 1.5-2.9 2.9-.2-1.4-1.5-2.7-2.9-2.9 1.4-.2 2.7-1.5 2.9-2.9z"
         fill="currentColor"
         stroke="none"
       />
