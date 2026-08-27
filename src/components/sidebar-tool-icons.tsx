@@ -40,11 +40,10 @@ export function SidebarChatGptIcon({ className }: IconProps) {
       className={cn(base, className)}
       aria-hidden
     >
-      <path d="M15.4 9.1a2.9 2.9 0 0 1 3.9 3.5l-3.8 2.2a2.9 2.9 0 0 1-5 0L6.7 12.6a2.9 2.9 0 0 1 3.9-3.5V4.7a2.9 2.9 0 0 1 5 0v4.4" opacity="0" />
-      {/* hexagonal knot: 6 trapezoid petals rotated 60° */}
-      <path d="M10.4 5.4h5.2l2.6 4.5-2.6 4.5h-5.2l-2.6-4.5z" />
-      <path d="M10.4 5.4h5.2l2.6 4.5-2.6 4.5h-5.2l-2.6-4.5z" transform="rotate(60 13 9.9)" />
-      <path d="M10.4 5.4h5.2l2.6 4.5-2.6 4.5h-5.2l-2.6-4.5z" transform="rotate(-60 13 9.9)" />
+      {/* interlocking knot: 3 rounded squares rotated ±60° */}
+      <rect x="8.7" y="3.6" width="6.6" height="6.6" rx="1.9" />
+      <rect x="8.7" y="3.6" width="6.6" height="6.6" rx="1.9" transform="rotate(60 12 12)" />
+      <rect x="8.7" y="3.6" width="6.6" height="6.6" rx="1.9" transform="rotate(-60 12 12)" />
     </svg>
   );
 }

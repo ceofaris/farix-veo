@@ -114,7 +114,6 @@ function DashboardLayout() {
             >
               <item.icon className="h-[18px] w-[18px] shrink-0" />
               <span className="flex-1">{item.label}</span>
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-success" />
             </Link>
           ))}
         </nav>
