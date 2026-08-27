@@ -406,7 +406,7 @@ importScripts("config.js", "supabase.js");
     const detected = await activeTabTool();
     const toolId = requestedTool || detected;
     if (!toolId) {
-      throw new Error("Open ChatGPT or Google Flow in the current tab, then inject the session.");
+      throw new Error("Select a tool (Veo 3, Gemini Pro or ChatGPT), then inject the session.");
     }
     const entry = tool(toolId);
 
