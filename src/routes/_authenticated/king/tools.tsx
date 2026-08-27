@@ -34,7 +34,7 @@ function KingTools() {
 
   return (
     <div>
-      <PageHeader title="Tools" description="Veo 3 and ChatGPT are the platform's fixed tools." />
+      <PageHeader title="Tools" description="Veo 3, ChatGPT and Gemini Pro are the platform's fixed tools." />
 
       {tools.isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
