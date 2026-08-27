@@ -1,4 +1,7 @@
 import { cn } from "@/lib/utils";
+import { assetUrl } from "@/lib/asset-url";
+import flowMark from "@/assets/flow-mark-v2.png.asset.json";
+import chatgptMark from "@/assets/chatgpt-mark.png.asset.json";
 
 /**
  * Sidebar tool icons — drawn as inline SVGs with currentColor so they stay
@@ -10,41 +13,27 @@ type IconProps = { className?: string };
 
 const base = "shrink-0";
 
-/** Flow mark — smooth double swoosh (Veo 3) */
+/** Flow brand mark (Veo 3) — same asset as King Tools */
 export function SidebarFlowIcon({ className }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.1"
-      strokeLinecap="round"
-      className={cn(base, className)}
+    <img
+      src={assetUrl(flowMark)}
+      alt=""
       aria-hidden
-    >
-      <path d="M2.5 8.5c3-3.6 6 3.6 9.5 0s6 3.6 9.5 0" />
-      <path d="M2.5 15.5c3-3.6 6 3.6 9.5 0s6 3.6 9.5 0" />
-    </svg>
+      className={cn(base, "object-contain dark:invert", className)}
+    />
   );
 }
 
-/** ChatGPT knot — six interlocking rounded petals (official-style mark) */
+/** Official ChatGPT mark — same asset as King Tools */
 export function SidebarChatGptIcon({ className }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinejoin="round"
-      className={cn(base, className)}
+    <img
+      src={assetUrl(chatgptMark)}
+      alt=""
       aria-hidden
-    >
-      {/* interlocking knot: 3 rounded squares rotated ±60° */}
-      <rect x="8.7" y="3.6" width="6.6" height="6.6" rx="1.9" />
-      <rect x="8.7" y="3.6" width="6.6" height="6.6" rx="1.9" transform="rotate(60 12 12)" />
-      <rect x="8.7" y="3.6" width="6.6" height="6.6" rx="1.9" transform="rotate(-60 12 12)" />
-    </svg>
+      className={cn(base, "object-contain dark:invert", className)}
+    />
   );
 }
 
