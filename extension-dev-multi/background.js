@@ -25,6 +25,9 @@ importScripts("config.js", "supabase.js");
     if (error?.code === "SESSION_EXPIRED" || error?.status === 401) {
       return "Your Farix session expired. Please log in again.";
     }
+    if (error?.code === "SESSION_DEAD") {
+      return "Session expired — try again or contact reseller.";
+    }
     if (error?.status === 409 || error?.code === "ACTIVE_SESSION_EXISTS") {
       return "This account is already active on another device.";
     }
@@ -398,6 +401,75 @@ importScripts("config.js", "supabase.js");
     return snapshot();
   }
 
+  /* ------------------------------------------------- session health probe */
+
+  const SESSION_DEAD = "SESSION_DEAD";
+
+  function deadSessionError() {
+    const error = new Error("Session expired — try again or contact reseller.");
+    error.code = SESSION_DEAD;
+    return error;
+  }
+
+  /** Flags the account dead in Supabase so it is never handed out again. */
+  async function markAccountExpired(accountId, accessToken) {
+    if (!accountId || !accessToken) return;
+    try {
+      await supabase.rpc(config.RPCS.markExpired, { p_tool_account_id: accountId }, accessToken);
+    } catch {
+      // Never let reporting failure hide the real error from the user.
+    }
+  }
+
+  /**
+   * Confirms the injected cookies actually produce a signed-in session.
+   * Returns "alive", "dead", or "unknown" (network glitch -> never expire).
+   */
+  async function probeSession(toolId) {
+    const entry = tool(toolId);
+    if (!entry.probeUrl) return "unknown";
+    let response;
+    let body = "";
+    try {
+      response = await fetch(entry.probeUrl, {
+        credentials: "include",
+        cache: "no-store",
+        redirect: "follow"
+      });
+      body = await response.text();
+    } catch {
+      return "unknown";
+    }
+
+    if (response.status === 401 || response.status === 403) return "dead";
+    if (!response.ok) return "unknown";
+
+    const finalUrl = String(response.url || "");
+    if (/accounts\.google\.com\/(ServiceLogin|signin)/i.test(finalUrl)) return "dead";
+    if (/(^|\.)chatgpt\.com\/auth\/login/i.test(finalUrl)) return "dead";
+
+    if (entry.probeKind === "next-auth") {
+      const trimmed = body.trim();
+      if (!trimmed || trimmed === "{}" || trimmed === "null") return "dead";
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (parsed?.error) return "dead";
+        if (!parsed?.user && !parsed?.accessToken && !parsed?.expires) return "dead";
+        return "alive";
+      } catch {
+        return "unknown";
+      }
+    }
+
+    if (entry.probeKind === "google") {
+      if (/id="?initialActionsScript/i.test(body) || body.length > 20000) return "alive";
+      if (/ServiceLogin|signin\/v2|Sign in - Google Accounts/i.test(body)) return "dead";
+      return "unknown";
+    }
+
+    return "unknown";
+  }
+
   async function injectSession(requestedTool) {
     const context = await authContext();
     if (!context.auth) throw new Error("Log in before injecting a session.");
@@ -445,7 +517,19 @@ importScripts("config.js", "supabase.js");
       }
     } catch (error) {
       await clearCookies(toolId);
+      if (accountId && error?.code !== "ACTIVE_SESSION_EXISTS" && error?.status !== 409) {
+        await markAccountExpired(accountId, context.auth.access_token);
+        throw deadSessionError();
+      }
       throw error;
+    }
+
+    const health = await probeSession(toolId);
+    if (health === "dead") {
+      await clearCookies(toolId);
+      await setSession(toolId, null);
+      await markAccountExpired(accountId, context.auth.access_token);
+      throw deadSessionError();
     }
 
     await setSession(toolId, {

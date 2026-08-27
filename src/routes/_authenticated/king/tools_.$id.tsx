@@ -48,7 +48,11 @@ function KingToolAccounts() {
   );
 
   async function toggleActive(a: ToolAccountRow) {
-    await supabase.from("tool_accounts").update({ is_active: !a.is_active }).eq("id", a.id);
+    const nextActive = !a.is_active;
+    await supabase
+      .from("tool_accounts")
+      .update(nextActive ? { is_active: true, status: "active" } : { is_active: false })
+      .eq("id", a.id);
     accounts.refetch();
   }
 
@@ -107,9 +111,13 @@ function KingToolAccounts() {
               <tr key={a.id} className="border-t border-border transition-colors hover:bg-muted/40">
                 <td className="px-5 py-4">{a.label || <span className="text-muted-foreground">—</span>}</td>
                 <td className="px-5 py-4">
-                  <Badge variant={a.is_active ? "default" : "secondary"}>
-                    {a.is_active ? "Active" : "Inactive"}
-                  </Badge>
+                  {!a.is_active ? (
+                    <Badge variant="secondary">Inactive</Badge>
+                  ) : a.status === "expired" ? (
+                    <Badge variant="destructive">Expired</Badge>
+                  ) : (
+                    <Badge variant="default">Active</Badge>
+                  )}
                 </td>
                 <td className="px-5 py-4 text-muted-foreground">
                   {new Date((a as unknown as { created_at: string }).created_at).toLocaleDateString()}

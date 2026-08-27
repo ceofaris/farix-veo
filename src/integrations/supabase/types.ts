@@ -212,10 +212,12 @@ export type Database = {
           cookie_data: string
           created_at: string
           created_by: string | null
+          expired_at: string | null
           id: string
           is_active: boolean
           label: string | null
           notes: string | null
+          status: string
           tool_id: string
           updated_at: string
         }
@@ -223,10 +225,12 @@ export type Database = {
           cookie_data: string
           created_at?: string
           created_by?: string | null
+          expired_at?: string | null
           id?: string
           is_active?: boolean
           label?: string | null
           notes?: string | null
+          status?: string
           tool_id: string
           updated_at?: string
         }
@@ -234,10 +238,12 @@ export type Database = {
           cookie_data?: string
           created_at?: string
           created_by?: string | null
+          expired_at?: string | null
           id?: string
           is_active?: boolean
           label?: string | null
           notes?: string | null
+          status?: string
           tool_id?: string
           updated_at?: string
         }
@@ -368,6 +374,10 @@ export type Database = {
       }
       is_king: { Args: { _user_id: string }; Returns: boolean }
       is_reseller: { Args: { _user_id: string }; Returns: boolean }
+      mark_tool_account_expired: {
+        Args: { p_tool_account_id: string }
+        Returns: Json
+      }
       set_active_session: { Args: { p_tool_account_id: string }; Returns: Json }
     }
     Enums: {
