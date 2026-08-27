@@ -217,11 +217,68 @@
     });
   }
 
+
+  /* --------------------------------------------- listing timestamps */
+
+  const DATE_TEXT_RE =
+    /^(today|yesterday|(\d{1,2}\s+)?(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s*\d{0,2},?\s*\d{0,2}:?\d{0,2}\s*(am|pm)?|\d{1,2}\/\d{1,2}\/\d{2,4}.*|\d+\s+(minute|hour|day|week|month|year)s?\s+ago)$/i;
+
+  function hideProjectDates() {
+    if (!isListingPage()) return;
+    const scope = document.querySelector("main") || document.body;
+    if (!scope) return;
+    scope.querySelectorAll("*").forEach((el) => {
+      if (el.dataset.farixHide === "1") return;
+      if (el.closest?.('[data-flow-allow="1"]')) return;
+      if (el.closest?.('[data-farix-hide="1"]')) return;
+      if (el.childElementCount > 0) return;
+      const text = (el.textContent || "").trim();
+      if (!text || text.length > 40) return;
+      if (!DATE_TEXT_RE.test(text)) return;
+      hideNode(cardRootFor(el));
+    });
+  }
+
   /* ------------------------------------------------ model dropdown */
 
   const BLOCKED_MODEL_RE =
     /(omni\s*flash|veo\s*3(\.\d)?\s*[-–]\s*(lite|fast|quality|pro|standard))/i;
   const ALLOWED_MODEL_RE = /lower\s*priority/i;
+
+  const ALLOWED_MODEL_LABEL = "Veo 3.1 - Lite [Lower Priority]";
+  const MODEL_LABEL_RE = /^(omni\s*flash|veo\s*[\d.]+\s*[-\u2013].*)$/i;
+
+  function enforceModelLabel() {
+    if (!isFlowPage()) return;
+    document.querySelectorAll("span, div, button, p").forEach((el) => {
+      if (el.childElementCount > 0) return;
+      const text = (el.textContent || "").trim();
+      if (!text || text.length > 60) return;
+      if (!/omni\s*flash/i.test(text)) return;
+      if (el.dataset.farixLabel === "1" && el.textContent === ALLOWED_MODEL_LABEL) return;
+      el.dataset.farixLabel = "1";
+      el.textContent = ALLOWED_MODEL_LABEL;
+    });
+  }
+
+  let autoSelectAttempts = 0;
+
+  function autoSelectAllowedModel() {
+    if (!isFlowPage() || autoSelectAttempts > 6) return;
+    const options = Array.from(
+      document.querySelectorAll("[role='menuitem'], [role='option'], [role='menuitemradio']")
+    ).filter((el) => ALLOWED_MODEL_RE.test((el.textContent || "").trim()));
+    if (!options.length) return;
+    const option = options[0];
+    if (option.dataset.farixPicked === "1") return;
+    if (option.getAttribute("aria-selected") === "true" || option.getAttribute("aria-checked") === "true") {
+      option.dataset.farixPicked = "1";
+      return;
+    }
+    option.dataset.farixPicked = "1";
+    autoSelectAttempts += 1;
+    option.click();
+  }
 
   function filterModelOptions() {
     if (!isFlowPage()) return;
@@ -243,7 +300,10 @@
 
   function sweep() {
     hideProjectCards();
+    hideProjectDates();
     filterModelOptions();
+    enforceModelLabel();
+    autoSelectAllowedModel();
   }
 
   function applyMode() {
