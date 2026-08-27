@@ -106,6 +106,39 @@ export type Database = {
           },
         ]
       }
+      investments: {
+        Row: {
+          amount: number
+          created_at: string
+          created_by: string | null
+          id: string
+          label: string
+          note: string | null
+          spent_on: string
+          updated_at: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          label: string
+          note?: string | null
+          spent_on?: string
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          label?: string
+          note?: string | null
+          spent_on?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       niches: {
         Row: {
           created_at: string
