@@ -128,7 +128,7 @@
     injectButton.textContent = target
       ? `${target.active ? "Restart" : "Inject"} ${target.label} Session`
       : "No tool unlocked";
-    clearButton.disabled = !state.tools?.some((item) => item.active);
+    clearButton.disabled = !target?.active;
   }
 
   async function loadState(sync = false) {
