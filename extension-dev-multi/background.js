@@ -106,17 +106,39 @@ importScripts("config.js", "supabase.js");
 
   /* --------------------------------------------------------------- cookies */
 
+  function toolHosts(toolId) {
+    const entry = tool(toolId);
+    return entry.hosts?.length ? entry.hosts : [entry.host];
+  }
+
   function allowedDomain(toolId, domain) {
-    const host = tool(toolId).host;
-    const normalized = String(domain || host).replace(/^\./, "").toLowerCase();
-    return normalized === host || normalized.endsWith(`.${host}`);
+    const normalized = String(domain || tool(toolId).host)
+      .replace(/^\./, "")
+      .toLowerCase();
+    return toolHosts(toolId).some(
+      (host) => normalized === host || normalized.endsWith(`.${host}`)
+    );
   }
 
   async function clearCookies(toolId) {
-    const host = tool(toolId).host;
-    const cookies = await new Promise((resolve) =>
-      chrome.cookies.getAll({ domain: host }, resolve)
+    const collected = await Promise.all(
+      toolHosts(toolId).map(
+        (host) =>
+          new Promise((resolve) =>
+            chrome.cookies.getAll({ domain: host }, (found) => {
+              void chrome.runtime.lastError;
+              resolve(found || []);
+            })
+          )
+      )
     );
+    const seen = new Set();
+    const cookies = collected.flat().filter((cookie) => {
+      const key = `${cookie.storeId || ""}:${cookie.domain}:${cookie.path}:${cookie.name}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return allowedDomain(toolId, cookie.domain);
+    });
     await Promise.all(
       cookies.map(
         (cookie) =>
