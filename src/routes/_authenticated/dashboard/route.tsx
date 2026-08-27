@@ -31,10 +31,13 @@ const FlowIcon = ({ className }: { className?: string }) => (
 
 const GeminiIcon = ({ className }: { className?: string }) => (
   <span
-    className={cn(className, "inline-flex items-center justify-center overflow-hidden")}
+    className={cn(
+      className,
+      "inline-flex items-center justify-center overflow-hidden rounded-md bg-white ring-1 ring-border/40",
+    )}
     aria-hidden
   >
-    <img src={geminiLogoUrl} alt="" className="h-full w-full object-contain" />
+    <img src={geminiLogoUrl} alt="" className="h-[78%] w-[78%] object-contain" />
   </span>
 );
 

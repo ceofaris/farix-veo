@@ -1,6 +1,6 @@
 import chatgptAsset from "@/assets/logo-chatgpt.png.asset.json";
 import flowAsset from "@/assets/logo-flow-wordmark.png.asset.json";
-import geminiAsset from "@/assets/logo-gemini.png.asset.json";
+import geminiAsset from "@/assets/logo-gemini-2025.png.asset.json";
 import { assetUrl } from "@/lib/asset-url";
 
 export type BuiltInLogo = { url: string; bleed?: boolean; container?: string };
@@ -11,7 +11,7 @@ export type BuiltInLogo = { url: string; bleed?: boolean; container?: string };
  */
 const BUILT_IN: Array<{ match: RegExp; logo: BuiltInLogo }> = [
   { match: /chat\s*-?\s*gpt/i, logo: { url: assetUrl(chatgptAsset) } },
-  { match: /gemini/i, logo: { url: assetUrl(geminiAsset) } },
+  { match: /gemini/i, logo: { url: assetUrl(geminiAsset), bleed: false, container: "bg-white" } },
   { match: /veo|flow/i, logo: { url: assetUrl(flowAsset), bleed: false, container: "bg-black" } },
 ];
 
