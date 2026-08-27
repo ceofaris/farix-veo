@@ -128,7 +128,8 @@ const pricingPlans = [
     popular: true,
     features: [
       "Veo 3 Lite (Unlimited)",
-      "ChatGPT Premium",
+      "Gemini Pro (Chat)",
+      "ChatGPT (Testing Phase — Limited Access)",
       "Prompts Base (Latest Niches)",
       "Nano Banana",
       "Nano Banana 2",
@@ -137,12 +138,12 @@ const pricingPlans = [
     ],
   },
   {
-    title: "ChatGPT Premium",
+    title: "Coming Soon",
     features: [
-      "Unlimited Chats",
-      "Image Generation (Limited)",
-      "Image Attachment Support",
-      "Prompts Base",
+      "Text to Speech",
+      "Omni Flash",
+      "Freebies",
+      "ChatGPT (Unlimited)",
     ],
   },
 ];
