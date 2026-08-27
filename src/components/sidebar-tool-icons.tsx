@@ -10,39 +10,41 @@ type IconProps = { className?: string };
 
 const base = "shrink-0";
 
-/** Flow-style wave mark (Veo 3) */
+/** Flow mark — smooth double swoosh (Veo 3) */
 export function SidebarFlowIcon({ className }: IconProps) {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.8"
+      strokeWidth="2.1"
       strokeLinecap="round"
       className={cn(base, className)}
       aria-hidden
     >
-      <path d="M3.5 8.2c2.8-2.8 5.6 2.8 8.5 0 2.8-2.8 5.6 2.8 8.5 0" />
-      <path d="M3.5 15.8c2.8-2.8 5.6 2.8 8.5 0 2.8-2.8 5.6 2.8 8.5 0" />
+      <path d="M2.5 8.5c3-3.6 6 3.6 9.5 0s6 3.6 9.5 0" />
+      <path d="M2.5 15.5c3-3.6 6 3.6 9.5 0s6 3.6 9.5 0" />
     </svg>
   );
 }
 
-/** Official-style ChatGPT knot (three interlocking rounded squares) */
+/** ChatGPT knot — six interlocking rounded petals (official-style mark) */
 export function SidebarChatGptIcon({ className }: IconProps) {
   return (
     <svg
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.7"
+      strokeWidth="1.8"
       strokeLinejoin="round"
       className={cn(base, className)}
       aria-hidden
     >
-      <rect x="8.7" y="3.6" width="6.6" height="6.6" rx="1.9" />
-      <rect x="8.7" y="3.6" width="6.6" height="6.6" rx="1.9" transform="rotate(60 12 12)" />
-      <rect x="8.7" y="3.6" width="6.6" height="6.6" rx="1.9" transform="rotate(-60 12 12)" />
+      <path d="M15.4 9.1a2.9 2.9 0 0 1 3.9 3.5l-3.8 2.2a2.9 2.9 0 0 1-5 0L6.7 12.6a2.9 2.9 0 0 1 3.9-3.5V4.7a2.9 2.9 0 0 1 5 0v4.4" opacity="0" />
+      {/* hexagonal knot: 6 trapezoid petals rotated 60° */}
+      <path d="M10.4 5.4h5.2l2.6 4.5-2.6 4.5h-5.2l-2.6-4.5z" />
+      <path d="M10.4 5.4h5.2l2.6 4.5-2.6 4.5h-5.2l-2.6-4.5z" transform="rotate(60 13 9.9)" />
+      <path d="M10.4 5.4h5.2l2.6 4.5-2.6 4.5h-5.2l-2.6-4.5z" transform="rotate(-60 13 9.9)" />
     </svg>
   );
 }
@@ -56,7 +58,7 @@ export function SidebarGeminiIcon({ className }: IconProps) {
   );
 }
 
-/** Prompt library: spark over list lines (Niche Prompts) */
+/** Prompt library — document sheet with spark overlay (Niche Prompts) */
 export function SidebarPromptsIcon({ className }: IconProps) {
   return (
     <svg
@@ -65,14 +67,16 @@ export function SidebarPromptsIcon({ className }: IconProps) {
       stroke="currentColor"
       strokeWidth="1.8"
       strokeLinecap="round"
+      strokeLinejoin="round"
       className={cn(base, className)}
       aria-hidden
     >
-      <path d="M4 7.5h7" />
-      <path d="M4 12h9" />
-      <path d="M4 16.5h6" />
+      <path d="M6 3.5h6l5 5V20a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z" />
+      <path d="M12 3.5V9h5" />
+      <path d="M8.4 12.8h4.2" />
+      <path d="M8.4 16h3" />
       <path
-        d="M16.6 12.8c.28 1.85 2.03 3.6 3.88 3.88-1.85.28-3.6 2.03-3.88 3.88-.28-1.85-2.03-3.6-3.88-3.88 1.85-.28 3.6-2.03 3.88-3.88z"
+        d="M17.6 13.2c.2 1.4 1.5 2.7 2.9 2.9-1.4.2-2.7 1.5-2.9 2.9-.2-1.4-1.5-2.7-2.9-2.9 1.4-.2 2.7-1.5 2.9-2.9z"
         fill="currentColor"
         stroke="none"
       />
