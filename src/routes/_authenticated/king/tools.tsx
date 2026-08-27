@@ -28,13 +28,20 @@ function KingTools() {
     queryFn: async () => {
       const { data, error } = await supabase.from("tools").select("*").order("created_at", { ascending: false });
       if (error) throw error;
-      return data as ToolRow[];
+      const order = (t: ToolRow) => {
+        const k = `${t.slug} ${t.name}`;
+        if (/veo|flow/i.test(k)) return 0;
+        if (/chat\s*-?\s*gpt/i.test(k)) return 1;
+        if (/gemini/i.test(k)) return 2;
+        return 3;
+      };
+      return (data as ToolRow[]).sort((a, b) => order(a) - order(b));
     },
   });
 
   return (
     <div>
-      <PageHeader title="Tools" description="Veo 3 and ChatGPT are the platform's fixed tools." />
+      <PageHeader title="Tools" description="Veo 3, ChatGPT and Gemini Pro are the platform's fixed tools." />
 
       {tools.isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
