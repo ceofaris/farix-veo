@@ -244,7 +244,7 @@
       !!toolRow &&
       (!toolRow.expires_at || new Date(toolRow.expires_at).getTime() > Date.now());
 
-    const allowedPlans = ["veo3_ultra", "master"];
+    const allowedPlans = ["pro", "master"];
     const planIncludes = !!toolRow && allowedPlans.indexOf(toolRow.plan) !== -1;
 
     if (profileRow.role !== "king") {

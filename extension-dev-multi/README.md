@@ -7,8 +7,8 @@ Manifest V3 Chrome extension that manages both Farix tools in one place.
 - Farix Supabase email/password login
 - Loads the plan from `user_plans` and derives tool access:
   - `master` → Veo 3 + ChatGPT active
-  - `veo3_ultra` → Veo 3 active, ChatGPT locked
-  - `chatgpt_premium` → ChatGPT active, Veo 3 locked
+  - `pro` → Veo 3 active, Gemini/ChatGPT locked
+  - `master` → all tools active
 - Popup shows email, plan, and per-tool Active / Ready / Locked status
 - **Inject Session** uses the active tab to pick the tool (or the tool selector when
   both are unlocked) and injects only that tool's cookies

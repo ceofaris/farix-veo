@@ -1,5 +1,5 @@
 /** The three plans the platform sells. */
-export type PlanId = "veo3_ultra" | "chatgpt_premium" | "master";
+export type PlanId = "pro" | "master";
 
 export type PlanFeature = "veo" | "chatgpt" | "gemini" | "prompts";
 
@@ -13,24 +13,22 @@ export type PlanDef = {
 
 export const PLANS: PlanDef[] = [
   {
-    id: "veo3_ultra",
-    name: "Veo3 Ultra",
+    id: "pro",
+    name: "Pro",
     tagline: "Unlimited Veo 3 video generation plus the full niche prompt library.",
     features: ["Veo 3 (Lite) — Unlimited", "Niche Prompts"],
     includes: { veo: true, chatgpt: false, gemini: false, prompts: true },
   },
   {
-    id: "chatgpt_premium",
-    name: "ChatGPT Premium",
-    tagline: "Full ChatGPT Premium access plus the full niche prompt library.",
-    features: ["ChatGPT Premium", "Niche Prompts"],
-    includes: { veo: false, chatgpt: true, gemini: false, prompts: true },
-  },
-  {
     id: "master",
     name: "Master",
-    tagline: "Everything on Farix — Veo 3, ChatGPT Premium, Gemini Pro and Niche Prompts.",
-    features: ["Veo 3 (Lite) — Unlimited", "ChatGPT Premium", "Gemini Pro", "Niche Prompts"],
+    tagline: "Everything on Farix — Veo 3, Gemini Pro, ChatGPT and Niche Prompts.",
+    features: [
+      "Veo 3 (Lite) — Unlimited",
+      "Gemini Pro (Chat)",
+      "ChatGPT (Testing Phase — Limited Access)",
+      "Niche Prompts",
+    ],
     includes: { veo: true, chatgpt: true, gemini: true, prompts: true },
   },
 ];

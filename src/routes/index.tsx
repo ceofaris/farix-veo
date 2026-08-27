@@ -114,7 +114,7 @@ const steps = [
 
 const pricingPlans = [
   {
-    title: "Veo Ultra",
+    title: "Pro",
     features: [
       "Veo 3 Lite (Unlimited)",
       "Prompts Base",
