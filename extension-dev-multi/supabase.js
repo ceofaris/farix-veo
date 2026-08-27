@@ -106,8 +106,7 @@
 
   const PLAN_LABELS = {
     master: "Master Plan",
-    veo3_ultra: "Veo3 Ultra",
-    chatgpt_premium: "ChatGPT Premium"
+    pro: "Pro"
   };
 
   /**

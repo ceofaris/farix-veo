@@ -29,7 +29,7 @@ globalThis.FARIX_CONFIG = Object.freeze({
       accountRpc: "get_random_flow_account",
       probeUrl: "https://labs.google/fx/api/auth/session",
       probeKind: "next-auth",
-      plans: ["veo3_ultra", "master"]
+      plans: ["pro", "master"]
     }),
     gemini: Object.freeze({
       id: "gemini",
@@ -60,7 +60,7 @@ globalThis.FARIX_CONFIG = Object.freeze({
       accountRpc: "get_random_chatgpt_account",
       probeUrl: "https://chatgpt.com/api/auth/session",
       probeKind: "next-auth",
-      plans: ["chatgpt_premium", "master"]
+      plans: ["master"]
     })
   }),
 
