@@ -195,7 +195,7 @@
     const planActive =
       !!toolRow &&
       (!toolRow.expires_at || new Date(toolRow.expires_at).getTime() > Date.now());
-    const allowedPlans = ["chatgpt_premium", "master"];
+    const allowedPlans = ["master"];
     const planIncludes = !!toolRow && allowedPlans.indexOf(toolRow.plan) !== -1;
 
     if (profileRow.role !== "king") {
