@@ -68,6 +68,15 @@ export function UserFormDialog({
   }, [open, user, allowedIds.join(",")]);
 
   async function save() {
+    const name = fullName.trim();
+    const mail = email.trim().toLowerCase();
+    if (!name) return toast.error("Full name is required");
+    if (!user) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return toast.error("Enter a valid email address");
+      if (password.length < 6) return toast.error("Password must be at least 6 characters");
+    }
+    if (!Number.isFinite(days) || days <= 0) return toast.error("Days must be a number greater than 0");
+    if (!options.length) return toast.error("No plans assigned to you — ask the administrator");
     if (!allowedIds.includes(plan)) return toast.error("Select a plan you are allowed to sell");
     setSaving(true);
     try {
