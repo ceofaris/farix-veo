@@ -167,10 +167,30 @@ export function VideoGuide() {
         <h2 className="text-lg font-semibold tracking-tight">Video Guide</h2>
       </div>
       <div className="grid gap-5 sm:grid-cols-2">
-        {/* Replace each MediaCard with a real YouTube embed, e.g.
-            <iframe className="w-full aspect-video rounded-2xl" src="https://www.youtube.com/embed/VIDEO_ID" allowFullScreen /> */}
-        <MediaCard ratio="16/9" hue={265} label="How to use on Laptop" duration="Laptop" />
-        <MediaCard ratio="16/9" hue={315} label="How to use on Mobile" duration="Mobile" />
+        <div className="space-y-2">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card">
+            <iframe
+              className="aspect-video w-full"
+              src="https://www.youtube.com/embed/pezzCEmbEC8?rel=0"
+              title="How to use on PC & Laptop"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+          <p className="text-sm font-medium text-muted-foreground">How to use on PC & Laptop</p>
+        </div>
+        <div className="space-y-2">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card">
+            <iframe
+              className="aspect-video w-full"
+              src="https://www.youtube.com/embed/0FhnYZsZS1M?rel=0"
+              title="How to use on Mobile"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+          <p className="text-sm font-medium text-muted-foreground">How to use on Mobile</p>
+        </div>
       </div>
     </section>
   );
