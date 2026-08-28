@@ -68,21 +68,32 @@ export function UserFormDialog({
   }, [open, user, allowedIds.join(",")]);
 
   async function save() {
+    const name = fullName.trim();
+    const mail = email.trim().toLowerCase();
+    if (!name) return toast.error("Full name is required");
+    if (!user) {
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return toast.error("Enter a valid email address");
+      if (password.length < 6) return toast.error("Password must be at least 6 characters");
+    }
+    if (!Number.isFinite(days) || days <= 0) return toast.error("Days must be a number greater than 0");
+    if (!options.length) return toast.error("No plans assigned to you — ask the administrator");
     if (!allowedIds.includes(plan)) return toast.error("Select a plan you are allowed to sell");
     setSaving(true);
     try {
       if (user) {
-        await update({ data: { id: user.id, full_name: fullName, days, is_active: isActive, plan } });
+        await update({ data: { id: user.id, full_name: name, days, is_active: isActive, plan } });
       } else {
         await create({
-          data: { email, password, full_name: fullName, days, is_active: isActive, plan, owner_id: ownerId },
+          data: { email: mail, password, full_name: name, days, is_active: isActive, plan, owner_id: ownerId },
         });
       }
       toast.success(user ? "User updated" : "User created");
       onOpenChange(false);
       onSaved();
     } catch (e) {
-      toast.error((e as Error).message);
+      console.error("[user-form] save failed", e);
+      const msg = (e as Error)?.message || "Something went wrong. Please try again.";
+      toast.error(/already been registered|already exists/i.test(msg) ? "This email is already registered" : msg);
     } finally {
       setSaving(false);
     }
