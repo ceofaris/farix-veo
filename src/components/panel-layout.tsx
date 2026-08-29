@@ -35,7 +35,7 @@ export function PanelLayout({
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed lg:sticky top-0 h-screen inset-y-0 left-0 z-40 w-64 shrink-0 bg-sidebar border-r border-sidebar-border flex flex-col transition-transform duration-200",
+          "fixed lg:sticky top-0 h-[100dvh] inset-y-0 left-0 z-40 w-[82vw] max-w-[17rem] sm:w-64 shrink-0 bg-sidebar border-r border-sidebar-border flex flex-col transition-transform duration-200",
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
@@ -125,7 +125,7 @@ export function PanelLayout({
             </button>
           </div>
         </header>
-        <main className="flex-1 p-5 sm:p-8 max-w-[1400px] w-full mx-auto">{children}</main>
+        <main className="farix-safe-x farix-safe-b flex-1 p-5 sm:p-8 max-w-[1400px] w-full mx-auto">{children}</main>
       </div>
 
       {open && (
@@ -175,7 +175,7 @@ export function TableShell({ children }: { children: ReactNode }) {
   return (
     <div className="mt-6 border border-border rounded-2xl bg-card shadow-card overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full text-sm">{children}</table>
+        <table className="w-full min-w-[640px] text-sm">{children}</table>
       </div>
     </div>
   );

@@ -7,6 +7,8 @@ import {
   PlayCircle,
   Check,
   ChevronDown,
+  Menu,
+  X,
 } from "lucide-react";
 import { FarixMark } from "@/components/farix-logo";
 import { Reveal } from "@/components/reveal";
@@ -235,21 +237,24 @@ function FaqAccordion() {
   );
 }
 
+const NAV_LINKS = [
+  { label: "Home", href: "#" },
+  { label: "About", href: "#how" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "FAQ", href: "#faq" },
+];
+
 function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-      <nav className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-5">
+      <nav className="mx-auto flex h-16 max-w-6xl items-center gap-3 px-5">
         <Link to="/" className="flex min-w-0 items-center gap-2">
           <FarixMark className="h-6" />
           <span className="truncate font-display text-lg font-bold tracking-tight text-foreground">Farix AI</span>
         </Link>
         <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
-          {[
-            { label: "Home", href: "#" },
-            { label: "About", href: "#how" },
-            { label: "Pricing", href: "#pricing" },
-            { label: "FAQ", href: "#faq" },
-          ].map((l) => (
+          {NAV_LINKS.map((l) => (
             <a
               key={l.label}
               href={l.href}
@@ -268,15 +273,46 @@ function Navbar() {
           </Link>
           <Link
             to="/auth"
-            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-cta px-5 py-2 font-display text-sm font-semibold text-primary-foreground shadow-card transition hover:opacity-90 active:scale-[0.98]"
+            className="inline-flex items-center gap-1.5 rounded-full bg-gradient-cta px-4 py-2 font-display text-sm font-semibold text-primary-foreground shadow-card transition hover:opacity-90 active:scale-[0.98] sm:px-5"
           >
             Get Started <ArrowRight className="h-3.5 w-3.5" />
           </Link>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-accent hover:text-foreground md:hidden"
+          >
+            {menuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
         </div>
       </nav>
+      {menuOpen && (
+        <div className="border-t border-border bg-background/95 px-5 pb-4 pt-2 backdrop-blur-xl md:hidden">
+          {NAV_LINKS.map((l) => (
+            <a
+              key={l.label}
+              href={l.href}
+              onClick={() => setMenuOpen(false)}
+              className="block rounded-xl px-3 py-3 font-sans text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              {l.label}
+            </a>
+          ))}
+          <Link
+            to="/auth"
+            onClick={() => setMenuOpen(false)}
+            className="block rounded-xl px-3 py-3 font-sans text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground sm:hidden"
+          >
+            Sign In
+          </Link>
+        </div>
+      )}
     </header>
   );
 }
+
 
 function Landing() {
   // Landing page is light-theme only.
