@@ -79,7 +79,7 @@ function DashboardLayout() {
     <div className={cn(shell, "flex")}>
       <aside
         className={cn(
-          "fixed lg:sticky top-0 inset-y-0 left-0 z-40 h-screen w-[230px] shrink-0 flex flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-200",
+          "fixed lg:sticky top-0 inset-y-0 left-0 z-40 h-[100dvh] w-[80vw] max-w-[17rem] sm:w-[230px] shrink-0 flex flex-col border-r border-sidebar-border bg-sidebar transition-transform duration-200",
           open ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
@@ -149,7 +149,7 @@ function DashboardLayout() {
           </button>
           <div className="font-display font-semibold lg:hidden">Farix</div>
         </header>
-        <main className="mx-auto w-full max-w-6xl flex-1 px-5 pb-10 pt-4 sm:px-8 sm:pt-5">
+        <main className="farix-safe-b mx-auto w-full max-w-6xl flex-1 px-5 pb-10 pt-4 sm:px-8 sm:pt-5">
           <Outlet />
         </main>
       </div>

@@ -97,7 +97,8 @@ function KingToolAccounts() {
       />
 
       <div className="mt-4 border border-border rounded-xl overflow-hidden bg-card">
-        <table className="w-full text-sm">
+        <div className="overflow-x-auto">
+        <table className="w-full min-w-[560px] text-sm">
           <thead className="bg-muted/60 text-muted-foreground text-left text-xs uppercase tracking-[0.08em]">
             <tr>
               <th className="px-5 py-3.5 font-semibold">Label</th>
@@ -144,6 +145,7 @@ function KingToolAccounts() {
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       <AccountFormDialog
