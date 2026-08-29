@@ -336,28 +336,30 @@ function Landing() {
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-background">
-        <div className="relative mx-auto max-w-5xl px-5 pb-28 pt-24 text-center sm:pt-32">
+        <div className="relative mx-auto max-w-5xl px-5 pb-20 pt-16 text-center sm:pb-28 sm:pt-32">
           <Reveal>
-            <h1 className="font-sans text-[3rem] font-bold leading-[1.05] tracking-[-0.04em] sm:text-[5.25rem]">
+            <h1 className="font-sans text-[2.5rem] font-bold leading-[1.08] tracking-[-0.04em] sm:text-[5.25rem] sm:leading-[1.05]">
               <span className="text-gradient-metallic">Create with AI</span>
               <br />
               <span className="text-gradient-ocean">Without Hassle</span>
             </h1>
           </Reveal>
           <Reveal delay={140}>
-            <div className="mt-11 flex justify-center">
+            <div className="mt-8 flex justify-center sm:mt-11">
               <Link
                 to="/auth"
-                className="inline-flex items-center gap-2.5 rounded-full bg-gradient-cta px-9 py-4 font-display text-base font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98]"
+                className="inline-flex items-center gap-2.5 rounded-full bg-gradient-cta px-8 py-3.5 font-display text-base font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98] sm:px-9 sm:py-4"
               >
                 Get Started <ArrowRight className="h-5 w-5" />
               </Link>
             </div>
           </Reveal>
           <Reveal delay={240}>
-            <section className="-mx-8 mt-20 grid w-[calc(100%+4rem)] grid-cols-7 gap-1.5 sm:-mx-14 sm:w-[calc(100%+7rem)]">
+            <section className="-mx-5 mt-12 flex snap-x snap-mandatory gap-1.5 overflow-x-auto px-5 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-14 sm:mt-20 sm:grid sm:w-[calc(100%+7rem)] sm:snap-none sm:grid-cols-7 sm:overflow-visible sm:px-0 sm:pb-0">
               {CLIPS.map((c, i) => (
-                <MediaCard key={i} ratio="9/16" hue={c.hue} videoSrc={CLIP_SRCS[i]} />
+                <div key={i} className="w-[42vw] max-w-[190px] shrink-0 snap-center sm:w-auto sm:max-w-none">
+                  <MediaCard ratio="9/16" hue={c.hue} videoSrc={CLIP_SRCS[i]} />
+                </div>
               ))}
             </section>
           </Reveal>
