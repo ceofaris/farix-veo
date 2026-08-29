@@ -451,3 +451,51 @@
 @utility shadow-cta-glow {
   box-shadow: 0 0 24px -8px color-mix(in oklab, var(--brand-violet) 55%, transparent);
 }
+
+/* ---------- Mobile responsiveness (mobile-only; desktop untouched) ---------- */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (max-width: 767px) {
+  html,
+  body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+
+  /* Prevent iOS auto-zoom on focus + touch-friendly controls */
+  input:not([type="checkbox"]):not([type="radio"]),
+  select,
+  textarea {
+    font-size: 16px;
+    min-height: 44px;
+  }
+  button,
+  [role="button"],
+  a[class*="rounded"] {
+    touch-action: manipulation;
+  }
+
+  /* Media never overflows its container */
+  img,
+  video,
+  svg,
+  iframe,
+  canvas {
+    max-width: 100%;
+  }
+
+  /* Safe-area padding for notched phones */
+  .farix-safe-x {
+    padding-left: max(1.25rem, env(safe-area-inset-left));
+    padding-right: max(1.25rem, env(safe-area-inset-right));
+  }
+  .farix-safe-b {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+  .farix-safe-t {
+    padding-top: env(safe-area-inset-top);
+  }
+}
