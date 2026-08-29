@@ -7,6 +7,8 @@ import {
   PlayCircle,
   Check,
   ChevronDown,
+  Menu,
+  X,
 } from "lucide-react";
 import { FarixMark } from "@/components/farix-logo";
 import { Reveal } from "@/components/reveal";
