@@ -1,6 +1,12 @@
 import { useEffect } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Check, X } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, X } from "lucide-react";
+
+const TOOL_LINKS = [
+  { label: "Veo 3 Video Generation", to: "/tools/veo-3-video-generation" },
+  { label: "Imagen 4 Image Generation", to: "/tools/imagen-4-image-generation" },
+  { label: "ChatGPT Access", to: "/tools/chatgpt-access" },
+];
 import { FarixMark } from "@/components/farix-logo";
 import { Reveal } from "@/components/reveal";
 
@@ -24,7 +30,31 @@ function Header() {
             Farix AI
           </span>
         </Link>
-        <div className="ml-auto flex shrink-0 items-center gap-2">
+        <div className="ml-auto hidden flex-1 items-center justify-center md:flex">
+          <div className="group relative">
+            <button
+              type="button"
+              className="flex items-center gap-1 rounded-full px-4 py-2 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+            >
+              Tools
+              <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
+            </button>
+            <div className="invisible absolute left-1/2 top-full -translate-x-1/2 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
+              <div className="w-64 rounded-2xl border border-border bg-background p-1.5 shadow-card">
+                {TOOL_LINKS.map((t) => (
+                  <Link
+                    key={t.to}
+                    to={t.to}
+                    className="block rounded-xl px-4 py-2.5 font-sans text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                  >
+                    {t.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
           <Link
             to="/auth"
             className="hidden rounded-full px-4 py-2 font-display text-sm font-medium text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
