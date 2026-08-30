@@ -103,6 +103,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.png", type: "image/png", sizes: "144x144" },
       { rel: "apple-touch-icon", href: "/favicon.png" },
     ],
+    scripts: [
+      {
+        async: true,
+        src: "https://www.googletagmanager.com/gtag/js?id=G-LNGW5EPFFS",
+      },
+      {
+        children: `window.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', 'G-LNGW5EPFFS');`,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
