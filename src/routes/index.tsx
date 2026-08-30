@@ -1,3 +1,6 @@
+import { NavDropdown } from "@/components/nav-dropdown";
+import { SiteFooter } from "@/components/site-footer";
+import { PAGE_LINKS, TOOL_LINKS } from "@/components/site-links";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
@@ -251,68 +254,6 @@ const NAV_LINKS = [
   { label: "FAQ", href: "#faq" },
 ];
 
-const TOOL_LINKS = [
-  { label: "Veo 3 Video Generation", to: "/tools/veo-3-video-generation" },
-  { label: "Imagen 4 Image Generation", to: "/tools/imagen-4-image-generation" },
-  { label: "ChatGPT Access", to: "/tools/chatgpt-access" },
-];
-
-function ToolsDropdown({ mobile = false, onNavigate }: { mobile?: boolean; onNavigate?: () => void }) {
-  const [open, setOpen] = useState(false);
-  if (mobile) {
-    return (
-      <div>
-        <button
-          type="button"
-          onClick={() => setOpen((v) => !v)}
-          className="flex w-full items-center justify-between rounded-xl px-4 py-3 font-sans text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-accent"
-        >
-          Tools
-          <ChevronDown className={cn("h-4 w-4 transition-transform", open && "rotate-180")} />
-        </button>
-        {open && (
-          <div className="mb-1 ml-4 flex flex-col border-l border-border">
-            {TOOL_LINKS.map((t) => (
-              <Link
-                key={t.to}
-                to={t.to}
-                onClick={onNavigate}
-                className="rounded-xl px-4 py-2.5 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-              >
-                {t.label}
-              </Link>
-            ))}
-          </div>
-        )}
-      </div>
-    );
-  }
-  return (
-    <div className="group relative">
-      <button
-        type="button"
-        className="flex items-center gap-1 rounded-full px-4 py-2 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-      >
-        Tools
-        <ChevronDown className="h-3.5 w-3.5 transition-transform group-hover:rotate-180" />
-      </button>
-      <div className="invisible absolute left-1/2 top-full -translate-x-1/2 pt-2 opacity-0 transition-all duration-200 group-hover:visible group-hover:opacity-100">
-        <div className="w-64 rounded-2xl border border-border bg-background p-1.5 shadow-card">
-          {TOOL_LINKS.map((t) => (
-            <Link
-              key={t.to}
-              to={t.to}
-              className="block rounded-xl px-4 py-2.5 font-sans text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-            >
-              {t.label}
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -333,7 +274,8 @@ function Navbar() {
               {l.label}
             </a>
           ))}
-          <ToolsDropdown />
+          <NavDropdown label="Tools" links={TOOL_LINKS} />
+          <NavDropdown label="Pages" links={PAGE_LINKS} />
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
           <Link
@@ -371,7 +313,8 @@ function Navbar() {
                 {l.label}
               </a>
             ))}
-            <ToolsDropdown mobile onNavigate={() => setMenuOpen(false)} />
+            <NavDropdown label="Tools" links={TOOL_LINKS} mobile onNavigate={() => setMenuOpen(false)} />
+            <NavDropdown label="Pages" links={PAGE_LINKS} mobile onNavigate={() => setMenuOpen(false)} />
             <Link
               to="/auth"
               onClick={() => setMenuOpen(false)}
@@ -584,16 +527,7 @@ function Landing() {
         </div>
       </section>
 
-      <footer className="border-t border-border">
-        <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-5 py-8 text-xs text-muted-foreground sm:flex-row">
-          <span className="flex items-center gap-2">
-            <FarixMark className="h-5" />
-            <span className="font-display font-semibold text-foreground">Farix AI</span>
-            <span>© {new Date().getFullYear()} · All rights reserved</span>
-          </span>
-          <span>Invite-only access platform</span>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
