@@ -26,6 +26,7 @@ import { Route as PPrivacyPolicyRouteImport } from './routes/p/privacy-policy'
 import { Route as PDisclaimerRouteImport } from './routes/p/disclaimer'
 import { Route as PContactUsRouteImport } from './routes/p/contact-us'
 import { Route as PAboutUsRouteImport } from './routes/p/about-us'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedResellerRouteRouteImport } from './routes/_authenticated/reseller/route'
 import { Route as AuthenticatedKingRouteRouteImport } from './routes/_authenticated/king/route'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
@@ -130,6 +131,11 @@ const PContactUsRoute = PContactUsRouteImport.update({
 const PAboutUsRoute = PAboutUsRouteImport.update({
   id: '/p/about-us',
   path: '/p/about-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedResellerRouteRoute =
@@ -253,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/p/about-us': typeof PAboutUsRoute
   '/p/contact-us': typeof PContactUsRoute
   '/p/disclaimer': typeof PDisclaimerRoute
@@ -287,6 +294,7 @@ export interface FileRoutesByTo {
   '/disclaimer': typeof DisclaimerRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/p/about-us': typeof PAboutUsRoute
   '/p/contact-us': typeof PContactUsRoute
   '/p/disclaimer': typeof PDisclaimerRoute
@@ -326,6 +334,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/p/about-us': typeof PAboutUsRoute
   '/p/contact-us': typeof PContactUsRoute
   '/p/disclaimer': typeof PDisclaimerRoute
@@ -365,6 +374,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/king'
     | '/reseller'
+    | '/blog/$slug'
     | '/p/about-us'
     | '/p/contact-us'
     | '/p/disclaimer'
@@ -399,6 +409,7 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/privacy-policy'
     | '/terms-and-conditions'
+    | '/blog/$slug'
     | '/p/about-us'
     | '/p/contact-us'
     | '/p/disclaimer'
@@ -437,6 +448,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/king'
     | '/_authenticated/reseller'
+    | '/blog/$slug'
     | '/p/about-us'
     | '/p/contact-us'
     | '/p/disclaimer'
@@ -473,6 +485,7 @@ export interface RootRouteChildren {
   DisclaimerRoute: typeof DisclaimerRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   PAboutUsRoute: typeof PAboutUsRoute
   PContactUsRoute: typeof PContactUsRoute
   PDisclaimerRoute: typeof PDisclaimerRoute
@@ -603,6 +616,13 @@ declare module '@tanstack/react-router' {
       path: '/p/about-us'
       fullPath: '/p/about-us'
       preLoaderRoute: typeof PAboutUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/reseller': {
@@ -834,6 +854,7 @@ const rootRouteChildren: RootRouteChildren = {
   DisclaimerRoute: DisclaimerRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsAndConditionsRoute: TermsAndConditionsRoute,
+  BlogSlugRoute: BlogSlugRoute,
   PAboutUsRoute: PAboutUsRoute,
   PContactUsRoute: PContactUsRoute,
   PDisclaimerRoute: PDisclaimerRoute,

@@ -121,7 +121,7 @@ function BlogMissing({ message }: { message: string }) {
 }
 
 function BlogPost() {
-  const post = Route.useLoaderData();
+  const post = Route.useLoaderData() as Blog;
   const others = useQuery(publishedBlogsQuery);
   const html = useMemo(() => renderMarkdown(post.content), [post.content]);
   const related = (others.data ?? []).filter((p) => p.id !== post.id).slice(0, 3);
