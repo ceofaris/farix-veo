@@ -1,14 +1,17 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, ArrowRight, Check, ChevronDown, Copy, Facebook, ListTree, MessageCircle } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import {
   blogBySlugQuery,
   blogExcerpt,
+  extractHeadings,
   formatDate,
   publishedBlogsQuery,
+  readingTime,
+  relatedPosts,
   renderMarkdown,
   SITE_URL,
   type Blog,
