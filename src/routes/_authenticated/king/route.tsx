@@ -39,6 +39,7 @@ function KingLayout() {
         { to: "/king/tools", label: "Tools", icon: Wrench },
         { to: "/king/resellers", label: "Resellers", icon: UserCog },
         { to: "/king/niches", label: "Niche Prompts", icon: Sparkles },
+        { to: "/king/blog", label: "Blog", icon: Newspaper },
         { to: "/king/extension-lab", label: "Extension Lab", icon: FlaskConical },
       ]}
     >
