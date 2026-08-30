@@ -9,7 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
+import { Route as ContactUsRouteImport } from './routes/contact-us'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsVeo3VideoGenerationRouteImport } from './routes/tools.veo-3-video-generation'
@@ -34,9 +39,34 @@ import { Route as AuthenticatedDashboardChatgptRouteImport } from './routes/_aut
 import { Route as AuthenticatedKingToolsIdRouteImport } from './routes/_authenticated/king/tools_.$id'
 import { Route as AuthenticatedKingResellersIdRouteImport } from './routes/_authenticated/king/resellers_.$id'
 
+const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
+  id: '/terms-and-conditions',
+  path: '/terms-and-conditions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactUsRoute = ContactUsRouteImport.update({
+  id: '/contact-us',
+  path: '/contact-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutUsRoute = AboutUsRouteImport.update({
+  id: '/about-us',
+  path: '/about-us',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
@@ -172,7 +202,12 @@ const AuthenticatedKingResellersIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
   '/auth': typeof AuthRoute
+  '/contact-us': typeof ContactUsRoute
+  '/disclaimer': typeof DisclaimerRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
@@ -197,7 +232,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about-us': typeof AboutUsRoute
   '/auth': typeof AuthRoute
+  '/contact-us': typeof ContactUsRoute
+  '/disclaimer': typeof DisclaimerRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
@@ -221,7 +261,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/about-us': typeof AboutUsRoute
   '/auth': typeof AuthRoute
+  '/contact-us': typeof ContactUsRoute
+  '/disclaimer': typeof DisclaimerRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
@@ -248,7 +293,12 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about-us'
     | '/auth'
+    | '/contact-us'
+    | '/disclaimer'
+    | '/privacy-policy'
+    | '/terms-and-conditions'
     | '/dashboard'
     | '/king'
     | '/reseller'
@@ -273,7 +323,12 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about-us'
     | '/auth'
+    | '/contact-us'
+    | '/disclaimer'
+    | '/privacy-policy'
+    | '/terms-and-conditions'
     | '/tools/chatgpt-access'
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
@@ -296,7 +351,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_authenticated'
+    | '/about-us'
     | '/auth'
+    | '/contact-us'
+    | '/disclaimer'
+    | '/privacy-policy'
+    | '/terms-and-conditions'
     | '/_authenticated/dashboard'
     | '/_authenticated/king'
     | '/_authenticated/reseller'
@@ -323,7 +383,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AboutUsRoute: typeof AboutUsRoute
   AuthRoute: typeof AuthRoute
+  ContactUsRoute: typeof ContactUsRoute
+  DisclaimerRoute: typeof DisclaimerRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   ToolsChatgptAccessRoute: typeof ToolsChatgptAccessRoute
   ToolsImagen4ImageGenerationRoute: typeof ToolsImagen4ImageGenerationRoute
   ToolsVeo3VideoGenerationRoute: typeof ToolsVeo3VideoGenerationRoute
@@ -331,11 +396,46 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms-and-conditions': {
+      id: '/terms-and-conditions'
+      path: '/terms-and-conditions'
+      fullPath: '/terms-and-conditions'
+      preLoaderRoute: typeof TermsAndConditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact-us': {
+      id: '/contact-us'
+      path: '/contact-us'
+      fullPath: '/contact-us'
+      preLoaderRoute: typeof ContactUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about-us': {
+      id: '/about-us'
+      path: '/about-us'
+      fullPath: '/about-us'
+      preLoaderRoute: typeof AboutUsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated': {
@@ -587,7 +687,12 @@ const AuthenticatedRouteRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AboutUsRoute: AboutUsRoute,
   AuthRoute: AuthRoute,
+  ContactUsRoute: ContactUsRoute,
+  DisclaimerRoute: DisclaimerRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
+  TermsAndConditionsRoute: TermsAndConditionsRoute,
   ToolsChatgptAccessRoute: ToolsChatgptAccessRoute,
   ToolsImagen4ImageGenerationRoute: ToolsImagen4ImageGenerationRoute,
   ToolsVeo3VideoGenerationRoute: ToolsVeo3VideoGenerationRoute,
