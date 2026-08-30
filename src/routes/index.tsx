@@ -333,6 +333,7 @@ function Navbar() {
               {l.label}
             </a>
           ))}
+          <ToolsDropdown />
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
           <Link
