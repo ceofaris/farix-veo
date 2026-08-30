@@ -66,8 +66,26 @@ export const Route = createFileRoute("/blog/$slug")({
             datePublished: post.created_at,
             dateModified: post.updated_at,
             mainEntityOfPage: url,
+            url,
             author: { "@type": "Organization", name: "Farix AI", url: SITE_URL },
-            publisher: { "@type": "Organization", name: "Farix AI", url: SITE_URL },
+            publisher: {
+              "@type": "Organization",
+              name: "Farix AI",
+              url: SITE_URL,
+              logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon.png` },
+            },
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+              { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+              { "@type": "ListItem", position: 3, name: post.title, item: url },
+            ],
           }),
         },
       ],
