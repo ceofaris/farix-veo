@@ -19,6 +19,16 @@ export type ToolLandingContent = {
   comparison: { farix: string[]; standalone: string[] };
   ctaTitle: string;
   ctaBody: string;
+  /** Long-form editorial sections rendered between features and comparison. */
+  sections?: { heading: string; paragraphs: string[]; bullets?: string[] }[];
+  /** "How it works" ordered steps. */
+  steps?: { title: string; body: string }[];
+  /** Who the tool is for. */
+  useCases?: { title: string; body: string }[];
+  /** Spec / capability table rows. */
+  specs?: { label: string; value: string }[];
+  /** FAQ entries — also emitted as FAQPage JSON-LD from the route. */
+  faqs?: { q: string; a: string }[];
 };
 
 function Header() {
