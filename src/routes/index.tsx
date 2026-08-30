@@ -459,11 +459,20 @@ function Landing() {
                       </h3>
                       <ul className="mt-6 space-y-3">
                         {plan.features.map((feature) => (
-                          <li key={feature} className="flex items-start gap-3 text-sm text-muted-foreground">
+                          <li key={feature.label} className="flex items-start gap-3 text-sm text-muted-foreground">
                             <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-cta">
                               <Check className="h-3 w-3" strokeWidth={3} />
                             </span>
-                            <span className="text-foreground/85">{feature}</span>
+                            {feature.href ? (
+                              <Link
+                                to={feature.href}
+                                className="text-foreground/85 underline-offset-4 transition-colors hover:text-primary hover:underline"
+                              >
+                                {feature.label}
+                              </Link>
+                            ) : (
+                              <span className="text-foreground/85">{feature.label}</span>
+                            )}
                           </li>
                         ))}
                       </ul>
