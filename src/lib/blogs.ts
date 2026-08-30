@@ -132,7 +132,8 @@ export function renderMarkdown(md: string) {
       flushPara();
       flushList();
       const level = Math.min(heading[1].length + 1, 6);
-      out.push(`<h${level}>${inline(heading[2])}</h${level}>`);
+      const id = slugify(heading[2]);
+      out.push(`<h${level} id="${id}">${inline(heading[2])}</h${level}>`);
       continue;
     }
     if (/^>\s?/.test(line)) {
