@@ -371,6 +371,7 @@ function Navbar() {
                 {l.label}
               </a>
             ))}
+            <ToolsDropdown mobile onNavigate={() => setMenuOpen(false)} />
             <Link
               to="/auth"
               onClick={() => setMenuOpen(false)}
