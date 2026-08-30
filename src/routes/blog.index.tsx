@@ -5,7 +5,7 @@ import { ArrowRight, Search } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
-import { blogExcerpt, formatDate, publishedBlogsQuery, SITE_URL } from "@/lib/blogs";
+import { blogExcerpt, formatDate, publishedBlogsQuery, readingTime, SITE_URL } from "@/lib/blogs";
 
 const TITLE = "Farix AI Blog — Guides on Veo 3, Gemini and ChatGPT access";
 const DESC =
