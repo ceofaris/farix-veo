@@ -21,6 +21,8 @@ export type ToolLandingContent = {
 };
 
 function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:h-16 sm:px-5">
@@ -69,10 +71,50 @@ function Header() {
             to="/auth"
             className="inline-flex items-center gap-1.5 rounded-full bg-gradient-cta px-4 py-2 font-display text-xs font-semibold text-primary-foreground shadow-card transition hover:opacity-90 active:scale-[0.98] sm:px-5 sm:text-sm"
           >
-            Get Started <ArrowRight className="h-3.5 w-3.5" />
+          Get Started <ArrowRight className="h-3.5 w-3.5" />
           </Link>
+          <button
+            type="button"
+            aria-label="Toggle menu"
+            onClick={() => setMenuOpen((v) => !v)}
+            className="grid h-9 w-9 place-items-center rounded-full border border-border text-foreground transition-colors hover:bg-accent md:hidden"
+          >
+            {menuOpen ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
+          </button>
         </div>
       </nav>
+      {menuOpen && (
+        <div className="border-t border-border bg-background px-4 pb-4 pt-2 md:hidden">
+          <div className="flex flex-col">
+            <a href="/#" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 font-sans text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-accent">Home</a>
+            <a href="/#how" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 font-sans text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-accent">About</a>
+            <a href="/#pricing" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 font-sans text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-accent">Pricing</a>
+            <a href="/#faq" onClick={() => setMenuOpen(false)} className="rounded-xl px-4 py-3 font-sans text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-accent">FAQ</a>
+            <button
+              type="button"
+              onClick={() => setToolsOpen((v) => !v)}
+              className="flex w-full items-center justify-between rounded-xl px-4 py-3 font-sans text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-accent"
+            >
+              Tools
+              <ChevronDown className={cn("h-4 w-4 transition-transform", toolsOpen && "rotate-180")} />
+            </button>
+            {toolsOpen && (
+              <div className="mb-1 ml-4 flex flex-col border-l border-border">
+                {TOOL_LINKS.map((t) => (
+                  <Link
+                    key={t.to}
+                    to={t.to}
+                    onClick={() => setMenuOpen(false)}
+                    className="rounded-xl px-4 py-2.5 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+                  >
+                    {t.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </header>
   );
 }
