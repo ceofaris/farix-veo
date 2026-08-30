@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as ContactUsRouteImport } from './routes/contact-us'
@@ -50,6 +51,11 @@ import { Route as AuthenticatedKingResellersIdRouteImport } from './routes/_auth
 const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
   id: '/terms-and-conditions',
   path: '/terms-and-conditions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
@@ -255,6 +261,7 @@ export interface FileRoutesByFullPath {
   '/contact-us': typeof ContactUsRoute
   '/disclaimer': typeof DisclaimerRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
@@ -293,6 +300,7 @@ export interface FileRoutesByTo {
   '/contact-us': typeof ContactUsRoute
   '/disclaimer': typeof DisclaimerRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/p/about-us': typeof PAboutUsRoute
@@ -330,6 +338,7 @@ export interface FileRoutesById {
   '/contact-us': typeof ContactUsRoute
   '/disclaimer': typeof DisclaimerRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
@@ -370,6 +379,7 @@ export interface FileRouteTypes {
     | '/contact-us'
     | '/disclaimer'
     | '/privacy-policy'
+    | '/sitemap.xml'
     | '/terms-and-conditions'
     | '/dashboard'
     | '/king'
@@ -408,6 +418,7 @@ export interface FileRouteTypes {
     | '/contact-us'
     | '/disclaimer'
     | '/privacy-policy'
+    | '/sitemap.xml'
     | '/terms-and-conditions'
     | '/blog/$slug'
     | '/p/about-us'
@@ -444,6 +455,7 @@ export interface FileRouteTypes {
     | '/contact-us'
     | '/disclaimer'
     | '/privacy-policy'
+    | '/sitemap.xml'
     | '/terms-and-conditions'
     | '/_authenticated/dashboard'
     | '/_authenticated/king'
@@ -484,6 +496,7 @@ export interface RootRouteChildren {
   ContactUsRoute: typeof ContactUsRoute
   DisclaimerRoute: typeof DisclaimerRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   BlogSlugRoute: typeof BlogSlugRoute
   PAboutUsRoute: typeof PAboutUsRoute
@@ -504,6 +517,13 @@ declare module '@tanstack/react-router' {
       path: '/terms-and-conditions'
       fullPath: '/terms-and-conditions'
       preLoaderRoute: typeof TermsAndConditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/privacy-policy': {
@@ -853,6 +873,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactUsRoute: ContactUsRoute,
   DisclaimerRoute: DisclaimerRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsAndConditionsRoute: TermsAndConditionsRoute,
   BlogSlugRoute: BlogSlugRoute,
   PAboutUsRoute: PAboutUsRoute,

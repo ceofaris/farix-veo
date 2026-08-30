@@ -1,14 +1,17 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, ArrowRight, Check, ChevronDown, Copy, Facebook, ListTree, MessageCircle } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import {
   blogBySlugQuery,
   blogExcerpt,
+  extractHeadings,
   formatDate,
   publishedBlogsQuery,
+  readingTime,
+  relatedPosts,
   renderMarkdown,
   SITE_URL,
   type Blog,
@@ -45,6 +48,7 @@ export const Route = createFileRoute("/blog/$slug")({
         { property: "og:description", content: description },
         { property: "og:type", content: "article" },
         { property: "og:url", content: url },
+        { property: "og:site_name", content: "Farix AI" },
         ...(post.cover_image_url ? [{ property: "og:image", content: post.cover_image_url }] : []),
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: title },
@@ -63,8 +67,26 @@ export const Route = createFileRoute("/blog/$slug")({
             datePublished: post.created_at,
             dateModified: post.updated_at,
             mainEntityOfPage: url,
+            url,
             author: { "@type": "Organization", name: "Farix AI", url: SITE_URL },
-            publisher: { "@type": "Organization", name: "Farix AI", url: SITE_URL },
+            publisher: {
+              "@type": "Organization",
+              name: "Farix AI",
+              url: SITE_URL,
+              logo: { "@type": "ImageObject", url: `${SITE_URL}/favicon.png` },
+            },
+          }),
+        },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              { "@type": "ListItem", position: 1, name: "Home", item: `${SITE_URL}/` },
+              { "@type": "ListItem", position: 2, name: "Blog", item: `${SITE_URL}/blog` },
+              { "@type": "ListItem", position: 3, name: post.title, item: url },
+            ],
           }),
         },
       ],
@@ -120,18 +142,108 @@ function BlogMissing({ message }: { message: string }) {
   );
 }
 
+function TableOfContents({ headings }: { headings: { id: string; text: string; level: number }[] }) {
+  const [open, setOpen] = useState(true);
+  return (
+    <nav className="mt-8 rounded-2xl border border-border bg-card/60 p-4 shadow-card">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-2 font-display text-sm font-semibold tracking-tight text-foreground"
+      >
+        <span className="inline-flex items-center gap-2">
+          <ListTree className="h-4 w-4 text-primary" /> Table of contents
+        </span>
+        <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <ul className="mt-3 space-y-1.5">
+          {headings.map((h) => (
+            <li key={h.id} style={{ paddingLeft: (h.level - 2) * 14 }}>
+              <a
+                href={`#${h.id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(h.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  history.replaceState(null, "", `#${h.id}`);
+                }}
+                className="text-sm text-muted-foreground transition-colors hover:text-primary"
+              >
+                {h.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </nav>
+  );
+}
+
+function ShareButtons({ url, title }: { url: string; title: string }) {
+  const [copied, setCopied] = useState(false);
+  const enc = encodeURIComponent;
+  const items = [
+    { label: "WhatsApp", href: `https://wa.me/?text=${enc(`${title} ${url}`)}`, icon: MessageCircle },
+    { label: "X", href: `https://twitter.com/intent/tweet?text=${enc(title)}&url=${enc(url)}`, icon: null },
+    { label: "Facebook", href: `https://www.facebook.com/sharer/sharer.php?u=${enc(url)}`, icon: Facebook },
+  ];
+  const base =
+    "inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs font-medium text-muted-foreground transition hover:border-primary/40 hover:text-primary";
+  return (
+    <div className="mt-8 flex flex-wrap items-center gap-2">
+      <span className="text-xs font-medium text-muted-foreground">Share:</span>
+      {items.map((i) => (
+        <a key={i.label} href={i.href} target="_blank" rel="noopener noreferrer" className={base}>
+          {i.icon ? <i.icon className="h-3.5 w-3.5" /> : <span className="font-semibold">𝕏</span>}
+          {i.label}
+        </a>
+      ))}
+      <button
+        type="button"
+        className={base}
+        onClick={async () => {
+          try {
+            await navigator.clipboard.writeText(url);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1800);
+          } catch {
+            /* clipboard unavailable */
+          }
+        }}
+      >
+        {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
+        {copied ? "Copied" : "Copy link"}
+      </button>
+    </div>
+  );
+}
+
 function BlogPost() {
   const post = Route.useLoaderData() as Blog;
   const others = useQuery(publishedBlogsQuery);
   const html = useMemo(() => renderMarkdown(post.content), [post.content]);
-  const related = (others.data ?? []).filter((p) => p.id !== post.id).slice(0, 3);
+  const headings = useMemo(() => extractHeadings(post.content), [post.content]);
+  const related = useMemo(() => relatedPosts(post, others.data ?? [], 3), [post, others.data]);
+  const url = `${SITE_URL}/blog/${post.slug}`;
 
   return (
     <Shell>
       <article className="mx-auto max-w-3xl px-5 pb-16 pt-12 sm:pt-16">
+        <nav aria-label="Breadcrumb" className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+          <Link to="/" className="transition-colors hover:text-foreground">
+            Home
+          </Link>
+          <span>/</span>
+          <Link to="/blog" className="transition-colors hover:text-foreground">
+            Blog
+          </Link>
+          <span>/</span>
+          <span className="line-clamp-1 text-foreground">{post.title}</span>
+        </nav>
+
         <Link
           to="/blog"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+          className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> All articles
         </Link>
@@ -139,7 +251,9 @@ function BlogPost() {
         <h1 className="mt-6 font-sans text-[2rem] font-bold leading-[1.12] tracking-[-0.04em] sm:text-[2.75rem]">
           {post.title}
         </h1>
-        <p className="mt-3 text-sm text-muted-foreground">{formatDate(post.created_at)}</p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          {formatDate(post.created_at)} · {readingTime(post)} min read
+        </p>
 
         {post.cover_image_url && (
           <img
@@ -149,10 +263,14 @@ function BlogPost() {
           />
         )}
 
+        {headings.length >= 3 && <TableOfContents headings={headings} />}
+
         <div
           className="farix-article mt-10 text-[1.02rem] leading-[1.85] text-muted-foreground"
           dangerouslySetInnerHTML={{ __html: html }}
         />
+
+        <ShareButtons url={url} title={post.title} />
 
         <div className="mt-14 rounded-2xl border border-border bg-card p-7 text-center shadow-card">
           <h2 className="font-display text-xl font-semibold tracking-tight text-foreground">

@@ -132,7 +132,8 @@ export function renderMarkdown(md: string) {
       flushPara();
       flushList();
       const level = Math.min(heading[1].length + 1, 6);
-      out.push(`<h${level}>${inline(heading[2])}</h${level}>`);
+      const id = slugify(heading[2]);
+      out.push(`<h${level} id="${id}">${inline(heading[2])}</h${level}>`);
       continue;
     }
     if (/^>\s?/.test(line)) {
@@ -173,6 +174,47 @@ export function renderMarkdown(md: string) {
   flushPara();
   flushList();
   return out.join("\n");
+}
+
+export type Heading = { id: string; text: string; level: number };
+
+/** Headings (h2/h3 in output terms) for the table of contents. */
+export function extractHeadings(md: string): Heading[] {
+  const out: Heading[] = [];
+  for (const raw of (md ?? "").replace(/\r\n/g, "\n").split("\n")) {
+    const m = /^(#{1,3})\s+(.*)$/.exec(raw.trim());
+    if (!m) continue;
+    const text = m[2].replace(/[*`_]/g, "").trim();
+    const id = slugify(text);
+    if (id) out.push({ id, text, level: Math.min(m[1].length + 1, 3) });
+  }
+  return out;
+}
+
+/** Reading time in minutes: words / 200, rounded up. */
+export function readingTime(post: Blog) {
+  const words = (post.content ?? "").trim().split(/\s+/).filter(Boolean).length;
+  return Math.max(1, Math.ceil(words / 200));
+}
+
+/** Rank other published posts by keyword/title overlap, newest first as fallback. */
+export function relatedPosts(post: Blog, all: Blog[], limit = 3) {
+  const terms = new Set(
+    `${post.keywords ?? ""} ${post.title}`
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter((t) => t.length > 3),
+  );
+  return all
+    .filter((p) => p.id !== post.id && p.status === "published")
+    .map((p) => {
+      const words = `${p.keywords ?? ""} ${p.title}`.toLowerCase().split(/[^a-z0-9]+/);
+      const score = words.reduce((n, w) => (w.length > 3 && terms.has(w) ? n + 1 : n), 0);
+      return { p, score };
+    })
+    .sort((a, b) => b.score - a.score || +new Date(b.p.created_at) - +new Date(a.p.created_at))
+    .slice(0, limit)
+    .map((x) => x.p);
 }
 
 export function blogExcerpt(post: Blog) {

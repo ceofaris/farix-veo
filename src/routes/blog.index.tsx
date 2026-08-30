@@ -5,7 +5,7 @@ import { ArrowRight, Search } from "lucide-react";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
-import { blogExcerpt, formatDate, publishedBlogsQuery, SITE_URL } from "@/lib/blogs";
+import { blogExcerpt, formatDate, publishedBlogsQuery, readingTime, SITE_URL } from "@/lib/blogs";
 
 const TITLE = "Farix AI Blog — Guides on Veo 3, Gemini and ChatGPT access";
 const DESC =
@@ -114,7 +114,9 @@ function BlogIndex() {
                   />
                 )}
                 <div className="flex flex-1 flex-col p-5">
-                  <span className="text-xs text-muted-foreground">{formatDate(p.created_at)}</span>
+                  <span className="text-xs text-muted-foreground">
+                    {formatDate(p.created_at)} · {readingTime(p)} min read
+                  </span>
                   <h2 className="mt-2 font-display text-lg font-semibold leading-snug tracking-tight">{p.title}</h2>
                   <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-muted-foreground">
                     {blogExcerpt(p)}
