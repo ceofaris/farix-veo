@@ -5,9 +5,9 @@ export const TOOL_LINKS = [
 ];
 
 export const PAGE_LINKS = [
-  { label: "About Us", to: "/about-us" },
-  { label: "Contact Us", to: "/contact-us" },
-  { label: "Privacy Policy", to: "/privacy-policy" },
-  { label: "Terms and Conditions", to: "/terms-and-conditions" },
-  { label: "Disclaimer", to: "/disclaimer" },
+  { label: "About Us", to: "/p/about-us" },
+  { label: "Contact Us", to: "/p/contact-us" },
+  { label: "Privacy Policy", to: "/p/privacy-policy" },
+  { label: "Terms and Conditions", to: "/p/terms-and-conditions" },
+  { label: "Disclaimer", to: "/p/disclaimer" },
 ];
