@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
@@ -35,6 +36,11 @@ import { Route as AuthenticatedDashboardChatgptRouteImport } from './routes/_aut
 import { Route as AuthenticatedKingToolsIdRouteImport } from './routes/_authenticated/king/tools_.$id'
 import { Route as AuthenticatedKingResellersIdRouteImport } from './routes/_authenticated/king/resellers_.$id'
 
+const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
+  id: '/terms-and-conditions',
+  path: '/terms-and-conditions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
   id: '/privacy-policy',
   path: '/privacy-policy',
@@ -180,6 +186,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
@@ -206,6 +213,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
@@ -231,6 +239,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
@@ -259,6 +268,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/privacy-policy'
+    | '/terms-and-conditions'
     | '/dashboard'
     | '/king'
     | '/reseller'
@@ -285,6 +295,7 @@ export interface FileRouteTypes {
     | '/'
     | '/auth'
     | '/privacy-policy'
+    | '/terms-and-conditions'
     | '/tools/chatgpt-access'
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
@@ -309,6 +320,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/auth'
     | '/privacy-policy'
+    | '/terms-and-conditions'
     | '/_authenticated/dashboard'
     | '/_authenticated/king'
     | '/_authenticated/reseller'
@@ -337,6 +349,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
+  TermsAndConditionsRoute: typeof TermsAndConditionsRoute
   ToolsChatgptAccessRoute: typeof ToolsChatgptAccessRoute
   ToolsImagen4ImageGenerationRoute: typeof ToolsImagen4ImageGenerationRoute
   ToolsVeo3VideoGenerationRoute: typeof ToolsVeo3VideoGenerationRoute
@@ -344,6 +357,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/terms-and-conditions': {
+      id: '/terms-and-conditions'
+      path: '/terms-and-conditions'
+      fullPath: '/terms-and-conditions'
+      preLoaderRoute: typeof TermsAndConditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy-policy': {
       id: '/privacy-policy'
       path: '/privacy-policy'
@@ -609,6 +629,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
+  TermsAndConditionsRoute: TermsAndConditionsRoute,
   ToolsChatgptAccessRoute: ToolsChatgptAccessRoute,
   ToolsImagen4ImageGenerationRoute: ToolsImagen4ImageGenerationRoute,
   ToolsVeo3VideoGenerationRoute: ToolsVeo3VideoGenerationRoute,
