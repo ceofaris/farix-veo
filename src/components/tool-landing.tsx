@@ -1,14 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, Check, ChevronDown, X } from "lucide-react";
+import { ArrowRight, Check, ChevronDown, Menu, X } from "lucide-react";
+import { FarixMark } from "@/components/farix-logo";
+import { Reveal } from "@/components/reveal";
+import { cn } from "@/lib/utils";
 
 const TOOL_LINKS = [
   { label: "Veo 3 Video Generation", to: "/tools/veo-3-video-generation" },
   { label: "Imagen 4 Image Generation", to: "/tools/imagen-4-image-generation" },
   { label: "ChatGPT Access", to: "/tools/chatgpt-access" },
 ];
-import { FarixMark } from "@/components/farix-logo";
-import { Reveal } from "@/components/reveal";
 
 export type ToolLandingContent = {
   eyebrow: string;
