@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useProfile } from "@/hooks/use-profile";
 import { PanelLayout } from "@/components/panel-layout";
-import { LayoutDashboard, Wrench, UserCog, FlaskConical, Sparkles } from "lucide-react";
+import { LayoutDashboard, Wrench, UserCog, FlaskConical, Sparkles, Newspaper } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/king")({
   component: KingLayout,
