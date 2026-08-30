@@ -209,6 +209,120 @@ export function ToolLanding({ content }: { content: ToolLandingContent }) {
         </div>
       </section>
 
+      {/* Long-form editorial sections */}
+      {content.sections?.length ? (
+        <section className="border-t border-border bg-background">
+          <div className="mx-auto max-w-3xl px-5 py-16">
+            <div className="space-y-14">
+              {content.sections.map((s) => (
+                <Reveal key={s.heading}>
+                  <article>
+                    <h2 className="font-display text-2xl font-bold tracking-[-0.03em] sm:text-[2rem]">
+                      {s.heading}
+                    </h2>
+                    <div className="mt-4 space-y-4">
+                      {s.paragraphs.map((p) => (
+                        <p key={p} className="text-[0.975rem] leading-[1.85] text-muted-foreground">
+                          {p}
+                        </p>
+                      ))}
+                    </div>
+                    {s.bullets?.length ? (
+                      <ul className="mt-5 space-y-2.5">
+                        {s.bullets.map((b) => (
+                          <li key={b} className="flex items-start gap-3 text-[0.95rem] leading-relaxed">
+                            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-gradient-cta" />
+                            <span className="text-foreground/80">{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* How it works */}
+      {content.steps?.length ? (
+        <section className="border-t border-border bg-secondary/30">
+          <div className="mx-auto max-w-6xl px-5 py-16">
+            <Reveal>
+              <h2 className="text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
+                How it works
+              </h2>
+            </Reveal>
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
+              {content.steps.map((s, i) => (
+                <Reveal key={s.title} delay={i * 90} className="h-full">
+                  <div className="flex h-full flex-col rounded-2xl border border-border/70 bg-card p-7 shadow-sm">
+                    <span className="grid h-9 w-9 place-items-center rounded-xl bg-gradient-cta font-display text-sm font-bold text-primary-foreground">
+                      {i + 1}
+                    </span>
+                    <h3 className="mt-4 font-display text-lg font-semibold tracking-tight">{s.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{s.body}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Use cases */}
+      {content.useCases?.length ? (
+        <section className="border-t border-border bg-background">
+          <div className="mx-auto max-w-6xl px-5 py-16">
+            <Reveal>
+              <h2 className="text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
+                Who it's for
+              </h2>
+            </Reveal>
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {content.useCases.map((u, i) => (
+                <Reveal key={u.title} delay={i * 70} className="h-full">
+                  <div className="h-full rounded-2xl border border-border/70 bg-card p-6 shadow-sm transition-colors hover:border-primary/25">
+                    <h3 className="font-display text-base font-semibold tracking-tight">{u.title}</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{u.body}</p>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Specs */}
+      {content.specs?.length ? (
+        <section className="border-t border-border bg-background">
+          <div className="mx-auto max-w-3xl px-5 py-14">
+            <Reveal>
+              <h2 className="font-display text-2xl font-bold tracking-[-0.03em] sm:text-[2rem]">
+                At a glance
+              </h2>
+              <dl className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
+                {content.specs.map((row, i) => (
+                  <div
+                    key={row.label}
+                    className={cn(
+                      "flex flex-col gap-1 px-6 py-4 sm:flex-row sm:items-center sm:gap-6",
+                      i > 0 && "border-t border-border",
+                    )}
+                  >
+                    <dt className="font-display text-sm font-semibold text-foreground sm:w-56 sm:shrink-0">
+                      {row.label}
+                    </dt>
+                    <dd className="text-sm leading-relaxed text-muted-foreground">{row.value}</dd>
+                  </div>
+                ))}
+              </dl>
+            </Reveal>
+          </div>
+        </section>
+      ) : null}
+
       {/* Comparison */}
       <section className="border-y border-border bg-secondary/40">
         <div className="mx-auto max-w-5xl px-5 py-16">
