@@ -20,6 +20,11 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ToolsVeo3VideoGenerationRouteImport } from './routes/tools.veo-3-video-generation'
 import { Route as ToolsImagen4ImageGenerationRouteImport } from './routes/tools.imagen-4-image-generation'
 import { Route as ToolsChatgptAccessRouteImport } from './routes/tools.chatgpt-access'
+import { Route as PTermsAndConditionsRouteImport } from './routes/p/terms-and-conditions'
+import { Route as PPrivacyPolicyRouteImport } from './routes/p/privacy-policy'
+import { Route as PDisclaimerRouteImport } from './routes/p/disclaimer'
+import { Route as PContactUsRouteImport } from './routes/p/contact-us'
+import { Route as PAboutUsRouteImport } from './routes/p/about-us'
 import { Route as AuthenticatedResellerRouteRouteImport } from './routes/_authenticated/reseller/route'
 import { Route as AuthenticatedKingRouteRouteImport } from './routes/_authenticated/king/route'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
@@ -93,6 +98,31 @@ const ToolsImagen4ImageGenerationRoute =
 const ToolsChatgptAccessRoute = ToolsChatgptAccessRouteImport.update({
   id: '/tools/chatgpt-access',
   path: '/tools/chatgpt-access',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PTermsAndConditionsRoute = PTermsAndConditionsRouteImport.update({
+  id: '/p/terms-and-conditions',
+  path: '/p/terms-and-conditions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PPrivacyPolicyRoute = PPrivacyPolicyRouteImport.update({
+  id: '/p/privacy-policy',
+  path: '/p/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PDisclaimerRoute = PDisclaimerRouteImport.update({
+  id: '/p/disclaimer',
+  path: '/p/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PContactUsRoute = PContactUsRouteImport.update({
+  id: '/p/contact-us',
+  path: '/p/contact-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PAboutUsRoute = PAboutUsRouteImport.update({
+  id: '/p/about-us',
+  path: '/p/about-us',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedResellerRouteRoute =
@@ -211,6 +241,11 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
+  '/p/about-us': typeof PAboutUsRoute
+  '/p/contact-us': typeof PContactUsRoute
+  '/p/disclaimer': typeof PDisclaimerRoute
+  '/p/privacy-policy': typeof PPrivacyPolicyRoute
+  '/p/terms-and-conditions': typeof PTermsAndConditionsRoute
   '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
@@ -238,6 +273,11 @@ export interface FileRoutesByTo {
   '/disclaimer': typeof DisclaimerRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
+  '/p/about-us': typeof PAboutUsRoute
+  '/p/contact-us': typeof PContactUsRoute
+  '/p/disclaimer': typeof PDisclaimerRoute
+  '/p/privacy-policy': typeof PPrivacyPolicyRoute
+  '/p/terms-and-conditions': typeof PTermsAndConditionsRoute
   '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
@@ -270,6 +310,11 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
+  '/p/about-us': typeof PAboutUsRoute
+  '/p/contact-us': typeof PContactUsRoute
+  '/p/disclaimer': typeof PDisclaimerRoute
+  '/p/privacy-policy': typeof PPrivacyPolicyRoute
+  '/p/terms-and-conditions': typeof PTermsAndConditionsRoute
   '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
@@ -302,6 +347,11 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/king'
     | '/reseller'
+    | '/p/about-us'
+    | '/p/contact-us'
+    | '/p/disclaimer'
+    | '/p/privacy-policy'
+    | '/p/terms-and-conditions'
     | '/tools/chatgpt-access'
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
@@ -329,6 +379,11 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/privacy-policy'
     | '/terms-and-conditions'
+    | '/p/about-us'
+    | '/p/contact-us'
+    | '/p/disclaimer'
+    | '/p/privacy-policy'
+    | '/p/terms-and-conditions'
     | '/tools/chatgpt-access'
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
@@ -360,6 +415,11 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/king'
     | '/_authenticated/reseller'
+    | '/p/about-us'
+    | '/p/contact-us'
+    | '/p/disclaimer'
+    | '/p/privacy-policy'
+    | '/p/terms-and-conditions'
     | '/tools/chatgpt-access'
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
@@ -389,6 +449,11 @@ export interface RootRouteChildren {
   DisclaimerRoute: typeof DisclaimerRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
+  PAboutUsRoute: typeof PAboutUsRoute
+  PContactUsRoute: typeof PContactUsRoute
+  PDisclaimerRoute: typeof PDisclaimerRoute
+  PPrivacyPolicyRoute: typeof PPrivacyPolicyRoute
+  PTermsAndConditionsRoute: typeof PTermsAndConditionsRoute
   ToolsChatgptAccessRoute: typeof ToolsChatgptAccessRoute
   ToolsImagen4ImageGenerationRoute: typeof ToolsImagen4ImageGenerationRoute
   ToolsVeo3VideoGenerationRoute: typeof ToolsVeo3VideoGenerationRoute
@@ -471,6 +536,41 @@ declare module '@tanstack/react-router' {
       path: '/tools/chatgpt-access'
       fullPath: '/tools/chatgpt-access'
       preLoaderRoute: typeof ToolsChatgptAccessRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/terms-and-conditions': {
+      id: '/p/terms-and-conditions'
+      path: '/p/terms-and-conditions'
+      fullPath: '/p/terms-and-conditions'
+      preLoaderRoute: typeof PTermsAndConditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/privacy-policy': {
+      id: '/p/privacy-policy'
+      path: '/p/privacy-policy'
+      fullPath: '/p/privacy-policy'
+      preLoaderRoute: typeof PPrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/disclaimer': {
+      id: '/p/disclaimer'
+      path: '/p/disclaimer'
+      fullPath: '/p/disclaimer'
+      preLoaderRoute: typeof PDisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/contact-us': {
+      id: '/p/contact-us'
+      path: '/p/contact-us'
+      fullPath: '/p/contact-us'
+      preLoaderRoute: typeof PContactUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/p/about-us': {
+      id: '/p/about-us'
+      path: '/p/about-us'
+      fullPath: '/p/about-us'
+      preLoaderRoute: typeof PAboutUsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/reseller': {
@@ -693,6 +793,11 @@ const rootRouteChildren: RootRouteChildren = {
   DisclaimerRoute: DisclaimerRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsAndConditionsRoute: TermsAndConditionsRoute,
+  PAboutUsRoute: PAboutUsRoute,
+  PContactUsRoute: PContactUsRoute,
+  PDisclaimerRoute: PDisclaimerRoute,
+  PPrivacyPolicyRoute: PPrivacyPolicyRoute,
+  PTermsAndConditionsRoute: PTermsAndConditionsRoute,
   ToolsChatgptAccessRoute: ToolsChatgptAccessRoute,
   ToolsImagen4ImageGenerationRoute: ToolsImagen4ImageGenerationRoute,
   ToolsVeo3VideoGenerationRoute: ToolsVeo3VideoGenerationRoute,
