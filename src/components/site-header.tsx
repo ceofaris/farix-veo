@@ -34,6 +34,12 @@ export function SiteHeader() {
               {l.label}
             </a>
           ))}
+          <Link
+            to="/blog"
+            className="rounded-full px-4 py-2 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+          >
+            Blog
+          </Link>
           <NavDropdown label="Tools" links={TOOL_LINKS} />
           <NavDropdown label="Pages" links={PAGE_LINKS} />
         </div>
@@ -73,6 +79,13 @@ export function SiteHeader() {
                 {l.label}
               </a>
             ))}
+            <Link
+              to="/blog"
+              onClick={() => setMenuOpen(false)}
+              className="rounded-xl px-4 py-3 font-sans text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-accent"
+            >
+              Blog
+            </Link>
             <NavDropdown label="Tools" links={TOOL_LINKS} mobile onNavigate={() => setMenuOpen(false)} />
             <NavDropdown label="Pages" links={PAGE_LINKS} mobile onNavigate={() => setMenuOpen(false)} />
             <Link

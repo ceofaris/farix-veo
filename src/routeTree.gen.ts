@@ -17,6 +17,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AboutUsRouteImport } from './routes/about-us'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as ToolsVeo3VideoGenerationRouteImport } from './routes/tools.veo-3-video-generation'
 import { Route as ToolsImagen4ImageGenerationRouteImport } from './routes/tools.imagen-4-image-generation'
 import { Route as ToolsChatgptAccessRouteImport } from './routes/tools.chatgpt-access'
@@ -25,6 +26,7 @@ import { Route as PPrivacyPolicyRouteImport } from './routes/p/privacy-policy'
 import { Route as PDisclaimerRouteImport } from './routes/p/disclaimer'
 import { Route as PContactUsRouteImport } from './routes/p/contact-us'
 import { Route as PAboutUsRouteImport } from './routes/p/about-us'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedResellerRouteRouteImport } from './routes/_authenticated/reseller/route'
 import { Route as AuthenticatedKingRouteRouteImport } from './routes/_authenticated/king/route'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
@@ -37,6 +39,7 @@ import { Route as AuthenticatedKingToolsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedKingResellersRouteImport } from './routes/_authenticated/king/resellers'
 import { Route as AuthenticatedKingNichesRouteImport } from './routes/_authenticated/king/niches'
 import { Route as AuthenticatedKingExtensionLabRouteImport } from './routes/_authenticated/king/extension-lab'
+import { Route as AuthenticatedKingBlogRouteImport } from './routes/_authenticated/king/blog'
 import { Route as AuthenticatedDashboardVeo3RouteImport } from './routes/_authenticated/dashboard/veo-3'
 import { Route as AuthenticatedDashboardPromptsRouteImport } from './routes/_authenticated/dashboard/prompts'
 import { Route as AuthenticatedDashboardGeminiRouteImport } from './routes/_authenticated/dashboard/gemini'
@@ -83,6 +86,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ToolsVeo3VideoGenerationRoute =
   ToolsVeo3VideoGenerationRouteImport.update({
     id: '/tools/veo-3-video-generation',
@@ -123,6 +131,11 @@ const PContactUsRoute = PContactUsRouteImport.update({
 const PAboutUsRoute = PAboutUsRouteImport.update({
   id: '/p/about-us',
   path: '/p/about-us',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedResellerRouteRoute =
@@ -193,6 +206,11 @@ const AuthenticatedKingExtensionLabRoute =
     path: '/extension-lab',
     getParentRoute: () => AuthenticatedKingRouteRoute,
   } as any)
+const AuthenticatedKingBlogRoute = AuthenticatedKingBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AuthenticatedKingRouteRoute,
+} as any)
 const AuthenticatedDashboardVeo3Route =
   AuthenticatedDashboardVeo3RouteImport.update({
     id: '/veo-3',
@@ -241,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/p/about-us': typeof PAboutUsRoute
   '/p/contact-us': typeof PContactUsRoute
   '/p/disclaimer': typeof PDisclaimerRoute
@@ -249,10 +268,12 @@ export interface FileRoutesByFullPath {
   '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
+  '/blog/': typeof BlogIndexRoute
   '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
+  '/king/blog': typeof AuthenticatedKingBlogRoute
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/niches': typeof AuthenticatedKingNichesRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
@@ -273,6 +294,7 @@ export interface FileRoutesByTo {
   '/disclaimer': typeof DisclaimerRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/terms-and-conditions': typeof TermsAndConditionsRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/p/about-us': typeof PAboutUsRoute
   '/p/contact-us': typeof PContactUsRoute
   '/p/disclaimer': typeof PDisclaimerRoute
@@ -281,10 +303,12 @@ export interface FileRoutesByTo {
   '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
+  '/blog': typeof BlogIndexRoute
   '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
+  '/king/blog': typeof AuthenticatedKingBlogRoute
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/niches': typeof AuthenticatedKingNichesRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
@@ -310,6 +334,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/p/about-us': typeof PAboutUsRoute
   '/p/contact-us': typeof PContactUsRoute
   '/p/disclaimer': typeof PDisclaimerRoute
@@ -318,10 +343,12 @@ export interface FileRoutesById {
   '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
+  '/blog/': typeof BlogIndexRoute
   '/_authenticated/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/_authenticated/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/_authenticated/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/_authenticated/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
+  '/_authenticated/king/blog': typeof AuthenticatedKingBlogRoute
   '/_authenticated/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/_authenticated/king/niches': typeof AuthenticatedKingNichesRoute
   '/_authenticated/king/resellers': typeof AuthenticatedKingResellersRoute
@@ -347,6 +374,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/king'
     | '/reseller'
+    | '/blog/$slug'
     | '/p/about-us'
     | '/p/contact-us'
     | '/p/disclaimer'
@@ -355,10 +383,12 @@ export interface FileRouteTypes {
     | '/tools/chatgpt-access'
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
+    | '/blog/'
     | '/dashboard/chatgpt'
     | '/dashboard/gemini'
     | '/dashboard/prompts'
     | '/dashboard/veo-3'
+    | '/king/blog'
     | '/king/extension-lab'
     | '/king/niches'
     | '/king/resellers'
@@ -379,6 +409,7 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/privacy-policy'
     | '/terms-and-conditions'
+    | '/blog/$slug'
     | '/p/about-us'
     | '/p/contact-us'
     | '/p/disclaimer'
@@ -387,10 +418,12 @@ export interface FileRouteTypes {
     | '/tools/chatgpt-access'
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
+    | '/blog'
     | '/dashboard/chatgpt'
     | '/dashboard/gemini'
     | '/dashboard/prompts'
     | '/dashboard/veo-3'
+    | '/king/blog'
     | '/king/extension-lab'
     | '/king/niches'
     | '/king/resellers'
@@ -415,6 +448,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/king'
     | '/_authenticated/reseller'
+    | '/blog/$slug'
     | '/p/about-us'
     | '/p/contact-us'
     | '/p/disclaimer'
@@ -423,10 +457,12 @@ export interface FileRouteTypes {
     | '/tools/chatgpt-access'
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
+    | '/blog/'
     | '/_authenticated/dashboard/chatgpt'
     | '/_authenticated/dashboard/gemini'
     | '/_authenticated/dashboard/prompts'
     | '/_authenticated/dashboard/veo-3'
+    | '/_authenticated/king/blog'
     | '/_authenticated/king/extension-lab'
     | '/_authenticated/king/niches'
     | '/_authenticated/king/resellers'
@@ -449,6 +485,7 @@ export interface RootRouteChildren {
   DisclaimerRoute: typeof DisclaimerRoute
   PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   TermsAndConditionsRoute: typeof TermsAndConditionsRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   PAboutUsRoute: typeof PAboutUsRoute
   PContactUsRoute: typeof PContactUsRoute
   PDisclaimerRoute: typeof PDisclaimerRoute
@@ -457,6 +494,7 @@ export interface RootRouteChildren {
   ToolsChatgptAccessRoute: typeof ToolsChatgptAccessRoute
   ToolsImagen4ImageGenerationRoute: typeof ToolsImagen4ImageGenerationRoute
   ToolsVeo3VideoGenerationRoute: typeof ToolsVeo3VideoGenerationRoute
+  BlogIndexRoute: typeof BlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -517,6 +555,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tools/veo-3-video-generation': {
       id: '/tools/veo-3-video-generation'
       path: '/tools/veo-3-video-generation'
@@ -571,6 +616,13 @@ declare module '@tanstack/react-router' {
       path: '/p/about-us'
       fullPath: '/p/about-us'
       preLoaderRoute: typeof PAboutUsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/reseller': {
@@ -657,6 +709,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKingExtensionLabRouteImport
       parentRoute: typeof AuthenticatedKingRouteRoute
     }
+    '/_authenticated/king/blog': {
+      id: '/_authenticated/king/blog'
+      path: '/blog'
+      fullPath: '/king/blog'
+      preLoaderRoute: typeof AuthenticatedKingBlogRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
     '/_authenticated/dashboard/veo-3': {
       id: '/_authenticated/dashboard/veo-3'
       path: '/veo-3'
@@ -725,6 +784,7 @@ const AuthenticatedDashboardRouteRouteWithChildren =
   )
 
 interface AuthenticatedKingRouteRouteChildren {
+  AuthenticatedKingBlogRoute: typeof AuthenticatedKingBlogRoute
   AuthenticatedKingExtensionLabRoute: typeof AuthenticatedKingExtensionLabRoute
   AuthenticatedKingNichesRoute: typeof AuthenticatedKingNichesRoute
   AuthenticatedKingResellersRoute: typeof AuthenticatedKingResellersRoute
@@ -736,6 +796,7 @@ interface AuthenticatedKingRouteRouteChildren {
 
 const AuthenticatedKingRouteRouteChildren: AuthenticatedKingRouteRouteChildren =
   {
+    AuthenticatedKingBlogRoute: AuthenticatedKingBlogRoute,
     AuthenticatedKingExtensionLabRoute: AuthenticatedKingExtensionLabRoute,
     AuthenticatedKingNichesRoute: AuthenticatedKingNichesRoute,
     AuthenticatedKingResellersRoute: AuthenticatedKingResellersRoute,
@@ -793,6 +854,7 @@ const rootRouteChildren: RootRouteChildren = {
   DisclaimerRoute: DisclaimerRoute,
   PrivacyPolicyRoute: PrivacyPolicyRoute,
   TermsAndConditionsRoute: TermsAndConditionsRoute,
+  BlogSlugRoute: BlogSlugRoute,
   PAboutUsRoute: PAboutUsRoute,
   PContactUsRoute: PContactUsRoute,
   PDisclaimerRoute: PDisclaimerRoute,
@@ -801,6 +863,7 @@ const rootRouteChildren: RootRouteChildren = {
   ToolsChatgptAccessRoute: ToolsChatgptAccessRoute,
   ToolsImagen4ImageGenerationRoute: ToolsImagen4ImageGenerationRoute,
   ToolsVeo3VideoGenerationRoute: ToolsVeo3VideoGenerationRoute,
+  BlogIndexRoute: BlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
