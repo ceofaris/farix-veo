@@ -30,7 +30,11 @@ function Header() {
             Farix AI
           </span>
         </Link>
-        <div className="ml-auto hidden flex-1 items-center justify-center md:flex">
+        <div className="ml-auto hidden flex-1 items-center justify-center gap-1 md:flex">
+          <a href="/#" className="rounded-full px-4 py-2 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">Home</a>
+          <a href="/#how" className="rounded-full px-4 py-2 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">About</a>
+          <a href="/#pricing" className="rounded-full px-4 py-2 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">Pricing</a>
+          <a href="/#faq" className="rounded-full px-4 py-2 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground">FAQ</a>
           <div className="group relative">
             <button
               type="button"
