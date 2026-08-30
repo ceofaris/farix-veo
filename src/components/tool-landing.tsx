@@ -368,6 +368,30 @@ export function ToolLanding({ content }: { content: ToolLandingContent }) {
         </div>
       </section>
 
+      {/* FAQ */}
+      {content.faqs?.length ? (
+        <section id="faq" className="bg-background">
+          <div className="mx-auto max-w-3xl px-5 py-16">
+            <Reveal>
+              <h2 className="text-center font-display text-3xl font-bold tracking-[-0.03em] sm:text-[2.5rem]">
+                Frequently asked questions
+              </h2>
+            </Reveal>
+            <div className="mt-9 divide-y divide-border overflow-hidden rounded-2xl border border-border bg-card">
+              {content.faqs.map((f) => (
+                <details key={f.q} className="group px-6 py-5">
+                  <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-[1.02rem] font-semibold tracking-tight text-foreground">
+                    {f.q}
+                    <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+                  </summary>
+                  <p className="mt-3 text-sm leading-[1.8] text-muted-foreground">{f.a}</p>
+                </details>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
       {/* CTA */}
       <section className="bg-background">
         <div className="mx-auto max-w-3xl px-5 py-20 text-center">
