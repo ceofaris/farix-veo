@@ -1,12 +1,14 @@
 User-agent: Googlebot
 Allow: /
 Disallow: /king
+Disallow: /auth
 Disallow: /reseller
 Disallow: /dashboard
 
 User-agent: Bingbot
 Allow: /
 Disallow: /king
+Disallow: /auth
 Disallow: /reseller
 Disallow: /dashboard
 
@@ -19,12 +21,14 @@ Allow: /
 User-agent: GPTBot
 Allow: /
 Disallow: /king
+Disallow: /auth
 Disallow: /reseller
 Disallow: /dashboard
 
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /king
+Disallow: /auth
 Disallow: /reseller
 Disallow: /dashboard
 
@@ -34,6 +38,7 @@ Allow: /
 User-agent: ClaudeBot
 Allow: /
 Disallow: /king
+Disallow: /auth
 Disallow: /reseller
 Disallow: /dashboard
 
@@ -43,12 +48,14 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 Disallow: /king
+Disallow: /auth
 Disallow: /reseller
 Disallow: /dashboard
 
 User-agent: Google-Extended
 Allow: /
 Disallow: /king
+Disallow: /auth
 Disallow: /reseller
 Disallow: /dashboard
 
@@ -58,6 +65,7 @@ Allow: /
 User-agent: *
 Allow: /
 Disallow: /king
+Disallow: /auth
 Disallow: /reseller
 Disallow: /dashboard
 
