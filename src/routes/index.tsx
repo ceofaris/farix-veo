@@ -114,41 +114,48 @@ const steps = [
   },
 ];
 
-const pricingPlans = [
+const VEO_PAGE = "/tools/veo-3-video-generation" as const;
+const IMAGEN_PAGE = "/tools/imagen-4-image-generation" as const;
+const CHATGPT_PAGE = "/tools/chatgpt-access" as const;
+
+type PlanFeature = { label: string; href?: typeof VEO_PAGE | typeof IMAGEN_PAGE | typeof CHATGPT_PAGE };
+
+const pricingPlans: { title: string; popular?: boolean; features: PlanFeature[] }[] = [
   {
     title: "Pro",
     features: [
-      "Veo 3 Lite (Unlimited)",
-      "Prompts Base",
-      "Nano Banana",
-      "Nano Banana 2",
-      "Imagen 4 Ultra",
+      { label: "Veo 3 Lite (Unlimited)", href: VEO_PAGE },
+      { label: "Prompts Base" },
+      { label: "Nano Banana" },
+      { label: "Nano Banana 2" },
+      { label: "Imagen 4 Ultra", href: IMAGEN_PAGE },
     ],
   },
   {
     title: "Master Plan",
     popular: true,
     features: [
-      "Veo 3 Lite (Unlimited)",
-      "Gemini Pro (Chat)",
-      "ChatGPT (Testing Phase — Limited Access)",
-      "Prompts Base (Latest Niches)",
-      "Nano Banana",
-      "Nano Banana 2",
-      "Imagen 4 Ultra",
-      "Early Access To Latest Features",
+      { label: "Veo 3 Lite (Unlimited)", href: VEO_PAGE },
+      { label: "Gemini Pro (Chat)" },
+      { label: "ChatGPT (Testing Phase — Limited Access)", href: CHATGPT_PAGE },
+      { label: "Prompts Base (Latest Niches)" },
+      { label: "Nano Banana" },
+      { label: "Nano Banana 2" },
+      { label: "Imagen 4 Ultra", href: IMAGEN_PAGE },
+      { label: "Early Access To Latest Features" },
     ],
   },
   {
     title: "Coming Soon",
     features: [
-      "Text to Speech",
-      "Omni Flash",
-      "Freebies",
-      "ChatGPT (Unlimited)",
+      { label: "Text to Speech" },
+      { label: "Omni Flash" },
+      { label: "Freebies" },
+      { label: "ChatGPT (Unlimited)", href: CHATGPT_PAGE },
     ],
   },
 ];
+
 
 const faqItems = [
   {
@@ -452,11 +459,20 @@ function Landing() {
                       </h3>
                       <ul className="mt-6 space-y-3">
                         {plan.features.map((feature) => (
-                          <li key={feature} className="flex items-start gap-3 text-sm text-muted-foreground">
+                          <li key={feature.label} className="flex items-start gap-3 text-sm text-muted-foreground">
                             <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-cta">
                               <Check className="h-3 w-3" strokeWidth={3} />
                             </span>
-                            <span className="text-foreground/85">{feature}</span>
+                            {feature.href ? (
+                              <Link
+                                to={feature.href}
+                                className="text-foreground/85 underline-offset-4 transition-colors hover:text-primary hover:underline"
+                              >
+                                {feature.label}
+                              </Link>
+                            ) : (
+                              <span className="text-foreground/85">{feature.label}</span>
+                            )}
                           </li>
                         ))}
                       </ul>
