@@ -12,6 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ToolsVeo3VideoGenerationRouteImport } from './routes/tools.veo-3-video-generation'
+import { Route as ToolsImagen4ImageGenerationRouteImport } from './routes/tools.imagen-4-image-generation'
+import { Route as ToolsChatgptAccessRouteImport } from './routes/tools.chatgpt-access'
 import { Route as AuthenticatedResellerRouteRouteImport } from './routes/_authenticated/reseller/route'
 import { Route as AuthenticatedKingRouteRouteImport } from './routes/_authenticated/king/route'
 import { Route as AuthenticatedDashboardRouteRouteImport } from './routes/_authenticated/dashboard/route'
@@ -43,6 +46,23 @@ const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ToolsVeo3VideoGenerationRoute =
+  ToolsVeo3VideoGenerationRouteImport.update({
+    id: '/tools/veo-3-video-generation',
+    path: '/tools/veo-3-video-generation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ToolsImagen4ImageGenerationRoute =
+  ToolsImagen4ImageGenerationRouteImport.update({
+    id: '/tools/imagen-4-image-generation',
+    path: '/tools/imagen-4-image-generation',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const ToolsChatgptAccessRoute = ToolsChatgptAccessRouteImport.update({
+  id: '/tools/chatgpt-access',
+  path: '/tools/chatgpt-access',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthenticatedResellerRouteRoute =
@@ -156,6 +176,9 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
+  '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
+  '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
+  '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
   '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
@@ -175,6 +198,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
+  '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
+  '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
   '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
@@ -199,6 +225,9 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRouteRouteWithChildren
   '/_authenticated/king': typeof AuthenticatedKingRouteRouteWithChildren
   '/_authenticated/reseller': typeof AuthenticatedResellerRouteRouteWithChildren
+  '/tools/chatgpt-access': typeof ToolsChatgptAccessRoute
+  '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
+  '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
   '/_authenticated/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/_authenticated/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/_authenticated/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
@@ -223,6 +252,9 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/king'
     | '/reseller'
+    | '/tools/chatgpt-access'
+    | '/tools/imagen-4-image-generation'
+    | '/tools/veo-3-video-generation'
     | '/dashboard/chatgpt'
     | '/dashboard/gemini'
     | '/dashboard/prompts'
@@ -242,6 +274,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/tools/chatgpt-access'
+    | '/tools/imagen-4-image-generation'
+    | '/tools/veo-3-video-generation'
     | '/dashboard/chatgpt'
     | '/dashboard/gemini'
     | '/dashboard/prompts'
@@ -265,6 +300,9 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/king'
     | '/_authenticated/reseller'
+    | '/tools/chatgpt-access'
+    | '/tools/imagen-4-image-generation'
+    | '/tools/veo-3-video-generation'
     | '/_authenticated/dashboard/chatgpt'
     | '/_authenticated/dashboard/gemini'
     | '/_authenticated/dashboard/prompts'
@@ -286,6 +324,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ToolsChatgptAccessRoute: typeof ToolsChatgptAccessRoute
+  ToolsImagen4ImageGenerationRoute: typeof ToolsImagen4ImageGenerationRoute
+  ToolsVeo3VideoGenerationRoute: typeof ToolsVeo3VideoGenerationRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -309,6 +350,27 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/veo-3-video-generation': {
+      id: '/tools/veo-3-video-generation'
+      path: '/tools/veo-3-video-generation'
+      fullPath: '/tools/veo-3-video-generation'
+      preLoaderRoute: typeof ToolsVeo3VideoGenerationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/imagen-4-image-generation': {
+      id: '/tools/imagen-4-image-generation'
+      path: '/tools/imagen-4-image-generation'
+      fullPath: '/tools/imagen-4-image-generation'
+      preLoaderRoute: typeof ToolsImagen4ImageGenerationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tools/chatgpt-access': {
+      id: '/tools/chatgpt-access'
+      path: '/tools/chatgpt-access'
+      fullPath: '/tools/chatgpt-access'
+      preLoaderRoute: typeof ToolsChatgptAccessRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_authenticated/reseller': {
@@ -526,6 +588,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ToolsChatgptAccessRoute: ToolsChatgptAccessRoute,
+  ToolsImagen4ImageGenerationRoute: ToolsImagen4ImageGenerationRoute,
+  ToolsVeo3VideoGenerationRoute: ToolsVeo3VideoGenerationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
