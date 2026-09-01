@@ -220,11 +220,13 @@ function AuthPage() {
               </div>
             </div>
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "Please wait…" : "Sign In"}
+              {loading ? "Please wait…" : signup ? "Create account & start free trial" : "Sign In"}
             </Button>
           </form>
           <p className="text-xs text-muted-foreground text-center mt-6">
-            No public signup. Contact your admin or reseller to get an account.
+            {signup
+              ? "One free trial per email. Temporary / disposable emails are not allowed."
+              : "New here? Switch to Sign Up for a 1 hour free trial of Veo 3."}
           </p>
         </div>
       </div>
