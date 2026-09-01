@@ -111,9 +111,10 @@ export function TrialBanner({ endsAt }: { endsAt: string }) {
 }
 
 export function SupportContact() {
+  const { phone } = useSupportPhone();
   return (
     <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-      <PhoneCall className="h-3.5 w-3.5" /> {SUPPORT_PHONE}
+      <PhoneCall className="h-3.5 w-3.5" /> {phone}
     </span>
   );
 }
