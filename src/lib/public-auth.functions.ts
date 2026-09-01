@@ -2,61 +2,12 @@ import { createServerFn } from "@tanstack/react-start";
 import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { checkSignupEmail, normalizeEmail } from "@/lib/email-guard";
 
 /**
- * Public, unauthenticated signup. Creates the auth user with the service-role
- * client; the database trigger creates the profile and grants the one-time
- * 1-hour trial (only if this email never had one).
+ * Public email/password signup was removed on purpose: self-signup now goes
+ * through Google OAuth only, so every public account is a verified identity
+ * and there is no unauthenticated account-creation endpoint to abuse.
  */
-export const publicSignup = createServerFn({ method: "POST" })
-  .inputValidator((d: unknown) =>
-    z
-      .object({
-        email: z.string().min(3).max(200),
-        password: z.string().min(6).max(200),
-        full_name: z.string().min(1).max(120),
-      })
-      .parse(d),
-  )
-  .handler(async ({ data }) => {
-    const email = normalizeEmail(data.email);
-    const emailError = checkSignupEmail(email);
-    if (emailError) throw new Error(emailError);
-
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    const { data: existing } = await supabaseAdmin
-      .from("profiles")
-      .select("id")
-      .eq("email", email)
-      .maybeSingle();
-    if (existing) {
-      throw new Error("An account already exists for this email. Please sign in instead.");
-    }
-
-    const { data: created, error } = await supabaseAdmin.auth.admin.createUser({
-      email,
-      password: data.password,
-      email_confirm: true,
-      user_metadata: { full_name: data.full_name.trim() },
-    });
-    if (error) {
-      if (/already/i.test(error.message)) {
-        throw new Error("An account already exists for this email. Please sign in instead.");
-      }
-      throw new Error(error.message);
-    }
-
-    const uid = created.user!.id;
-    const { data: profile } = await supabaseAdmin
-      .from("profiles")
-      .select("trial_ends_at")
-      .eq("id", uid)
-      .maybeSingle();
-
-    return { ok: true, id: uid, trial_ends_at: profile?.trial_ends_at ?? null };
-  });
 
 function clientIp(): string {
   const req = getRequest();

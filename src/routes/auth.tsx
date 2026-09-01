@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
-import { publicSignup } from "@/lib/public-auth.functions";
-import { checkSignupEmail } from "@/lib/email-guard";
+import { useAppSettings } from "@/hooks/use-app-settings";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -40,14 +39,25 @@ export const Route = createFileRoute("/auth")({
   component: AuthPage,
 });
 
+function GoogleIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[18px] w-[18px]" aria-hidden="true">
+      <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.7v3h3.9c2.3-2.1 3.5-5.2 3.5-8.9Z" />
+      <path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1.1.7-2.4 1.2-4 1.2-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1A12 12 0 0 0 12 24Z" />
+      <path fill="#FBBC05" d="M5.4 14.4a7.2 7.2 0 0 1 0-4.6V6.7H1.4a12 12 0 0 0 0 10.8l4-3.1Z" />
+      <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4C17.9 1.2 15.2 0 12 0A12 12 0 0 0 1.4 6.7l4 3.1C6.3 6.9 8.9 4.8 12 4.8Z" />
+    </svg>
+  );
+}
+
 function AuthPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
-  const [fullName, setFullName] = useState("");
+  const { settings } = useAppSettings();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   async function landingRouteFor(userId: string) {
@@ -63,8 +73,7 @@ function AuthPage() {
       qc.setQueryData(["current-profile"], null);
       return null;
     }
-    // Prime the shared profile cache so protected layouts render immediately
-    // instead of waiting on their own fetch (which caused the stuck "Loading…").
+    // Prime the shared profile cache so protected layouts render immediately.
     qc.setQueryData(["current-profile"], profile ?? null);
     const role = profile?.role;
     if (role === "king") return "/king" as const;
@@ -110,35 +119,17 @@ function AuthPage() {
     }
   }
 
-  async function handleSignUp(e: React.FormEvent) {
-    e.preventDefault();
-    const emailError = checkSignupEmail(email);
-    if (emailError) return toast.error(emailError);
-    if (!fullName.trim()) return toast.error("Enter your full name");
-    if (password.length < 6) return toast.error("Password must be at least 6 characters");
-    setLoading(true);
-    try {
-      await publicSignup({ data: { email, password, full_name: fullName } });
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim().toLowerCase(),
-        password,
-      });
-      if (error) {
-        toast.success("Account created — please sign in");
-        setMode("signin");
-        return;
-      }
-      await landingRouteFor(data.user!.id);
-      toast.success("Welcome to Farix — your 1 hour free trial has started");
-      navigate({ to: "/dashboard", replace: true });
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Sign up failed. Please try again.");
-    } finally {
-      setLoading(false);
+  async function handleGoogle() {
+    setGoogleLoading(true);
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: { redirectTo: `${window.location.origin}/auth` },
+    });
+    if (error) {
+      setGoogleLoading(false);
+      toast.error(error.message);
     }
   }
-
-  const signup = mode === "signup";
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4 relative">
@@ -149,41 +140,34 @@ function AuthPage() {
           <span className="text-xl font-semibold tracking-tight text-foreground">Farix</span>
         </Link>
         <div className="bg-card border border-border rounded-2xl p-8 shadow-card">
-          <div className="mb-6 grid grid-cols-2 gap-1 rounded-full border border-border bg-muted/40 p-1">
-            {(["signin", "signup"] as const).map((m) => (
-              <button
-                key={m}
-                type="button"
-                onClick={() => setMode(m)}
-                className={`rounded-full py-2 text-sm font-medium transition-colors ${
-                  mode === m ? "bg-brand-gradient text-white shadow-glow" : "text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                {m === "signin" ? "Sign In" : "Sign Up"}
-              </button>
-            ))}
-          </div>
-          <h1 className="text-2xl font-semibold text-center">
-            {signup ? "Create your account" : "Sign in to your account"}
-          </h1>
+          <h1 className="text-2xl font-semibold text-center">Sign in to Farix</h1>
           <p className="text-sm text-muted-foreground text-center mt-2">
-            {signup
-              ? "Sign up with your real email and get a 1 hour free trial of Veo 3."
+            {settings.public_signup_enabled
+              ? "Continue with Google to create your account and start your free trial."
               : "Enter your credentials to continue."}
           </p>
-          <form onSubmit={signup ? handleSignUp : handleSignIn} className="mt-6 space-y-4">
-            {signup && (
-              <div>
-                <Label htmlFor="fullName">Full name</Label>
-                <Input
-                  id="fullName"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  required
-                  className="bg-background border-border"
-                />
+
+          {settings.public_signup_enabled && (
+            <>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleGoogle}
+                disabled={googleLoading}
+                className="mt-6 w-full gap-3 rounded-xl py-6 text-sm font-medium"
+              >
+                <GoogleIcon />
+                {googleLoading ? "Redirecting…" : "Continue with Google"}
+              </Button>
+              <div className="my-6 flex items-center gap-3">
+                <span className="h-px flex-1 bg-border" />
+                <span className="text-[11px] uppercase tracking-widest text-muted-foreground">or</span>
+                <span className="h-px flex-1 bg-border" />
               </div>
-            )}
+            </>
+          )}
+
+          <form onSubmit={handleSignIn} className="space-y-4">
             <div>
               <Label htmlFor="email">Email</Label>
               <Input
@@ -220,14 +204,9 @@ function AuthPage() {
               </div>
             </div>
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "Please wait…" : signup ? "Create account & start free trial" : "Sign In"}
+              {loading ? "Please wait…" : "Sign In"}
             </Button>
           </form>
-          {!signup && (
-            <p className="text-xs text-muted-foreground text-center mt-6">
-              New here? Switch to Sign Up for a 1 hour free trial of Veo 3.
-            </p>
-          )}
         </div>
       </div>
     </div>

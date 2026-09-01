@@ -1,11 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { Lock } from "lucide-react";
 import { LOCK_MESSAGE, type PlanFeature } from "@/lib/plans";
-import { UpgradeButton } from "@/components/account-state";
-import { SUPPORT_PHONE, SUPPORT_WHATSAPP_URL } from "@/lib/support";
+import { UpgradeButton, useSupportPhone } from "@/components/account-state";
 
 /** Shown when the signed-in user's plan does not include a feature. */
 export function PlanLock({ feature, title }: { feature: PlanFeature; title: string }) {
+  const { phone, url } = useSupportPhone();
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
       <div className="max-w-md rounded-3xl border border-border bg-card p-10 text-center shadow-soft">
@@ -25,8 +25,8 @@ export function PlanLock({ feature, title }: { feature: PlanFeature; title: stri
         </div>
         <p className="mt-4 text-xs text-muted-foreground">
           Premium access support:{" "}
-          <a href={SUPPORT_WHATSAPP_URL} target="_blank" rel="noreferrer" className="font-semibold text-foreground underline underline-offset-4">
-            {SUPPORT_PHONE}
+          <a href={url} target="_blank" rel="noreferrer" className="font-semibold text-foreground underline underline-offset-4">
+            {phone}
           </a>
         </p>
       </div>

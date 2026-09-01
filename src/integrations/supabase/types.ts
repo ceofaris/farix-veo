@@ -59,6 +59,39 @@ export type Database = {
           },
         ]
       }
+      app_settings: {
+        Row: {
+          created_at: string
+          google_only_signup: boolean
+          id: boolean
+          max_login_ips: number
+          public_signup_enabled: boolean
+          support_phone: string
+          trial_minutes: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          google_only_signup?: boolean
+          id?: boolean
+          max_login_ips?: number
+          public_signup_enabled?: boolean
+          support_phone?: string
+          trial_minutes?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          google_only_signup?: boolean
+          id?: boolean
+          max_login_ips?: number
+          public_signup_enabled?: boolean
+          support_phone?: string
+          trial_minutes?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       blogs: {
         Row: {
           content: string
@@ -515,6 +548,7 @@ export type Database = {
         Args: { p_tool_account_id: string }
         Returns: Json
       }
+      normalize_email: { Args: { _email: string }; Returns: string }
       record_login_ip: { Args: { p_ip: string }; Returns: Json }
       set_active_session: { Args: { p_tool_account_id: string }; Returns: Json }
     }

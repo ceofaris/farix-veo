@@ -38,6 +38,7 @@ import { Route as AuthenticatedResellerUsersRouteImport } from './routes/_authen
 import { Route as AuthenticatedResellerToolsRouteImport } from './routes/_authenticated/reseller/tools'
 import { Route as AuthenticatedKingToolsRouteImport } from './routes/_authenticated/king/tools'
 import { Route as AuthenticatedKingSuspendedRouteImport } from './routes/_authenticated/king/suspended'
+import { Route as AuthenticatedKingSettingsRouteImport } from './routes/_authenticated/king/settings'
 import { Route as AuthenticatedKingResellersRouteImport } from './routes/_authenticated/king/resellers'
 import { Route as AuthenticatedKingNichesRouteImport } from './routes/_authenticated/king/niches'
 import { Route as AuthenticatedKingExtensionLabRouteImport } from './routes/_authenticated/king/extension-lab'
@@ -202,6 +203,12 @@ const AuthenticatedKingSuspendedRoute =
     path: '/suspended',
     getParentRoute: () => AuthenticatedKingRouteRoute,
   } as any)
+const AuthenticatedKingSettingsRoute =
+  AuthenticatedKingSettingsRouteImport.update({
+    id: '/settings',
+    path: '/settings',
+    getParentRoute: () => AuthenticatedKingRouteRoute,
+  } as any)
 const AuthenticatedKingResellersRoute =
   AuthenticatedKingResellersRouteImport.update({
     id: '/resellers',
@@ -291,6 +298,7 @@ export interface FileRoutesByFullPath {
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/niches': typeof AuthenticatedKingNichesRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
+  '/king/settings': typeof AuthenticatedKingSettingsRoute
   '/king/suspended': typeof AuthenticatedKingSuspendedRoute
   '/king/tools': typeof AuthenticatedKingToolsRoute
   '/reseller/tools': typeof AuthenticatedResellerToolsRoute
@@ -328,6 +336,7 @@ export interface FileRoutesByTo {
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/niches': typeof AuthenticatedKingNichesRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
+  '/king/settings': typeof AuthenticatedKingSettingsRoute
   '/king/suspended': typeof AuthenticatedKingSuspendedRoute
   '/king/tools': typeof AuthenticatedKingToolsRoute
   '/reseller/tools': typeof AuthenticatedResellerToolsRoute
@@ -370,6 +379,7 @@ export interface FileRoutesById {
   '/_authenticated/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/_authenticated/king/niches': typeof AuthenticatedKingNichesRoute
   '/_authenticated/king/resellers': typeof AuthenticatedKingResellersRoute
+  '/_authenticated/king/settings': typeof AuthenticatedKingSettingsRoute
   '/_authenticated/king/suspended': typeof AuthenticatedKingSuspendedRoute
   '/_authenticated/king/tools': typeof AuthenticatedKingToolsRoute
   '/_authenticated/reseller/tools': typeof AuthenticatedResellerToolsRoute
@@ -412,6 +422,7 @@ export interface FileRouteTypes {
     | '/king/extension-lab'
     | '/king/niches'
     | '/king/resellers'
+    | '/king/settings'
     | '/king/suspended'
     | '/king/tools'
     | '/reseller/tools'
@@ -449,6 +460,7 @@ export interface FileRouteTypes {
     | '/king/extension-lab'
     | '/king/niches'
     | '/king/resellers'
+    | '/king/settings'
     | '/king/suspended'
     | '/king/tools'
     | '/reseller/tools'
@@ -490,6 +502,7 @@ export interface FileRouteTypes {
     | '/_authenticated/king/extension-lab'
     | '/_authenticated/king/niches'
     | '/_authenticated/king/resellers'
+    | '/_authenticated/king/settings'
     | '/_authenticated/king/suspended'
     | '/_authenticated/king/tools'
     | '/_authenticated/reseller/tools'
@@ -728,6 +741,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKingSuspendedRouteImport
       parentRoute: typeof AuthenticatedKingRouteRoute
     }
+    '/_authenticated/king/settings': {
+      id: '/_authenticated/king/settings'
+      path: '/settings'
+      fullPath: '/king/settings'
+      preLoaderRoute: typeof AuthenticatedKingSettingsRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
     '/_authenticated/king/resellers': {
       id: '/_authenticated/king/resellers'
       path: '/resellers'
@@ -828,6 +848,7 @@ interface AuthenticatedKingRouteRouteChildren {
   AuthenticatedKingExtensionLabRoute: typeof AuthenticatedKingExtensionLabRoute
   AuthenticatedKingNichesRoute: typeof AuthenticatedKingNichesRoute
   AuthenticatedKingResellersRoute: typeof AuthenticatedKingResellersRoute
+  AuthenticatedKingSettingsRoute: typeof AuthenticatedKingSettingsRoute
   AuthenticatedKingSuspendedRoute: typeof AuthenticatedKingSuspendedRoute
   AuthenticatedKingToolsRoute: typeof AuthenticatedKingToolsRoute
   AuthenticatedKingIndexRoute: typeof AuthenticatedKingIndexRoute
@@ -841,6 +862,7 @@ const AuthenticatedKingRouteRouteChildren: AuthenticatedKingRouteRouteChildren =
     AuthenticatedKingExtensionLabRoute: AuthenticatedKingExtensionLabRoute,
     AuthenticatedKingNichesRoute: AuthenticatedKingNichesRoute,
     AuthenticatedKingResellersRoute: AuthenticatedKingResellersRoute,
+    AuthenticatedKingSettingsRoute: AuthenticatedKingSettingsRoute,
     AuthenticatedKingSuspendedRoute: AuthenticatedKingSuspendedRoute,
     AuthenticatedKingToolsRoute: AuthenticatedKingToolsRoute,
     AuthenticatedKingIndexRoute: AuthenticatedKingIndexRoute,
