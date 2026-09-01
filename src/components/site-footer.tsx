@@ -17,8 +17,7 @@ export function SiteFooter() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2">
-              <FarixMark className="h-6" />
-              <span className="font-display text-lg font-bold tracking-tight text-foreground">Farix AI</span>
+              <span className="text-lg font-bold tracking-tight text-foreground">Farix AI</span>
             </div>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
               Managed access to premium AI tools — Veo 3, Gemini Pro, ChatGPT and image generation — through one
