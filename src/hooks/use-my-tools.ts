@@ -75,7 +75,8 @@ export function useMyTools() {
   }
 
   async function downloadExtension(toolId?: string) {
-    if (!planActive) return toast.error("Your plan is inactive — contact your reseller");
+    if (suspended) return toast.error("Account suspended — contact support");
+    if (!hasVeo && !paidActive) return toast.error("Your plan is expired — upgrade to continue");
     const list = versions.data ?? [];
     const v = toolId ? list.find((x) => x.tool_id === toolId) : list[0];
     if (!v) return toast.error("No extension build available yet");
@@ -91,8 +92,13 @@ export function useMyTools() {
     tools: toolList,
     plan: plan.data ?? null,
     planId,
-    planName: planDef(planId)?.name ?? null,
+    planName: planDef(planId)?.name ?? (trialActive ? "Free Trial" : null),
     planActive,
+    suspended,
+    trialActive,
+    trialExpired,
+    trialEndsAt,
+    accessExpired,
     /** kept for older call sites */
     hasMaster: planId === "master" && planActive,
     hasVeo,
