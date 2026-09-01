@@ -1,3 +1,4 @@
+import { FarixMark } from "@/components/farix-logo";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";

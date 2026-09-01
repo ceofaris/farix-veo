@@ -1,3 +1,4 @@
+import { FarixMark } from "@/components/farix-logo";
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Menu, X } from "lucide-react";

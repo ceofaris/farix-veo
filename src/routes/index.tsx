@@ -1,3 +1,4 @@
+import { FarixMark } from "@/components/farix-logo";
 import { NavDropdown } from "@/components/nav-dropdown";
 import { SiteFooter } from "@/components/site-footer";
 import { PAGE_LINKS, TOOL_LINKS } from "@/components/site-links";

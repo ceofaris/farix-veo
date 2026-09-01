@@ -1,3 +1,4 @@
+import { FarixMark } from "@/components/farix-logo";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ReactNode, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";

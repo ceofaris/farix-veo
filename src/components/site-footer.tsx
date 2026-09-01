@@ -1,3 +1,4 @@
+import { FarixMark } from "@/components/farix-logo";
 import { Link } from "@tanstack/react-router";
 import { Mail, ArrowRight } from "lucide-react";
 import { PAGE_LINKS, TOOL_LINKS } from "@/components/site-links";
