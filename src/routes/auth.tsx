@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
+import { publicSignup } from "@/lib/public-auth.functions";
+import { checkSignupEmail } from "@/lib/email-guard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -41,6 +43,8 @@ export const Route = createFileRoute("/auth")({
 function AuthPage() {
   const navigate = useNavigate();
   const qc = useQueryClient();
+  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -106,6 +110,35 @@ function AuthPage() {
     }
   }
 
+  async function handleSignUp(e: React.FormEvent) {
+    e.preventDefault();
+    const emailError = checkSignupEmail(email);
+    if (emailError) return toast.error(emailError);
+    if (!fullName.trim()) return toast.error("Enter your full name");
+    if (password.length < 6) return toast.error("Password must be at least 6 characters");
+    setLoading(true);
+    try {
+      await publicSignup({ data: { email, password, full_name: fullName } });
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password,
+      });
+      if (error) {
+        toast.success("Account created — please sign in");
+        setMode("signin");
+        return;
+      }
+      await landingRouteFor(data.user!.id);
+      toast.success("Welcome to Farix — your 1 hour free trial has started");
+      navigate({ to: "/dashboard", replace: true });
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Sign up failed. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const signup = mode === "signup";
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4 relative">
@@ -116,11 +149,41 @@ function AuthPage() {
           <span className="text-xl font-semibold tracking-tight text-foreground">Farix</span>
         </Link>
         <div className="bg-card border border-border rounded-2xl p-8 shadow-card">
-          <h1 className="text-2xl font-semibold text-center">Sign in to your account</h1>
+          <div className="mb-6 grid grid-cols-2 gap-1 rounded-full border border-border bg-muted/40 p-1">
+            {(["signin", "signup"] as const).map((m) => (
+              <button
+                key={m}
+                type="button"
+                onClick={() => setMode(m)}
+                className={`rounded-full py-2 text-sm font-medium transition-colors ${
+                  mode === m ? "bg-brand-gradient text-white shadow-glow" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {m === "signin" ? "Sign In" : "Sign Up"}
+              </button>
+            ))}
+          </div>
+          <h1 className="text-2xl font-semibold text-center">
+            {signup ? "Create your account" : "Sign in to your account"}
+          </h1>
           <p className="text-sm text-muted-foreground text-center mt-2">
-            Enter your credentials to continue.
+            {signup
+              ? "Sign up with your real email and get a 1 hour free trial of Veo 3."
+              : "Enter your credentials to continue."}
           </p>
-          <form onSubmit={handleSignIn} className="mt-6 space-y-4">
+          <form onSubmit={signup ? handleSignUp : handleSignIn} className="mt-6 space-y-4">
+            {signup && (
+              <div>
+                <Label htmlFor="fullName">Full name</Label>
+                <Input
+                  id="fullName"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
+                  className="bg-background border-border"
+                />
+              </div>
+            )}
             <div>
               <Label htmlFor="email">Email</Label>
               <Input
@@ -157,11 +220,13 @@ function AuthPage() {
               </div>
             </div>
             <Button type="submit" disabled={loading} className="w-full">
-              {loading ? "Please wait…" : "Sign In"}
+              {loading ? "Please wait…" : signup ? "Create account & start free trial" : "Sign In"}
             </Button>
           </form>
           <p className="text-xs text-muted-foreground text-center mt-6">
-            No public signup. Contact your admin or reseller to get an account.
+            {signup
+              ? "One free trial per email. Temporary / disposable emails are not allowed."
+              : "New here? Switch to Sign Up for a 1 hour free trial of Veo 3."}
           </p>
         </div>
       </div>

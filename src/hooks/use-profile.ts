@@ -10,6 +10,10 @@ export type Profile = {
   expires_at: string | null;
   is_active: boolean;
   created_by: string | null;
+  status?: "active" | "suspended";
+  trial_ends_at?: string | null;
+  trial_used?: boolean;
+  signup_source?: string;
 };
 
 export async function fetchProfile(): Promise<Profile | null> {

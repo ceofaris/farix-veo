@@ -13,6 +13,9 @@ import {
 import { FarixMark } from "@/components/farix-logo";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { ExpiredScreen, SuspendedScreen, TrialBanner } from "@/components/account-state";
+import { recordLoginIp } from "@/lib/public-auth.functions";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/_authenticated/dashboard")({
   component: DashboardLayout,
@@ -26,8 +29,10 @@ const NAV = [
 ] as const;
 
 function DashboardLayout() {
-  const { profile, loading, isUser } = useMyTools();
+  const { profile, loading, isUser, suspended, trialActive, trialEndsAt, accessExpired, trialExpired } =
+    useMyTools();
   const navigate = useNavigate();
+  const qc = useQueryClient();
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const { theme } = useTheme();
@@ -43,8 +48,21 @@ function DashboardLayout() {
     else if (profile.role === "reseller") navigate({ to: "/reseller" });
   }, [profile, loading, navigate]);
 
+  // Device / IP protection: record the current IP once per browser session.
+  useEffect(() => {
+    if (!profile || profile.role !== "user") return;
+    if (sessionStorage.getItem("farix-ip-checked")) return;
+    sessionStorage.setItem("farix-ip-checked", "1");
+    recordLoginIp()
+      .then((res) => {
+        if (res?.status === "suspended") qc.invalidateQueries({ queryKey: ["current-profile"] });
+      })
+      .catch(() => {});
+  }, [profile, qc]);
+
   async function logout() {
     await supabase.auth.signOut();
+    sessionStorage.removeItem("farix-ip-checked");
     navigate({ to: "/auth" });
   }
 
@@ -150,7 +168,16 @@ function DashboardLayout() {
           <div className="font-display font-semibold lg:hidden">Farix</div>
         </header>
         <main className="mx-auto w-full max-w-6xl flex-1 px-5 pb-10 pt-4 sm:px-8 sm:pt-5">
-          <Outlet />
+          {suspended ? (
+            <SuspendedScreen />
+          ) : accessExpired ? (
+            <ExpiredScreen trial={trialExpired} />
+          ) : (
+            <>
+              {trialActive && trialEndsAt && <TrialBanner endsAt={trialEndsAt} />}
+              <Outlet />
+            </>
+          )}
         </main>
       </div>
 

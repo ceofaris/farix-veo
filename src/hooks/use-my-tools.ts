@@ -48,12 +48,22 @@ export function useMyTools() {
   const toolList: ToolLite[] = tools.data ?? [];
   const expiresAt = plan.data?.expires_at ?? profile?.expires_at ?? null;
   const planId = plan.data?.plan ?? null;
-  const planActive = !!profile?.is_active && !!expiresAt && !planExpired(expiresAt);
+  const suspended = profile?.status === "suspended";
+  const paidActive =
+    !suspended && !!profile?.is_active && !!plan.data && !planExpired(plan.data.expires_at);
 
-  const hasVeo = planActive && planIncludes(planId, "veo");
-  const hasChatgpt = planActive && planIncludes(planId, "chatgpt");
-  const hasGemini = planActive && planIncludes(planId, "gemini");
-  const hasPrompts = planActive && planIncludes(planId, "prompts");
+  const trialEndsAt = profile?.trial_ends_at ?? null;
+  const trialActive =
+    !suspended && !paidActive && !!profile?.is_active && !!trialEndsAt && !planExpired(trialEndsAt);
+  const trialExpired = !!profile?.trial_used && !trialActive && !paidActive;
+
+  const planActive = paidActive;
+  const accessExpired = !suspended && !paidActive && !trialActive;
+
+  const hasVeo = (paidActive && planIncludes(planId, "veo")) || trialActive;
+  const hasChatgpt = paidActive && planIncludes(planId, "chatgpt");
+  const hasGemini = paidActive && planIncludes(planId, "gemini");
+  const hasPrompts = paidActive && planIncludes(planId, "prompts");
 
   function findTool(re: RegExp) {
     return toolList.find((t) => re.test(`${t.slug} ${t.name}`)) ?? null;
@@ -65,7 +75,8 @@ export function useMyTools() {
   }
 
   async function downloadExtension(toolId?: string) {
-    if (!planActive) return toast.error("Your plan is inactive — contact your reseller");
+    if (suspended) return toast.error("Account suspended — contact support");
+    if (!hasVeo && !paidActive) return toast.error("Your plan is expired — upgrade to continue");
     const list = versions.data ?? [];
     const v = toolId ? list.find((x) => x.tool_id === toolId) : list[0];
     if (!v) return toast.error("No extension build available yet");
@@ -81,8 +92,13 @@ export function useMyTools() {
     tools: toolList,
     plan: plan.data ?? null,
     planId,
-    planName: planDef(planId)?.name ?? null,
+    planName: planDef(planId)?.name ?? (trialActive ? "Free Trial" : null),
     planActive,
+    suspended,
+    trialActive,
+    trialExpired,
+    trialEndsAt,
+    accessExpired,
     /** kept for older call sites */
     hasMaster: planId === "master" && planActive,
     hasVeo,
