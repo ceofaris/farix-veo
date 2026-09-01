@@ -104,7 +104,8 @@ function DashboardLayout() {
         <div className="flex h-16 items-center gap-3 px-5">
           <FarixMark className="h-7" />
           <div className="min-w-0">
-            <div className="truncate text-xs font-semibold tracking-tight">AI Workspace</div>
+            <div className="font-display text-[15px] font-semibold leading-tight tracking-tight">Farix AI</div>
+            <div className="truncate text-[11px] text-muted-foreground">AI Workspace</div>
           </div>
           <button
             className="ml-auto rounded-md p-1.5 text-muted-foreground hover:bg-sidebar-accent lg:hidden"
