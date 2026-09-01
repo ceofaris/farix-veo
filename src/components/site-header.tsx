@@ -18,11 +18,8 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:h-16 sm:px-5">
-        <Link to="/" className="flex min-w-0 items-center gap-2">
-          <FarixMark className="h-5 sm:h-6" />
-          <span className="truncate text-base font-bold tracking-tight text-foreground sm:text-lg">
-            Farix AI
-          </span>
+        <Link to="/" className="flex min-w-0 items-center" aria-label="Farix AI home">
+          <FarixMark className="h-6 sm:h-7" />
         </Link>
         <div className="ml-auto hidden flex-1 items-center justify-center gap-1 md:flex">
           {HASH_LINKS.map((l) => (

@@ -140,9 +140,8 @@ function AuthPage() {
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4 relative">
       <ThemeToggle className="absolute top-6 right-6" />
       <div className="w-full max-w-md">
-        <Link to="/" className="flex items-center gap-2 justify-center mb-8">
-          <FarixMark className="h-8" />
-          <span className="text-xl font-semibold tracking-tight text-foreground">Farix AI</span>
+        <Link to="/" className="flex items-center justify-center mb-8" aria-label="Farix AI home">
+          <FarixMark className="h-9" />
         </Link>
         <div className="bg-card border border-border rounded-2xl p-8 shadow-card">
           <h1 className="text-2xl font-semibold text-center">Sign in to Farix</h1>
