@@ -27,7 +27,6 @@ import { assetUrl } from "@/lib/asset-url";
 
 
 const SITE_URL = "https://farixai.com";
-const BRAND_IMAGE = assetUrl(markAsset);
 const HOME_TITLE = "Farix AI — Create with AI Without Hassle";
 const HOME_DESCRIPTION =
   "Farix AI gives you managed access to premium AI tools like Veo 3 and ChatGPT through one secure, invite-only platform — no accounts or setup needed.";
@@ -259,8 +258,7 @@ function Navbar() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:h-16 sm:gap-4 sm:px-5">
         <Link to="/" className="flex min-w-0 items-center gap-2">
-          <FarixMark className="h-5 sm:h-6" />
-          <span className="truncate font-display text-base font-bold tracking-tight text-foreground sm:text-lg">Farix AI</span>
+          <span className="truncate text-base font-bold tracking-tight text-foreground sm:text-lg">Farix AI</span>
         </Link>
         <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
           {NAV_LINKS.map((l) => (
