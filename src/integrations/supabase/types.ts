@@ -233,6 +233,10 @@ export type Database = {
           id: string
           is_active: boolean
           role: string
+          signup_source: string
+          status: string
+          trial_ends_at: string | null
+          trial_used: boolean
           updated_at: string
         }
         Insert: {
@@ -244,6 +248,10 @@ export type Database = {
           id: string
           is_active?: boolean
           role?: string
+          signup_source?: string
+          status?: string
+          trial_ends_at?: string | null
+          trial_used?: boolean
           updated_at?: string
         }
         Update: {
@@ -255,6 +263,10 @@ export type Database = {
           id?: string
           is_active?: boolean
           role?: string
+          signup_source?: string
+          status?: string
+          trial_ends_at?: string | null
+          trial_used?: boolean
           updated_at?: string
         }
         Relationships: []
@@ -368,6 +380,50 @@ export type Database = {
         }
         Relationships: []
       }
+      trial_emails: {
+        Row: {
+          email: string
+          used_at: string
+        }
+        Insert: {
+          email: string
+          used_at?: string
+        }
+        Update: {
+          email?: string
+          used_at?: string
+        }
+        Relationships: []
+      }
+      user_login_ips: {
+        Row: {
+          first_seen: string
+          ip: string
+          last_seen: string
+          user_id: string
+        }
+        Insert: {
+          first_seen?: string
+          ip: string
+          last_seen?: string
+          user_id: string
+        }
+        Update: {
+          first_seen?: string
+          ip?: string
+          last_seen?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_login_ips_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_plans: {
         Row: {
           created_at: string
@@ -459,6 +515,7 @@ export type Database = {
         Args: { p_tool_account_id: string }
         Returns: Json
       }
+      record_login_ip: { Args: { p_ip: string }; Returns: Json }
       set_active_session: { Args: { p_tool_account_id: string }; Returns: Json }
     }
     Enums: {
