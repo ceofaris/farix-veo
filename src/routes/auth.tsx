@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { supabase } from "@/integrations/supabase/client";
+import { publicSignup } from "@/lib/public-auth.functions";
+import { checkSignupEmail } from "@/lib/email-guard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
