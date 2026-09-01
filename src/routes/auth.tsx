@@ -223,11 +223,11 @@ function AuthPage() {
               {loading ? "Please wait…" : signup ? "Create account & start free trial" : "Sign In"}
             </Button>
           </form>
-          <p className="text-xs text-muted-foreground text-center mt-6">
-            {signup
-              ? "One free trial per email. Temporary / disposable emails are not allowed."
-              : "New here? Switch to Sign Up for a 1 hour free trial of Veo 3."}
-          </p>
+          {!signup && (
+            <p className="text-xs text-muted-foreground text-center mt-6">
+              New here? Switch to Sign Up for a 1 hour free trial of Veo 3.
+            </p>
+          )}
         </div>
       </div>
     </div>
