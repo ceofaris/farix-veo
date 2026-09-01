@@ -1,3 +1,4 @@
+import { FarixMark } from "@/components/farix-logo";
 import { NavDropdown } from "@/components/nav-dropdown";
 import { SiteFooter } from "@/components/site-footer";
 import { PAGE_LINKS, TOOL_LINKS } from "@/components/site-links";
@@ -39,8 +40,16 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: HOME_TITLE },
       { property: "og:description", content: HOME_DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: `${SITE_URL}/` },
+      { property: "og:url", content: SITE_URL },
+      {
+        property: "og:image",
+        content: `${SITE_URL}/__l5e/assets-v1/e9114caf-b585-4d34-beb9-ae48adf9cd6c/farix-mark.png`,
+      },
       { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:image",
+        content: `${SITE_URL}/__l5e/assets-v1/e9114caf-b585-4d34-beb9-ae48adf9cd6c/farix-mark.png`,
+      },
       { name: "twitter:title", content: HOME_TITLE },
       { name: "twitter:description", content: HOME_DESCRIPTION },
     ],
@@ -53,6 +62,7 @@ export const Route = createFileRoute("/")({
           "@type": "Organization",
           name: "Farix AI",
           url: SITE_URL,
+          logo: `${SITE_URL}/__l5e/assets-v1/e9114caf-b585-4d34-beb9-ae48adf9cd6c/farix-mark.png`,
           description:
             "Farix AI provides managed, invite-only access to premium AI tools through a secure Chrome extension.",
           sameAs: [],
@@ -255,6 +265,7 @@ function Navbar() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:h-16 sm:gap-4 sm:px-5">
         <Link to="/" className="flex min-w-0 items-center gap-2">
+          <FarixMark className="h-5 sm:h-6" />
           <span className="truncate text-base font-bold tracking-tight text-foreground sm:text-lg">Farix AI</span>
         </Link>
         <div className="hidden flex-1 items-center justify-center gap-1 md:flex">

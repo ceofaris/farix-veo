@@ -1,3 +1,4 @@
+import { FarixMark } from "@/components/farix-logo";
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ReactNode, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,6 +40,7 @@ export function PanelLayout({
         )}
       >
         <div className="px-5 py-5 flex items-center gap-3 border-b border-sidebar-border">
+          <FarixMark className="h-7" />
           <div className="min-w-0">
             <div className="font-semibold leading-tight tracking-tight">Farix AI</div>
             <div className="text-xs text-muted-foreground truncate">{title}</div>

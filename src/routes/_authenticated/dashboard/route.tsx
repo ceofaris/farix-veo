@@ -1,3 +1,4 @@
+import { FarixMark } from "@/components/farix-logo";
 import { createFileRoute, Link, Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -101,6 +102,7 @@ function DashboardLayout() {
         )}
       >
         <div className="flex h-16 items-center gap-3 px-5">
+          <FarixMark className="h-7" />
           <div className="min-w-0">
             <div className="font-semibold leading-tight tracking-tight">Farix AI</div>
             <div className="truncate text-[11px] text-muted-foreground">AI Workspace</div>

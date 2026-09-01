@@ -1,3 +1,4 @@
+import { FarixMark } from "@/components/farix-logo";
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -25,9 +26,17 @@ export const Route = createFileRoute("/auth")({
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
         { property: "og:url", content: "https://farixai.com/auth" },
+        {
+          property: "og:image",
+          content: "https://farixai.lovable.app/__l5e/assets-v1/e9114caf-b585-4d34-beb9-ae48adf9cd6c/farix-mark.png",
+        },
         { name: "twitter:card", content: "summary" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
+        {
+          name: "twitter:image",
+          content: "https://farixai.lovable.app/__l5e/assets-v1/e9114caf-b585-4d34-beb9-ae48adf9cd6c/farix-mark.png",
+        },
       ],
       links: [{ rel: "canonical", href: "https://farixai.com/auth" }],
     };
@@ -132,6 +141,7 @@ function AuthPage() {
       <ThemeToggle className="absolute top-6 right-6" />
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center gap-2 justify-center mb-8">
+          <FarixMark className="h-8" />
           <span className="text-xl font-semibold tracking-tight text-foreground">Farix AI</span>
         </Link>
         <div className="bg-card border border-border rounded-2xl p-8 shadow-card">
