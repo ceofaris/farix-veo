@@ -2,14 +2,24 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Clock, PhoneCall, ShieldAlert, Sparkles } from "lucide-react";
 import { SUPPORT_PHONE, SUPPORT_WHATSAPP_URL } from "@/lib/support";
+import { useAppSettings } from "@/hooks/use-app-settings";
 import { cn } from "@/lib/utils";
 
+/** King-editable number wins; the constant stays as a fallback. */
+export function useSupportPhone() {
+  const { settings } = useAppSettings();
+  const phone = settings.support_phone?.trim() || SUPPORT_PHONE;
+  const digits = phone.replace(/\D/g, "");
+  return { phone, url: digits ? `https://wa.me/${digits}` : SUPPORT_WHATSAPP_URL };
+}
+
 function SupportLine() {
+  const { phone, url } = useSupportPhone();
   return (
     <p className="mt-4 text-xs text-muted-foreground">
       Need premium access now? Call or WhatsApp{" "}
-      <a href={SUPPORT_WHATSAPP_URL} target="_blank" rel="noreferrer" className="font-semibold text-foreground underline underline-offset-4">
-        {SUPPORT_PHONE}
+      <a href={url} target="_blank" rel="noreferrer" className="font-semibold text-foreground underline underline-offset-4">
+        {phone}
       </a>
     </p>
   );
