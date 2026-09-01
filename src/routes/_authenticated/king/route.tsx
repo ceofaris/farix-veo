@@ -42,6 +42,7 @@ function KingLayout() {
         { to: "/king/niches", label: "Niche Prompts", icon: Sparkles },
         { to: "/king/blog", label: "Blog", icon: Newspaper },
         { to: "/king/extension-lab", label: "Extension Lab", icon: FlaskConical },
+        { to: "/king/settings", label: "Settings", icon: Settings },
       ]}
     >
       <Outlet />
