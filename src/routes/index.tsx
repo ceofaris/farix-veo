@@ -62,6 +62,7 @@ export const Route = createFileRoute("/")({
           "@type": "Organization",
           name: "Farix AI",
           url: SITE_URL,
+          logo: `${SITE_URL}/__l5e/assets-v1/e9114caf-b585-4d34-beb9-ae48adf9cd6c/farix-mark.png`,
           description:
             "Farix AI provides managed, invite-only access to premium AI tools through a secure Chrome extension.",
           sameAs: [],
