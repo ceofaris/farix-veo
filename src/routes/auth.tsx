@@ -26,9 +26,17 @@ export const Route = createFileRoute("/auth")({
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
         { property: "og:url", content: "https://farixai.com/auth" },
+        {
+          property: "og:image",
+          content: "https://farixai.lovable.app/__l5e/assets-v1/e9114caf-b585-4d34-beb9-ae48adf9cd6c/farix-mark.png",
+        },
         { name: "twitter:card", content: "summary" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
+        {
+          name: "twitter:image",
+          content: "https://farixai.lovable.app/__l5e/assets-v1/e9114caf-b585-4d34-beb9-ae48adf9cd6c/farix-mark.png",
+        },
       ],
       links: [{ rel: "canonical", href: "https://farixai.com/auth" }],
     };
