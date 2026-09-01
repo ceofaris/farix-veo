@@ -53,8 +53,8 @@ export function planIncludes(id: string | null | undefined, feature: PlanFeature
 
 /** Message shown on a dashboard section the current plan does not cover. */
 export const LOCK_MESSAGE: Record<PlanFeature, string> = {
-  veo: "Purchase Master plan to access Veo 3 and other features",
-  chatgpt: "Purchase Master plan to access ChatGPT and other features",
-  gemini: "Contact your Reseller for access",
-  prompts: "Purchase a plan to access Niche Prompts",
+  veo: "Purchase a plan to use Veo 3 video generation",
+  chatgpt: "Purchase a plan to use ChatGPT, Gemini Pro and Prompts",
+  gemini: "Purchase a plan to use ChatGPT, Gemini Pro and Prompts",
+  prompts: "Purchase a plan to use ChatGPT, Gemini Pro and Prompts",
 };
