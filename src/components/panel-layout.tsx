@@ -42,7 +42,8 @@ export function PanelLayout({
         <div className="px-5 py-5 flex items-center gap-3 border-b border-sidebar-border">
           <FarixMark className="h-7" />
           <div className="min-w-0">
-            <div className="text-sm font-semibold leading-tight tracking-tight truncate">{title}</div>
+            <div className="font-display text-[15px] font-semibold leading-tight tracking-tight">Farix AI</div>
+            <div className="text-xs text-muted-foreground truncate">{title}</div>
           </div>
           <button
             className="ml-auto lg:hidden p-1.5 rounded-md text-muted-foreground hover:bg-sidebar-accent"
