@@ -25,8 +25,8 @@ export function PlanLock({ feature, title }: { feature: PlanFeature; title: stri
         </div>
         <p className="mt-4 text-xs text-muted-foreground">
           Premium access support:{" "}
-          <a href={SUPPORT_WHATSAPP_URL} target="_blank" rel="noreferrer" className="font-semibold text-foreground underline underline-offset-4">
-            {SUPPORT_PHONE}
+          <a href={url} target="_blank" rel="noreferrer" className="font-semibold text-foreground underline underline-offset-4">
+            {phone}
           </a>
         </p>
       </div>
