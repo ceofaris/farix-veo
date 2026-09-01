@@ -168,7 +168,16 @@ function DashboardLayout() {
           <div className="font-display font-semibold lg:hidden">Farix</div>
         </header>
         <main className="mx-auto w-full max-w-6xl flex-1 px-5 pb-10 pt-4 sm:px-8 sm:pt-5">
-          <Outlet />
+          {suspended ? (
+            <SuspendedScreen />
+          ) : accessExpired ? (
+            <ExpiredScreen trial={trialExpired} />
+          ) : (
+            <>
+              {trialActive && trialEndsAt && <TrialBanner endsAt={trialEndsAt} />}
+              <Outlet />
+            </>
+          )}
         </main>
       </div>
 
