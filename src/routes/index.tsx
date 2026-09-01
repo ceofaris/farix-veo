@@ -40,8 +40,16 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: HOME_TITLE },
       { property: "og:description", content: HOME_DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: `${SITE_URL}/` },
+      { property: "og:url", content: SITE_URL },
+      {
+        property: "og:image",
+        content: `${SITE_URL}/__l5e/assets-v1/e9114caf-b585-4d34-beb9-ae48adf9cd6c/farix-mark.png`,
+      },
       { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:image",
+        content: `${SITE_URL}/__l5e/assets-v1/e9114caf-b585-4d34-beb9-ae48adf9cd6c/farix-mark.png`,
+      },
       { name: "twitter:title", content: HOME_TITLE },
       { name: "twitter:description", content: HOME_DESCRIPTION },
     ],
