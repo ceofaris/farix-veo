@@ -40,11 +40,9 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: HOME_DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/` },
-      { property: "og:image", content: BRAND_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: HOME_TITLE },
       { name: "twitter:description", content: HOME_DESCRIPTION },
-      { name: "twitter:image", content: BRAND_IMAGE },
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/` }],
     scripts: [
@@ -55,7 +53,6 @@ export const Route = createFileRoute("/")({
           "@type": "Organization",
           name: "Farix AI",
           url: SITE_URL,
-          logo: BRAND_IMAGE,
           description:
             "Farix AI provides managed, invite-only access to premium AI tools through a secure Chrome extension.",
           sameAs: [],
