@@ -13,11 +13,9 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import { FarixMark } from "@/components/farix-logo";
 import { Reveal } from "@/components/reveal";
 import { MediaCard } from "@/components/dashboard/ui";
 import { cn } from "@/lib/utils";
-import markAsset from "@/assets/farix-mark.png.asset.json";
 import clip1 from "@/assets/farix-clip-1.mp4.asset.json";
 import clip2 from "@/assets/farix-clip-2.mp4.asset.json";
 import clip3 from "@/assets/farix-clip-3.mp4.asset.json";
@@ -29,7 +27,6 @@ import { assetUrl } from "@/lib/asset-url";
 
 
 const SITE_URL = "https://farixai.com";
-const BRAND_IMAGE = assetUrl(markAsset);
 const HOME_TITLE = "Farix AI — Create with AI Without Hassle";
 const HOME_DESCRIPTION =
   "Farix AI gives you managed access to premium AI tools like Veo 3 and ChatGPT through one secure, invite-only platform — no accounts or setup needed.";
@@ -43,11 +40,9 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: HOME_DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:url", content: `${SITE_URL}/` },
-      { property: "og:image", content: BRAND_IMAGE },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: HOME_TITLE },
       { name: "twitter:description", content: HOME_DESCRIPTION },
-      { name: "twitter:image", content: BRAND_IMAGE },
     ],
     links: [{ rel: "canonical", href: `${SITE_URL}/` }],
     scripts: [
@@ -58,7 +53,6 @@ export const Route = createFileRoute("/")({
           "@type": "Organization",
           name: "Farix AI",
           url: SITE_URL,
-          logo: BRAND_IMAGE,
           description:
             "Farix AI provides managed, invite-only access to premium AI tools through a secure Chrome extension.",
           sameAs: [],
@@ -261,8 +255,7 @@ function Navbar() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <nav className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4 sm:h-16 sm:gap-4 sm:px-5">
         <Link to="/" className="flex min-w-0 items-center gap-2">
-          <FarixMark className="h-5 sm:h-6" />
-          <span className="truncate font-display text-base font-bold tracking-tight text-foreground sm:text-lg">Farix AI</span>
+          <span className="truncate text-base font-bold tracking-tight text-foreground sm:text-lg">Farix AI</span>
         </Link>
         <div className="hidden flex-1 items-center justify-center gap-1 md:flex">
           {NAV_LINKS.map((l) => (

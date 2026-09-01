@@ -10,7 +10,6 @@ import {
   SidebarGeminiIcon,
   SidebarPromptsIcon,
 } from "@/components/sidebar-tool-icons";
-import { FarixMark } from "@/components/farix-logo";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ExpiredScreen, SuspendedScreen, TrialBanner } from "@/components/account-state";
@@ -102,9 +101,8 @@ function DashboardLayout() {
         )}
       >
         <div className="flex h-16 items-center gap-3 px-5">
-          <FarixMark className="h-7" />
           <div className="min-w-0">
-            <div className="font-display font-semibold leading-tight tracking-tight">Farix</div>
+            <div className="font-semibold leading-tight tracking-tight">Farix AI</div>
             <div className="truncate text-[11px] text-muted-foreground">AI Workspace</div>
           </div>
           <button

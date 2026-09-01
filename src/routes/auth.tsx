@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { FarixMark } from "@/components/farix-logo";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,
@@ -18,7 +17,6 @@ export const Route = createFileRoute("/auth")({
     const title = "Sign In | Farix AI";
     const description =
       "Sign in to your Farix AI account to access your assigned premium AI tools. Access is invite-only and provided by an authorized Farix AI reseller.";
-    const image = "https://farixai.lovable.app/__l5e/assets-v1/5f13d1dc-09a1-42c1-855d-4edb89b406e9/farix-mark.png";
     return {
       meta: [
         { title },
@@ -27,11 +25,9 @@ export const Route = createFileRoute("/auth")({
         { property: "og:description", content: description },
         { property: "og:type", content: "website" },
         { property: "og:url", content: "https://farixai.com/auth" },
-        { property: "og:image", content: image },
-        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:card", content: "summary" },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
-        { name: "twitter:image", content: image },
       ],
       links: [{ rel: "canonical", href: "https://farixai.com/auth" }],
     };
@@ -136,8 +132,7 @@ function AuthPage() {
       <ThemeToggle className="absolute top-6 right-6" />
       <div className="w-full max-w-md">
         <Link to="/" className="flex items-center gap-2 justify-center mb-8">
-          <FarixMark className="h-7" />
-          <span className="text-xl font-semibold tracking-tight text-foreground">Farix</span>
+          <span className="text-xl font-semibold tracking-tight text-foreground">Farix AI</span>
         </Link>
         <div className="bg-card border border-border rounded-2xl p-8 shadow-card">
           <h1 className="text-2xl font-semibold text-center">Sign in to Farix</h1>

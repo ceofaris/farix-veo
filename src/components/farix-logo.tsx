@@ -1,23 +1,15 @@
 import { cn } from "@/lib/utils";
-import markAsset from "@/assets/farix-mark.png.asset.json";
-import { assetUrl } from "@/lib/asset-url";
 
+// Old Farix brand mark has been retired. Brand spots render plain text only.
 export function FarixMark({ className }: { className?: string }) {
-  return (
-    <img
-      src={assetUrl(markAsset)}
-      alt="Farix logo"
-      className={cn("h-6 w-auto shrink-0 object-contain select-none", className)}
-      draggable={false}
-    />
-  );
+  return null;
 }
 
 export function FarixLogo({
   className,
   markClassName,
   textClassName,
-  label = "Farix",
+  label = "Farix AI",
   showText = true,
 }: {
   className?: string;
@@ -28,7 +20,6 @@ export function FarixLogo({
 }) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <FarixMark className={markClassName} />
       {showText && (
         <span className={cn("font-semibold tracking-tight text-foreground", textClassName)}>
           {label}
