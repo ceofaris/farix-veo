@@ -1,6 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { Mail, ArrowRight } from "lucide-react";
-import { FarixMark } from "@/components/farix-logo";
 import { PAGE_LINKS, TOOL_LINKS } from "@/components/site-links";
 
 const IMPORTANT_LINKS = [

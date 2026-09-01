@@ -10,7 +10,6 @@ import {
   SidebarGeminiIcon,
   SidebarPromptsIcon,
 } from "@/components/sidebar-tool-icons";
-import { FarixMark } from "@/components/farix-logo";
 import { useTheme } from "@/hooks/use-theme";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { ExpiredScreen, SuspendedScreen, TrialBanner } from "@/components/account-state";

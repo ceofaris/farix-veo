@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { FarixMark } from "@/components/farix-logo";
 
 export const Route = createFileRoute("/auth")({
   ssr: false,

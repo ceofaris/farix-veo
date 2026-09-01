@@ -2,7 +2,6 @@ import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ReactNode, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { LogOut, Menu, X } from "lucide-react";
-import { FarixMark } from "@/components/farix-logo";
 import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { useProfile } from "@/hooks/use-profile";

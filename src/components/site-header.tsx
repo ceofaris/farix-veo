@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Menu, X } from "lucide-react";
-import { FarixMark } from "@/components/farix-logo";
 import { NavDropdown } from "@/components/nav-dropdown";
 import { PAGE_LINKS, TOOL_LINKS } from "@/components/site-links";
 
