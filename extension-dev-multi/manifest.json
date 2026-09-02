@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Farix AI",
   "version": "1.0.0",
-  "description": "One managed Farix AI extension for Veo 3, Gemini Pro and ChatGPT sessions.",
+  "description": "One managed Farix AI extension for Veo 3 and Gemini Pro sessions.",
   "permissions": [
     "storage",
     "cookies",
@@ -12,8 +12,6 @@
     "management"
   ],
   "host_permissions": [
-    "https://chatgpt.com/*",
-    "https://*.chatgpt.com/*",
     "https://labs.google/*",
     "https://*.labs.google/*",
     "https://*.google.com/*",
@@ -38,16 +36,6 @@
     "default_icon": "icon.png"
   },
   "content_scripts": [
-    {
-      "matches": [
-        "https://chatgpt.com/*",
-        "https://*.chatgpt.com/*"
-      ],
-      "js": [
-        "chatgpt-lockdown.js"
-      ],
-      "run_at": "document_idle"
-    },
     {
       "matches": [
         "https://gemini.google.com/*",

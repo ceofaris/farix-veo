@@ -446,7 +446,6 @@ importScripts("config.js", "supabase.js");
 
     const finalUrl = String(response.url || "");
     if (/accounts\.google\.com\/(ServiceLogin|signin)/i.test(finalUrl)) return "dead";
-    if (/(^|\.)chatgpt\.com\/auth\/login/i.test(finalUrl)) return "dead";
 
     if (entry.probeKind === "next-auth") {
       const trimmed = body.trim();
@@ -478,7 +477,7 @@ importScripts("config.js", "supabase.js");
     const detected = await activeTabTool();
     const toolId = requestedTool || detected;
     if (!toolId) {
-      throw new Error("Select a tool (Veo 3, Gemini Pro or ChatGPT), then inject the session.");
+      throw new Error("Select a tool (Veo 3 or Gemini Pro), then inject the session.");
     }
     const entry = tool(toolId);
 
@@ -608,7 +607,7 @@ importScripts("config.js", "supabase.js");
 
   // Heartbeat ports for both lockdown watchdogs (kept isolated by port name).
   chrome.runtime.onConnect.addListener((port) => {
-    if (port.name !== "flow-lockdown" && port.name !== "farix-chatgpt-watchdog") return;
+    if (port.name !== "flow-lockdown") return;
     port.onMessage.addListener(() => {
       try {
         port.postMessage({

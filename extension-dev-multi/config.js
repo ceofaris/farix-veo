@@ -1,5 +1,5 @@
 /*
- * Farix AI Multi extension configuration (Veo 3 + ChatGPT).
+ * Farix AI Multi extension configuration (Veo 3 + Gemini Pro).
  * Only use the public Supabase anon key here. Never use a service_role key.
  */
 globalThis.FARIX_CONFIG = Object.freeze({
@@ -49,19 +49,6 @@ globalThis.FARIX_CONFIG = Object.freeze({
       probeKind: "google",
       plans: ["master"]
     }),
-    chatgpt: Object.freeze({
-      id: "chatgpt",
-      label: "ChatGPT",
-      host: "chatgpt.com",
-      hosts: Object.freeze(["chatgpt.com"]),
-      url: "https://chatgpt.com",
-      tabMatches: ["https://chatgpt.com/*", "https://*.chatgpt.com/*"],
-      urlPattern: /^https:\/\/([a-z0-9-]+\.)*chatgpt\.com\//i,
-      accountRpc: "get_random_chatgpt_account",
-      probeUrl: "https://chatgpt.com/api/auth/session",
-      probeKind: "next-auth",
-      plans: ["master"]
-    })
   }),
 
   TABLES: Object.freeze({
