@@ -111,7 +111,7 @@ export function useMyTools() {
     hasPrompts,
     hasWhisk,
     expiresAt,
-    versions: versions.data ?? [],
+    versions: (qc.getQueryData(latestVersionsQuery.queryKey) as LatestVersion[] | undefined) ?? [],
     findTool,
     expiryFor,
     downloadExtension,
