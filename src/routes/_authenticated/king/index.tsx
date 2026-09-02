@@ -246,6 +246,37 @@ function KingDashboard() {
   }, [rows, resellers]);
 
   const activeResellers = resellers.filter((r) => r.is_active).length;
+  const [q, setQ] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const removeUserFn = useServerFn(deleteAuthUser);
+
+  const shownUsers = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    const list = needle
+      ? users.filter(
+          (u) =>
+            u.email.toLowerCase().includes(needle) ||
+            (u.full_name ?? "").toLowerCase().includes(needle),
+        )
+      : users;
+    return list.slice(0, 50);
+  }, [users, q]);
+
+  async function removeUser(id: string, email: string) {
+    if (!confirm(`Permanently delete ${email}? This cannot be undone.`)) return;
+    setBusyId(id);
+    try {
+      await removeUserFn({ data: { id } });
+      toast.success("User deleted");
+      qc.invalidateQueries({ queryKey: kingProfilesQuery.queryKey });
+      qc.invalidateQueries({ queryKey: masterPlansQuery.queryKey });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Delete failed");
+    } finally {
+      setBusyId(null);
+    }
+  }
+
 
   async function deleteInvestment(id: string) {
     if (!confirm("Delete this investment entry?")) return;
