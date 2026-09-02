@@ -29,6 +29,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
       accountRpc: "get_random_flow_account",
       probeUrl: "https://labs.google/fx/api/auth/session",
       probeKind: "next-auth",
+      /** Inject works from any tab — the extension opens Flow itself. */
+      opensOwnTab: true,
       plans: ["pro", "master"]
     }),
     gemini: Object.freeze({
@@ -49,6 +51,27 @@ globalThis.FARIX_CONFIG = Object.freeze({
       probeKind: "google",
       plans: ["master"]
     }),
+    /**
+     * Whisk has no cookie pool of its own: it reuses the Flow/Veo accounts and
+     * only differs by the URL that is opened after injection.
+     */
+    whisk: Object.freeze({
+      id: "whisk",
+      label: "Whisk",
+      host: "labs.google",
+      hosts: Object.freeze(["labs.google"]),
+      url: "https://labs.google/fx/tools/flow/shared/tool/c0c427a4-f509-4a15-a704-21f89e512dbe",
+      tabMatches: ["https://labs.google/fx/tools/flow/shared/tool/*"],
+      urlPattern: /^https:\/\/labs\.google\/fx\/tools\/flow\/shared\/tool\//i,
+      accountRpc: "get_random_flow_account",
+      probeUrl: "https://labs.google/fx/api/auth/session",
+      probeKind: "next-auth",
+      opensOwnTab: true,
+      /** Same labs.google cookie jar as Veo 3. */
+      sharesCookiesWith: "veo",
+      plans: ["master"]
+    }),
+
   }),
 
   TABLES: Object.freeze({
