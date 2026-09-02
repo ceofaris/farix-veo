@@ -20,7 +20,7 @@ globalThis.FARIX_CONFIG = Object.freeze({
   TOOLS: Object.freeze({
     veo: Object.freeze({
       id: "veo",
-      label: "Veo 3",
+      label: "Veo 3 (Flow)",
       host: "labs.google",
       hosts: Object.freeze(["labs.google"]),
       url: "https://labs.google/fx/tools/flow",
@@ -32,24 +32,6 @@ globalThis.FARIX_CONFIG = Object.freeze({
       /** Inject works from any tab — the extension opens Flow itself. */
       opensOwnTab: true,
       plans: ["pro", "master"]
-    }),
-    gemini: Object.freeze({
-      id: "gemini",
-      label: "Gemini Pro",
-      host: "gemini.google.com",
-      hosts: Object.freeze([
-        "gemini.google.com",
-        "accounts.google.com",
-        "myaccount.google.com",
-        "google.com"
-      ]),
-      url: "https://gemini.google.com/app",
-      tabMatches: ["https://gemini.google.com/*"],
-      urlPattern: /^https:\/\/gemini\.google\.com\//i,
-      accountRpc: "get_random_gemini_account",
-      probeUrl: "https://gemini.google.com/app",
-      probeKind: "google",
-      plans: ["master"]
     }),
     /**
      * Whisk has no cookie pool of its own: it reuses the Flow/Veo accounts and
@@ -71,6 +53,25 @@ globalThis.FARIX_CONFIG = Object.freeze({
       sharesCookiesWith: "veo",
       plans: ["master"]
     }),
+    gemini: Object.freeze({
+      id: "gemini",
+      label: "Gemini Pro",
+      host: "gemini.google.com",
+      hosts: Object.freeze([
+        "gemini.google.com",
+        "accounts.google.com",
+        "myaccount.google.com",
+        "google.com"
+      ]),
+      url: "https://gemini.google.com/app",
+      tabMatches: ["https://gemini.google.com/*"],
+      urlPattern: /^https:\/\/gemini\.google\.com\//i,
+      accountRpc: "get_random_gemini_account",
+      probeUrl: "https://gemini.google.com/app",
+      probeKind: "google",
+      plans: ["master"]
+    }),
+
 
   }),
 
