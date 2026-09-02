@@ -135,7 +135,20 @@ function DashboardLayout() {
         </nav>
 
         <div className="space-y-2 border-t border-sidebar-border p-3">
+          <div className="rounded-xl border border-border bg-card/60 px-3 py-2.5">
+            <div className="flex items-center justify-between text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+              <span>Veo Credits</span>
+              <Coins className="h-3.5 w-3.5" />
+            </div>
+            <div className="mt-1 font-display text-xl font-semibold tracking-tight">
+              {formatCredits(credits.data)}
+            </div>
+            <div className="mt-0.5 text-[11px] text-muted-foreground">
+              {VEO_CREDIT_COST} credits per video
+            </div>
+          </div>
           <div className="flex items-center gap-3 rounded-xl px-2 py-2">
+
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-gradient text-xs font-semibold text-white">
               {initials}
             </div>
