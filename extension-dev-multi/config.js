@@ -1,5 +1,5 @@
 /*
- * Farix AI Multi extension configuration (Veo 3 + Gemini Pro).
+ * Farix AI Master extension configuration (Veo 3 + Gemini Pro + Whisk).
  * Only use the public Supabase anon key here. Never use a service_role key.
  */
 globalThis.FARIX_CONFIG = Object.freeze({
