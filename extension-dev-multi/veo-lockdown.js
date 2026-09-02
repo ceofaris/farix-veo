@@ -21,7 +21,9 @@
   const path = () => window.location.pathname;
   const isFlowPage = () => /^\/fx\/tools\/flow(?:[/?#]|$)/.test(path());
   const isProjectPage = () => /^\/fx\/tools\/flow\/project\//.test(path());
-  const isListingPage = () => isFlowPage() && !isProjectPage();
+  // Whisk (shared tool) pages must stay fully interactive: "Try in a project" etc.
+  const isSharedToolPage = () => /^\/fx\/tools\/flow\/shared\//.test(path());
+  const isListingPage = () => isFlowPage() && !isProjectPage() && !isSharedToolPage();
 
   /* --------------------------------------------------------------- styles */
 
