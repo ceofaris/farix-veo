@@ -1,8 +1,8 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ExternalLink, Download, Clapperboard, AudioLines, Banana } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ExternalLink, Clapperboard, AudioLines, Banana } from "lucide-react";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
-import { FeatureCard, VideoGuide } from "@/components/dashboard/ui";
+import { FeatureCard } from "@/components/dashboard/ui";
 import { PlanLock } from "@/components/plan-lock";
 
 export const Route = createFileRoute("/_authenticated/dashboard/veo-3")({
@@ -26,7 +26,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/veo-3")({
 });
 
 function VeoPage() {
-  const { findTool, downloadExtension, hasVeo, loading } = useMyTools();
+  const { findTool, hasVeo, loading } = useMyTools();
   const tool = findTool(/veo/i);
 
   if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading…</div>;
@@ -44,24 +44,22 @@ function VeoPage() {
                 <span className="h-1.5 w-1.5 rounded-full bg-success" /> Active
               </span>
             </div>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Need the extension?{" "}
+              <Link to="/dashboard/extension-help" className="text-brand-cyan hover:underline">
+                Extension & Help
+              </Link>
+            </p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <a
-            href="https://labs.google/fx/tools/flow"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-5 py-2.5 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
-          >
-            <ExternalLink className="h-4 w-4" /> Open Veo Flow
-          </a>
-          <button
-            onClick={() => downloadExtension(tool?.id)}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 font-display text-sm font-semibold text-foreground transition-colors hover:bg-accent"
-          >
-            <Download className="h-4 w-4" /> Download Extension
-          </button>
-        </div>
+        <a
+          href="https://labs.google/fx/tools/flow"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-5 py-2.5 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
+        >
+          <ExternalLink className="h-4 w-4" /> Open Veo Flow
+        </a>
       </header>
 
       <section className="space-y-4">
@@ -84,8 +82,6 @@ function VeoPage() {
           />
         </div>
       </section>
-
-      <VideoGuide />
     </div>
   );
 }
