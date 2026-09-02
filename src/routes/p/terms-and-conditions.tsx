@@ -36,7 +36,8 @@ const blocks: ContentBlock[] = [
   {
     heading: "4. Managed sessions and fair use",
     paragraphs: [
-      "Tool access is provided through managed sessions injected into the official interfaces of third-party providers. Those sessions are shared infrastructure and are intentionally locked down: profile, billing and settings areas are disabled and account names are masked.",
+      "Farix AI provides managed access to AI generation tools that operate with Google Flow (labs.google.com). Access is delivered through managed sessions injected into the official interfaces of third-party providers via the Farix browser extension. Those sessions are shared infrastructure and are intentionally locked down: profile, billing and settings areas are disabled and account names are masked.",
+      "Farix AI handles account access coordination and plan management on its side, so you do not need to manage the underlying provider billing yourself.",
     ],
     bullets: [
       "Do not attempt to unlock, extract, export or reuse session cookies outside the Farix extension.",
@@ -62,7 +63,7 @@ const blocks: ContentBlock[] = [
   {
     heading: "7. Intellectual property",
     paragraphs: [
-      "The Farix name, logo, dashboard, extensions and written content are owned by Farix AI. Veo, Flow, Gemini, Imagen and other product names belong to their respective owners; Farix AI is an independent access platform and is not affiliated with, endorsed by or sponsored by Google.",
+      "The Farix name, logo, dashboard, extensions and written content are owned by Farix AI. Farix AI is an independent service and is not affiliated with, partnered with, sponsored by, or endorsed by Google LLC or its subsidiaries. All Google product names, logos, and trademarks — including Veo, Flow, Gemini and Imagen — are the property of their respective owners.",
       "Rights to content you generate inside a third-party tool are governed by that provider's terms. You are responsible for checking those terms before commercial use.",
     ],
   },

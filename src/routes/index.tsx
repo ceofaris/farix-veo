@@ -1,7 +1,7 @@
 import { FarixMark } from "@/components/farix-logo";
 import { NavDropdown } from "@/components/nav-dropdown";
 import { SiteFooter } from "@/components/site-footer";
-import { PAGE_LINKS, TOOL_LINKS } from "@/components/site-links";
+import { PAGE_LINKS } from "@/components/site-links";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
@@ -250,7 +250,6 @@ function FaqAccordion() {
 
 const NAV_LINKS = [
   { label: "Home", href: "#" },
-  { label: "About", href: "#how" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
 ];
@@ -275,7 +274,6 @@ function Navbar() {
               {l.label}
             </a>
           ))}
-          <NavDropdown label="Tools" links={TOOL_LINKS} />
           <NavDropdown label="Pages" links={PAGE_LINKS} />
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
@@ -314,7 +312,6 @@ function Navbar() {
                 {l.label}
               </a>
             ))}
-            <NavDropdown label="Tools" links={TOOL_LINKS} mobile onNavigate={() => setMenuOpen(false)} />
             <NavDropdown label="Pages" links={PAGE_LINKS} mobile onNavigate={() => setMenuOpen(false)} />
             <Link
               to="/auth"

@@ -3,11 +3,10 @@ import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Menu, X } from "lucide-react";
 import { NavDropdown } from "@/components/nav-dropdown";
-import { PAGE_LINKS, TOOL_LINKS } from "@/components/site-links";
+import { PAGE_LINKS } from "@/components/site-links";
 
 const HASH_LINKS = [
   { label: "Home", href: "/#" },
-  { label: "About", href: "/#how" },
   { label: "Pricing", href: "/#pricing" },
   { label: "FAQ", href: "/#faq" },
 ];
@@ -34,13 +33,6 @@ export function SiteHeader() {
               {l.label}
             </a>
           ))}
-          <Link
-            to="/blog"
-            className="rounded-full px-4 py-2 font-sans text-sm font-medium tracking-wide text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
-          >
-            Blog
-          </Link>
-          <NavDropdown label="Tools" links={TOOL_LINKS} />
           <NavDropdown label="Pages" links={PAGE_LINKS} />
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
@@ -79,14 +71,6 @@ export function SiteHeader() {
                 {l.label}
               </a>
             ))}
-            <Link
-              to="/blog"
-              onClick={() => setMenuOpen(false)}
-              className="rounded-xl px-4 py-3 font-sans text-sm font-medium tracking-wide text-foreground transition-colors hover:bg-accent"
-            >
-              Blog
-            </Link>
-            <NavDropdown label="Tools" links={TOOL_LINKS} mobile onNavigate={() => setMenuOpen(false)} />
             <NavDropdown label="Pages" links={PAGE_LINKS} mobile onNavigate={() => setMenuOpen(false)} />
             <Link
               to="/auth"

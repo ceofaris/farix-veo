@@ -90,7 +90,7 @@ export function SiteFooter() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-border pt-6 text-xs text-muted-foreground sm:flex-row">
           <span>© {new Date().getFullYear()} Farix AI · All rights reserved</span>
-          <span>Invite-only access platform · Not affiliated with Google or OpenAI</span>
+          <span>Farix AI is independent and not affiliated with Google. Trademarks belong to their respective owners.</span>
         </div>
       </div>
     </footer>
