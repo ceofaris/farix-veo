@@ -63,6 +63,30 @@ function VeoPage() {
           </button>
         </div>
       </header>
+      <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div className="text-sm font-medium text-muted-foreground">Remaining Credits</div>
+            <div className="mt-1 font-display text-4xl font-semibold tracking-tight">
+              {credits.isPending ? "…" : formatCredits(credits.data)}
+            </div>
+            <div className="mt-1 text-xs text-muted-foreground">
+              {VEO_CREDIT_COST} credits are deducted per successfully generated Veo video. Failed or
+              cancelled generations cost nothing.
+            </div>
+          </div>
+          <div className="rounded-xl bg-primary/10 p-3 text-primary">
+            <Coins className="h-6 w-6" />
+          </div>
+        </div>
+        {!credits.isPending && (credits.data ?? 0) < VEO_CREDIT_COST && (
+          <div className="mt-4 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            Insufficient credits — you need at least {VEO_CREDIT_COST} credits to generate a video.
+            Contact your reseller to top up.
+          </div>
+        )}
+      </section>
+
 
       <section className="space-y-4">
         <h2 className="text-lg font-semibold tracking-tight">What’s Included</h2>
