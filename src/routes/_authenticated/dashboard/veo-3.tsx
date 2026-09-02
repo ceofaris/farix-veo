@@ -29,7 +29,9 @@ export const Route = createFileRoute("/_authenticated/dashboard/veo-3")({
 
 function VeoPage() {
   const { findTool, downloadExtension, hasVeo, loading } = useMyTools();
+  const credits = useMyCredits();
   const tool = findTool(/veo/i);
+
 
   if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading…</div>;
   if (!hasVeo) return <PlanLock feature="veo" title="Veo 3" />;
