@@ -144,6 +144,14 @@ function DashboardLayout() {
               <span className="flex-1">{item.label}</span>
             </Link>
           ))}
+          <Link
+            to={HELP.to}
+            onClick={() => setOpen(false)}
+            className={helpNavClass(path === HELP.to)}
+          >
+            <HELP.icon className="h-[18px] w-[18px] shrink-0" />
+            <span className="flex-1">{HELP.label}</span>
+          </Link>
         </nav>
 
         <div className="space-y-2 border-t border-sidebar-border p-3">
