@@ -494,7 +494,7 @@ function Landing() {
                             to="/auth"
                             className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display font-semibold transition hover:opacity-90 active:scale-[0.98] pricing-btn-secondary"
                           >
-                            Start Free Trail <ArrowRight className="h-4 w-4" />
+                            Start Free Trial <ArrowRight className="h-4 w-4" />
                           </Link>
                         </>
                       ) : (
