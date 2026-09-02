@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Farix AI — Whisk",
+  "name": "Farix AI \u2014 Whisk",
   "version": "1.0.0",
   "description": "Launch managed Farix AI Whisk sessions using the shared Flow account pool.",
   "permissions": [
@@ -18,8 +18,13 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Farix AI — Whisk",
-    "default_popup": "popup.html"
+    "default_title": "Farix AI \u2014 Whisk",
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
   },
-  "minimum_chrome_version": "100"
+  "minimum_chrome_version": "100",
+  "icons": {
+    "48": "icon.png",
+    "128": "icon.png"
+  }
 }

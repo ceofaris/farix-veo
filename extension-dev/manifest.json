@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Farix AI — Veo Session",
+  "name": "Farix AI \u2014 Veo Session",
   "version": "1.0.0",
   "description": "Securely launch managed Farix AI Veo sessions.",
   "permissions": [
@@ -20,7 +20,8 @@
   },
   "action": {
     "default_title": "Farix AI",
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": "icon.png"
   },
   "content_scripts": [
     {
@@ -36,6 +37,9 @@
       "all_frames": false
     }
   ],
-
-  "minimum_chrome_version": "100"
+  "minimum_chrome_version": "100",
+  "icons": {
+    "48": "icon.png",
+    "128": "icon.png"
+  }
 }
