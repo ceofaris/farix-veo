@@ -583,7 +583,8 @@ importScripts("config.js", "supabase.js");
     return {
       credits: Number(value.credits || 0),
       charged: Boolean(value.charged),
-      duplicate: Boolean(value.duplicate)
+      duplicate: Boolean(value.duplicate),
+      insufficient: Boolean(value.insufficient)
     };
   }
 
