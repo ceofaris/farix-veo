@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
-import { Home, LogOut, Menu, X } from "lucide-react";
+import { Home, LogOut, Menu, X, HelpCircle } from "lucide-react";
 import {
   SidebarFlowIcon,
   SidebarGeminiIcon,
@@ -27,6 +27,8 @@ const NAV = [
   { to: "/dashboard/whisk", label: "Whisk", icon: SidebarWhiskIcon },
   { to: "/dashboard/prompts", label: "Niche Prompts", icon: SidebarPromptsIcon },
 ] as const;
+
+const HELP = { to: "/dashboard/extension-help", label: "Extension & Help", icon: HelpCircle };
 
 function DashboardLayout() {
   const { profile, loading, isUser, suspended, trialActive, trialEndsAt, accessExpired, trialExpired } =
@@ -93,6 +95,14 @@ function DashboardLayout() {
         : "text-muted-foreground hover:bg-[color-mix(in_oklab,#8b5cf6_12%,transparent)] hover:text-foreground",
     );
 
+  const helpNavClass = (active: boolean) =>
+    cn(
+      "flex items-center gap-3 rounded-xl px-3 py-2.5 font-display text-sm font-medium tracking-tight transition-all",
+      active
+        ? "bg-brand-cyan/15 text-brand-cyan shadow-sm"
+        : "text-muted-foreground hover:bg-brand-cyan/10 hover:text-brand-cyan",
+    );
+
   return (
     <div className={cn(shell, "flex")}>
       <aside
@@ -134,6 +144,14 @@ function DashboardLayout() {
               <span className="flex-1">{item.label}</span>
             </Link>
           ))}
+          <Link
+            to={HELP.to}
+            onClick={() => setOpen(false)}
+            className={helpNavClass(path === HELP.to)}
+          >
+            <HELP.icon className="h-[18px] w-[18px] shrink-0" />
+            <span className="flex-1">{HELP.label}</span>
+          </Link>
         </nav>
 
         <div className="space-y-2 border-t border-sidebar-border p-3">
