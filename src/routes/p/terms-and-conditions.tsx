@@ -28,8 +28,8 @@ const blocks: ContentBlock[] = [
   {
     heading: "3. Plans and what they include",
     bullets: [
-      "Pro: Veo 3 (Lite) unlimited generation plus Niche Prompts. ChatGPT and Gemini Pro are not included.",
-      "Master: Veo 3 (Lite) unlimited generation, Gemini Pro chat, ChatGPT (testing phase, limited access), Niche Prompts and all other Master features.",
+      "Pro: Veo 3 (Lite) unlimited generation plus Niche Prompts. Gemini Pro is not included.",
+      "Master: Veo 3 (Lite) unlimited generation, Gemini Pro chat, Niche Prompts and all other Master features.",
       "Features marked \"Coming Soon\" are not guaranteed and may change, be delayed or be withdrawn.",
     ],
   },
@@ -62,7 +62,7 @@ const blocks: ContentBlock[] = [
   {
     heading: "7. Intellectual property",
     paragraphs: [
-      "The Farix name, logo, dashboard, extensions and written content are owned by Farix AI. Veo, Flow, Gemini, Imagen, ChatGPT and other product names belong to their respective owners; Farix AI is an independent access platform and is not affiliated with, endorsed by or sponsored by Google or OpenAI.",
+      "The Farix name, logo, dashboard, extensions and written content are owned by Farix AI. Veo, Flow, Gemini, Imagen and other product names belong to their respective owners; Farix AI is an independent access platform and is not affiliated with, endorsed by or sponsored by Google.",
       "Rights to content you generate inside a third-party tool are governed by that provider's terms. You are responsible for checking those terms before commercial use.",
     ],
   },

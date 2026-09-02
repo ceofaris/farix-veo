@@ -10,7 +10,6 @@ export const MASTER_PLAN = {
   tagline: "One plan unlocks everything on Farix.",
   features: [
     "Veo 3 (Lite) — Unlimited",
-    "ChatGPT Premium",
     "Niche Prompts",
     "Freebies",
   ],
@@ -34,10 +33,6 @@ export const activeToolsQuery = queryOptions({
 
 /** Hard-coded marketing copy for the two fixed tools. */
 const DESCRIPTIONS: Array<{ match: RegExp; text: string }> = [
-  {
-    match: /chat\s*-?\s*gpt/i,
-    text: "Full ChatGPT access — GPT-5, Deep Research, Thinking mode, image creation and voice.",
-  },
   {
     match: /veo/i,
     text: "Google Veo 3 video generation — cinematic AI video with native audio, straight from your browser.",

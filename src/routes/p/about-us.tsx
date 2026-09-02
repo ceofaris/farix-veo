@@ -5,7 +5,7 @@ const SITE_URL = "https://farixai.com";
 const PATH = "/p/about-us";
 const TITLE = "About Farix AI | Managed Access to Premium AI Tools";
 const DESCRIPTION =
-  "Learn about Farix AI — an invite-only platform that gives creators managed access to Veo 3, Gemini Pro, ChatGPT and Imagen 4 without signups, foreign cards or regional blocks.";
+  "Learn about Farix AI — an invite-only platform that gives creators managed access to Veo 3, Gemini Pro and Imagen 4 without signups, foreign cards or regional blocks.";
 
 const blocks: ContentBlock[] = [
   {
@@ -21,7 +21,6 @@ const blocks: ContentBlock[] = [
       "Veo 3 (Lite) cinematic video generation through Google Flow, with unlimited generation on active plans.",
       "Imagen 4 and Nano Banana image generation for stills, thumbnails and concept frames.",
       "Gemini Pro for chat, research and reasoning.",
-      "ChatGPT access in a testing phase with limited availability.",
       "Niche Prompts — a curated, King-managed prompt library built around real content niches.",
     ],
   },

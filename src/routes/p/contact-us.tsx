@@ -33,7 +33,7 @@ const blocks: ContentBlock[] = [
     ],
     bullets: [
       "The email address on your Farix AI account.",
-      "Which tool is affected — Veo 3, Gemini Pro, ChatGPT or image generation.",
+      "Which tool is affected — Veo 3, Gemini Pro or image generation.",
       "Your plan (Pro or Master) and the reseller who activated you.",
       "The extension version you installed and your browser.",
       "A screenshot of the error or the screen you get stuck on.",

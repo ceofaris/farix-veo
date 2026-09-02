@@ -1,7 +1,7 @@
 /** The three plans the platform sells. */
 export type PlanId = "pro" | "master";
 
-export type PlanFeature = "veo" | "chatgpt" | "gemini" | "prompts";
+export type PlanFeature = "veo" | "gemini" | "prompts";
 
 export type PlanDef = {
   id: PlanId;
@@ -17,19 +17,18 @@ export const PLANS: PlanDef[] = [
     name: "Pro",
     tagline: "Unlimited Veo 3 video generation plus the full niche prompt library.",
     features: ["Veo 3 (Lite) — Unlimited", "Niche Prompts"],
-    includes: { veo: true, chatgpt: false, gemini: false, prompts: true },
+    includes: { veo: true, gemini: false, prompts: true },
   },
   {
     id: "master",
     name: "Master",
-    tagline: "Everything on Farix — Veo 3, Gemini Pro, ChatGPT and Niche Prompts.",
+    tagline: "Everything on Farix — Veo 3, Gemini Pro and Niche Prompts.",
     features: [
       "Veo 3 (Lite) — Unlimited",
       "Gemini Pro (Chat)",
-      "ChatGPT (Testing Phase — Limited Access)",
       "Niche Prompts",
     ],
-    includes: { veo: true, chatgpt: true, gemini: true, prompts: true },
+    includes: { veo: true, gemini: true, prompts: true },
   },
 ];
 
@@ -54,7 +53,6 @@ export function planIncludes(id: string | null | undefined, feature: PlanFeature
 /** Message shown on a dashboard section the current plan does not cover. */
 export const LOCK_MESSAGE: Record<PlanFeature, string> = {
   veo: "Purchase a plan to use Veo 3 video generation",
-  chatgpt: "Purchase a plan to use ChatGPT, Gemini Pro and Prompts",
-  gemini: "Purchase a plan to use ChatGPT, Gemini Pro and Prompts",
-  prompts: "Purchase a plan to use ChatGPT, Gemini Pro and Prompts",
+  gemini: "Purchase a plan to use Gemini Pro and Prompts",
+  prompts: "Purchase a plan to use Gemini Pro and Prompts",
 };

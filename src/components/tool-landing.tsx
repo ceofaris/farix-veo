@@ -322,9 +322,6 @@ export function ToolLanding({ content }: { content: ToolLandingContent }) {
             <Link to="/tools/imagen-4-image-generation" className="hover:text-foreground">
               Imagen 4 image generation
             </Link>
-            <Link to="/tools/chatgpt-access" className="hover:text-foreground">
-              ChatGPT access
-            </Link>
           </div>
         </div>
       </section>

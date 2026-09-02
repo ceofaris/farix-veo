@@ -21,7 +21,7 @@ export function SiteFooter() {
               <span className="font-display text-lg font-semibold tracking-tight text-foreground">Farix AI</span>
             </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted-foreground">
-              Managed access to premium AI tools — Veo 3, Gemini Pro, ChatGPT and image generation — through one
+              Managed access to premium AI tools — Veo 3, Gemini Pro and image generation — through one
               secure, invite-only platform.
             </p>
             <a

@@ -7,9 +7,9 @@ import { SiteFooter } from "@/components/site-footer";
 import { Reveal } from "@/components/reveal";
 import { blogExcerpt, formatDate, publishedBlogsQuery, readingTime, SITE_URL } from "@/lib/blogs";
 
-const TITLE = "Farix AI Blog — Guides on Veo 3, Gemini and ChatGPT access";
+const TITLE = "Farix AI Blog — Guides on Veo 3, Gemini and Imagen access";
 const DESC =
-  "Practical guides, tutorials and updates on premium AI tool access — Veo 3 video, Imagen 4 images, Gemini Pro and ChatGPT — from the Farix AI team.";
+  "Practical guides, tutorials and updates on premium AI tool access — Veo 3 video, Imagen 4 images and Gemini Pro — from the Farix AI team.";
 
 export const Route = createFileRoute("/blog/")({
   component: BlogIndex,

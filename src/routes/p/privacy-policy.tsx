@@ -11,7 +11,7 @@ const blocks: ContentBlock[] = [
   {
     heading: "1. Introduction",
     paragraphs: [
-      "Farix AI (\"Farix\", \"we\", \"us\") provides managed access to third-party AI tools such as Veo 3, Gemini Pro, ChatGPT and image generation models through an invite-only platform and a companion Chrome extension. This Privacy Policy explains what information we collect, why we collect it, how it is stored and what control you have over it.",
+      "Farix AI (\"Farix\", \"we\", \"us\") provides managed access to third-party AI tools such as Veo 3, Gemini Pro and image generation models through an invite-only platform and a companion Chrome extension. This Privacy Policy explains what information we collect, why we collect it, how it is stored and what control you have over it.",
       "By creating an account through an authorised reseller, signing in to the dashboard or installing the Farix extension, you agree to the practices described on this page. If you do not agree, please stop using the platform and ask your reseller to deactivate your account.",
     ],
   },

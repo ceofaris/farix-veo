@@ -41,7 +41,7 @@ function KingTools() {
 
   return (
     <div>
-      <PageHeader title="Tools" description="Veo 3, ChatGPT and Gemini Pro are the platform's fixed tools." />
+      <PageHeader title="Tools" description="Veo 3 and Gemini Pro are the platform's fixed tools." />
 
       {tools.isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
@@ -58,7 +58,7 @@ function KingTools() {
           </div>
           <h2 className="mt-5 text-lg font-semibold">No tools available</h2>
           <p className="mt-2 text-sm text-muted-foreground max-w-sm">
-            Veo 3 and ChatGPT are configured at the platform level.
+            Veo 3 and Gemini Pro are configured at the platform level.
           </p>
         </Card>
       )}

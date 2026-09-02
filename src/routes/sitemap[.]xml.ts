@@ -19,7 +19,6 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/blog", changefreq: "daily", priority: "0.9" },
           { path: "/tools/veo-3-video-generation", changefreq: "weekly", priority: "0.9" },
           { path: "/tools/imagen-4-image-generation", changefreq: "weekly", priority: "0.9" },
-          { path: "/tools/chatgpt-access", changefreq: "weekly", priority: "0.9" },
           { path: "/p/about-us", changefreq: "monthly", priority: "0.7" },
           { path: "/p/contact-us", changefreq: "monthly", priority: "0.7" },
           { path: "/p/privacy-policy", changefreq: "yearly", priority: "0.4" },

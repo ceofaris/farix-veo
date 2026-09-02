@@ -30,7 +30,7 @@ import { assetUrl } from "@/lib/asset-url";
 const SITE_URL = "https://farixai.com";
 const HOME_TITLE = "Farix AI — Create with AI Without Hassle";
 const HOME_DESCRIPTION =
-  "Farix AI gives you managed access to premium AI tools like Veo 3 and ChatGPT through one secure, invite-only platform — no accounts or setup needed.";
+  "Farix AI gives you managed access to premium AI tools like Veo 3, Gemini Pro and Imagen 4 through one secure, invite-only platform — no accounts or setup needed.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -123,9 +123,8 @@ const steps = [
 
 const VEO_PAGE = "/tools/veo-3-video-generation" as const;
 const IMAGEN_PAGE = "/tools/imagen-4-image-generation" as const;
-const CHATGPT_PAGE = "/tools/chatgpt-access" as const;
 
-type PlanFeature = { label: string; href?: typeof VEO_PAGE | typeof IMAGEN_PAGE | typeof CHATGPT_PAGE };
+type PlanFeature = { label: string; href?: typeof VEO_PAGE | typeof IMAGEN_PAGE };
 
 const pricingPlans: { title: string; popular?: boolean; features: PlanFeature[] }[] = [
   {
@@ -144,7 +143,6 @@ const pricingPlans: { title: string; popular?: boolean; features: PlanFeature[] 
     features: [
       { label: "Veo 3 Lite (Unlimited)", href: VEO_PAGE },
       { label: "Gemini Pro (Chat)" },
-      { label: "ChatGPT (Testing Phase — Limited Access)", href: CHATGPT_PAGE },
       { label: "Prompts Base (Latest Niches)" },
       { label: "Nano Banana" },
       { label: "Nano Banana 2" },
@@ -158,7 +156,6 @@ const pricingPlans: { title: string; popular?: boolean; features: PlanFeature[] 
       { label: "Text to Speech" },
       { label: "Omni Flash" },
       { label: "Freebies" },
-      { label: "ChatGPT (Unlimited)", href: CHATGPT_PAGE },
     ],
   },
 ];

@@ -277,7 +277,7 @@ function BlogPost() {
             Try Farix AI today
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-sm leading-relaxed text-muted-foreground">
-            One plan unlocks Veo 3 video, Gemini Pro and ChatGPT through the secure Farix browser extension.
+            One plan unlocks Veo 3 video, Gemini Pro and Imagen 4 through the secure Farix browser extension.
           </p>
           <Link
             to="/auth"
