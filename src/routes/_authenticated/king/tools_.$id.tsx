@@ -74,8 +74,16 @@ function KingToolAccounts() {
             <ToolLogo tool={tool.data as { name: string; slug?: string | null }} className="w-14 h-14" />
           )}
           <div>
-            <h1 className="text-2xl font-semibold">{tool.data?.name ?? "Tool"}</h1>
-            <p className="text-muted-foreground text-sm mt-1">Manage cookie accounts.</p>
+            <h1 className="text-2xl font-semibold">
+              {/veo|flow/i.test(`${tool.data?.slug ?? ""} ${tool.data?.name ?? ""}`)
+                ? "Veo 3 + Whisk (Flow)"
+                : tool.data?.name ?? "Tool"}
+            </h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              {/veo|flow/i.test(`${tool.data?.slug ?? ""} ${tool.data?.name ?? ""}`)
+                ? "Manage cookie accounts — the same Flow cookies power Veo 3 and Whisk. Whisk is included in the Master extension and needs no separate package."
+                : "Manage cookie accounts."}
+            </p>
           </div>
         </div>
         <Button onClick={() => { setEditing(null); setDialogOpen(true); }}>

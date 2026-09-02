@@ -115,7 +115,7 @@ function ExtensionLab() {
           folder="extension-dev-multi/"
           files={devMultiExtensionFiles}
           onDownload={downloadMultiDevZip}
-          note="Veo 3 + Gemini Pro in one — files live in extension-dev-multi/. Cookies stay isolated per site and tool access follows the user plan (Master unlocks both)."
+          note="Veo 3 (Flow) + Gemini Pro + Whisk in one — files live in extension-dev-multi/. Whisk is included here and shares the Flow/Veo cookie pool (no second package, no separate accounts). Cookies stay isolated per site and access follows the user plan."
         />
         <LabSection
           title="Farix Gemini Extension (dev)"
