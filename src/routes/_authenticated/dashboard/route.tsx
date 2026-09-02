@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
-import { Home, LogOut, Menu, X } from "lucide-react";
+import { Home, LogOut, Menu, X, HelpCircle } from "lucide-react";
 import {
   SidebarFlowIcon,
   SidebarGeminiIcon,
