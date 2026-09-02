@@ -14,6 +14,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { planExpired } from "@/lib/queries";
 import { planName, type PlanId } from "@/lib/plans";
 import { StatCard } from "@/components/stat-card";
+import { useCreditsFor, formatCredits } from "@/lib/credits";
 import { Users as UsersIcon, Activity, Crown } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/reseller/users")({
@@ -53,6 +54,7 @@ function ResellerUsers() {
 
 
   const rows = users.data ?? [];
+  const creditsMap = useCreditsFor(rows.map((u) => u.id)).data ?? {};
   const activeUsers = rows.filter((u) => {
     const p = planOf(u);
     return u.is_active && !planExpired(p?.expires_at ?? u.expires_at);
@@ -122,6 +124,7 @@ function ResellerUsers() {
             <th className="px-5 py-3.5 font-semibold">Status</th>
             <th className="px-5 py-3.5 font-semibold">Expiry</th>
             <th className="px-5 py-3.5 font-semibold">Payment</th>
+            <th className="px-5 py-3.5 font-semibold">Credits</th>
             <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
           </tr>
         </thead>
@@ -147,6 +150,10 @@ function ResellerUsers() {
                 </Badge>
               </td>
 
+              <td className="px-5 py-4 font-medium tabular-nums">
+                {formatCredits(creditsMap[u.id])}
+              </td>
+
               <td className="px-5 py-4 text-right space-x-1">
                 <Button
                   size="sm"
@@ -166,7 +173,7 @@ function ResellerUsers() {
           ))}
           {users.data?.length === 0 && (
             <tr>
-              <td colSpan={7} className="px-5 py-14 text-center text-muted-foreground">
+              <td colSpan={8} className="px-5 py-14 text-center text-muted-foreground">
                 No users yet.
               </td>
             </tr>
