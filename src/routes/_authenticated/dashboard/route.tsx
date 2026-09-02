@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
-import { Home, LogOut, Menu, X } from "lucide-react";
+import { Coins, Home, LogOut, Menu, X } from "lucide-react";
+import { useMyCredits } from "@/lib/credits";
+import { formatCredits, VEO_CREDIT_COST } from "@/lib/credits";
+
 import {
   SidebarFlowIcon,
   SidebarGeminiIcon,
@@ -34,6 +37,8 @@ function DashboardLayout() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const { theme } = useTheme();
+  const credits = useMyCredits();
+
   const shell = cn("farix-shell min-h-screen bg-background text-foreground", theme === "dark" && "dark");
 
   useEffect(() => {
@@ -135,7 +140,20 @@ function DashboardLayout() {
         </nav>
 
         <div className="space-y-2 border-t border-sidebar-border p-3">
+          <div className="rounded-xl border border-border bg-card/60 px-3 py-2.5">
+            <div className="flex items-center justify-between text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+              <span>Veo Credits</span>
+              <Coins className="h-3.5 w-3.5" />
+            </div>
+            <div className="mt-1 font-display text-xl font-semibold tracking-tight">
+              {formatCredits(credits.data)}
+            </div>
+            <div className="mt-0.5 text-[11px] text-muted-foreground">
+              {VEO_CREDIT_COST} credits per video
+            </div>
+          </div>
           <div className="flex items-center gap-3 rounded-xl px-2 py-2">
+
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-gradient text-xs font-semibold text-white">
               {initials}
             </div>

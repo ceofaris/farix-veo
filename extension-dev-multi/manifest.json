@@ -54,7 +54,8 @@
         "https://*.labs.google/*"
       ],
       "js": [
-        "veo-lockdown.js"
+        "veo-lockdown.js",
+        "veo-credits.js"
       ],
       "run_at": "document_idle"
     },
@@ -70,5 +71,16 @@
       "run_at": "document_idle"
     }
   ],
-  "minimum_chrome_version": "100"
+  "minimum_chrome_version": "100",
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "veo-credits-main.js"
+      ],
+      "matches": [
+        "https://labs.google/*",
+        "https://*.labs.google/*"
+      ]
+    }
+  ]
 }

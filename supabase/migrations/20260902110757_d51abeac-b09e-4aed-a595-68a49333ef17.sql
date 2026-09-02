@@ -1,0 +1,10 @@
+REVOKE EXECUTE ON FUNCTION public.get_credits(uuid) FROM anon, public;
+REVOKE EXECUTE ON FUNCTION public.veo_credit_status(integer) FROM anon, public;
+REVOKE EXECUTE ON FUNCTION public.veo_charge_success(text) FROM anon, public;
+REVOKE EXECUTE ON FUNCTION public.set_user_credits(uuid, integer) FROM anon, public;
+REVOKE EXECUTE ON FUNCTION public.adjust_user_credits(uuid, integer) FROM anon, public;
+GRANT EXECUTE ON FUNCTION public.get_credits(uuid) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.veo_credit_status(integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.veo_charge_success(text) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.set_user_credits(uuid, integer) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.adjust_user_credits(uuid, integer) TO authenticated;

@@ -166,6 +166,11 @@ export const createEndUser = createServerFn({ method: "POST" })
       { user_id: uid, plan: data.plan, expires_at },
       { onConflict: "user_id" },
     );
+    // Veo credits: every new account starts on the test grant. King can top up
+    // to the paid grant (45,000) from the King panel.
+    await supabaseAdmin
+      .from("user_credits")
+      .upsert({ user_id: uid, credits: 500 }, { onConflict: "user_id" });
     return { ok: true, id: uid };
   });
 
