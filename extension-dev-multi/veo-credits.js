@@ -113,11 +113,31 @@
     }
   }
 
+  const pending = new Map(); // jobId -> attempts
+
   async function charge(jobId) {
-    const res = await send({ type: "VEO_CHARGE_SUCCESS", jobId });
-    if (res?.ok && typeof res.credits === "number") {
-      state.credits = res.credits;
-      render();
+    const key = String(jobId || "").trim();
+    if (!key) return;
+    const attempts = pending.get(key) ?? 0;
+    const res = await send({ type: "VEO_CHARGE_SUCCESS", jobId: key });
+
+    if (res?.ok) {
+      pending.delete(key);
+      if (typeof res.credits === "number") {
+        state.credits = res.credits;
+        render();
+      }
+      if (res.insufficient) notice(`Insufficient credits — you need at least ${COST} credits.`);
+      return;
+    }
+
+    // Transient failure (worker asleep, token refresh, offline) — retry a few times.
+    if (attempts < 5) {
+      pending.set(key, attempts + 1);
+      setTimeout(() => void charge(key), 2000 * (attempts + 1));
+    } else {
+      pending.delete(key);
+      console.warn("[Farix] credit charge failed", res?.error || "unknown error");
     }
   }
 
@@ -130,6 +150,7 @@
       void charge(data.id);
     }
   });
+
 
   /* ------------------------------------------------------ generation gate */
 
