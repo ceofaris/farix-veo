@@ -601,6 +601,109 @@ function KingDashboard() {
         </Card>
       </div>
 
+      {/* Users list */}
+      <Card className="p-5">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <div className="text-sm font-medium">Users</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Free trial and reseller users. Showing {shownUsers.length} of {users.length}.
+            </p>
+          </div>
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search email or name…"
+            className="h-9 w-full sm:w-64"
+          />
+        </div>
+
+        <div className="mt-4 overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/40 text-xs text-muted-foreground">
+              <tr>
+                <th className="px-3.5 py-2 text-left font-medium">Email</th>
+                <th className="px-3.5 py-2 text-left font-medium">Plan</th>
+                <th className="px-3.5 py-2 text-left font-medium">Status</th>
+                <th className="px-3.5 py-2 text-left font-medium">Created</th>
+                <th className="px-3.5 py-2 text-left font-medium">Expiry</th>
+                <th className="px-3.5 py-2" />
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {shownUsers.map((u) => {
+                const p = paidPlanByUser.get(u.id);
+                const label = p ? planName(p.plan) : "Free";
+                const expiry = p?.expires_at ?? u.expires_at ?? u.trial_ends_at ?? null;
+                const suspended = u.status === "suspended" || !u.is_active;
+                const expired = !!expiry && new Date(expiry).getTime() < now;
+                const state = suspended ? "suspended" : expired ? "expired" : "active";
+                return (
+                  <tr key={u.id} className="hover:bg-muted/30">
+                    <td className="px-3.5 py-2.5">
+                      <div className="truncate max-w-[220px]">{u.email}</div>
+                      {u.full_name && (
+                        <div className="text-[11px] text-muted-foreground truncate max-w-[220px]">
+                          {u.full_name}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-3.5 py-2.5">
+                      {label}
+                      {p && !p.is_paid && (
+                        <span className="ml-1 text-[11px] text-amber-600">unpaid</span>
+                      )}
+                    </td>
+                    <td className="px-3.5 py-2.5">
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[11px] font-medium",
+                          state === "active" && "bg-chart-2/15 text-chart-2",
+                          state === "expired" && "bg-chart-5/15 text-chart-5",
+                          state === "suspended" && "bg-destructive/15 text-destructive",
+                        )}
+                      >
+                        {state}
+                      </span>
+                    </td>
+                    <td className="px-3.5 py-2.5 text-muted-foreground">
+                      {pktDayLabel(pktDayKey(u.created_at))}
+                    </td>
+                    <td className="px-3.5 py-2.5 text-muted-foreground">
+                      {expiry ? pktDayLabel(pktDayKey(expiry)) : "—"}
+                    </td>
+                    <td className="px-3.5 py-2.5 text-right">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7"
+                        disabled={busyId === u.id}
+                        onClick={() => removeUser(u.id, u.email)}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+              {shownUsers.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-3.5 py-6 text-center text-muted-foreground">
+                    No users found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {users.length > shownUsers.length && (
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Showing first 50 matches — refine the search to find more.
+          </p>
+        )}
+      </Card>
+
+
       <InvestmentDialog
         open={invOpen}
         onOpenChange={setInvOpen}
