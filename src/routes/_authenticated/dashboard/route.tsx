@@ -6,7 +6,6 @@ import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
 import { Home, LogOut, Menu, X } from "lucide-react";
 import {
-  SidebarChatGptIcon,
   SidebarFlowIcon,
   SidebarGeminiIcon,
   SidebarPromptsIcon,
@@ -23,7 +22,6 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 
 const NAV = [
   { to: "/dashboard/veo-3", label: "Veo 3", icon: SidebarFlowIcon },
-  { to: "/dashboard/chatgpt", label: "ChatGPT", icon: SidebarChatGptIcon },
   { to: "/dashboard/gemini", label: "Gemini Pro", icon: SidebarGeminiIcon },
   { to: "/dashboard/prompts", label: "Niche Prompts", icon: SidebarPromptsIcon },
 ] as const;
