@@ -244,7 +244,7 @@
       !!toolRow &&
       (!toolRow.expires_at || new Date(toolRow.expires_at).getTime() > Date.now());
 
-    const allowedPlans = ["pro", "master"];
+    const allowedPlans = ["master"];
     const planIncludes = !!toolRow && allowedPlans.indexOf(toolRow.plan) !== -1;
 
     if (profileRow.role !== "king") {
@@ -253,7 +253,7 @@
       }
       if (!planIncludes) {
         throw new SupabaseError(
-          "Your plan does not include Veo 3. Upgrade to the Master plan.",
+          "Your plan does not include Whisk. Upgrade to the Master plan.",
           { code: "PLAN_FEATURE_LOCKED" }
         );
       }

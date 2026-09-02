@@ -1,5 +1,5 @@
 /*
- * Farix AI extension configuration.
+ * Farix AI Whisk extension configuration (standalone).
  *
  * Replace the two placeholders below with the public values from your
  * Supabase project. Never put a service_role key in this file.
@@ -8,7 +8,8 @@ globalThis.FARIX_CONFIG = Object.freeze({
   SUPABASE_URL: "https://niytnogzleyderixfkaf.supabase.co",
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5peXRub2d6bGV5ZGVyaXhma2FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxODA5NDEsImV4cCI6MjEwMDc1Njk0MX0.qIFZ9AOqqeWkKQTQ7EVLehXqdWkS0_IlZHuj2rcqQng",
 
-  FLOW_URL: "https://labs.google/fx/tools/flow",
+  /* Whisk opens the shared Flow tool URL, but uses the Veo/Flow cookie pool. */
+  WHISK_URL: "https://labs.google/fx/tools/flow/shared/tool/c0c427a4-f509-4a15-a704-21f89e512dbe",
 
   TABLES: Object.freeze({
     profiles: "profiles",
@@ -35,9 +36,9 @@ globalThis.FARIX_CONFIG = Object.freeze({
   }),
 
   STORAGE_KEYS: Object.freeze({
-    auth: "farix_auth",
-    profile: "farix_profile",
-    activeSession: "farix_active_session",
-    deviceId: "farix_device_id"
+    auth: "farix_whisk_auth",
+    profile: "farix_whisk_profile",
+    activeSession: "farix_whisk_active_session",
+    deviceId: "farix_whisk_device_id"
   })
 });

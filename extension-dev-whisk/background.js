@@ -7,7 +7,7 @@ importScripts("config.js", "supabase.js");
   const supabase = globalThis.FarixSupabase;
   const keys = config.STORAGE_KEYS;
   const FLOW_HOST = "labs.google";
-  const FLOW_URL = config.FLOW_URL;
+  const WHISK_URL = config.WHISK_URL;
 
   function storageGet(keyOrKeys) {
     return new Promise((resolve) => chrome.storage.local.get(keyOrKeys, resolve));
@@ -30,8 +30,12 @@ importScripts("config.js", "supabase.js");
     });
   }
 
-  function isFlowTab(tab) {
-    return Boolean(tab?.id && typeof tab.url === "string" && /^https:\/\/labs\.google\/fx\/tools\/flow(?:[/?#]|$)/.test(tab.url));
+  function isWhiskTab(tab) {
+    return Boolean(
+      tab?.id &&
+        typeof tab.url === "string" &&
+        /^https:\/\/labs\.google\/fx\/tools\/flow\//.test(tab.url)
+    );
   }
 
   function isExpired(expiresAt) {
@@ -179,21 +183,23 @@ importScripts("config.js", "supabase.js");
     });
   }
 
-  async function findOrOpenFlowTab() {
+  async function findOrOpenWhiskTab() {
     const tabs = await new Promise((resolve) =>
       chrome.tabs.query({ url: ["https://labs.google/fx/tools/flow*"] }, resolve)
     );
-    const current = tabs.find(isFlowTab);
+    const current =
+      tabs.find((tab) => typeof tab.url === "string" && tab.url.startsWith(WHISK_URL)) ||
+      tabs.find(isWhiskTab);
 
     if (current?.id) {
       await new Promise((resolve) =>
-        chrome.tabs.update(current.id, { active: true, url: FLOW_URL }, resolve)
+        chrome.tabs.update(current.id, { active: true, url: WHISK_URL }, resolve)
       );
       return current.id;
     }
 
     const created = await new Promise((resolve) =>
-      chrome.tabs.create({ url: FLOW_URL, active: true }, resolve)
+      chrome.tabs.create({ url: WHISK_URL, active: true }, resolve)
     );
     return created?.id;
   }
@@ -218,7 +224,7 @@ importScripts("config.js", "supabase.js");
       authenticated: Boolean(context.auth),
       email: context.profile?.email || context.auth?.user?.email || "",
       name: context.profile?.name || "",
-      plan: context.profile?.plan || "Veo",
+      plan: context.profile?.plan || "Master",
       role: context.profile?.role || "user",
       tools: context.profile?.tools || [],
       expiresAt: context.profile?.expiresAt || null,
@@ -261,7 +267,7 @@ importScripts("config.js", "supabase.js");
 
   async function injectSession() {
     const context = await getAuthenticatedContext();
-    if (!context.auth) throw new Error("Log in before starting a Veo session.");
+    if (!context.auth) throw new Error("Log in before starting a Whisk session.");
     if (isExpired(context.profile?.expiresAt)) {
       throw new Error("Your Farix plan has expired.");
     }
@@ -274,7 +280,7 @@ importScripts("config.js", "supabase.js");
     const account = supabase.unwrapRpcValue(accountPayload);
     const cookieData = account?.cookie_data || account?.cookies || account;
     const cookies = parseCookieData(cookieData);
-    if (!cookies.length) throw new Error("No managed Veo account is available right now.");
+    if (!cookies.length) throw new Error("No managed Flow account is available right now.");
 
     const accountId = account?.id || account?.account_id || null;
 
@@ -312,7 +318,7 @@ importScripts("config.js", "supabase.js");
       deviceId
     };
     await storageSet({ [keys.activeSession]: activeSession });
-    const tabId = await findOrOpenFlowTab();
+    const tabId = await findOrOpenWhiskTab();
 
     return { ...(await stateSnapshot()), tabId };
   }
@@ -366,19 +372,6 @@ importScripts("config.js", "supabase.js");
       }
     })();
     return true;
-  });
-
-  // Heartbeat port used by the content-script lockdown watchdog.
-  chrome.runtime.onConnect.addListener((port) => {
-    if (port.name !== "flow-lockdown") return;
-    port.onMessage.addListener(() => {
-      try {
-        port.postMessage({ type: "LOCKDOWN_ALIVE" });
-      } catch {
-        /* port closed */
-      }
-    });
-    port.onDisconnect.addListener(() => void chrome.runtime.lastError);
   });
 
   chrome.runtime.onInstalled.addListener(() => {
