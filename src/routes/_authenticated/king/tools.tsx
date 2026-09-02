@@ -65,13 +65,15 @@ function KingTools() {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
-        {tools.data?.map((t) => (
+        {tools.data?.map((t) => {
+          const isFlow = /veo|flow/i.test(`${t.slug} ${t.name}`);
+          return (
           <Card key={t.id} className="group hover:shadow-pop hover:-translate-y-0.5 transition-all duration-200">
             <div className="flex items-start gap-4">
               <ToolLogo tool={t} />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-semibold truncate">{t.name}</h3>
+                  <h3 className="font-semibold truncate">{isFlow ? "Veo 3 + Whisk (Flow)" : t.name}</h3>
                   <Badge
                     className={
                       t.is_active
@@ -86,8 +88,14 @@ function KingTools() {
                 <p className="text-xs text-muted-foreground truncate mt-1 flex items-center gap-1">
                   <Globe className="w-3 h-3 shrink-0" /> {t.domain}
                 </p>
+                {isFlow && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Same Flow cookies power Veo 3 and Whisk — one shared account pool.
+                  </p>
+                )}
               </div>
             </div>
+
             <div className="flex gap-2 mt-5 pt-4 border-t border-border">
               <Button asChild size="sm" variant="secondary" className="flex-1">
                 <Link to="/king/tools/$id" params={{ id: t.id }}>
