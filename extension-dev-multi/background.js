@@ -394,7 +394,8 @@ importScripts("config.js", "supabase.js");
   }
 
   async function clearData(toolId) {
-    const targets = toolId ? [toolId] : Object.keys(TOOLS);
+    // Clearing one tool clears every tool sharing its cookie jar (Veo 3 + Whisk).
+    const targets = toolId ? cookieGroup(toolId) : Object.keys(TOOLS);
     for (const id of targets) {
       await clearCookies(id);
       await setSession(id, null);
@@ -491,15 +492,15 @@ importScripts("config.js", "supabase.js");
     const detected = await activeTabTool();
     const toolId = requestedTool || detected;
     if (!toolId) {
-      throw new Error("Select a tool (Veo 3 or Gemini Pro), then inject the session.");
+      throw new Error("Select a tool (Veo 3, Gemini Pro or Whisk), then inject the session.");
     }
     const entry = tool(toolId);
 
     if (!context.profile?.access?.[toolId]) {
       throw new Error(`Your plan does not include ${entry.label}. Upgrade to the Master plan.`);
     }
-    // Veo 3 never requires the user to already be on Flow — it opens the tab itself.
-    if (toolId !== "veo" && detected && detected !== toolId) {
+    // Veo 3 and Whisk never require the user to already be on Flow.
+    if (!entry.opensOwnTab && detected && detected !== toolId) {
       throw new Error(
         `The current tab is not ${entry.label}. Farix will open ${entry.label} for you.`
       );
@@ -514,8 +515,11 @@ importScripts("config.js", "supabase.js");
 
     const accountId = account?.id || account?.account_id || null;
 
-    // Only the target tool's cookies are ever touched — no cross-injection.
+    // Only the target tool's own cookie jar is ever touched — no cross-injection.
     await clearCookies(toolId);
+    for (const sibling of cookieGroup(toolId)) {
+      if (sibling !== toolId) await setSession(sibling, null);
+    }
     try {
       await Promise.all(cookies.map((cookie) => injectCookie(toolId, cookie)));
       if (accountId) {
