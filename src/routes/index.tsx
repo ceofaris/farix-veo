@@ -465,6 +465,9 @@ function Landing() {
                       <h3 className="font-display text-xl font-bold text-foreground sm:text-2xl">
                         {plan.title}
                       </h3>
+                      {plan.subtitle && (
+                        <p className="mt-1 text-sm font-medium text-muted-foreground">{plan.subtitle}</p>
+                      )}
                       <ul className="mt-6 space-y-3">
                         {plan.features.map((feature) => (
                           <li key={feature.label} className="flex items-start gap-3 text-sm text-muted-foreground">
@@ -484,17 +487,29 @@ function Landing() {
                           </li>
                         ))}
                       </ul>
-                      <Link
-                        to="/auth"
-                        className={cn(
-                          "mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display font-semibold transition hover:opacity-90 active:scale-[0.98]",
-                          isPopular
-                            ? "bg-gradient-cta text-cta shadow-cta-glow"
-                            : "pricing-btn-secondary",
-                        )}
-                      >
-                        Contact your Reseller <ArrowRight className="h-4 w-4" />
-                      </Link>
+                      {plan.title === "Free" ? (
+                        <>
+                          <p className="mt-4 text-xs text-muted-foreground">1 hour free trial · No reseller needed to start</p>
+                          <Link
+                            to="/auth"
+                            className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display font-semibold transition hover:opacity-90 active:scale-[0.98] pricing-btn-secondary"
+                          >
+                            Start Free Trail <ArrowRight className="h-4 w-4" />
+                          </Link>
+                        </>
+                      ) : (
+                        <Link
+                          to="/auth"
+                          className={cn(
+                            "mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display font-semibold transition hover:opacity-90 active:scale-[0.98]",
+                            isPopular
+                              ? "bg-gradient-cta text-cta shadow-cta-glow"
+                              : "pricing-btn-secondary",
+                          )}
+                        >
+                          Contact your Reseller <ArrowRight className="h-4 w-4" />
+                        </Link>
+                      )}
                     </div>
                   </div>
                 );
