@@ -5,6 +5,8 @@ export const TOOL_LINKS = [
 
 export const PAGE_LINKS = [
   { label: "About Us", to: "/p/about-us" },
+  { label: "Blog", to: "/blog" },
+  { label: "Tools", to: "/tools/veo-3-video-generation" },
   { label: "Contact Us", to: "/p/contact-us" },
   { label: "Privacy Policy", to: "/p/privacy-policy" },
   { label: "Terms and Conditions", to: "/p/terms-and-conditions" },

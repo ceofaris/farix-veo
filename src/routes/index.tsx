@@ -250,7 +250,6 @@ function FaqAccordion() {
 
 const NAV_LINKS = [
   { label: "Home", href: "#" },
-  { label: "About", href: "#how" },
   { label: "Pricing", href: "#pricing" },
   { label: "FAQ", href: "#faq" },
 ];
