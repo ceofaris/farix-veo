@@ -4,6 +4,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/panel-layout";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useServerFn } from "@tanstack/react-start";
+import { deleteAuthUser } from "@/lib/admin.functions";
+
 import { ToolLogo } from "@/components/tool-logo";
 import { formatRs } from "@/components/mark-paid-dialog";
 import { InvestmentDialog } from "@/components/investment-dialog";
@@ -40,7 +44,9 @@ import {
   Trash2,
   ChevronRight,
   Crown,
+  Sparkles,
 } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -132,6 +138,40 @@ function KingDashboard() {
   const weekKeys = new Set(lastPktDays(7));
   const newToday = users.filter((u) => pktDayKey(u.created_at) === todayKey).length;
   const newWeek = users.filter((u) => weekKeys.has(pktDayKey(u.created_at))).length;
+  const monthPrefix = pktMonthKey();
+  const newMonth = users.filter((u) => pktDayKey(u.created_at).slice(0, 7) === monthPrefix).length;
+
+  /** Paid plan (pro/master) per user, from user_plans. */
+  const paidPlanByUser = useMemo(() => {
+    const map = new Map<string, { plan: string; is_paid: boolean; expires_at: string }>();
+    for (const r of rows) {
+      const cur = map.get(r.user_id);
+      if (!cur || (r.is_paid && !cur.is_paid)) {
+        map.set(r.user_id, { plan: r.plan, is_paid: r.is_paid, expires_at: r.expires_at });
+      }
+    }
+    return map;
+  }, [rows]);
+
+  /** Free = self-signup trial users (signup_source = 'public'). */
+  const freeUsers = useMemo(
+    () => users.filter((u) => (u.signup_source ?? "invite") === "public"),
+    [users],
+  );
+  const freeMonth = freeUsers.filter(
+    (u) => pktDayKey(u.created_at).slice(0, 7) === monthPrefix,
+  ).length;
+  /** Converted = signed up free AND now holds a PAID pro/master plan. */
+  const convertedUsers = useMemo(
+    () =>
+      freeUsers.filter((u) => {
+        const p = paidPlanByUser.get(u.id);
+        return !!p && p.is_paid && (p.plan === "pro" || p.plan === "master");
+      }),
+    [freeUsers, paidPlanByUser],
+  );
+  const convRate =
+    freeUsers.length > 0 ? Math.round((convertedUsers.length / freeUsers.length) * 100) : 0;
 
   const planCounts = useMemo(() => {
     let pro = 0;
@@ -142,6 +182,7 @@ function KingDashboard() {
     }
     return { pro, master };
   }, [rows]);
+
 
   const cookiesByTool = useMemo(() => {
     const map = new Map<string, { active: number; expired: number }>();
@@ -209,6 +250,37 @@ function KingDashboard() {
   }, [rows, resellers]);
 
   const activeResellers = resellers.filter((r) => r.is_active).length;
+  const [q, setQ] = useState("");
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const removeUserFn = useServerFn(deleteAuthUser);
+
+  const shownUsers = useMemo(() => {
+    const needle = q.trim().toLowerCase();
+    const list = needle
+      ? users.filter(
+          (u) =>
+            u.email.toLowerCase().includes(needle) ||
+            (u.full_name ?? "").toLowerCase().includes(needle),
+        )
+      : users;
+    return list.slice(0, 50);
+  }, [users, q]);
+
+  async function removeUser(id: string, email: string) {
+    if (!confirm(`Permanently delete ${email}? This cannot be undone.`)) return;
+    setBusyId(id);
+    try {
+      await removeUserFn({ data: { id } });
+      toast.success("User deleted");
+      qc.invalidateQueries({ queryKey: kingProfilesQuery.queryKey });
+      qc.invalidateQueries({ queryKey: masterPlansQuery.queryKey });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Delete failed");
+    } finally {
+      setBusyId(null);
+    }
+  }
+
 
   async function deleteInvestment(id: string) {
     if (!confirm("Delete this investment entry?")) return;
@@ -256,6 +328,28 @@ function KingDashboard() {
           hint={`${activeUsers} active · ${expiredUsers} expired`}
           tone="chart-3"
         />
+        <Tile
+          icon={CalendarClock}
+          label="Users this month"
+          value={dash(newMonth)}
+          hint={`${newToday} today · ${newWeek} this week`}
+          tone="chart-3"
+        />
+        <Tile
+          icon={Sparkles}
+          label="Free signups"
+          value={dash(freeUsers.length)}
+          hint={`${freeMonth} this month`}
+          tone="primary"
+        />
+        <Tile
+          icon={TrendingUp}
+          label="Free → Paid"
+          value={dash(convertedUsers.length)}
+          hint={`${convRate}% conversion`}
+          tone="chart-2"
+        />
+
         <Tile
           icon={BadgeCheck}
           label="Paid Plans"
@@ -541,6 +635,109 @@ function KingDashboard() {
           </div>
         </Card>
       </div>
+
+      {/* Users list */}
+      <Card className="p-5">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <div className="text-sm font-medium">Users</div>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Free trial and reseller users. Showing {shownUsers.length} of {users.length}.
+            </p>
+          </div>
+          <Input
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+            placeholder="Search email or name…"
+            className="h-9 w-full sm:w-64"
+          />
+        </div>
+
+        <div className="mt-4 overflow-x-auto rounded-xl border border-border">
+          <table className="w-full text-sm">
+            <thead className="bg-muted/40 text-xs text-muted-foreground">
+              <tr>
+                <th className="px-3.5 py-2 text-left font-medium">Email</th>
+                <th className="px-3.5 py-2 text-left font-medium">Plan</th>
+                <th className="px-3.5 py-2 text-left font-medium">Status</th>
+                <th className="px-3.5 py-2 text-left font-medium">Created</th>
+                <th className="px-3.5 py-2 text-left font-medium">Expiry</th>
+                <th className="px-3.5 py-2" />
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {shownUsers.map((u) => {
+                const p = paidPlanByUser.get(u.id);
+                const label = p ? planName(p.plan) : "Free";
+                const expiry = p?.expires_at ?? u.expires_at ?? u.trial_ends_at ?? null;
+                const suspended = u.status === "suspended" || !u.is_active;
+                const expired = !!expiry && new Date(expiry).getTime() < now;
+                const state = suspended ? "suspended" : expired ? "expired" : "active";
+                return (
+                  <tr key={u.id} className="hover:bg-muted/30">
+                    <td className="px-3.5 py-2.5">
+                      <div className="truncate max-w-[220px]">{u.email}</div>
+                      {u.full_name && (
+                        <div className="text-[11px] text-muted-foreground truncate max-w-[220px]">
+                          {u.full_name}
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-3.5 py-2.5">
+                      {label}
+                      {p && !p.is_paid && (
+                        <span className="ml-1 text-[11px] text-amber-600">unpaid</span>
+                      )}
+                    </td>
+                    <td className="px-3.5 py-2.5">
+                      <span
+                        className={cn(
+                          "rounded-full px-2 py-0.5 text-[11px] font-medium",
+                          state === "active" && "bg-chart-2/15 text-chart-2",
+                          state === "expired" && "bg-chart-5/15 text-chart-5",
+                          state === "suspended" && "bg-destructive/15 text-destructive",
+                        )}
+                      >
+                        {state}
+                      </span>
+                    </td>
+                    <td className="px-3.5 py-2.5 text-muted-foreground">
+                      {pktDayLabel(pktDayKey(u.created_at))}
+                    </td>
+                    <td className="px-3.5 py-2.5 text-muted-foreground">
+                      {expiry ? pktDayLabel(pktDayKey(expiry)) : "—"}
+                    </td>
+                    <td className="px-3.5 py-2.5 text-right">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-7 w-7"
+                        disabled={busyId === u.id}
+                        onClick={() => removeUser(u.id, u.email)}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </td>
+                  </tr>
+                );
+              })}
+              {shownUsers.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="px-3.5 py-6 text-center text-muted-foreground">
+                    No users found.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+        {users.length > shownUsers.length && (
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Showing first 50 matches — refine the search to find more.
+          </p>
+        )}
+      </Card>
+
 
       <InvestmentDialog
         open={invOpen}
