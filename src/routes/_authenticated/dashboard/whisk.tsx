@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { ExternalLink, Download, Sparkles, Image as ImageIcon, Wand2, Layers, Palette, Zap } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ExternalLink, Sparkles, Image as ImageIcon, Wand2, Layers, Palette, Zap } from "lucide-react";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { FeatureCard, VideoGuide } from "@/components/dashboard/ui";
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/whisk")({
 });
 
 function WhiskPage() {
-  const { findTool, downloadExtension, hasWhisk, loading } = useMyTools();
+  const { findTool, hasWhisk, loading } = useMyTools();
   // Whisk shares the Veo 3 extension build and cookie pool.
   const tool = findTool(/veo|flow/i);
 
@@ -50,26 +50,21 @@ function WhiskPage() {
               </span>
             </div>
             <p className="mt-1 text-sm text-muted-foreground">
-              Uses the same managed session as Veo 3 — inject once from the extension.
+              Uses the same managed session as Veo 3 — inject once from the extension.{" "}
+              <Link to="/dashboard/extension-help" className="text-brand-cyan hover:underline">
+                Extension & Help
+              </Link>
             </p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <a
-            href={WHISK_URL}
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-5 py-2.5 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
-          >
-            <ExternalLink className="h-4 w-4" /> Open Whisk
-          </a>
-          <button
-            onClick={() => downloadExtension(tool?.id)}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 font-display text-sm font-semibold text-foreground transition-colors hover:bg-accent"
-          >
-            <Download className="h-4 w-4" /> Download Extension
-          </button>
-        </div>
+        <a
+          href={WHISK_URL}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-5 py-2.5 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
+        >
+          <ExternalLink className="h-4 w-4" /> Open Whisk
+        </a>
       </header>
 
       <section className="space-y-4">
@@ -107,8 +102,6 @@ function WhiskPage() {
           />
         </div>
       </section>
-
-      <VideoGuide />
     </div>
   );
 }

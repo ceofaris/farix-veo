@@ -1,7 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ExternalLink,
-  Download,
   Sparkles,
   Search,
   Image as ImageIcon,
@@ -35,7 +34,7 @@ export const Route = createFileRoute("/_authenticated/dashboard/gemini")({
 });
 
 function GeminiPage() {
-  const { findTool, downloadExtension, hasGemini, loading } = useMyTools();
+  const { findTool, hasGemini, loading } = useMyTools();
   const tool = findTool(/gemini/i);
 
   if (loading) return <div className="p-6 text-sm text-muted-foreground">Loading…</div>;
@@ -53,24 +52,22 @@ function GeminiPage() {
                 <span className="h-1.5 w-1.5 rounded-full bg-success" /> Active
               </span>
             </div>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Need the extension?{" "}
+              <Link to="/dashboard/extension-help" className="text-brand-cyan hover:underline">
+                Extension & Help
+              </Link>
+            </p>
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-2">
-          <a
-            href="https://gemini.google.com"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-5 py-2.5 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
-          >
-            <ExternalLink className="h-4 w-4" /> Open Gemini
-          </a>
-          <button
-            onClick={() => downloadExtension(tool?.id)}
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 font-display text-sm font-semibold text-foreground transition-colors hover:bg-accent"
-          >
-            <Download className="h-4 w-4" /> Download Extension
-          </button>
-        </div>
+        <a
+          href="https://gemini.google.com"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-5 py-2.5 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"
+        >
+          <ExternalLink className="h-4 w-4" /> Open Gemini
+        </a>
       </header>
 
       <section className="space-y-4">
@@ -108,8 +105,6 @@ function GeminiPage() {
           />
         </div>
       </section>
-
-      <VideoGuide />
     </div>
   );
 }
