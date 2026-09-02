@@ -43,6 +43,7 @@ import { Route as AuthenticatedKingResellersRouteImport } from './routes/_authen
 import { Route as AuthenticatedKingNichesRouteImport } from './routes/_authenticated/king/niches'
 import { Route as AuthenticatedKingExtensionLabRouteImport } from './routes/_authenticated/king/extension-lab'
 import { Route as AuthenticatedKingBlogRouteImport } from './routes/_authenticated/king/blog'
+import { Route as AuthenticatedDashboardWhiskRouteImport } from './routes/_authenticated/dashboard/whisk'
 import { Route as AuthenticatedDashboardVeo3RouteImport } from './routes/_authenticated/dashboard/veo-3'
 import { Route as AuthenticatedDashboardPromptsRouteImport } from './routes/_authenticated/dashboard/prompts'
 import { Route as AuthenticatedDashboardGeminiRouteImport } from './routes/_authenticated/dashboard/gemini'
@@ -230,6 +231,12 @@ const AuthenticatedKingBlogRoute = AuthenticatedKingBlogRouteImport.update({
   path: '/blog',
   getParentRoute: () => AuthenticatedKingRouteRoute,
 } as any)
+const AuthenticatedDashboardWhiskRoute =
+  AuthenticatedDashboardWhiskRouteImport.update({
+    id: '/whisk',
+    path: '/whisk',
+    getParentRoute: () => AuthenticatedDashboardRouteRoute,
+  } as any)
 const AuthenticatedDashboardVeo3Route =
   AuthenticatedDashboardVeo3RouteImport.update({
     id: '/veo-3',
@@ -286,6 +293,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
+  '/dashboard/whisk': typeof AuthenticatedDashboardWhiskRoute
   '/king/blog': typeof AuthenticatedKingBlogRoute
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/niches': typeof AuthenticatedKingNichesRoute
@@ -323,6 +331,7 @@ export interface FileRoutesByTo {
   '/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
+  '/dashboard/whisk': typeof AuthenticatedDashboardWhiskRoute
   '/king/blog': typeof AuthenticatedKingBlogRoute
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/niches': typeof AuthenticatedKingNichesRoute
@@ -365,6 +374,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/_authenticated/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/_authenticated/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
+  '/_authenticated/dashboard/whisk': typeof AuthenticatedDashboardWhiskRoute
   '/_authenticated/king/blog': typeof AuthenticatedKingBlogRoute
   '/_authenticated/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/_authenticated/king/niches': typeof AuthenticatedKingNichesRoute
@@ -407,6 +417,7 @@ export interface FileRouteTypes {
     | '/dashboard/gemini'
     | '/dashboard/prompts'
     | '/dashboard/veo-3'
+    | '/dashboard/whisk'
     | '/king/blog'
     | '/king/extension-lab'
     | '/king/niches'
@@ -444,6 +455,7 @@ export interface FileRouteTypes {
     | '/dashboard/gemini'
     | '/dashboard/prompts'
     | '/dashboard/veo-3'
+    | '/dashboard/whisk'
     | '/king/blog'
     | '/king/extension-lab'
     | '/king/niches'
@@ -485,6 +497,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/gemini'
     | '/_authenticated/dashboard/prompts'
     | '/_authenticated/dashboard/veo-3'
+    | '/_authenticated/dashboard/whisk'
     | '/_authenticated/king/blog'
     | '/_authenticated/king/extension-lab'
     | '/_authenticated/king/niches'
@@ -763,6 +776,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKingBlogRouteImport
       parentRoute: typeof AuthenticatedKingRouteRoute
     }
+    '/_authenticated/dashboard/whisk': {
+      id: '/_authenticated/dashboard/whisk'
+      path: '/whisk'
+      fullPath: '/dashboard/whisk'
+      preLoaderRoute: typeof AuthenticatedDashboardWhiskRouteImport
+      parentRoute: typeof AuthenticatedDashboardRouteRoute
+    }
     '/_authenticated/dashboard/veo-3': {
       id: '/_authenticated/dashboard/veo-3'
       path: '/veo-3'
@@ -805,6 +825,7 @@ interface AuthenticatedDashboardRouteRouteChildren {
   AuthenticatedDashboardGeminiRoute: typeof AuthenticatedDashboardGeminiRoute
   AuthenticatedDashboardPromptsRoute: typeof AuthenticatedDashboardPromptsRoute
   AuthenticatedDashboardVeo3Route: typeof AuthenticatedDashboardVeo3Route
+  AuthenticatedDashboardWhiskRoute: typeof AuthenticatedDashboardWhiskRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
 }
 
@@ -813,6 +834,7 @@ const AuthenticatedDashboardRouteRouteChildren: AuthenticatedDashboardRouteRoute
     AuthenticatedDashboardGeminiRoute: AuthenticatedDashboardGeminiRoute,
     AuthenticatedDashboardPromptsRoute: AuthenticatedDashboardPromptsRoute,
     AuthenticatedDashboardVeo3Route: AuthenticatedDashboardVeo3Route,
+    AuthenticatedDashboardWhiskRoute: AuthenticatedDashboardWhiskRoute,
     AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   }
 
