@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Farix AI",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "One managed Farix AI extension for Veo 3 and Gemini Pro sessions.",
   "permissions": [
     "storage",
@@ -38,17 +38,6 @@
   "content_scripts": [
     {
       "matches": [
-        "https://labs.google/*",
-        "https://*.labs.google/*"
-      ],
-      "js": [
-        "veo-credits.js"
-      ],
-      "run_at": "document_start",
-      "all_frames": false
-    },
-    {
-      "matches": [
         "https://gemini.google.com/*",
         "https://accounts.google.com/*",
         "https://myaccount.google.com/*"
@@ -81,16 +70,5 @@
       "run_at": "document_idle"
     }
   ],
-  "minimum_chrome_version": "100",
-  "web_accessible_resources": [
-    {
-      "resources": [
-        "veo-credits-main.js"
-      ],
-      "matches": [
-        "https://labs.google/*",
-        "https://*.labs.google/*"
-      ]
-    }
-  ]
+  "minimum_chrome_version": "100"
 }

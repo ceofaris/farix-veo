@@ -553,41 +553,6 @@ importScripts("config.js", "supabase.js");
     }
   }
 
-  /* ---------------------------------------------------------- veo credits */
-
-  // 30 credits per SUCCESSFUL Veo video. Reads are cheap; the deduction itself
-  // happens in Postgres (veo_charge_success) and is idempotent per media id.
-  async function veoCreditStatus(expectedOutputs) {
-    const { auth } = await authContext();
-    if (!auth?.access_token) throw new Error("Please log in to Farix first.");
-    const raw = await supabase.rpc(
-      "veo_credit_status",
-      { p_expected_outputs: Number(expectedOutputs) || 1 },
-      auth.access_token
-    );
-    const value = supabase.unwrapRpcValue(raw) || {};
-    return {
-      credits: Number(value.credits || 0),
-      costPerVideo: Number(value.cost_per_video || 30),
-      allowed: Boolean(value.allowed),
-      allowedOutputs: Number(value.allowed_outputs || 0)
-    };
-  }
-
-  async function veoChargeSuccess(jobId) {
-    const { auth } = await authContext();
-    if (!auth?.access_token) throw new Error("Please log in to Farix first.");
-    if (!jobId) throw new Error("Missing video id.");
-    const raw = await supabase.rpc("veo_charge_success", { p_job_id: String(jobId) }, auth.access_token);
-    const value = supabase.unwrapRpcValue(raw) || {};
-    return {
-      credits: Number(value.credits || 0),
-      charged: Boolean(value.charged),
-      duplicate: Boolean(value.duplicate),
-      insufficient: Boolean(value.insufficient)
-    };
-  }
-
   /* -------------------------------------------------------------- messaging */
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -626,12 +591,6 @@ importScripts("config.js", "supabase.js");
             break;
           case "CLEAR_SESSION":
             sendResponse({ ok: true, state: await clearData(message.tool || null) });
-            break;
-          case "VEO_CREDIT_STATUS":
-            sendResponse({ ok: true, ...(await veoCreditStatus(message.expectedOutputs)) });
-            break;
-          case "VEO_CHARGE_SUCCESS":
-            sendResponse({ ok: true, ...(await veoChargeSuccess(message.jobId)) });
             break;
           case "LOGOUT":
             sendResponse({ ok: true, state: await logout() });

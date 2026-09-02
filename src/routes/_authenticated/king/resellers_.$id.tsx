@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PageHeader, TableShell } from "@/components/panel-layout";
 import { StatCard } from "@/components/stat-card";
-import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert, Wallet, Coins } from "lucide-react";
+import { ArrowLeft, Plus, Pencil, Trash2, Users as UsersIcon, BadgeCheck, BadgeAlert, Wallet } from "lucide-react";
 import { UserFormDialog, UserRow } from "@/components/user-form-dialog";
 import { useServerFn } from "@tanstack/react-start";
 import { deleteAuthUser, setAccountPaid } from "@/lib/admin.functions";
@@ -14,8 +14,6 @@ import { toast } from "sonner";
 import { planExpired } from "@/lib/queries";
 import { planName, type PlanId } from "@/lib/plans";
 import { MarkPaidDialog, PayTarget, formatRs } from "@/components/mark-paid-dialog";
-import { CreditsDialog, type CreditTarget } from "@/components/credits-dialog";
-import { useCreditsFor, formatCredits } from "@/lib/credits";
 
 export const Route = createFileRoute("/_authenticated/king/resellers_/$id")({
   component: KingResellerUsers,
@@ -48,7 +46,6 @@ function KingResellerUsers() {
   const [editing, setEditing] = useState<UserRow | null>(null);
   const [filter, setFilter] = useState<Filter>("all");
   const [payTarget, setPayTarget] = useState<PayTarget | null>(null);
-  const [creditTarget, setCreditTarget] = useState<CreditTarget | null>(null);
   const del = useServerFn(deleteAuthUser);
   const markPaid = useServerFn(setAccountPaid);
   const qc = useQueryClient();
@@ -87,8 +84,6 @@ function KingResellerUsers() {
   });
 
   const rows = users.data ?? [];
-  const creditsQuery = useCreditsFor(rows.map((u) => u.id));
-  const creditsMap = creditsQuery.data ?? {};
   const filtered = rows.filter((u) => {
     const p = planOf(u);
     if (filter === "paid") return !!p?.is_paid;
@@ -185,7 +180,6 @@ function KingResellerUsers() {
             <th className="px-5 py-3.5 font-semibold">Plan</th>
             <th className="px-5 py-3.5 font-semibold">Expiry</th>
             <th className="px-5 py-3.5 font-semibold">Payment</th>
-            <th className="px-5 py-3.5 font-semibold">Credits</th>
             <th className="px-5 py-3.5 font-semibold text-right">Actions</th>
           </tr>
         </thead>
@@ -223,20 +217,6 @@ function KingResellerUsers() {
                   ) : (
                     <Badge variant="secondary">Unpaid</Badge>
                   )}
-                </td>
-                <td className="px-5 py-4 whitespace-nowrap">
-                  <button
-                    className="font-medium tabular-nums underline-offset-4 hover:underline"
-                    onClick={() =>
-                      setCreditTarget({
-                        id: u.id,
-                        name: u.full_name || u.email,
-                        credits: creditsMap[u.id] ?? 0,
-                      })
-                    }
-                  >
-                    {formatCredits(creditsMap[u.id])}
-                  </button>
                 </td>
                 <td className="px-5 py-4 text-right space-x-1 whitespace-nowrap">
                   {p && p.is_paid && (
@@ -280,20 +260,6 @@ function KingResellerUsers() {
                   >
                     <Pencil className="w-4 h-4" />
                   </Button>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    title="Manage credits"
-                    onClick={() =>
-                      setCreditTarget({
-                        id: u.id,
-                        name: u.full_name || u.email,
-                        credits: creditsMap[u.id] ?? 0,
-                      })
-                    }
-                  >
-                    <Coins className="w-4 h-4" />
-                  </Button>
                   <Button size="sm" variant="ghost" onClick={() => handleDelete(u.id)}>
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -304,19 +270,13 @@ function KingResellerUsers() {
 
           {filtered.length === 0 && (
             <tr>
-              <td colSpan={6} className="px-5 py-14 text-center text-muted-foreground">
+              <td colSpan={5} className="px-5 py-14 text-center text-muted-foreground">
                 No users match this filter.
               </td>
             </tr>
           )}
         </tbody>
       </TableShell>
-
-      <CreditsDialog
-        target={creditTarget}
-        onOpenChange={(v) => !v && setCreditTarget(null)}
-        onSaved={() => creditsQuery.refetch()}
-      />
 
       <MarkPaidDialog
         target={payTarget}
