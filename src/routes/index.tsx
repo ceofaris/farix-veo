@@ -517,14 +517,6 @@ function Landing() {
             </div>
           </Reveal>
 
-          <Reveal delay={200}>
-            <p className="mt-12 text-center text-sm text-muted-foreground">
-              Already have credentials?{" "}
-              <Link to="/auth" className="font-medium text-brand-pink hover:underline">
-                Sign in here →
-              </Link>
-            </p>
-          </Reveal>
         </div>
       </section>
 
