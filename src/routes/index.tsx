@@ -126,12 +126,12 @@ const IMAGEN_PAGE = "/tools/imagen-4-image-generation" as const;
 
 type PlanFeature = { label: string; href?: typeof VEO_PAGE | typeof IMAGEN_PAGE };
 
-const pricingPlans: { title: string; popular?: boolean; features: PlanFeature[] }[] = [
+const pricingPlans: { title: string; subtitle?: string; popular?: boolean; features: PlanFeature[] }[] = [
   {
-    title: "Pro",
+    title: "Free",
+    subtitle: "Free trial",
     features: [
-      { label: "Veo 3 Lite (Unlimited)", href: VEO_PAGE },
-      { label: "Prompts Base" },
+      { label: "Veo 3 Lite (Unlimited) — 1 hour access", href: VEO_PAGE },
       { label: "Nano Banana" },
       { label: "Nano Banana 2" },
       { label: "Imagen 4 Ultra", href: IMAGEN_PAGE },
@@ -143,6 +143,7 @@ const pricingPlans: { title: string; popular?: boolean; features: PlanFeature[] 
     features: [
       { label: "Veo 3 Lite (Unlimited)", href: VEO_PAGE },
       { label: "Gemini Pro (Chat)" },
+      { label: "Whisk" },
       { label: "Prompts Base (Latest Niches)" },
       { label: "Nano Banana" },
       { label: "Nano Banana 2" },
@@ -151,11 +152,13 @@ const pricingPlans: { title: string; popular?: boolean; features: PlanFeature[] 
     ],
   },
   {
-    title: "Coming Soon",
+    title: "Pro",
     features: [
-      { label: "Text to Speech" },
-      { label: "Omni Flash" },
-      { label: "Freebies" },
+      { label: "Veo 3 Lite (Unlimited)", href: VEO_PAGE },
+      { label: "Prompts Base" },
+      { label: "Nano Banana" },
+      { label: "Nano Banana 2" },
+      { label: "Imagen 4 Ultra", href: IMAGEN_PAGE },
     ],
   },
 ];
