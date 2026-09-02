@@ -264,9 +264,23 @@ importScripts("config.js", "supabase.js");
       chrome.tabs.query({ active: true, currentWindow: true }, resolve)
     );
     const url = tab?.url || "";
-    const match = Object.values(TOOLS).find((item) => item.urlPattern.test(url));
+    // Narrower tools (Whisk shares labs.google with Veo) are matched first.
+    const ordered = Object.values(TOOLS).sort(
+      (a, b) => (b.sharesCookiesWith ? 1 : 0) - (a.sharesCookiesWith ? 1 : 0)
+    );
+    const match = ordered.find((item) => item.urlPattern.test(url));
     return match?.id || null;
   }
+
+  /** Tool ids that share the exact same cookie jar (Veo 3 + Whisk). */
+  function cookieGroup(toolId) {
+    const entry = tool(toolId);
+    const root = entry.sharesCookiesWith || entry.id;
+    return Object.values(TOOLS)
+      .filter((item) => (item.sharesCookiesWith || item.id) === root)
+      .map((item) => item.id);
+  }
+
 
   /* -------------------------------------------------------------- sessions */
 
