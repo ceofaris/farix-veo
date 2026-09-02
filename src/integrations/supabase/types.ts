@@ -140,6 +140,41 @@ export type Database = {
         }
         Relationships: []
       }
+      credit_ledger: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          job_id: string | null
+          reason: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          job_id?: string | null
+          reason: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          job_id?: string | null
+          reason?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credit_ledger_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       extension_versions: {
         Row: {
           created_at: string
@@ -428,6 +463,35 @@ export type Database = {
         }
         Relationships: []
       }
+      user_credits: {
+        Row: {
+          created_at: string
+          credits: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credits?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credits?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_credits_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_login_ips: {
         Row: {
           first_seen: string
@@ -506,7 +570,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      adjust_user_credits: {
+        Args: { p_delta: number; p_user_id: string }
+        Returns: Json
+      }
       clear_active_session: { Args: never; Returns: Json }
+      get_credits: { Args: { _user_id: string }; Returns: number }
       get_random_chatgpt_account: {
         Args: never
         Returns: {
@@ -551,6 +620,15 @@ export type Database = {
       normalize_email: { Args: { _email: string }; Returns: string }
       record_login_ip: { Args: { p_ip: string }; Returns: Json }
       set_active_session: { Args: { p_tool_account_id: string }; Returns: Json }
+      set_user_credits: {
+        Args: { p_credits: number; p_user_id: string }
+        Returns: Json
+      }
+      veo_charge_success: { Args: { p_job_id: string }; Returns: Json }
+      veo_credit_status: {
+        Args: { p_expected_outputs?: number }
+        Returns: Json
+      }
     }
     Enums: {
       [_ in never]: never
