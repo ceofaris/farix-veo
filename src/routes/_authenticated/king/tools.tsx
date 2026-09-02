@@ -31,17 +31,18 @@ function KingTools() {
       const order = (t: ToolRow) => {
         const k = `${t.slug} ${t.name}`;
         if (/veo|flow/i.test(k)) return 0;
-        if (/chat\s*-?\s*gpt/i.test(k)) return 1;
-        if (/gemini/i.test(k)) return 2;
-        return 3;
+        if (/gemini/i.test(k)) return 1;
+        return 2;
       };
-      return (data as ToolRow[]).sort((a, b) => order(a) - order(b));
+      return (data as ToolRow[])
+        .filter((t) => !/chat\s*-?\s*gpt/i.test(`${t.slug} ${t.name}`))
+        .sort((a, b) => order(a) - order(b));
     },
   });
 
   return (
     <div>
-      <PageHeader title="Tools" description="Veo 3, ChatGPT and Gemini Pro are the platform's fixed tools." />
+      <PageHeader title="Tools" description="Veo 3 and Gemini Pro are the platform's fixed tools." />
 
       {tools.isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5 mt-6">
@@ -58,7 +59,7 @@ function KingTools() {
           </div>
           <h2 className="mt-5 text-lg font-semibold">No tools available</h2>
           <p className="mt-2 text-sm text-muted-foreground max-w-sm">
-            Veo 3 and ChatGPT are configured at the platform level.
+            Veo 3 and Gemini Pro are configured at the platform level.
           </p>
         </Card>
       )}

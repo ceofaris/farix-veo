@@ -69,7 +69,7 @@ export function ExpiredScreen({ trial = false }: { trial?: boolean }) {
         <h1 className="mt-5 font-display text-2xl font-semibold tracking-tight">Your plan is expired</h1>
         <p className="mt-2 text-sm text-muted-foreground">
           {trial
-            ? "Your 1 hour free trial has ended. Upgrade to keep using Veo 3 and unlock ChatGPT, Gemini Pro and Niche Prompts."
+            ? "Your 1 hour free trial has ended. Upgrade to keep using Veo 3 and unlock Gemini Pro and Niche Prompts."
             : "Your access has ended. Upgrade to continue using Farix AI tools."}
         </p>
         <div className="mt-6">
@@ -103,7 +103,7 @@ export function TrialBanner({ endsAt }: { endsAt: string }) {
         {mins}m {String(secs).padStart(2, "0")}s remaining — Veo 3 unlocked
       </span>
       <span className="text-xs text-muted-foreground">
-        Purchase a plan to use ChatGPT, Gemini Pro and Prompts
+        Purchase a plan to use Gemini Pro and Prompts
       </span>
       <UpgradeButton className="ml-auto px-4 py-2 text-xs" />
     </div>

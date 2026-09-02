@@ -65,10 +65,9 @@ export const Route = createFileRoute("/_authenticated/king/")({
   }),
 });
 
-const TOOL_ORDER = ["veo-3", "chatgpt", "gemini"];
-const TOOL_FEATURE: Record<string, "veo" | "chatgpt" | "gemini"> = {
+const TOOL_ORDER = ["veo-3", "gemini"];
+const TOOL_FEATURE: Record<string, "veo" | "gemini"> = {
   "veo-3": "veo",
-  chatgpt: "chatgpt",
   gemini: "gemini",
 };
 

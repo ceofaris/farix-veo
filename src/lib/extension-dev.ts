@@ -7,12 +7,6 @@ const veoModules = import.meta.glob("/extension-dev/**/*", {
   eager: true,
 }) as Record<string, string>;
 
-const chatgptModules = import.meta.glob("/extension-dev-chatgpt/**/*", {
-  query: "?raw",
-  import: "default",
-  eager: true,
-}) as Record<string, string>;
-
 const multiModules = import.meta.glob("/extension-dev-multi/**/*", {
   query: "?raw",
   import: "default",
@@ -39,10 +33,6 @@ function toFiles(modules: Record<string, string>, prefix: string): DevFile[] {
 }
 
 export const devExtensionFiles: DevFile[] = toFiles(veoModules, "/extension-dev/");
-export const devChatgptExtensionFiles: DevFile[] = toFiles(
-  chatgptModules,
-  "/extension-dev-chatgpt/",
-);
 export const devMultiExtensionFiles: DevFile[] = toFiles(
   multiModules,
   "/extension-dev-multi/",
@@ -93,9 +83,6 @@ export function downloadDevZip() {
   downloadZip(devExtensionFiles, "farix-veo-extension-dev.zip");
 }
 
-export function downloadChatgptDevZip() {
-  downloadZip(devChatgptExtensionFiles, "farix-chatgpt-extension-dev.zip");
-}
 
 export function downloadMultiDevZip() {
   downloadZip(devMultiExtensionFiles, "farix-multi-extension-dev.zip");

@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import { assetUrl } from "@/lib/asset-url";
 import flowMark from "@/assets/flow-mark-v2.png.asset.json";
-import chatgptMark from "@/assets/chatgpt-mark.png.asset.json";
 
 /**
  * Sidebar tool icons — drawn as inline SVGs with currentColor so they stay
@@ -21,18 +20,6 @@ export function SidebarFlowIcon({ className }: IconProps) {
       alt=""
       aria-hidden
       className={cn(base, "object-contain dark:invert", className, "w-[22px]")}
-    />
-  );
-}
-
-/** Official ChatGPT mark — same asset as King Tools */
-export function SidebarChatGptIcon({ className }: IconProps) {
-  return (
-    <img
-      src={assetUrl(chatgptMark)}
-      alt=""
-      aria-hidden
-      className={cn(base, "object-contain dark:invert", className)}
     />
   );
 }

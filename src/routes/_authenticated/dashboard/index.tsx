@@ -23,12 +23,12 @@ export const Route = createFileRoute("/_authenticated/dashboard/")({
       { title: "Home | Farix AI Workspace" },
       {
         name: "description",
-        content: "Your Farix home — Veo 3 video generation and ChatGPT access in one workspace.",
+        content: "Your Farix home — Veo 3 video generation and Gemini Pro in one workspace.",
       },
       { property: "og:title", content: "Home | Farix AI Workspace" },
       {
         property: "og:description",
-        content: "Your Farix home — Veo 3 video generation and ChatGPT access in one workspace.",
+        content: "Your Farix home — Veo 3 video generation and Gemini Pro in one workspace.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },

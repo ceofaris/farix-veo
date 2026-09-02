@@ -1,11 +1,10 @@
 import { builtInToolLogoInfo } from "@/lib/tool-logos";
 import { assetUrl } from "@/lib/asset-url";
 import flowMark from "@/assets/flow-mark-v2.png.asset.json";
-import chatgptMark from "@/assets/chatgpt-mark.png.asset.json";
 import geminiMark from "@/assets/gemini-mark.png.asset.json";
 
 /**
- * Fixed-tool marks. Flow + ChatGPT ship as black-on-transparent PNGs, so they
+ * Fixed-tool marks. Flow ships as a black-on-transparent PNG, so it
  * render dark on light theme and are inverted to white on dark theme.
  * Gemini keeps its original colors in both themes.
  */
@@ -17,7 +16,6 @@ const MARKS: Array<{
   pad: string;
 }> = [
   { match: /veo|flow/i, url: assetUrl(flowMark), alt: "Flow logo", invertOnDark: true, pad: "p-2" },
-  { match: /chat\s*-?\s*gpt/i, url: assetUrl(chatgptMark), alt: "ChatGPT logo", invertOnDark: true, pad: "p-2" },
   { match: /gemini/i, url: assetUrl(geminiMark), alt: "Gemini logo", invertOnDark: false, pad: "p-1.5" },
 ];
 

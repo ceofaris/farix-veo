@@ -137,7 +137,7 @@ const content: ToolLandingContent = {
     },
     {
       q: "Which Farix AI plan includes Veo 3?",
-      a: "Both the Pro plan and the Master plan include unlimited Veo 3 Lite access. The Master plan adds Gemini Pro chat and ChatGPT access on top.",
+      a: "Both the Pro plan and the Master plan include unlimited Veo 3 Lite access. The Master plan adds Gemini Pro chat on top.",
     },
     {
       q: "Can I use Veo 3 on my phone?",

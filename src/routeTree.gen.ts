@@ -46,7 +46,6 @@ import { Route as AuthenticatedKingBlogRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedDashboardVeo3RouteImport } from './routes/_authenticated/dashboard/veo-3'
 import { Route as AuthenticatedDashboardPromptsRouteImport } from './routes/_authenticated/dashboard/prompts'
 import { Route as AuthenticatedDashboardGeminiRouteImport } from './routes/_authenticated/dashboard/gemini'
-import { Route as AuthenticatedDashboardChatgptRouteImport } from './routes/_authenticated/dashboard/chatgpt'
 import { Route as AuthenticatedKingToolsIdRouteImport } from './routes/_authenticated/king/tools_.$id'
 import { Route as AuthenticatedKingResellersIdRouteImport } from './routes/_authenticated/king/resellers_.$id'
 
@@ -249,12 +248,6 @@ const AuthenticatedDashboardGeminiRoute =
     path: '/gemini',
     getParentRoute: () => AuthenticatedDashboardRouteRoute,
   } as any)
-const AuthenticatedDashboardChatgptRoute =
-  AuthenticatedDashboardChatgptRouteImport.update({
-    id: '/chatgpt',
-    path: '/chatgpt',
-    getParentRoute: () => AuthenticatedDashboardRouteRoute,
-  } as any)
 const AuthenticatedKingToolsIdRoute =
   AuthenticatedKingToolsIdRouteImport.update({
     id: '/tools_/$id',
@@ -290,7 +283,6 @@ export interface FileRoutesByFullPath {
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
   '/blog/': typeof BlogIndexRoute
-  '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
@@ -328,7 +320,6 @@ export interface FileRoutesByTo {
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
   '/blog': typeof BlogIndexRoute
-  '/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
@@ -371,7 +362,6 @@ export interface FileRoutesById {
   '/tools/imagen-4-image-generation': typeof ToolsImagen4ImageGenerationRoute
   '/tools/veo-3-video-generation': typeof ToolsVeo3VideoGenerationRoute
   '/blog/': typeof BlogIndexRoute
-  '/_authenticated/dashboard/chatgpt': typeof AuthenticatedDashboardChatgptRoute
   '/_authenticated/dashboard/gemini': typeof AuthenticatedDashboardGeminiRoute
   '/_authenticated/dashboard/prompts': typeof AuthenticatedDashboardPromptsRoute
   '/_authenticated/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
@@ -414,7 +404,6 @@ export interface FileRouteTypes {
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
     | '/blog/'
-    | '/dashboard/chatgpt'
     | '/dashboard/gemini'
     | '/dashboard/prompts'
     | '/dashboard/veo-3'
@@ -452,7 +441,6 @@ export interface FileRouteTypes {
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
     | '/blog'
-    | '/dashboard/chatgpt'
     | '/dashboard/gemini'
     | '/dashboard/prompts'
     | '/dashboard/veo-3'
@@ -494,7 +482,6 @@ export interface FileRouteTypes {
     | '/tools/imagen-4-image-generation'
     | '/tools/veo-3-video-generation'
     | '/blog/'
-    | '/_authenticated/dashboard/chatgpt'
     | '/_authenticated/dashboard/gemini'
     | '/_authenticated/dashboard/prompts'
     | '/_authenticated/dashboard/veo-3'
@@ -797,13 +784,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardGeminiRouteImport
       parentRoute: typeof AuthenticatedDashboardRouteRoute
     }
-    '/_authenticated/dashboard/chatgpt': {
-      id: '/_authenticated/dashboard/chatgpt'
-      path: '/chatgpt'
-      fullPath: '/dashboard/chatgpt'
-      preLoaderRoute: typeof AuthenticatedDashboardChatgptRouteImport
-      parentRoute: typeof AuthenticatedDashboardRouteRoute
-    }
     '/_authenticated/king/tools_/$id': {
       id: '/_authenticated/king/tools_/$id'
       path: '/tools/$id'
@@ -822,7 +802,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedDashboardRouteRouteChildren {
-  AuthenticatedDashboardChatgptRoute: typeof AuthenticatedDashboardChatgptRoute
   AuthenticatedDashboardGeminiRoute: typeof AuthenticatedDashboardGeminiRoute
   AuthenticatedDashboardPromptsRoute: typeof AuthenticatedDashboardPromptsRoute
   AuthenticatedDashboardVeo3Route: typeof AuthenticatedDashboardVeo3Route
@@ -831,7 +810,6 @@ interface AuthenticatedDashboardRouteRouteChildren {
 
 const AuthenticatedDashboardRouteRouteChildren: AuthenticatedDashboardRouteRouteChildren =
   {
-    AuthenticatedDashboardChatgptRoute: AuthenticatedDashboardChatgptRoute,
     AuthenticatedDashboardGeminiRoute: AuthenticatedDashboardGeminiRoute,
     AuthenticatedDashboardPromptsRoute: AuthenticatedDashboardPromptsRoute,
     AuthenticatedDashboardVeo3Route: AuthenticatedDashboardVeo3Route,

@@ -5,9 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Download, FlaskConical, FileCode2, Info } from "lucide-react";
 import {
   devExtensionFiles,
-  devChatgptExtensionFiles,
   downloadDevZip,
-  downloadChatgptDevZip,
   devMultiExtensionFiles,
   downloadMultiDevZip,
   devGeminiExtensionFiles,
@@ -20,9 +18,9 @@ export const Route = createFileRoute("/_authenticated/king/extension-lab")({
   head: () => ({
     meta: [
       { title: "Extension Lab — Farix King Panel" },
-      { name: "description", content: "Development workspace for the Farix Veo 3 and ChatGPT Chrome extensions." },
+      { name: "description", content: "Development workspace for the Farix Veo 3 and Gemini Chrome extensions." },
       { property: "og:title", content: "Extension Lab — Farix King Panel" },
-      { property: "og:description", content: "Development workspace for the Farix Veo 3 and ChatGPT Chrome extensions." },
+      { property: "og:description", content: "Development workspace for the Farix Veo 3 and Gemini Chrome extensions." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -113,19 +111,11 @@ function ExtensionLab() {
         />
 
         <LabSection
-          title="Farix ChatGPT Extension (dev)"
-          folder="extension-dev-chatgpt/"
-          files={devChatgptExtensionFiles}
-          onDownload={downloadChatgptDevZip}
-          note="ChatGPT only — files live in extension-dev-chatgpt/. For testing only; upload the final version from Tools → ChatGPT → Upload Extension."
-        />
-
-        <LabSection
           title="Farix Multi Extension (dev)"
           folder="extension-dev-multi/"
           files={devMultiExtensionFiles}
           onDownload={downloadMultiDevZip}
-          note="Veo 3 + ChatGPT in one — files live in extension-dev-multi/. Cookies stay isolated per site and tool access follows the user plan (Master unlocks both)."
+          note="Veo 3 + Gemini Pro in one — files live in extension-dev-multi/. Cookies stay isolated per site and tool access follows the user plan (Master unlocks both)."
         />
         <LabSection
           title="Farix Gemini Extension (dev)"

@@ -61,7 +61,6 @@ export function useMyTools() {
   const accessExpired = !suspended && !paidActive && !trialActive;
 
   const hasVeo = (paidActive && planIncludes(planId, "veo")) || trialActive;
-  const hasChatgpt = paidActive && planIncludes(planId, "chatgpt");
   const hasGemini = paidActive && planIncludes(planId, "gemini");
   const hasPrompts = paidActive && planIncludes(planId, "prompts");
 
@@ -102,7 +101,6 @@ export function useMyTools() {
     /** kept for older call sites */
     hasMaster: planId === "master" && planActive,
     hasVeo,
-    hasChatgpt,
     hasGemini,
     hasPrompts,
     expiresAt,

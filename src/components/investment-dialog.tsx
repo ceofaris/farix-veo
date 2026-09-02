@@ -81,7 +81,7 @@ export function InvestmentDialog({
               value={label}
               autoFocus
               onChange={(e) => setLabel(e.target.value)}
-              placeholder="e.g. ChatGPT accounts"
+              placeholder="e.g. Gemini accounts"
             />
           </div>
           <div className="grid grid-cols-2 gap-3">

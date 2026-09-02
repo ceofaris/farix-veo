@@ -1,4 +1,4 @@
-# Farix AI Multi Extension (Veo 3 + ChatGPT)
+# Farix AI Multi Extension (Veo 3 + Gemini Pro)
 
 Manifest V3 Chrome extension that manages both Farix tools in one place.
 
@@ -6,8 +6,8 @@ Manifest V3 Chrome extension that manages both Farix tools in one place.
 
 - Farix Supabase email/password login
 - Loads the plan from `user_plans` and derives tool access:
-  - `master` → Veo 3 + ChatGPT active
-  - `pro` → Veo 3 active, Gemini/ChatGPT locked
+  - `master` → Veo 3 + Gemini Pro active
+  - `pro` → Veo 3 active, Gemini locked
   - `master` → all tools active
 - Popup shows email, plan, and per-tool Active / Ready / Locked status
 - **Inject Session** uses the active tab to pick the tool (or the tool selector when
@@ -21,7 +21,6 @@ Manifest V3 Chrome extension that manages both Farix tools in one place.
 
 | Site | Account RPC | Cookie domain | Lockdown |
 | --- | --- | --- | --- |
-| `chatgpt.com` | `get_random_chatgpt_account` | `chatgpt.com` only | `chatgpt-lockdown.js` |
 | `labs.google` | `get_random_flow_account` | `labs.google` only | `veo-lockdown.js` |
 
 Cookies are never cross-injected: each tool's domain allow-list is checked before
