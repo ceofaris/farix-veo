@@ -44,6 +44,9 @@ export type ProfileLite = {
   created_at: string;
   full_name: string | null;
   email: string;
+  signup_source: string | null;
+  trial_ends_at: string | null;
+  status: string | null;
 };
 
 /** One query for every profile-derived stat (users, resellers, daily chart). */
@@ -54,7 +57,9 @@ export const kingProfilesQuery = queryOptions({
   queryFn: async (): Promise<ProfileLite[]> => {
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, role, is_active, expires_at, created_by, created_at, full_name, email")
+      .select(
+        "id, role, is_active, expires_at, created_by, created_at, full_name, email, signup_source, trial_ends_at, status",
+      )
       .in("role", ["user", "reseller"])
       .order("created_at", { ascending: false })
       .limit(5000);
@@ -62,6 +67,7 @@ export const kingProfilesQuery = queryOptions({
     return (data ?? []) as ProfileLite[];
   },
 });
+
 
 export type ToolAccountLite = { tool_id: string; is_active: boolean; status: string };
 
