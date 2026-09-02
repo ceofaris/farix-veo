@@ -292,6 +292,28 @@ function KingDashboard() {
           tone="chart-3"
         />
         <Tile
+          icon={CalendarClock}
+          label="Users this month"
+          value={dash(newMonth)}
+          hint={`${newToday} today · ${newWeek} this week`}
+          tone="chart-3"
+        />
+        <Tile
+          icon={Sparkles}
+          label="Free signups"
+          value={dash(freeUsers.length)}
+          hint={`${freeMonth} this month`}
+          tone="primary"
+        />
+        <Tile
+          icon={TrendingUp}
+          label="Free → Paid"
+          value={dash(convertedUsers.length)}
+          hint={`${convRate}% conversion`}
+          tone="chart-2"
+        />
+
+        <Tile
           icon={BadgeCheck}
           label="Paid Plans"
           value={dash(totals.paidCount)}
