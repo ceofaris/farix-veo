@@ -4,6 +4,10 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card } from "@/components/panel-layout";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useServerFn } from "@tanstack/react-start";
+import { deleteAuthUser } from "@/lib/admin.functions";
+
 import { ToolLogo } from "@/components/tool-logo";
 import { formatRs } from "@/components/mark-paid-dialog";
 import { InvestmentDialog } from "@/components/investment-dialog";
