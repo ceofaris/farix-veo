@@ -33,6 +33,24 @@ globalThis.FARIX_CONFIG = Object.freeze({
       opensOwnTab: true,
       plans: ["pro", "master"]
     }),
+    gemini: Object.freeze({
+      id: "gemini",
+      label: "Gemini Pro",
+      host: "gemini.google.com",
+      hosts: Object.freeze([
+        "gemini.google.com",
+        "accounts.google.com",
+        "myaccount.google.com",
+        "google.com"
+      ]),
+      url: "https://gemini.google.com/app",
+      tabMatches: ["https://gemini.google.com/*"],
+      urlPattern: /^https:\/\/gemini\.google\.com\//i,
+      accountRpc: "get_random_gemini_account",
+      probeUrl: "https://gemini.google.com/app",
+      probeKind: "google",
+      plans: ["master"]
+    }),
     /**
      * Whisk has no cookie pool of its own: it reuses the Flow/Veo accounts and
      * only differs by the URL that is opened after injection.
@@ -51,24 +69,6 @@ globalThis.FARIX_CONFIG = Object.freeze({
       opensOwnTab: true,
       /** Same labs.google cookie jar as Veo 3. */
       sharesCookiesWith: "veo",
-      plans: ["master"]
-    }),
-    gemini: Object.freeze({
-      id: "gemini",
-      label: "Gemini Pro",
-      host: "gemini.google.com",
-      hosts: Object.freeze([
-        "gemini.google.com",
-        "accounts.google.com",
-        "myaccount.google.com",
-        "google.com"
-      ]),
-      url: "https://gemini.google.com/app",
-      tabMatches: ["https://gemini.google.com/*"],
-      urlPattern: /^https:\/\/gemini\.google\.com\//i,
-      accountRpc: "get_random_gemini_account",
-      probeUrl: "https://gemini.google.com/app",
-      probeKind: "google",
       plans: ["master"]
     }),
 
