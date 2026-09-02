@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Farix AI",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "One managed Farix AI extension for Veo 3 and Gemini Pro sessions.",
   "permissions": [
     "storage",
