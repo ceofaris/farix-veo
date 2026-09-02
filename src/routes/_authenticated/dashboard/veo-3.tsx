@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ExternalLink, Download, Clapperboard, AudioLines, Banana } from "lucide-react";
+import { ExternalLink, Download, Clapperboard, AudioLines, Banana, Coins } from "lucide-react";
+import { useMyCredits, formatCredits, VEO_CREDIT_COST } from "@/lib/credits";
+
 import { useMyTools } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
 import { FeatureCard, VideoGuide } from "@/components/dashboard/ui";
