@@ -58,3 +58,23 @@ export function SidebarPromptsIcon({ className }: IconProps) {
     </svg>
   );
 }
+
+/** Whisk — overlapping image frames with a spark (Flow shared tool) */
+export function SidebarWhiskIcon({ className }: IconProps) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={cn(base, className)}
+      aria-hidden
+    >
+      <rect x="3" y="6.5" width="12" height="11" rx="2.5" />
+      <path d="M6 14l2.4-2.6 2.2 2.3 1.5-1.5 2.9 3" />
+      <path d="M18 4.5c.25 1.7 1.8 3.25 3.5 3.5-1.7.25-3.25 1.8-3.5 3.5-.25-1.7-1.8-3.25-3.5-3.5 1.7-.25 3.25-1.8 3.5-3.5z" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
