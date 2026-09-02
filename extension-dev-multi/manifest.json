@@ -38,6 +38,17 @@
   "content_scripts": [
     {
       "matches": [
+        "https://labs.google/*",
+        "https://*.labs.google/*"
+      ],
+      "js": [
+        "veo-credits.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": [
         "https://gemini.google.com/*",
         "https://accounts.google.com/*",
         "https://myaccount.google.com/*"
@@ -54,8 +65,7 @@
         "https://*.labs.google/*"
       ],
       "js": [
-        "veo-lockdown.js",
-        "veo-credits.js"
+        "veo-lockdown.js"
       ],
       "run_at": "document_idle"
     },
