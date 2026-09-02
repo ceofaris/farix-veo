@@ -20,9 +20,9 @@ export const Route = createFileRoute("/_authenticated/king/extension-lab")({
   head: () => ({
     meta: [
       { title: "Extension Lab — Farix King Panel" },
-      { name: "description", content: "Development workspace for the Farix Veo 3 and Gemini Chrome extensions." },
+      { name: "description", content: "Development workspace for the Farix Veo 3, Gemini Pro and Whisk Chrome extensions." },
       { property: "og:title", content: "Extension Lab — Farix King Panel" },
-      { property: "og:description", content: "Development workspace for the Farix Veo 3 and Gemini Chrome extensions." },
+      { property: "og:description", content: "Development workspace for the Farix Veo 3, Gemini Pro and Whisk Chrome extensions." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],

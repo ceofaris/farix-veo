@@ -19,7 +19,7 @@ Cookies are cleared on logout, Clear Session, and on disable/unload.
 - No separate Whisk accounts exist; King manages one Flow/Veo cookie pool.
 - Because the cookie jar is shared with Veo 3, injecting or clearing here also
   affects a Veo session in the same browser profile.
-- No Gemini and no ChatGPT code paths exist in this package.
+- No Gemini code paths exist in this package.
 
 ## Load in Chrome
 
