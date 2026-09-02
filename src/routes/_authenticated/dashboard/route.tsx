@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { cn } from "@/lib/utils";
-import { Home, LogOut, Menu, X } from "lucide-react";
+import { Coins, Home, LogOut, Menu, X } from "lucide-react";
+import { useMyCredits } from "@/lib/credits";
+import { formatCredits, VEO_CREDIT_COST } from "@/lib/credits";
+
 import {
   SidebarFlowIcon,
   SidebarGeminiIcon,
