@@ -31,22 +31,25 @@ export function useProfile() {
   const query = useQuery({
     queryKey: ["current-profile"],
     queryFn: fetchProfile,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
     // A stale `null` (fetched before sign-in) must never be reused after login,
     // otherwise protected layouts hang on their "Loading…" branch forever.
-    staleTime: 30 * 1000,
-    gcTime: 30 * 60 * 1000,
-    refetchOnMount: true,
+    // Anything else is reused from cache instead of refetching on every mount.
+    refetchOnMount: (q) => q.state.data == null,
     retry: 1,
   });
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((event) => {
       if (event === "SIGNED_OUT") qc.setQueryData(["current-profile"], null);
-      if (event === "SIGNED_IN" || event === "USER_UPDATED" || event === "TOKEN_REFRESHED")
+      // TOKEN_REFRESHED fires hourly and on tab focus — refetching there was pure waste.
+      if (event === "SIGNED_IN" || event === "USER_UPDATED")
         qc.invalidateQueries({ queryKey: ["current-profile"] });
     });
     return () => sub.subscription.unsubscribe();
   }, [qc]);
+
 
   return {
     profile: query.data ?? null,

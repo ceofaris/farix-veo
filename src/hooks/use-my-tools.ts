@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { activeToolsQuery, planExpired, type ToolLite } from "@/lib/queries";
 import { planDef, planIncludes, type PlanId } from "@/lib/plans";
@@ -9,17 +9,29 @@ import { toast } from "sonner";
 export type UserPlanRow = { id: string; plan: PlanId; expires_at: string; is_paid: boolean };
 export type LatestVersion = { id: string; version: string; file_path: string; tool_id: string };
 
+const latestVersionsQuery = {
+  queryKey: ["latest-extensions"] as const,
+  staleTime: 10 * 60 * 1000,
+  queryFn: async () => {
+    const { data, error } = await supabase
+      .from("extension_versions")
+      .select("id, version, file_path, tool_id")
+      .eq("is_latest", true);
+    if (error) throw error;
+    return (data ?? []) as LatestVersion[];
+  },
+};
+
 /** Plan-based access for the signed-in end user + the extension builds they can download. */
 export function useMyTools() {
   const { profile, loading } = useProfile();
+  const qc = useQueryClient();
   const isUser = profile?.role === "user";
-
-  const tools = useQuery({ ...activeToolsQuery, enabled: isUser });
 
   const plan = useQuery({
     queryKey: ["my-plan", profile?.id],
     enabled: !!profile && isUser,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 10 * 60 * 1000,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("user_plans")
@@ -31,21 +43,6 @@ export function useMyTools() {
     },
   });
 
-  const versions = useQuery({
-    queryKey: ["latest-extensions"],
-    enabled: isUser,
-    staleTime: 5 * 60 * 1000,
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("extension_versions")
-        .select("id, version, file_path, tool_id")
-        .eq("is_latest", true);
-      if (error) throw error;
-      return (data ?? []) as LatestVersion[];
-    },
-  });
-
-  const toolList: ToolLite[] = tools.data ?? [];
   const expiresAt = plan.data?.expires_at ?? profile?.expires_at ?? null;
   const planId = plan.data?.plan ?? null;
   const suspended = profile?.status === "suspended";
@@ -59,6 +56,12 @@ export function useMyTools() {
 
   const planActive = paidActive;
   const accessExpired = !suspended && !paidActive && !trialActive;
+
+  // Only users who can actually open a tool need the tools table; locked,
+  // expired and suspended accounts (incl. finished free trials) fetch nothing.
+  const hasAccess = paidActive || trialActive;
+  const tools = useQuery({ ...activeToolsQuery, enabled: isUser && hasAccess });
+  const toolList: ToolLite[] = tools.data ?? [];
 
   const hasVeo = (paidActive && planIncludes(planId, "veo")) || trialActive;
   const hasGemini = paidActive && planIncludes(planId, "gemini");
@@ -77,13 +80,15 @@ export function useMyTools() {
   async function downloadExtension(toolId?: string) {
     if (suspended) return toast.error("Account suspended — contact support");
     if (!hasVeo && !paidActive) return toast.error("Your plan is expired — upgrade to continue");
-    const list = versions.data ?? [];
+    // Fetched on demand (and cached): nobody pays a request for a button they never press.
+    const list = await qc.fetchQuery(latestVersionsQuery).catch(() => [] as LatestVersion[]);
     const v = toolId ? list.find((x) => x.tool_id === toolId) : list[0];
     if (!v) return toast.error("No extension build available yet");
     const url = await signedExtensionUrl(v.file_path);
     if (!url) return toast.error("Could not create download link");
     window.open(url, "_blank");
   }
+
 
   return {
     profile,
@@ -106,7 +111,7 @@ export function useMyTools() {
     hasPrompts,
     hasWhisk,
     expiresAt,
-    versions: versions.data ?? [],
+    versions: (qc.getQueryData(latestVersionsQuery.queryKey) as LatestVersion[] | undefined) ?? [],
     findTool,
     expiryFor,
     downloadExtension,
