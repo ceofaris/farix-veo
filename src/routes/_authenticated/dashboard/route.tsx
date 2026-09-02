@@ -8,6 +8,7 @@ import { Home, LogOut, Menu, X } from "lucide-react";
 import {
   SidebarFlowIcon,
   SidebarGeminiIcon,
+  SidebarWhiskIcon,
   SidebarPromptsIcon,
 } from "@/components/sidebar-tool-icons";
 import { useTheme } from "@/hooks/use-theme";
@@ -23,6 +24,7 @@ export const Route = createFileRoute("/_authenticated/dashboard")({
 const NAV = [
   { to: "/dashboard/veo-3", label: "Veo 3", icon: SidebarFlowIcon },
   { to: "/dashboard/gemini", label: "Gemini Pro", icon: SidebarGeminiIcon },
+  { to: "/dashboard/whisk", label: "Whisk", icon: SidebarWhiskIcon },
   { to: "/dashboard/prompts", label: "Niche Prompts", icon: SidebarPromptsIcon },
 ] as const;
 

@@ -63,6 +63,7 @@ export function useMyTools() {
   const hasVeo = (paidActive && planIncludes(planId, "veo")) || trialActive;
   const hasGemini = paidActive && planIncludes(planId, "gemini");
   const hasPrompts = paidActive && planIncludes(planId, "prompts");
+  const hasWhisk = paidActive && planIncludes(planId, "whisk");
 
   function findTool(re: RegExp) {
     return toolList.find((t) => re.test(`${t.slug} ${t.name}`)) ?? null;
@@ -103,6 +104,7 @@ export function useMyTools() {
     hasVeo,
     hasGemini,
     hasPrompts,
+    hasWhisk,
     expiresAt,
     versions: versions.data ?? [],
     findTool,
