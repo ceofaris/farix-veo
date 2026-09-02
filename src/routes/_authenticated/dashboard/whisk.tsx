@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ExternalLink, Sparkles, Image as ImageIcon, Wand2, Layers, Palette, Zap } from "lucide-react";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
-import { FeatureCard, VideoGuide } from "@/components/dashboard/ui";
+import { FeatureCard } from "@/components/dashboard/ui";
 import { PlanLock } from "@/components/plan-lock";
 
 /** Whisk runs on the same managed Flow/Veo accounts — only the URL differs. */

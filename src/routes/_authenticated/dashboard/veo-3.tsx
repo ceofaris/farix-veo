@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ExternalLink, Clapperboard, AudioLines, Banana } from "lucide-react";
 import { useMyTools } from "@/hooks/use-my-tools";
 import { ToolLogo } from "@/components/tool-logo";
-import { FeatureCard, VideoGuide } from "@/components/dashboard/ui";
+import { FeatureCard } from "@/components/dashboard/ui";
 import { PlanLock } from "@/components/plan-lock";
 
 export const Route = createFileRoute("/_authenticated/dashboard/veo-3")({
