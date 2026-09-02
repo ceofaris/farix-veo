@@ -28,6 +28,8 @@ const NAV = [
   { to: "/dashboard/prompts", label: "Niche Prompts", icon: SidebarPromptsIcon },
 ] as const;
 
+const HELP = { to: "/dashboard/extension-help", label: "Extension & Help", icon: HelpCircle };
+
 function DashboardLayout() {
   const { profile, loading, isUser, suspended, trialActive, trialEndsAt, accessExpired, trialExpired } =
     useMyTools();
