@@ -41,7 +41,7 @@ The random-account RPC should return one account object (or a one-item array) wi
 }
 ```
 
-`tool_slug` is always sent as `gemini`, and returned accounts/cookies are checked again in the extension. Cookies are only read, written, or removed for Gemini-related Google cookie scopes. Veo, ChatGPT, and unrelated hosts are rejected.
+`tool_slug` is always sent as `gemini`, and returned accounts/cookies are checked again in the extension. Cookies are only read, written, or removed for Gemini-related Google cookie scopes. Veo and unrelated hosts are rejected.
 
 ## Lockdown behavior
 
@@ -51,4 +51,4 @@ The document-start content script silently blocks account/profile, settings, bil
 
 - Only the Supabase URL and public anon key belong in the extension.
 - Never put a `service_role` key or other privileged credential in `config.js` or extension storage.
-- The extension does not inject or touch Veo or ChatGPT cookies.
+- The extension does not inject or touch Veo cookies.
