@@ -132,6 +132,40 @@ function KingDashboard() {
   const weekKeys = new Set(lastPktDays(7));
   const newToday = users.filter((u) => pktDayKey(u.created_at) === todayKey).length;
   const newWeek = users.filter((u) => weekKeys.has(pktDayKey(u.created_at))).length;
+  const monthPrefix = pktMonthKey();
+  const newMonth = users.filter((u) => pktDayKey(u.created_at).slice(0, 7) === monthPrefix).length;
+
+  /** Paid plan (pro/master) per user, from user_plans. */
+  const paidPlanByUser = useMemo(() => {
+    const map = new Map<string, { plan: string; is_paid: boolean; expires_at: string }>();
+    for (const r of rows) {
+      const cur = map.get(r.user_id);
+      if (!cur || (r.is_paid && !cur.is_paid)) {
+        map.set(r.user_id, { plan: r.plan, is_paid: r.is_paid, expires_at: r.expires_at });
+      }
+    }
+    return map;
+  }, [rows]);
+
+  /** Free = self-signup trial users (signup_source = 'public'). */
+  const freeUsers = useMemo(
+    () => users.filter((u) => (u.signup_source ?? "invite") === "public"),
+    [users],
+  );
+  const freeMonth = freeUsers.filter(
+    (u) => pktDayKey(u.created_at).slice(0, 7) === monthPrefix,
+  ).length;
+  /** Converted = signed up free AND now holds a PAID pro/master plan. */
+  const convertedUsers = useMemo(
+    () =>
+      freeUsers.filter((u) => {
+        const p = paidPlanByUser.get(u.id);
+        return !!p && p.is_paid && (p.plan === "pro" || p.plan === "master");
+      }),
+    [freeUsers, paidPlanByUser],
+  );
+  const convRate =
+    freeUsers.length > 0 ? Math.round((convertedUsers.length / freeUsers.length) * 100) : 0;
 
   const planCounts = useMemo(() => {
     let pro = 0;
@@ -142,6 +176,7 @@ function KingDashboard() {
     }
     return { pro, master };
   }, [rows]);
+
 
   const cookiesByTool = useMemo(() => {
     const map = new Map<string, { active: number; expired: number }>();
