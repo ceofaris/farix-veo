@@ -20,6 +20,12 @@ const geminiModules = import.meta.glob("/extension-dev-gemini/**/*", {
   eager: true,
 }) as Record<string, string>;
 
+const whiskModules = import.meta.glob("/extension-dev-whisk/**/*", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+
 export type DevFile = { path: string; content: string; bytes: number };
 
 function toFiles(modules: Record<string, string>, prefix: string): DevFile[] {
@@ -36,6 +42,11 @@ export const devExtensionFiles: DevFile[] = toFiles(veoModules, "/extension-dev/
 export const devMultiExtensionFiles: DevFile[] = toFiles(
   multiModules,
   "/extension-dev-multi/",
+);
+
+export const devWhiskExtensionFiles: DevFile[] = toFiles(
+  whiskModules,
+  "/extension-dev-whisk/",
 );
 
 export const devGeminiExtensionFiles: DevFile[] = toFiles(
@@ -90,4 +101,8 @@ export function downloadMultiDevZip() {
 
 export function downloadGeminiDevZip() {
   downloadZip(devGeminiExtensionFiles, "farix-gemini-extension-dev.zip");
+}
+
+export function downloadWhiskDevZip() {
+  downloadZip(devWhiskExtensionFiles, "farix-whisk-extension-dev.zip");
 }

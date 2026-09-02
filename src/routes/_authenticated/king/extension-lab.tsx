@@ -10,6 +10,8 @@ import {
   downloadMultiDevZip,
   devGeminiExtensionFiles,
   downloadGeminiDevZip,
+  devWhiskExtensionFiles,
+  downloadWhiskDevZip,
   type DevFile,
 } from "@/lib/extension-dev";
 
@@ -123,6 +125,13 @@ function ExtensionLab() {
           files={devGeminiExtensionFiles}
           onDownload={downloadGeminiDevZip}
           note="Gemini Pro only — files live in extension-dev-gemini/. For testing only; upload the final version from Tools → Gemini Pro → Upload Extension."
+        />
+        <LabSection
+          title="Farix Whisk Extension (dev)"
+          folder="extension-dev-whisk/"
+          files={devWhiskExtensionFiles}
+          onDownload={downloadWhiskDevZip}
+          note="Whisk only — uses the Flow/Veo cookie pool (no separate Whisk accounts) and opens the Whisk tool URL after injection."
         />
       </div>
     </div>
