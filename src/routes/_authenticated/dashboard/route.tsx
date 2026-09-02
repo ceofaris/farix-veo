@@ -37,6 +37,8 @@ function DashboardLayout() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
   const { theme } = useTheme();
+  const credits = useMyCredits();
+
   const shell = cn("farix-shell min-h-screen bg-background text-foreground", theme === "dark" && "dark");
 
   useEffect(() => {
