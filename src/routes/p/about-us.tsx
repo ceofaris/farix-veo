@@ -27,7 +27,7 @@ const blocks: ContentBlock[] = [
   {
     heading: "How the model works",
     paragraphs: [
-      "Farix AI provides managed access to AI generation tools that operate with Google Flow (labs.google.com). Users receive access through Farix-managed accounts, delivered via a secure browser extension that opens each tool in an already-authenticated session.",
+      "Farix AI provides managed access to AI generation tools that operate with Google Flow (flow.google.com). Users receive access through Farix-managed accounts, delivered via a secure browser extension that opens each tool in an already-authenticated session.",
       "Farix AI handles account access coordination and plan management on its side, so you never need to manage the underlying provider accounts or billing yourself. Access ends automatically on your plan expiry date unless renewed through your reseller.",
       "The platform operates through a three-tier structure. The platform owner maintains tool accounts, extension builds and plan definitions. Authorised resellers activate users, set plan duration and handle payments and support in their own market. This keeps support local and fast: your reseller knows your language, your payment method and your renewal cycle, while the platform handles infrastructure, session health and tool availability behind the scenes.",
     ],

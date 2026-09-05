@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "Farix AI",
-  "version": "1.2.1",
-  "description": "One managed Farix AI extension for Veo 3 (Flow), Gemini Pro, and Whisk — Whisk uses the same Flow session as Veo 3.",
+  "version": "1.3.0",
+  "description": "One managed Farix AI extension for Veo 3 (Flow), Gemini Pro, and Whisk \u2014 Whisk uses the same Flow session as Veo 3.",
   "permissions": [
     "storage",
     "cookies",
@@ -12,6 +12,8 @@
     "management"
   ],
   "host_permissions": [
+    "https://*.flow.google.com/*",
+    "https://flow.google.com/*",
     "https://labs.google/*",
     "https://*.labs.google/*",
     "https://*.google.com/*",
@@ -50,6 +52,8 @@
     },
     {
       "matches": [
+        "https://flow.google.com/*",
+        "https://*.flow.google.com/*",
         "https://labs.google/*",
         "https://*.labs.google/*"
       ],

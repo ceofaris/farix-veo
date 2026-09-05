@@ -36,7 +36,7 @@ const blocks: ContentBlock[] = [
   {
     heading: "4. Managed sessions and fair use",
     paragraphs: [
-      "Farix AI provides managed access to AI generation tools that operate with Google Flow (labs.google.com). Access is delivered through managed sessions injected into the official interfaces of third-party providers via the Farix browser extension. Those sessions are shared infrastructure and are intentionally locked down: profile, billing and settings areas are disabled and account names are masked.",
+      "Farix AI provides managed access to AI generation tools that operate with Google Flow (flow.google.com). Access is delivered through managed sessions injected into the official interfaces of third-party providers via the Farix browser extension. Those sessions are shared infrastructure and are intentionally locked down: profile, billing and settings areas are disabled and account names are masked.",
       "Farix AI handles account access coordination and plan management on its side, so you do not need to manage the underlying provider billing yourself.",
     ],
     bullets: [

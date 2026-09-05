@@ -21,14 +21,17 @@ globalThis.FARIX_CONFIG = Object.freeze({
     veo: Object.freeze({
       id: "veo",
       label: "Veo 3 (Flow)",
-      host: "labs.google",
-      hosts: Object.freeze(["labs.google"]),
-      url: "https://labs.google/fx/tools/flow",
-      tabMatches: ["https://labs.google/fx/tools/flow*"],
-      urlPattern: /^https:\/\/([a-z0-9-]+\.)*labs\.google\//i,
+      host: "flow.google.com",
+      hosts: Object.freeze(["flow.google.com", "labs.google"]),
+      url: "https://flow.google.com/about",
+      tabMatches: [
+        "https://flow.google.com/*",
+        "https://labs.google/fx/tools/flow*"
+      ],
+      urlPattern: /^https:\/\/([a-z0-9-]+\.)*(flow\.google\.com|labs\.google)\//i,
       accountRpc: "get_random_flow_account",
-      probeUrl: "https://labs.google/fx/api/auth/session",
-      probeKind: "next-auth",
+      probeUrl: "https://flow.google.com/about",
+      probeKind: "google",
       /** Inject works from any tab — the extension opens Flow itself. */
       opensOwnTab: true,
       plans: ["pro", "master"]
@@ -58,16 +61,19 @@ globalThis.FARIX_CONFIG = Object.freeze({
     whisk: Object.freeze({
       id: "whisk",
       label: "Whisk",
-      host: "labs.google",
-      hosts: Object.freeze(["labs.google"]),
-      url: "https://labs.google/fx/tools/flow/shared/tool/c0c427a4-f509-4a15-a704-21f89e512dbe",
-      tabMatches: ["https://labs.google/fx/tools/flow/shared/tool/*"],
+      host: "flow.google.com",
+      hosts: Object.freeze(["flow.google.com", "labs.google"]),
+      url: "https://flow.google.com/about",
+      tabMatches: [
+        "https://flow.google.com/*",
+        "https://labs.google/fx/tools/flow/shared/tool/*"
+      ],
       urlPattern: /^https:\/\/labs\.google\/fx\/tools\/flow\/shared\/tool\//i,
       accountRpc: "get_random_flow_account",
-      probeUrl: "https://labs.google/fx/api/auth/session",
-      probeKind: "next-auth",
+      probeUrl: "https://flow.google.com/about",
+      probeKind: "google",
       opensOwnTab: true,
-      /** Same labs.google cookie jar as Veo 3. */
+      /** Same Flow cookie jar as Veo 3. */
       sharesCookiesWith: "veo",
       plans: ["master"]
     }),

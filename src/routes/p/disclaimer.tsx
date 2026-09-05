@@ -11,7 +11,7 @@ const blocks: ContentBlock[] = [
   {
     heading: "1. Independent access platform",
     paragraphs: [
-      "Farix AI provides managed access to AI generation tools that operate with Google Flow (labs.google.com). Farix AI is an independent service and is not affiliated with, partnered with, sponsored by, or endorsed by Google LLC or its subsidiaries.",
+      "Farix AI provides managed access to AI generation tools that operate with Google Flow (flow.google.com). Farix AI is an independent service and is not affiliated with, partnered with, sponsored by, or endorsed by Google LLC or its subsidiaries.",
       "All Google product names, logos, and trademarks — including Veo, Flow, Gemini and Imagen — are the property of their respective owners and are used only to describe which tools are reachable through the platform.",
     ],
   },
