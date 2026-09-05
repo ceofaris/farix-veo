@@ -5,7 +5,7 @@
   // Listing page: whole page inert except the real "+ New project" tile.
   // Project pages: editor fully usable, only profile/account locked.
 
-  const FLOW_ROOT = "https://labs.google/fx/tools/flow";
+  const FLOW_ROOT = "https://flow.google.com/about";
   const LOGOUT_URL = "https://accounts.google.com/Logout";
 
   const ACCOUNT_HREF_PATTERN =
@@ -421,7 +421,7 @@
   function purgeAndLogout() {
     try {
       const cookies = document.cookie ? document.cookie.split(";") : [];
-      const domains = ["", ".labs.google", "labs.google", ".google.com"];
+      const domains = ["", ".flow.google.com", "flow.google.com", ".labs.google", "labs.google", ".google.com"];
       for (const cookie of cookies) {
         const name = cookie.split("=")[0]?.trim();
         if (!name) continue;

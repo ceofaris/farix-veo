@@ -24,7 +24,7 @@ The default data contract expects:
 - `get_random_flow_account()`: returns an account containing `cookie_data`
 - `set_active_session(p_user_id, p_device_id)`: rejects an account already active elsewhere
 
-`cookie_data` can be a JSON array of Chrome cookie objects, a `{ "cookies": [...] }` object, or a name/value map. For safety, cookie injection is limited to `labs.google` and its subdomains.
+`cookie_data` can be a JSON array of Chrome cookie objects, a `{ "cookies": [...] }` object, or a name/value map. For safety, cookie injection is limited to `flow.google.com` and its subdomains.
 
 ## Load in Chrome
 
@@ -36,4 +36,4 @@ The default data contract expects:
 
 ## Notes
 
-The extension only observes newly-added `<video>` elements on `https://labs.google/fx/tools/flow*`; it does not count images. Chrome does not guarantee an uninstall callback for extensions, so logout is the reliable cleanup path and disable/unload cleanup is best effort. The extension never stores the user's password.
+The extension only observes newly-added `<video>` elements on `https://flow.google.com/about`; it does not count images. Chrome does not guarantee an uninstall callback for extensions, so logout is the reliable cleanup path and disable/unload cleanup is best effort. The extension never stores the user's password.

@@ -8,7 +8,7 @@ globalThis.FARIX_CONFIG = Object.freeze({
   SUPABASE_URL: "https://niytnogzleyderixfkaf.supabase.co",
   SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5peXRub2d6bGV5ZGVyaXhma2FmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUxODA5NDEsImV4cCI6MjEwMDc1Njk0MX0.qIFZ9AOqqeWkKQTQ7EVLehXqdWkS0_IlZHuj2rcqQng",
 
-  FLOW_URL: "https://labs.google/fx/tools/flow",
+  FLOW_URL: "https://flow.google.com/about",
 
   TABLES: Object.freeze({
     profiles: "profiles",

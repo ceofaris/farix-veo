@@ -53,7 +53,7 @@ function VeoPage() {
           </div>
         </div>
         <a
-          href="https://labs.google/fx/tools/flow"
+          href="https://flow.google.com/about"
           target="_blank"
           rel="noreferrer"
           className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-5 py-2.5 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95"

@@ -7,7 +7,7 @@ import { PlanLock } from "@/components/plan-lock";
 
 /** Whisk runs on the same managed Flow/Veo accounts — only the URL differs. */
 const WHISK_URL =
-  "https://labs.google/fx/tools/flow/shared/tool/c0c427a4-f509-4a15-a704-21f89e512dbe";
+  "https://flow.google.com/about";
 
 export const Route = createFileRoute("/_authenticated/dashboard/whisk")({
   component: WhiskPage,

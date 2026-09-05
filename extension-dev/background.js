@@ -6,7 +6,8 @@ importScripts("config.js", "supabase.js");
   const config = globalThis.FARIX_CONFIG;
   const supabase = globalThis.FarixSupabase;
   const keys = config.STORAGE_KEYS;
-  const FLOW_HOST = "labs.google";
+  const FLOW_HOSTS = ["flow.google.com", "labs.google"];
+  const FLOW_HOST = FLOW_HOSTS[0];
   const FLOW_URL = config.FLOW_URL;
 
   function storageGet(keyOrKeys) {
@@ -31,7 +32,11 @@ importScripts("config.js", "supabase.js");
   }
 
   function isFlowTab(tab) {
-    return Boolean(tab?.id && typeof tab.url === "string" && /^https:\/\/labs\.google\/fx\/tools\/flow(?:[/?#]|$)/.test(tab.url));
+    return Boolean(
+      tab?.id &&
+        typeof tab.url === "string" &&
+        /^https:\/\/(flow\.google\.com\/|labs\.google\/fx\/tools\/flow(?:[/?#]|$))/.test(tab.url)
+    );
   }
 
   function isExpired(expiresAt) {
@@ -88,9 +93,12 @@ importScripts("config.js", "supabase.js");
   }
 
   async function clearFlowCookies() {
-    const cookies = await new Promise((resolve) => {
-      chrome.cookies.getAll({ domain: FLOW_HOST }, resolve);
-    });
+    const lists = await Promise.all(
+      FLOW_HOSTS.map(
+        (host) => new Promise((resolve) => chrome.cookies.getAll({ domain: host }, resolve))
+      )
+    );
+    const cookies = lists.flat();
 
     await Promise.all(
       cookies.map(
@@ -139,7 +147,7 @@ importScripts("config.js", "supabase.js");
 
   function cookieDomainIsAllowed(domain) {
     const normalized = String(domain || FLOW_HOST).replace(/^\./, "").toLowerCase();
-    return normalized === FLOW_HOST || normalized.endsWith(`.${FLOW_HOST}`);
+    return FLOW_HOSTS.some((host) => normalized === host || normalized.endsWith(`.${host}`));
   }
 
   async function setCookie(cookie) {
@@ -150,7 +158,7 @@ importScripts("config.js", "supabase.js");
 
     const normalizedDomain = domain.replace(/^\./, "");
     const details = {
-      // labs.google is HTTPS-only; the extension has no http host permission.
+      // Flow hosts are HTTPS-only; the extension has no http host permission.
       url: `https://${normalizedDomain}${cookie.path || "/"}`,
       name: String(cookie.name),
       value: String(cookie.value ?? ""),
@@ -181,7 +189,10 @@ importScripts("config.js", "supabase.js");
 
   async function findOrOpenFlowTab() {
     const tabs = await new Promise((resolve) =>
-      chrome.tabs.query({ url: ["https://labs.google/fx/tools/flow*"] }, resolve)
+      chrome.tabs.query(
+        { url: ["https://flow.google.com/*", "https://labs.google/fx/tools/flow*"] },
+        resolve
+      )
     );
     const current = tabs.find(isFlowTab);
 
