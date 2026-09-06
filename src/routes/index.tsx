@@ -474,16 +474,23 @@ function Landing() {
                             <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-cta">
                               <Check className="h-3 w-3" strokeWidth={3} />
                             </span>
-                            {feature.href ? (
-                              <Link
-                                to={feature.href}
-                                className="text-foreground/85 underline-offset-4 transition-colors hover:text-primary hover:underline"
-                              >
-                                {feature.label}
-                              </Link>
-                            ) : (
-                              <span className="text-foreground/85">{feature.label}</span>
-                            )}
+                            <div className="flex flex-col">
+                              {feature.href ? (
+                                <Link
+                                  to={feature.href}
+                                  className="text-foreground/85 underline-offset-4 transition-colors hover:text-primary hover:underline"
+                                >
+                                  {feature.label}
+                                </Link>
+                              ) : (
+                                <span className="text-foreground/85">{feature.label}</span>
+                              )}
+                              {feature.label.includes("Veo 3 Lite") && (
+                                <span className="mt-1 text-[11px] leading-snug text-muted-foreground/70">
+                                  Veo 3 Lite: occasional generation issues may occur — if a run fails, try again.
+                                </span>
+                              )}
+                            </div>
                           </li>
                         ))}
                       </ul>
