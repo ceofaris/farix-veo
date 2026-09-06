@@ -237,7 +237,14 @@ export function ToolLanding({ content }: { content: ToolLandingContent }) {
                       <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-gradient-cta text-cta">
                         <Check className="h-3 w-3" strokeWidth={3} />
                       </span>
-                      <span className="text-foreground/85">{item}</span>
+                      <div className="flex flex-col">
+                        <span className="text-foreground/85">{item}</span>
+                        {item.includes("Veo 3 Lite") && (
+                          <span className="mt-1 text-[11px] leading-snug text-muted-foreground/70">
+                            Veo 3 Lite: occasional generation issues may occur — if a run fails, try again.
+                          </span>
+                        )}
+                      </div>
                     </li>
                   ))}
                 </ul>
