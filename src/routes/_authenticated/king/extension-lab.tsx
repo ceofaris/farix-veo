@@ -4,14 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Download, FlaskConical, FileCode2, Info } from "lucide-react";
 import {
-  devExtensionFiles,
-  downloadDevZip,
   devMultiExtensionFiles,
   downloadMultiDevZip,
-  devGeminiExtensionFiles,
-  downloadGeminiDevZip,
-  devWhiskExtensionFiles,
-  downloadWhiskDevZip,
   type DevFile,
 } from "@/lib/extension-dev";
 
@@ -100,38 +94,16 @@ function ExtensionLab() {
     <div>
       <PageHeader
         title="Extension Lab"
-        description="Development versions of the Farix Chrome extensions, kept fully separate and editable in this project."
+        description="Development source of the single Farix Master extension (Veo 3, Gemini Pro and Whisk in one package)."
       />
 
-      <div className="mt-5 grid gap-5 lg:grid-cols-2 items-start">
+      <div className="mt-5 grid gap-5 lg:grid-cols-1 items-start">
         <LabSection
-          title="Farix Veo Extension (dev)"
-          folder="extension-dev/"
-          files={devExtensionFiles}
-          onDownload={downloadDevZip}
-          note="Veo 3 only — files live in extension-dev/. For testing only; upload the final version from Tools → Veo 3 → Upload Extension."
-        />
-
-        <LabSection
-          title="Farix Multi Extension (dev)"
+          title="Farix Master Extension (dev)"
           folder="extension-dev-multi/"
           files={devMultiExtensionFiles}
           onDownload={downloadMultiDevZip}
           note="Veo 3 (Flow) + Gemini Pro + Whisk in one — files live in extension-dev-multi/. Whisk is included here and shares the Flow/Veo cookie pool (no second package, no separate accounts). Cookies stay isolated per site and access follows the user plan."
-        />
-        <LabSection
-          title="Farix Gemini Extension (dev)"
-          folder="extension-dev-gemini/"
-          files={devGeminiExtensionFiles}
-          onDownload={downloadGeminiDevZip}
-          note="Gemini Pro only — files live in extension-dev-gemini/. For testing only; upload the final version from Tools → Gemini Pro → Upload Extension."
-        />
-        <LabSection
-          title="Farix Whisk Extension (dev)"
-          folder="extension-dev-whisk/"
-          files={devWhiskExtensionFiles}
-          onDownload={downloadWhiskDevZip}
-          note="Whisk only — uses the Flow/Veo cookie pool (no separate Whisk accounts) and opens the Whisk tool URL after injection."
         />
       </div>
     </div>
