@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus, Pencil, Trash2, Power } from "lucide-react";
 import { AccountFormDialog, ToolAccountRow } from "@/components/account-form-dialog";
 import { toast } from "sonner";
-import { ToolExtensionCard } from "@/components/tool-extension-card";
 import { ToolLogo } from "@/components/tool-logo";
 
 
@@ -91,10 +90,6 @@ function KingToolAccounts() {
         </Button>
       </div>
 
-
-      <div className="mt-6">
-        <ToolExtensionCard toolId={id} toolName={tool.data?.name ?? "Tool"} />
-      </div>
 
       <h2 className="mt-8 font-semibold">Cookie Accounts</h2>
       <Input
