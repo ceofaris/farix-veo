@@ -45,7 +45,7 @@ function StepCard({
 }
 
 function ExtensionHelpPage() {
-  const { downloadExtension, findTool, loading } = useMyTools();
+  const { downloadExtension, loading } = useMyTools();
 
   return (
     <div className="space-y-10">
@@ -70,7 +70,7 @@ function ExtensionHelpPage() {
             </div>
           </div>
           <button
-            onClick={() => downloadExtension(findTool(/veo|flow/i)?.id)}
+            onClick={() => downloadExtension()}
             disabled={loading}
             className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-5 py-2.5 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95 disabled:opacity-50"
           >

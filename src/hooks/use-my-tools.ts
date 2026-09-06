@@ -16,7 +16,7 @@ const latestVersionsQuery = {
     const { data, error } = await supabase
       .from("extension_versions")
       .select("id, version, file_path, tool_id")
-      .eq("is_latest", true);
+      .order("created_at", { ascending: false });
     if (error) throw error;
     return (data ?? []) as LatestVersion[];
   },
@@ -79,12 +79,12 @@ export function useMyTools() {
     return expiresAt;
   }
 
-  async function downloadExtension(toolId?: string) {
+  /** One Master build for everyone — the tool argument is ignored on purpose. */
+  async function downloadExtension(_toolId?: string) {
     if (suspended) return toast.error("Account suspended — contact support");
-    if (!hasVeo && !paidActive) return toast.error("Your plan is expired — upgrade to continue");
     // Fetched on demand (and cached): nobody pays a request for a button they never press.
     const list = await qc.fetchQuery(latestVersionsQuery).catch(() => [] as LatestVersion[]);
-    const v = toolId ? list.find((x) => x.tool_id === toolId) : list[0];
+    const v = list[0];
     if (!v) return toast.error("No extension build available yet");
     const url = await signedExtensionUrl(v.file_path);
     if (!url) return toast.error("Could not create download link");
