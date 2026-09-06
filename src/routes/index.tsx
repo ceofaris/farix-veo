@@ -132,9 +132,6 @@ const pricingPlans: { title: string; subtitle?: string; popular?: boolean; featu
     subtitle: "Free trial",
     features: [
       { label: "Veo 3 Lite (Unlimited) — 1 hour access", href: VEO_PAGE },
-      { label: "Nano Banana" },
-      { label: "Nano Banana 2" },
-      { label: "Imagen 4 Ultra", href: IMAGEN_PAGE },
     ],
   },
   {

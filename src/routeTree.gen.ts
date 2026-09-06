@@ -42,6 +42,7 @@ import { Route as AuthenticatedKingSettingsRouteImport } from './routes/_authent
 import { Route as AuthenticatedKingResellersRouteImport } from './routes/_authenticated/king/resellers'
 import { Route as AuthenticatedKingNichesRouteImport } from './routes/_authenticated/king/niches'
 import { Route as AuthenticatedKingExtensionLabRouteImport } from './routes/_authenticated/king/extension-lab'
+import { Route as AuthenticatedKingExtensionRouteImport } from './routes/_authenticated/king/extension'
 import { Route as AuthenticatedKingBlogRouteImport } from './routes/_authenticated/king/blog'
 import { Route as AuthenticatedDashboardWhiskRouteImport } from './routes/_authenticated/dashboard/whisk'
 import { Route as AuthenticatedDashboardVeo3RouteImport } from './routes/_authenticated/dashboard/veo-3'
@@ -227,6 +228,12 @@ const AuthenticatedKingExtensionLabRoute =
     path: '/extension-lab',
     getParentRoute: () => AuthenticatedKingRouteRoute,
   } as any)
+const AuthenticatedKingExtensionRoute =
+  AuthenticatedKingExtensionRouteImport.update({
+    id: '/extension',
+    path: '/extension',
+    getParentRoute: () => AuthenticatedKingRouteRoute,
+  } as any)
 const AuthenticatedKingBlogRoute = AuthenticatedKingBlogRouteImport.update({
   id: '/blog',
   path: '/blog',
@@ -303,6 +310,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/dashboard/whisk': typeof AuthenticatedDashboardWhiskRoute
   '/king/blog': typeof AuthenticatedKingBlogRoute
+  '/king/extension': typeof AuthenticatedKingExtensionRoute
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/niches': typeof AuthenticatedKingNichesRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
@@ -342,6 +350,7 @@ export interface FileRoutesByTo {
   '/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/dashboard/whisk': typeof AuthenticatedDashboardWhiskRoute
   '/king/blog': typeof AuthenticatedKingBlogRoute
+  '/king/extension': typeof AuthenticatedKingExtensionRoute
   '/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/king/niches': typeof AuthenticatedKingNichesRoute
   '/king/resellers': typeof AuthenticatedKingResellersRoute
@@ -386,6 +395,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard/veo-3': typeof AuthenticatedDashboardVeo3Route
   '/_authenticated/dashboard/whisk': typeof AuthenticatedDashboardWhiskRoute
   '/_authenticated/king/blog': typeof AuthenticatedKingBlogRoute
+  '/_authenticated/king/extension': typeof AuthenticatedKingExtensionRoute
   '/_authenticated/king/extension-lab': typeof AuthenticatedKingExtensionLabRoute
   '/_authenticated/king/niches': typeof AuthenticatedKingNichesRoute
   '/_authenticated/king/resellers': typeof AuthenticatedKingResellersRoute
@@ -430,6 +440,7 @@ export interface FileRouteTypes {
     | '/dashboard/veo-3'
     | '/dashboard/whisk'
     | '/king/blog'
+    | '/king/extension'
     | '/king/extension-lab'
     | '/king/niches'
     | '/king/resellers'
@@ -469,6 +480,7 @@ export interface FileRouteTypes {
     | '/dashboard/veo-3'
     | '/dashboard/whisk'
     | '/king/blog'
+    | '/king/extension'
     | '/king/extension-lab'
     | '/king/niches'
     | '/king/resellers'
@@ -512,6 +524,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard/veo-3'
     | '/_authenticated/dashboard/whisk'
     | '/_authenticated/king/blog'
+    | '/_authenticated/king/extension'
     | '/_authenticated/king/extension-lab'
     | '/_authenticated/king/niches'
     | '/_authenticated/king/resellers'
@@ -782,6 +795,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedKingExtensionLabRouteImport
       parentRoute: typeof AuthenticatedKingRouteRoute
     }
+    '/_authenticated/king/extension': {
+      id: '/_authenticated/king/extension'
+      path: '/extension'
+      fullPath: '/king/extension'
+      preLoaderRoute: typeof AuthenticatedKingExtensionRouteImport
+      parentRoute: typeof AuthenticatedKingRouteRoute
+    }
     '/_authenticated/king/blog': {
       id: '/_authenticated/king/blog'
       path: '/blog'
@@ -868,6 +888,7 @@ const AuthenticatedDashboardRouteRouteWithChildren =
 
 interface AuthenticatedKingRouteRouteChildren {
   AuthenticatedKingBlogRoute: typeof AuthenticatedKingBlogRoute
+  AuthenticatedKingExtensionRoute: typeof AuthenticatedKingExtensionRoute
   AuthenticatedKingExtensionLabRoute: typeof AuthenticatedKingExtensionLabRoute
   AuthenticatedKingNichesRoute: typeof AuthenticatedKingNichesRoute
   AuthenticatedKingResellersRoute: typeof AuthenticatedKingResellersRoute
@@ -882,6 +903,7 @@ interface AuthenticatedKingRouteRouteChildren {
 const AuthenticatedKingRouteRouteChildren: AuthenticatedKingRouteRouteChildren =
   {
     AuthenticatedKingBlogRoute: AuthenticatedKingBlogRoute,
+    AuthenticatedKingExtensionRoute: AuthenticatedKingExtensionRoute,
     AuthenticatedKingExtensionLabRoute: AuthenticatedKingExtensionLabRoute,
     AuthenticatedKingNichesRoute: AuthenticatedKingNichesRoute,
     AuthenticatedKingResellersRoute: AuthenticatedKingResellersRoute,

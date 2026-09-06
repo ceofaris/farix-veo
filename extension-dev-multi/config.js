@@ -34,7 +34,7 @@ globalThis.FARIX_CONFIG = Object.freeze({
       probeKind: "google",
       /** Inject works from any tab — the extension opens Flow itself. */
       opensOwnTab: true,
-      plans: ["pro", "master"]
+      plans: ["free", "pro", "master"]
     }),
     gemini: Object.freeze({
       id: "gemini",

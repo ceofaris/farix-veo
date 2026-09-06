@@ -106,7 +106,8 @@
 
   const PLAN_LABELS = {
     master: "Master Plan",
-    pro: "Pro"
+    pro: "Pro",
+    free: "Free Trial"
   };
 
   /**
@@ -120,7 +121,7 @@
         config.TABLES.profiles,
         { [config.PROFILE_USER_COLUMN]: `eq.${user.id}` },
         accessToken,
-        "id,email,full_name,role,expires_at,is_active",
+        "id,email,full_name,role,expires_at,is_active,trial_ends_at,trial_used,status",
         1
       ),
       selectRows(
@@ -144,13 +145,25 @@
       throw new SupabaseError("Your Farix account is disabled.", { code: "ACCOUNT_DISABLED" });
     }
 
-    const isKing = profileRow.role === "king";
-    const expiresAt = planRow?.expires_at || profileRow.expires_at || null;
-    const planActive =
-      isKing || (!!planRow && (!expiresAt || new Date(expiresAt).getTime() > Date.now()));
-    const plan = planRow?.plan || (isKing ? "master" : null);
+    if (profileRow.status === "suspended") {
+      throw new SupabaseError("Your Farix account is suspended.", { code: "ACCOUNT_SUSPENDED" });
+    }
 
-    if (!isKing && !planRow) {
+    const isKing = profileRow.role === "king";
+    const paidExpiry = planRow?.expires_at || profileRow.expires_at || null;
+    const paidActive =
+      isKing || (!!planRow && (!paidExpiry || new Date(paidExpiry).getTime() > Date.now()));
+
+    // Free trial: no paid plan row, but the 1-hour trial window is still open.
+    const trialEndsAt = profileRow.trial_ends_at || null;
+    const trialActive =
+      !paidActive && !!trialEndsAt && new Date(trialEndsAt).getTime() > Date.now();
+
+    const plan = paidActive ? planRow?.plan || (isKing ? "master" : null) : trialActive ? "free" : null;
+    const planActive = paidActive || trialActive;
+    const expiresAt = paidActive ? paidExpiry : trialActive ? trialEndsAt : paidExpiry;
+
+    if (!isKing && !planRow && !trialActive) {
       throw new SupabaseError("No active Farix plan is assigned to this account.", {
         code: "NO_ACTIVE_PLAN"
       });
