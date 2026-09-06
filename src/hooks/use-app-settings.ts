@@ -26,13 +26,20 @@ export async function fetchAppSettings(): Promise<AppSettings> {
   return { ...DEFAULT_SETTINGS, ...(data ?? {}) } as AppSettings;
 }
 
-/** Public, King-editable platform settings (signup, trial length, IP limit, support). */
-export function useAppSettings() {
+export const APP_SETTINGS_KEY = ["app-settings"] as const;
+
+/**
+ * Public, King-editable platform settings (signup, trial length, IP limit, support).
+ * `enabled: false` reads whatever is already cached without spending a request —
+ * used by locked/expired screens that only need the support number.
+ */
+export function useAppSettings(enabled = true) {
   const query = useQuery({
-    queryKey: ["app-settings"],
+    queryKey: APP_SETTINGS_KEY,
     queryFn: fetchAppSettings,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
+    enabled,
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
   });
   return {
     settings: query.data ?? DEFAULT_SETTINGS,
