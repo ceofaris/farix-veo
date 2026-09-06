@@ -357,13 +357,21 @@ function Landing() {
             </h1>
           </Reveal>
           <Reveal delay={140}>
-            <div className="mt-8 flex justify-center sm:mt-11">
+            <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:mt-11">
               <Link
                 to="/auth"
                 className="inline-flex items-center gap-2.5 rounded-full bg-gradient-cta px-8 py-3.5 font-display text-base font-semibold text-primary-foreground ring-glow transition hover:opacity-90 active:scale-[0.98] sm:px-9 sm:py-4"
               >
                 Get Started <ArrowRight className="h-5 w-5" />
               </Link>
+              <div className="flex flex-col items-center gap-1">
+                <span className="font-display text-xs font-semibold uppercase tracking-[0.14em] text-gradient-soft text-glow-soft sm:text-sm">
+                  1 Hour Free Trial
+                </span>
+                <span className="text-[11px] font-medium tracking-wide text-muted-foreground/80 sm:text-xs">
+                  No card required
+                </span>
+              </div>
             </div>
           </Reveal>
           <Reveal delay={240}>
