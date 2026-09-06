@@ -20,7 +20,14 @@ export async function fetchProfile(): Promise<Profile | null> {
   const { data: sessionData } = await supabase.auth.getSession();
   const user = sessionData.session?.user;
   if (!user) return null;
-  const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
+  // Explicit column list: `*` shipped columns no screen reads (pure egress).
+  const { data, error } = await supabase
+    .from("profiles")
+    .select(
+      "id, email, full_name, role, expires_at, is_active, created_by, status, trial_ends_at, trial_used, signup_source",
+    )
+    .eq("id", user.id)
+    .maybeSingle();
   if (error) throw error;
   return (data as Profile) ?? null;
 }
