@@ -370,7 +370,7 @@ function Landing() {
             </div>
           </Reveal>
           <Reveal delay={240}>
-            <section className="-mx-5 mt-12 flex snap-x snap-mandatory gap-1.5 overflow-x-auto px-5 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-14 sm:mt-20 sm:grid sm:w-[calc(100%+7rem)] sm:snap-none sm:grid-cols-7 sm:overflow-visible sm:px-0 sm:pb-0">
+            <section className="-mx-5 mt-7 flex snap-x snap-mandatory gap-1.5 overflow-x-auto px-5 pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-14 sm:mt-11 sm:grid sm:w-[calc(100%+7rem)] sm:snap-none sm:grid-cols-7 sm:overflow-visible sm:px-0 sm:pb-0">
               {CLIPS.map((c, i) => (
                 <div key={i} className="w-[42vw] max-w-[190px] shrink-0 snap-center sm:w-auto sm:max-w-none">
                   <MediaCard ratio="9/16" hue={c.hue} videoSrc={CLIP_SRCS[i]} />
