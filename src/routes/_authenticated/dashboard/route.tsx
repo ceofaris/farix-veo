@@ -102,8 +102,8 @@ function DashboardLayout() {
     cn(
       "flex items-center gap-3 rounded-xl px-3 py-2.5 font-display text-sm font-medium tracking-tight transition-all",
       active
-        ? "bg-brand-cyan/15 text-brand-cyan shadow-sm"
-        : "text-muted-foreground hover:bg-brand-cyan/10 hover:text-brand-cyan",
+        ? "bg-brand-gradient text-white glow-premium"
+        : "text-muted-foreground hover:bg-brand-pink/10 hover:text-brand-pink",
     );
 
   return (
