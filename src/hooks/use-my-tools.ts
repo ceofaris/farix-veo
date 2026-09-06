@@ -30,8 +30,10 @@ export function useMyTools() {
 
   const plan = useQuery({
     queryKey: ["my-plan", profile?.id],
-    enabled: !!profile && isUser,
-    staleTime: 10 * 60 * 1000,
+    // Suspended accounts see one locked screen — no plan lookup needed.
+    enabled: !!profile && isUser && profile.status !== "suspended",
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("user_plans")
