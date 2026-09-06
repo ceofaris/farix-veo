@@ -102,7 +102,7 @@ function ExtensionHelpPage() {
                 href="https://play.google.com/store/apps/details?id=com.lemurbrowser.exts"
                 target="_blank"
                 rel="noreferrer"
-                className="font-medium text-brand-cyan underline-offset-2 transition-colors hover:underline"
+                className="font-medium text-brand-pink underline-offset-2 transition-colors hover:underline"
               >
                 Lemur Browser
               </a>
