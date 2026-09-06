@@ -51,8 +51,11 @@ function DashboardLayout() {
   }, [profile, loading, navigate]);
 
   // Device / IP protection: record the current IP once per browser session.
+  // Locked accounts (already suspended or with no active access) can't use any
+  // tool, so they skip the server call entirely.
   useEffect(() => {
     if (!profile || profile.role !== "user") return;
+    if (suspended || accessExpired) return;
     if (sessionStorage.getItem("farix-ip-checked")) return;
     sessionStorage.setItem("farix-ip-checked", "1");
     recordLoginIp()
