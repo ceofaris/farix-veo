@@ -452,6 +452,12 @@
   box-shadow: 0 0 24px -8px color-mix(in oklab, var(--brand-violet) 55%, transparent);
 }
 
+@utility text-glow-soft {
+  text-shadow:
+    0 0 18px color-mix(in oklab, var(--brand-pink) 45%, transparent),
+    0 0 36px color-mix(in oklab, var(--brand-violet) 30%, transparent);
+}
+
 /* Premium luminous glow accents (pink → violet) */
 @utility glow-premium {
   box-shadow:
