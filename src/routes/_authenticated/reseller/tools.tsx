@@ -38,6 +38,11 @@ function ResellerPlans() {
                 </Badge>
               ))}
             </div>
+            {p.features.some((f) => f.includes("Veo 3")) && (
+              <p className="mt-3 text-[11px] leading-snug text-muted-foreground/70">
+                Veo 3 Lite: occasional generation issues may occur — if a run fails, try again.
+              </p>
+            )}
           </Card>
         ))}
       </div>
