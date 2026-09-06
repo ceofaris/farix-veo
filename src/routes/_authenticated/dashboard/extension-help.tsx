@@ -32,9 +32,9 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-7 shadow-card">
+    <div className="group rounded-2xl border border-border bg-card p-7 shadow-card transition-all duration-300 hover:border-brand-pink/30 hover:shadow-[0_16px_44px_-18px_color-mix(in_oklab,var(--brand-violet)_35%,transparent)]">
       <div className="flex items-center gap-3.5">
-        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-cyan/15 to-brand-violet/10 text-brand-cyan ring-1 ring-brand-cyan/15">
+        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-pink/25 via-brand-violet/20 to-brand-violet/10 text-white glow-icon">
           {icon}
         </span>
         <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
