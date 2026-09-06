@@ -32,14 +32,14 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className="rounded-2xl border border-border bg-card p-6 shadow-card">
-      <div className="flex items-center gap-3">
-        <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-brand-cyan/10 text-brand-cyan">
+    <div className="rounded-2xl border border-border bg-card p-7 shadow-card">
+      <div className="flex items-center gap-3.5">
+        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand-cyan/15 to-brand-violet/10 text-brand-cyan ring-1 ring-brand-cyan/15">
           {icon}
         </span>
-        <h2 className="text-lg font-semibold tracking-tight">{title}</h2>
+        <h2 className="text-xl font-semibold tracking-tight">{title}</h2>
       </div>
-      <div className="mt-5">{children}</div>
+      <div className="mt-6">{children}</div>
     </div>
   );
 }
@@ -48,22 +48,22 @@ function ExtensionHelpPage() {
   const { downloadExtension, loading } = useMyTools();
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <Link to="/dashboard" className="inline-flex items-center gap-1 hover:text-foreground transition-colors">
           <ArrowLeft className="h-3.5 w-3.5" /> Dashboard
         </Link>
       </div>
 
-      <section className="rounded-2xl border border-border bg-card p-6 shadow-card">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex items-start gap-4">
-            <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-cyan/10 text-brand-cyan">
-              <Puzzle className="h-6 w-6" />
+      <section className="rounded-2xl border border-border bg-card p-8 shadow-card">
+        <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex items-start gap-5">
+            <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-cyan/15 to-brand-violet/10 text-brand-cyan ring-1 ring-brand-cyan/15">
+              <Puzzle className="h-7 w-7" />
             </span>
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight">Extension</h1>
-              <p className="mt-1 max-w-xl text-sm text-muted-foreground">
+              <h1 className="text-3xl font-bold tracking-tight">Extension</h1>
+              <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
                 One Farix extension works for Veo 3, Gemini Pro, and Whisk. Download once, then
                 Inject the tool you want.
               </p>
@@ -72,16 +72,16 @@ function ExtensionHelpPage() {
           <button
             onClick={() => downloadExtension()}
             disabled={loading}
-            className="inline-flex items-center gap-2 rounded-full bg-brand-gradient px-5 py-2.5 font-display text-sm font-semibold text-white shadow-glow transition-transform active:scale-95 disabled:opacity-50"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-gradient px-6 py-3 font-display text-sm font-semibold text-white shadow-glow transition-all hover:shadow-cta-glow active:scale-95 disabled:opacity-50"
           >
             <Download className="h-4 w-4" /> Download Extension
           </button>
         </div>
       </section>
 
-      <section className="grid gap-5 sm:grid-cols-2">
+      <section className="grid gap-6 sm:grid-cols-2">
         <StepCard icon={<Monitor className="h-5 w-5" />} title="How to use on PC & Laptop">
-          <ol className="list-decimal space-y-3 pl-5 text-sm text-muted-foreground marker:text-foreground">
+          <ol className="list-decimal space-y-4 pl-6 text-sm leading-relaxed text-muted-foreground marker:text-foreground marker:font-medium">
             <li>Download the extension using the button above.</li>
             <li>Open Chrome and go to the Extensions window.</li>
             <li>Turn on Developer mode.</li>
@@ -95,14 +95,14 @@ function ExtensionHelpPage() {
         </StepCard>
 
         <StepCard icon={<Smartphone className="h-5 w-5" />} title="How to use on Mobile">
-          <ol className="list-decimal space-y-3 pl-5 text-sm text-muted-foreground marker:text-foreground">
+          <ol className="list-decimal space-y-4 pl-6 text-sm leading-relaxed text-muted-foreground marker:text-foreground marker:font-medium">
             <li>
               Open Play Store and download{" "}
               <a
                 href="https://play.google.com/store/apps/details?id=com.lemurbrowser.exts"
                 target="_blank"
                 rel="noreferrer"
-                className="font-medium text-brand-cyan underline-offset-2 hover:underline"
+                className="font-medium text-brand-cyan underline-offset-2 transition-colors hover:underline"
               >
                 Lemur Browser
               </a>
