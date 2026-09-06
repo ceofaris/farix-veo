@@ -5,9 +5,12 @@ import { SUPPORT_PHONE, SUPPORT_WHATSAPP_URL } from "@/lib/support";
 import { useAppSettings } from "@/hooks/use-app-settings";
 import { cn } from "@/lib/utils";
 
-/** King-editable number wins; the constant stays as a fallback. */
+/**
+ * King-editable number wins; the constant stays as a fallback.
+ * Read-only: locked/expired screens must not spend a settings request.
+ */
 export function useSupportPhone() {
-  const { settings } = useAppSettings();
+  const { settings } = useAppSettings(false);
   const phone = settings.support_phone?.trim() || SUPPORT_PHONE;
   const digits = phone.replace(/\D/g, "");
   return { phone, url: digits ? `https://wa.me/${digits}` : SUPPORT_WHATSAPP_URL };
