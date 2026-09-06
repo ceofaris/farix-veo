@@ -30,8 +30,10 @@ export function useMyTools() {
 
   const plan = useQuery({
     queryKey: ["my-plan", profile?.id],
-    enabled: !!profile && isUser,
-    staleTime: 10 * 60 * 1000,
+    // Suspended accounts see one locked screen — no plan lookup needed.
+    enabled: !!profile && isUser && profile.status !== "suspended",
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
     queryFn: async () => {
       const { data, error } = await supabase
         .from("user_plans")
@@ -57,10 +59,10 @@ export function useMyTools() {
   const planActive = paidActive;
   const accessExpired = !suspended && !paidActive && !trialActive;
 
-  // Only users who can actually open a tool need the tools table; locked,
-  // expired and suspended accounts (incl. finished free trials) fetch nothing.
-  const hasAccess = paidActive || trialActive;
-  const tools = useQuery({ ...activeToolsQuery, enabled: isUser && hasAccess });
+  // Only paid users need the tools table (ids for per-tool extension builds).
+  // Trial, expired, locked and suspended accounts fetch nothing — their pages
+  // render from static names/logos and the shared extension build.
+  const tools = useQuery({ ...activeToolsQuery, enabled: isUser && paidActive });
   const toolList: ToolLite[] = tools.data ?? [];
 
   const hasVeo = (paidActive && planIncludes(planId, "veo")) || trialActive;
