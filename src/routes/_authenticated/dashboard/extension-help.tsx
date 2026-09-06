@@ -55,14 +55,14 @@ function ExtensionHelpPage() {
         </Link>
       </div>
 
-      <section className="rounded-2xl border border-border bg-card p-8 shadow-card">
+      <section className="rounded-2xl border border-border bg-card p-8 glow-card">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-start gap-5">
-            <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-cyan/15 to-brand-violet/10 text-brand-cyan ring-1 ring-brand-cyan/15">
+            <span className="inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-pink/30 via-brand-violet/25 to-brand-violet/10 text-white glow-icon">
               <Puzzle className="h-7 w-7" />
             </span>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Extension</h1>
+              <h1 className="text-4xl font-bold tracking-tight">Extension</h1>
               <p className="mt-2 max-w-2xl text-[15px] leading-relaxed text-muted-foreground">
                 One Farix extension works for Veo 3, Gemini Pro, and Whisk. Download once, then
                 Inject the tool you want.
@@ -72,7 +72,7 @@ function ExtensionHelpPage() {
           <button
             onClick={() => downloadExtension()}
             disabled={loading}
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-gradient px-6 py-3 font-display text-sm font-semibold text-white shadow-glow transition-all hover:shadow-cta-glow active:scale-95 disabled:opacity-50"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-brand-gradient px-6 py-3 font-display text-sm font-semibold text-white shadow-glow transition-all hover:shadow-[0_0_32px_-6px_color-mix(in_oklab,var(--brand-pink)_55%,transparent)] active:scale-95 disabled:opacity-50"
           >
             <Download className="h-4 w-4" /> Download Extension
           </button>
